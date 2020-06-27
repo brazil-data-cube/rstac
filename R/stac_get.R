@@ -2,7 +2,7 @@
 
 .stac_get <- function(url, endpoint = "/stac", params = list(), headers = list()) {
 
-  url <- .make_url(base_url = url, endpoint = endpoint, params = params)
+  url <- .make_url(url = url, endpoint = endpoint, params = params)
 
   tryCatch({
 
