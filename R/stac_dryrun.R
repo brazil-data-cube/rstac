@@ -21,7 +21,6 @@
 #'
 #' @export
 stac_dryrun <- function(expr) {
-
   if (!missing(expr)) {
 
     .dryrun <- TRUE

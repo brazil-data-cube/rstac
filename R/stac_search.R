@@ -123,9 +123,39 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
                    endpoint = "/stac/search",
                    params = params,
                    headers = .headers)
+  browser()
 
   if (is.null(res))
     return(invisible(NULL))
 
   return(res)
+}
+
+################################################################################
+#'@description a new function
+#'
+#'@export
+stac_search_new <- function(url, query = list(), .headers = list()) {
+
+  browser()
+  # Creating a base url
+  base_url <- crul::HttpClient$new(url     = url,
+                                   headers = .headers)
+  # making a get request
+  res <- base_url$get(query = query)
+
+  # Verify status code
+  if(res$status_code > 203){
+    stop(paste(res$status_http()[2]$message, ". \nStatus code =", res$status_code),
+         call. = FALSE)
+  }
+
+  # verifying the output type of API
+  stopifnot(res$response_headers$`content-type` == 'application/json')
+
+  # Parsing res file
+  parsed_res <- res$parse("UTF-8")
+  content    <- jsonlite::fromJSON(parsed_res, flatten = TRUE)
+
+  return(content)
 }

@@ -1,6 +1,7 @@
 
 .make_url <- function(url, endpoint = "/stac", params = list()) {
 
+
   res <- url
 
   if (length(endpoint) > 0)
