@@ -17,3 +17,6 @@ RoxygenNote: 7.0.2
 Depends:
     jsonlite,
     curl
+Suggests: 
+    testthat,
+    covr
