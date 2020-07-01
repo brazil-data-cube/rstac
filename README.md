@@ -3,9 +3,6 @@ R Client Library for SpatioTemporal Asset Catalog (STAC)
 
 [![Travis build status](https://travis-ci.com/OldLipe/stac.R.svg?branch=master)](https://travis-ci.com/OldLipe/stac.R) [![Build status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/stac-r) [![codecov](https://codecov.io/gh/OldLipe/stac.R/branch/master/graph/badge.svg)](https://codecov.io/gh/OldLipe/stac.R)
 
-
-
-
 STAC is a specification of files and web services used to describe geospatial information assets.
 The specification can be consulted in [https://stacspec.org/].
 
