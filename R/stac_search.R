@@ -85,8 +85,8 @@
 #' \dontrun{
 #'
 #' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1",
-#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355))
+#'      collections = "MOD13Q1",
+#'      bbox = c(-55.16335, -4.26325, -49.31739, -1.18355))
 #' }
 #'
 #' @export
@@ -123,8 +123,6 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
                    endpoint = "/stac/search",
                    params = params,
                    headers = .headers)
-  browser()
-
   if (is.null(res))
     return(invisible(NULL))
 
@@ -137,13 +135,15 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
 #'@export
 stac_search_new <- function(url, query = list(), .headers = list()) {
 
-  browser()
   # Creating a base url
   base_url <- crul::HttpClient$new(url     = url,
                                    headers = .headers)
-  # making a get request
-  res <- base_url$get(query = query)
+  # query adjustment
+  query_redefined <- .query_format(query)
 
+  # making a get request
+  res <- base_url$get(query = query_redefined)
+  cat(res$url)
   # Verify status code
   if(res$status_code > 203){
     stop(paste(res$status_http()[2]$message, ". \nStatus code =", res$status_code),
@@ -159,3 +159,6 @@ stac_search_new <- function(url, query = list(), .headers = list()) {
 
   return(content)
 }
+
+
+
