@@ -1,1 +1,30 @@
-
+http_interactions:
+- request:
+    method: get
+    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      User-Agent: libcurl/7.58.0 r-curl/4.3 crul/0.9.2.92
+      Accept-Encoding: gzip, deflate
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: '200'
+      message: OK
+      explanation: Request fulfilled, document follows
+    headers:
+      status: HTTP/1.1 200 OK
+      date: Thu, 02 Jul 2020 22:01:41 GMT
+      server: nginx/1.17.3
+      content-type: application/json
+      content-length: '2732'
+      access-control-allow-origin: '*'
+    body:
+      encoding: UTF-8
+      file: no
+      string: |
+        {"description":"Brazil Data Cube Catalog","id":"bdc","links":[{"href":"http://brazildatacube.dpi.inpe.br/stac","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/C4_64","rel":"child","title":"C4_64"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/C4_64_16D_MED","rel":"child","title":"C4_64_16D_MED"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/C4_64_16D_STK","rel":"child","title":"C4_64_16D_STK"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/C4_64_1M_MED","rel":"child","title":"C4_64_1M_MED"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/C4_64_1M_STK","rel":"child","title":"C4_64_1M_STK"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/HLS.L30","rel":"child","title":"HLS.L30"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/HLS.S30","rel":"child","title":"HLS.S30"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/LC8_30","rel":"child","title":"LC8_30"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/LC8_30_1M_MED","rel":"child","title":"LC8_30_1M_MED"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/LC8_30_1M_STK","rel":"child","title":"LC8_30_1M_STK"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/LC8DN","rel":"child","title":"LC8DN"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/LC8SR","rel":"child","title":"LC8SR"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"child","title":"MOD13Q1"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MYD13Q1","rel":"child","title":"MYD13Q1"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/S2_10","rel":"child","title":"S2_10"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/S2_10_16D_MED","rel":"child","title":"S2_10_16D_MED"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/S2_10_16D_STK","rel":"child","title":"S2_10_16D_STK"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/S2_10_1M_MED","rel":"child","title":"S2_10_1M_MED"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/S2_10_1M_STK","rel":"child","title":"S2_10_1M_STK"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/S2_MSI_L2_SR_LASRC","rel":"child","title":"S2_MSI_L2_SR_LASRC"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/S2SR_SEN28","rel":"child","title":"S2SR_SEN28"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/S2TOA","rel":"child","title":"S2TOA"}],"stac_version":"0.8.0"}
+  recorded_at: 2020-07-02 22:01:41 GMT
+  recorded_with: vcr/0.5.4, webmockr/0.6.2
