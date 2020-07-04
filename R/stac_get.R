@@ -1,6 +1,7 @@
 .stac_get <- function(url, endpoint = "/stac", params = list(), headers = list()) {
 
   url <- .make_url(url = url, endpoint = endpoint, params = params)
+  print(url)
 
   if (stac_dryrun()) {
     message(url)
