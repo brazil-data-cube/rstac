@@ -13,7 +13,6 @@ testthat::test_that("stack get response", {
 
   #testthat::expect_error(stac_search_new(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac/search",
   #                                           query = list(datetime = c("12/10/2019"))))
-
   # datetime fixed
   testthat::expect_error(stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
                                     datetime = "2018-02-12T23:20:50Z"))
@@ -31,9 +30,7 @@ testthat::test_that("stack get response", {
   # searching b y
   # datetime interval - the error is normal here?
   testthat::expect_error(stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-                                     collections = "MOD13Q1",
-                                     datetime = c("../2018-03-18T12:31:12Z")))
-
+                                     collections = "MOD13Q1"))
 
   })
 })

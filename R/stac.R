@@ -26,36 +26,11 @@
 stac <- function(url, .headers = list()) {
 
   # TODO check valid stac response
-  res <- .stac_get(url = url, endpoint = "/stac", headers = .headers)
+  res <- .stac_request(url = url, endpoint = "/stac", headers = .headers,
+                       .method = "get")
 
   if (is.null(res))
     return(invisible(NULL))
 
   return(res)
-}
-
-################################################################################
-#' @export
-stac_new <- function(url, .headers = list()) {
-
-  # Creating a base url
-  base_url <- crul::HttpClient$new(url     = url,
-                                   headers = .headers)
-  # making a get request
-  res <- base_url$get()
-
-  # Verify status code
-  if(res$status_code > 203){
-    stop(paste(res$status_http()[2]$message, ". \nStatus code =", res$status_code),
-         call. = FALSE)
-  }
-
-  # verifying the output type of API
-  stopifnot(res$response_headers$`content-type` == 'application/json')
-
-  # Parsing res file
-  parsed_res <- res$parse("UTF-8")
-  content    <- jsonlite::fromJSON(parsed_res, flatten = TRUE)
-
-  return(content)
 }

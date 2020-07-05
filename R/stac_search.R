@@ -75,6 +75,8 @@
 #' @param .next       An \code{integer} informing which set of results
 #' to return. Values less than 1 means all pages will be retrieved.
 #'
+#' @param .method
+#'
 #' @param .headers    A \code{list} of named arguments to be passed as
 #' http request headers.
 #'
@@ -90,8 +92,8 @@
 #' }
 #'
 #' @export
-stac_search <- function(url, collections, ids, bbox, datetime, ...,
-                        .limit = 10, .next = 1, .headers = list()) {
+stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
+                        .limit = 10, .next = 1, .method = "get", .headers = list()) {
 
   params <- list()
 
@@ -108,6 +110,14 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
   # TODO check valid bbox
   if (!missing(bbox))
     params[["bbox"]] <- bbox
+
+  # TODO check valid intersects
+  if(!missing(intersects))
+    if(.method == "post")
+      params[["intersects"]] <- intersects
+    else{
+      warning("param not ...")
+    }
 
   if (!missing(...))
     params <- c(params, list(...))
@@ -126,39 +136,9 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
   if (is.null(res))
     return(invisible(NULL))
 
+
+
   return(res)
 }
-
-################################################################################
-#'@description a new function
-#'
-#'@export
-stac_search_new <- function(url, query = list(), .headers = list()) {
-
-  # Creating a base url
-  base_url <- crul::HttpClient$new(url     = url,
-                                   headers = .headers)
-  # query adjustment
-  query_redefined <- .query_format(query)
-
-  # making a get request
-  res <- base_url$get(query = query_redefined)
-  cat(res$url)
-  # Verify status code
-  if(res$status_code > 203){
-    stop(paste(res$status_http()[2]$message, ". \nStatus code =", res$status_code),
-         call. = FALSE)
-  }
-
-  # verifying the output type of API
-  stopifnot(res$response_headers$`content-type` == 'application/json')
-
-  # Parsing res file
-  parsed_res <- res$parse("UTF-8")
-  content    <- jsonlite::fromJSON(parsed_res, flatten = TRUE)
-
-  return(content)
-}
-
 
 
