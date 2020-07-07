@@ -1,5 +1,3 @@
-
-
 #' @title stac functions
 #'
 #' @author Rolf Simoes
@@ -26,10 +24,16 @@
 stac <- function(url, .headers = list()) {
 
   # TODO check valid stac response
-  res <- .stac_get(url = url, endpoint = "/stac", headers = .headers)
+  res <- .stac_request(url = url, endpoint = "/stac", headers = .headers,
+                       method = "get")
 
   if (is.null(res))
     return(invisible(NULL))
+
+  # TODO maybe we need to create a function like .check_get_resquest()
+  # to verify for not repeat this line of code
+  if (res$status_code != 200)
+    stop(paste(res$content$code, res$content$description), call. = FALSE)
 
   return(res)
 }

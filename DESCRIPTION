@@ -13,7 +13,10 @@ Description: STAC client is a R package that interfaces STAC API endpoints.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Depends:
     jsonlite,
     curl
+Suggests: 
+    testthat,
+    covr

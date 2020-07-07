@@ -75,6 +75,8 @@
 #' @param .next       An \code{integer} informing which set of results
 #' to return. Values less than 1 means all pages will be retrieved.
 #'
+#' @param .method
+#'
 #' @param .headers    A \code{list} of named arguments to be passed as
 #' http request headers.
 #'
@@ -85,13 +87,13 @@
 #' \dontrun{
 #'
 #' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1",
-#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355))
+#'      collections = "MOD13Q1",
+#'      bbox = c(-55.16335, -4.26325, -49.31739, -1.18355))
 #' }
 #'
 #' @export
-stac_search <- function(url, collections, ids, bbox, datetime, ...,
-                        .limit = 10, .next = 1, .headers = list()) {
+stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
+                        .limit = 10, .next = 1, .method = "get", .headers = list()) {
 
   params <- list()
 
@@ -106,8 +108,18 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
     params[["datetime"]] <- datetime
 
   # TODO check valid bbox
+  # TODO Only one of either intersects or bbox should be specified. If both are
+  # specified, a 400 Bad Request response should be returned.
   if (!missing(bbox))
     params[["bbox"]] <- bbox
+
+  # TODO check valid intersects
+  if(!missing(intersects))
+    if(.method == "post")
+      params[["intersects"]] <- intersects
+    else{
+      warning("param `intersects` not valid for get request")
+    }
 
   if (!missing(...))
     params <- c(params, list(...))
@@ -119,13 +131,24 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
     params["next"] <- .next
 
   # TODO check valid stac response
-  res <- .stac_get(url = url,
+  res <- .stac_request(url = url,
                    endpoint = "/stac/search",
                    params = params,
-                   headers = .headers)
-
+                   headers = .headers,
+                   method =  .method )
   if (is.null(res))
     return(invisible(NULL))
 
+  if(.method == "get"){
+    if (res$status_code != 200)
+      stop(paste(res$content$code, res$content$description), call. = FALSE)
+  } else {
+    # TODO: vertify return
+    stop(paste(res$content$code, res$content$description), call. = FALSE)
+  }
+
   return(res)
 }
+
+
+b <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")

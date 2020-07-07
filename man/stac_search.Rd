@@ -10,9 +10,11 @@ stac_search(
   ids,
   bbox,
   datetime,
+  intersects,
   ...,
   .limit = 10,
   .next = 1,
+  .method = "get",
   .headers = list()
 )
 }
@@ -82,6 +84,8 @@ to return. Defaults to 10.}
 \item{.next}{An \code{integer} informing which set of results
 to return. Values less than 1 means all pages will be retrieved.}
 
+\item{.method}{}
+
 \item{.headers}{A \code{list} of named arguments to be passed as
 http request headers.}
 }
@@ -99,8 +103,8 @@ endpoint (v0.8.0). It retrieves items using search parameters criteria.
 \dontrun{
 
 stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-            collections = "MOD13Q1",
-            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355))
+     collections = "MOD13Q1",
+     bbox = c(-55.16335, -4.26325, -49.31739, -1.18355))
 }
 
 }
