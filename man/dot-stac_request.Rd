@@ -19,9 +19,13 @@ STAC web service.}
 \item{endpoint}{A \code{character} ..}
 
 \item{params}{A \code{list} ...}
+
+\item{headers}{A \code{list} ...}
+
+\item{method}{A \code{character} ...}
 }
 \value{
-A url ...
+A res ...
 }
 \description{
 This function

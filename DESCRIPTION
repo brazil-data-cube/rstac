@@ -19,4 +19,5 @@ Depends:
     curl
 Suggests: 
     testthat,
-    covr
+    covr,
+    vcr

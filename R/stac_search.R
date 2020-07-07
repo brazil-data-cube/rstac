@@ -39,6 +39,8 @@
 #' server whether only a single temporal property is used to determine
 #' the extent or all relevant temporal properties.
 #'
+#' @param intersects An \code{Object} ...
+#'
 #' @param bbox        Only features that have a geometry that intersects the
 #' bounding box are selected. The bounding box is provided as four or six
 #' numbers, depending on whether the coordinate reference system includes a
@@ -75,7 +77,7 @@
 #' @param .next       An \code{integer} informing which set of results
 #' to return. Values less than 1 means all pages will be retrieved.
 #'
-#' @param .method
+#' @param .method A \code{character} ...
 #'
 #' @param .headers    A \code{list} of named arguments to be passed as
 #' http request headers.
@@ -149,6 +151,3 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
 
   return(res)
 }
-
-
-b <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")

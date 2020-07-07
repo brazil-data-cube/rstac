@@ -76,6 +76,8 @@ If a feature has multiple temporal properties, it is the decision of the
 server whether only a single temporal property is used to determine
 the extent or all relevant temporal properties.}
 
+\item{intersects}{An \code{Object} ...}
+
 \item{...}{Any additional non standard filter parameter.}
 
 \item{.limit}{An \code{integer} defining the maximum number of results
@@ -84,7 +86,7 @@ to return. Defaults to 10.}
 \item{.next}{An \code{integer} informing which set of results
 to return. Values less than 1 means all pages will be retrieved.}
 
-\item{.method}{}
+\item{.method}{A \code{character} ...}
 
 \item{.headers}{A \code{list} of named arguments to be passed as
 http request headers.}
