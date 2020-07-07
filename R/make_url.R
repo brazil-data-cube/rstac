@@ -1,21 +1,18 @@
-#' @description
+#' @title make url
 #'
-#' @name
+#' @author Rolf Simoes
 #'
-#' @param
+#' @description This function
 #'
-#' @param
+#' @param url      A \code{character} informing the base url of a
+#' STAC web service.
 #'
-#' @param
+#' @param endpoint A \code{character} ..
 #'
-#' @param
+#' @param params A \code{list} ...
 #'
-#' @author
-#'
+#' @return A url ...
 .make_url <- function(url, endpoint = "/stac", params = list()) {
-
-  # TODO: refactor
-  browser()
 
   res <- url
 
@@ -24,7 +21,7 @@
 
   if (length(params) > 0) {
 
-    #params_refac <- paste(names(params), params, sep="=", collapse = "&")
+    #params_refac <- paste0(names(params), params, sep="=", collapse = "&")
 
     params <- paste(mapply(function(k, v) {
       paste(k, paste(v, collapse = ","), sep = "=")
@@ -32,6 +29,6 @@
 
     res <- paste(res, params, sep = "?")
   }
-
+  cat(res)
   return(res)
 }

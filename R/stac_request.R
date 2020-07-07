@@ -1,16 +1,25 @@
-#' @name .stac_request
-#' @param method
-
-stac_request<- function(url, endpoint = "/stac", params = list(), headers = list(),
+#' @title make url
+#'
+#' @author Rolf Simoes
+#'
+#' @description This function
+#'
+#' @param url      A \code{character} informing the base url of a
+#' STAC web service.
+#'
+#' @param endpoint A \code{character} ..
+#'
+#' @param params A \code{list} ...
+#'
+#' @return A res ...
+.stac_request <- function(url, endpoint = "/stac", params = list(), headers = list(),
                         method = "get") {
+  #browser()
 
-  if(method == "get"){
-    url <- .make_url(url = url, endpoint = endpoint, params = params)
-  } else{
-    url <- .make_url(url = url, endpoint = endpoint)
-  }
+  ifelse(method == "get",
+         url <- .make_url(url = url, endpoint = endpoint, params = params),
+         url <- .make_url(url = url, endpoint = endpoint))
 
-  print(url)
 
   if (stac_dryrun()) {
     message(url)
@@ -18,7 +27,6 @@ stac_request<- function(url, endpoint = "/stac", params = list(), headers = list
   }
 
   tryCatch({
-
     h <- curl::new_handle()
     curl::handle_setheaders(h, .list = headers)
     if(method == "post"){
@@ -30,19 +38,19 @@ stac_request<- function(url, endpoint = "/stac", params = list(), headers = list
 
     stop(paste("Request error.", e$message), call. = FALSE)
   })
-  browser()
-  content <- rawToChar(res$content)
 
-  if (!jsonlite::validate(content))
+  res$content <- rawToChar(res$content)
+
+  if (!jsonlite::validate(res$content))
     stop("Invalid JSON response.", call. = FALSE)
 
-  content <- jsonlite::fromJSON(content,
-                                simplifyVector = TRUE,
-                                simplifyDataFrame = FALSE,
-                                simplifyMatrix = FALSE)
+  res$content <- jsonlite::fromJSON(res$content,
+                                    simplifyVector = TRUE,
+                                    simplifyDataFrame = FALSE,
+                                    simplifyMatrix = FALSE)
 
   if (res$status_code != 200)
-    stop(paste(content$code, content$description), call. = FALSE)
+    stop(paste(res$content$code, res$content$description), call. = FALSE)
 
-  return(content)
+  return(res)
 }

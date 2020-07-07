@@ -108,6 +108,8 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
     params[["datetime"]] <- datetime
 
   # TODO check valid bbox
+  # TODO Only one of either intersects or bbox should be specified. If both are
+  # specified, a 400 Bad Request response should be returned.
   if (!missing(bbox))
     params[["bbox"]] <- bbox
 
@@ -116,7 +118,7 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
     if(.method == "post")
       params[["intersects"]] <- intersects
     else{
-      warning("param not ...")
+      warning("param `intersects` not valid for get request")
     }
 
   if (!missing(...))
@@ -129,16 +131,24 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
     params["next"] <- .next
 
   # TODO check valid stac response
-  res <- .stac_get(url = url,
+  res <- .stac_request(url = url,
                    endpoint = "/stac/search",
                    params = params,
-                   headers = .headers)
+                   headers = .headers,
+                   method =  .method )
   if (is.null(res))
     return(invisible(NULL))
 
-
+  if(.method == "get"){
+    if (res$status_code != 200)
+      stop(paste(res$content$code, res$content$description), call. = FALSE)
+  } else {
+    # TODO: vertify return
+    stop(paste(res$content$code, res$content$description), call. = FALSE)
+  }
 
   return(res)
 }
 
 
+b <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
