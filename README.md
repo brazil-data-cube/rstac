@@ -1,5 +1,5 @@
-# Rstac <img src="img/logo.png" align="right" width="120" />
-R Client Library for SpatioTemporal Asset Catalog (Rstac)
+# rstac <img src="img/logo.png" align="right" width="120" />
+R Client Library for SpatioTemporal Asset Catalog (rstac)
 
 [![Travis build status](https://travis-ci.com/OldLipe/stac.R.svg?branch=master)](https://travis-ci.com/OldLipe/stac.R) [![Build status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/stac-r) [![codecov](https://codecov.io/gh/OldLipe/stac.R/branch/master/graph/badge.svg)](https://codecov.io/gh/OldLipe/stac.R)
 
@@ -11,7 +11,7 @@ As STAC spec is evolving fast and reaching its maturity, we plan update `Rstac` 
 
 ## installation
 
-To install `Rstac` for R, run the following commands 
+To install `rstac` for R, run the following commands 
 
 ```R
 library(devtools)
@@ -23,7 +23,7 @@ install_github("brazil-data-cube/stac.R")
 In this version, we only implemented STAC endpoints (`'/stac'` and `'/stac/search'`) functions.
 
 ```R
-library(stac)
+library(rstac)
 
 stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
 stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
