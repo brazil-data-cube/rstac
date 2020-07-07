@@ -1,2 +1,5 @@
 ^stac\.Rproj$
 ^\.Rproj\.user$
+^codecov\.yml$
+^appveyor\.yml$
+^\.travis\.yml$
