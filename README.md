@@ -1,17 +1,17 @@
-# stac.R
-R Client Library for SpatioTemporal Asset Catalog (STAC)
+# Rstac
+R Client Library for SpatioTemporal Asset Catalog (Rstac)
 
 [![Travis build status](https://travis-ci.com/OldLipe/stac.R.svg?branch=teste_novo_modelo)](https://travis-ci.com/OldLipe/stac.R) [![Build status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/stac-r) [![codecov](https://codecov.io/gh/OldLipe/stac.R/branch/master/graph/badge.svg)](https://codecov.io/gh/OldLipe/stac.R)
 
 STAC is a specification of files and web services used to describe geospatial information assets.
 The specification can be consulted in [https://stacspec.org/].
 
-STAC client for R (`stac`) was designed to fully support STAC v0.8.0. 
-As STAC spec is evolving fast and reaching its maturity, we plan update `stac` to support upcoming STAC 1.0.0 version.
+R client library for STAC (`Rstac`) was designed to fully support STAC v0.8.0. 
+As STAC spec is evolving fast and reaching its maturity, we plan update `Rstac` to support upcoming STAC 1.0.0 version soon.
 
 ## installation
 
-To install `stac` for R, the following commands 
+To install `Rstac` for R, run the following commands 
 
 ```R
 library(devtools)

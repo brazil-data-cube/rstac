@@ -21,7 +21,7 @@ STAC web service.}
 \item{params}{A \code{list} ...}
 }
 \value{
-A url ...
+A res ...
 }
 \description{
 This function

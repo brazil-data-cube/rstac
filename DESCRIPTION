@@ -1,14 +1,17 @@
-Package: stac
-Title: SpatioTemporal Asset Catalog API Client (STAC client)
+Package: rstac
+Title: R client library for SpatioTemporal Asset Catalog (rstac)
 Version: 0.1.0
 Authors@R: 
-    person("Rolf", "Simoes", email = "rolfsimoes@inpe.br",
-           role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0003-0953-4132"))
-Description: STAC client is a R package that interfaces STAC API endpoints.
+    c(person("Rolf", "Simoes", email = "rolfsimoes@inpe.br",
+             role = c("aut", "cre"),
+             comment = c(ORCID = "0000-0003-0953-4132")),
+      person("Felipe", "Souza", email = "",
+             role = c("aut")))
+Description: R client library for STAC is a R package that interfaces STAC API 
+    endpoints.
     For more information about the STAC specification, please consult the
     specification page (http://stacspec.org).
-    This package supports the version 0.8.0 of the OpenAPI specification
+    This package supports the version 0.8.0 of the STAC specification
     (https://github.com/radiantearth/stac-spec/blob/v0.8.0/api-spec/STAC.yaml).
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -19,4 +22,5 @@ Depends:
     curl
 Suggests: 
     testthat,
-    covr
+    covr,
+    vcr
