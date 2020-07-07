@@ -1,4 +1,4 @@
 library(testthat)
-library(stac)
+library(rstac)
 
-test_check("stac")
+test_check("rstac")
