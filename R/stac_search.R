@@ -107,7 +107,8 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
 
   # TODO check valid datetime & interval
   if (!missing(datetime))
-    params[["datetime"]] <- datetime
+    .verify_datetime <- function(datetime)
+    params[["da'tetime"]] <- datetime
 
   # TODO check valid bbox
   # TODO Only one of either intersects or bbox should be specified. If both are

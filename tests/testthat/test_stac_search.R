@@ -16,6 +16,8 @@ testthat::test_that("stack get response", {
   testthat::expect_equal(res_stac$status_code, 200)
 
   # TODO: wrong date time interval
+  res_stac_w <- stac::stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+                          datetime = "2018-02-12T23:20:50Z")
 
   # TODO: provided bbox and intersects in the same query
 
