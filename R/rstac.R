@@ -22,6 +22,7 @@
 #'
 #' @section Data access and organization functions:
 #' \itemize{
+#'   \item \code{\link{stac_request}}: makes HTTP requests to STAC web service.
 #'   \item \code{items_matched}: returns how many items matched the
 #'     search criteria.
 #'   \item \code{items_length}: informs how many items are

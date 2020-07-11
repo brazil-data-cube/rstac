@@ -10,8 +10,7 @@ R client library for STAC is a R package that interfaces STAC API
     endpoints.
     For more information about the STAC specification, please consult the
     specification page (http://stacspec.org).
-    This package supports the version 0.8.0 of the STAC specification
-    (https://github.com/radiantearth/stac-spec/blob/v0.8.0/api-spec/STAC.yaml).
+    This package supports the version 0.8.0 of the STAC specification.
 }
 \section{The \code{rstac} functions}{
 
@@ -40,6 +39,7 @@ access (e.g. assets) and metadata organization.
 \section{Data access and organization functions}{
 
 \itemize{
+  \item \code{\link{stac_request}}: makes HTTP requests to STAC web service.
   \item \code{items_matched}: returns how many items matched the
     search criteria.
   \item \code{items_length}: informs how many items are
@@ -58,10 +58,11 @@ the corresponding JSON STAC objects.
 }
 
 \author{
-\strong{Maintainer}: Rolf Simoes \email{rolfsimoes@inpe.br} (\href{https://orcid.org/0000-0003-0953-4132}{ORCID})
+\strong{Maintainer}: Brazil Data Cube Project \email{brazildatacube@dpi.inpe.br} [copyright holder]
 
 Authors:
 \itemize{
+  \item Rolf Simoes \email{rolf.simoes@inpe.br} (\href{https://orcid.org/0000-0003-0953-4132}{ORCID})
   \item Felipe Souza
 }
 
