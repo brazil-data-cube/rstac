@@ -7,14 +7,14 @@
 \alias{.make_url}
 \title{HTTP request}
 \usage{
-.get_request(stac, headers = list())
+.get_request(s, headers = list())
 
-.post_request(stac, headers = list())
+.post_request(s, headers = list())
 
 .make_url(url, endpoint = "", params = list())
 }
 \arguments{
-\item{stac}{A \code{stac} object expressing a STAC search criteria.}
+\item{s}{A \code{stac} object expressing a STAC search criteria.}
 
 \item{headers}{A named \code{list} informing HTTP request headers to be
 passed to \code{curl} package request functions.}

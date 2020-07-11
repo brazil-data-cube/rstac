@@ -17,7 +17,7 @@
 #' Calling rountines must parse this object to further return the result to
 #' the user or raise error depending on the response content.
 #'
-#' @param stac     A \code{stac} object expressing a STAC search criteria.
+#' @param s        A \code{stac} object expressing a STAC search criteria.
 #'
 #' @param headers  A named \code{list} informing HTTP request headers to be
 #' passed to \code{curl} package request functions.
@@ -26,12 +26,12 @@
 #' A regular \code{list} object containing all HTTP parsed responses
 #' returned by \code{curl} package.
 #'
-.get_request <- function(stac, headers = list()) {
+.get_request <- function(s, headers = list()) {
 
-  if (!inherits(stac, "stac"))
-    stop(sprintf("Invalid stac object."), call. = FALSE)
+  if (!inherits(s, "stac"))
+    stop(sprintf("Invalid `stac` object."), call. = FALSE)
 
-  url <- .make_url(url = stac$url, endpoint = stac$endpoint, params = stac$params)
+  url <- .make_url(url = s$url, endpoint = s$endpoint, params = s$params)
 
   tryCatch({
     h <- curl::new_handle()
@@ -69,12 +69,12 @@
 #' @description \code{.post_request} is a function that generates HTTP POST
 #' requests. The object returned includes the same field of \code{.get_request}.
 #'
-.post_request <- function(stac, headers = list()) {
+.post_request <- function(s, headers = list()) {
 
-  if (!inherits(stac, "stac"))
-    stop(sprintf("Invalid stac object."), call. = FALSE)
+  if (!inherits(s, "stac"))
+    stop(sprintf("Invalid `stac` object."), call. = FALSE)
 
-  url <- .make_url(url = stac$url, endpoint = stac$endpoint)
+  url <- .make_url(url = s$url, endpoint = s$endpoint)
 
   tryCatch({
     h <- curl::new_handle()
@@ -87,7 +87,7 @@
       "User-Agent" = stac_user_agent),
       headers))
 
-    curl::handle_setform(h, .list  = stac$params)
+    curl::handle_setform(h, .list  = s$params)
 
     res <- curl::curl_fetch_memory(url = url, handle = h)
   },

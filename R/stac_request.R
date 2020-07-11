@@ -2,34 +2,46 @@
 #'
 #' @author Rolf Simoes
 #'
-#' @description This function implements \code{/stac} API
-#' endpoint (v0.8.0). It retrieves the root STAC Catalog or STAC Collection
-#' that is the entry point to access any data published in a STAC web service.
+#' @description The \code{stac_request} is function that makes HTTP
+#' requests to STAC web services, retrieves, and parse the data.
 #'
-#' @param stac       A \code{stac} object expressing a STAC search criteria.
+#' @param stac       A \code{stac} object expressing a STAC search criteria or
+#' any \code{stac_*} object.
 #'
 #' @param method     A \code{character} value informing the HTTP method to be
 #' used for this request. Accepted methods are \code{'get'} or \code{'post'}.
+#' Only used if no HTTP \code{method} is defined in \code{stac} object
+#' parameter.
 #'
-#' @param .headers   A \code{list} of named arguments to be passed as
-#' http request headers.
+#' @param headers    A \code{list} of named arguments to be passed as
+#' http request headers. This is used in \emph{addition} to eventual headers
+#' defined in \code{stac} object parameter.
 #'
 #' @seealso
-#' \code{\link{stac}}, \code{\link{stac_search}},
-#' \code{\link{stac_collections}}, and \code{\link{stac_items}}
+#' \code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
+#' \code{\link{stac_items}}
 #'
-#' @return A \code{stac_catalog} object representing STAC Catalog definition.
+#' @return
+#' Either a \code{stac_collection} or a \code{stac_items} object
+#' depending of the \code{stac} parameter details.
 #'
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'     stac_request()
 #' }
 #'
 #' @export
-stac_request <- function(stac, method = c("get", "post"), .headers = list()) {
+stac_request <- function(stac, method = c("get", "post"), headers = list()) {
+
+  if (!inherits(stac, c("stac", "stac_collection", "stac_items")))
+    stop(sprintf("Invalid `stac` parameter value."), call. = FALSE)
 
   method <- method[[1]]
+  if (!is.null(.stac_method(stac)))
+    method <- .stac_method(stac)
+
   if (!method %in% c("get", "post"))
     stop(sprintf("Invalid request method '%s'.", method), call. = FALSE)
 
@@ -37,7 +49,7 @@ stac_request <- function(stac, method = c("get", "post"), .headers = list()) {
   if (method == "get") {
 
     # TODO: validate stac response
-    res <- .get_request(stac, headers = .headers)
+    res <- .get_request(stac, headers = headers)
 
     # TODO: check responses for method and content-type according to
     # STAC spec v0.8.0. Maybe we need to create a function like
@@ -52,4 +64,16 @@ stac_request <- function(stac, method = c("get", "post"), .headers = list()) {
   }
 
   return(content)
+}
+
+
+.stac_method <- function(stac) {
+
+  if (inherits(stac, "stac"))
+    return(stac$method[[1]])
+
+  if (inherits(stac, c("stac_collection", "stac_items")))
+    return(attr(stac, "stac")$method[[1]])
+
+  stop(sprintf("Invalid `stac` parameter value."))
 }
