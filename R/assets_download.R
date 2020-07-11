@@ -1,7 +1,5 @@
 #' @title stac download
 #'
-#' @name stac_download ...
-#'
 #' @author ...
 #'
 #' @description baixar as imagens que vem do res e organizar em repo
@@ -10,7 +8,7 @@
 #' @param output_dir ...
 #'
 #' @export
-stac_download <- function(res, output_dir){
+assets_download <- function(res, output_dir){
 
 
 
