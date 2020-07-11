@@ -89,7 +89,6 @@
 #'             collections = "MOD13Q1",
 #'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
 #'     stac_request()
-#'
 #' }
 #'
 #' @export
