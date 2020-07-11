@@ -90,9 +90,6 @@
 #'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
 #'     stac_request()
 #'
-#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'     stac_request()
-#'
 #' }
 #'
 #' @export
