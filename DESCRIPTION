@@ -21,6 +21,7 @@ Depends:
     jsonlite,
     curl
 Suggests: 
-    testthat,
     covr,
+    magrittr,
+    testthat,
     vcr
