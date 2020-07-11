@@ -40,9 +40,9 @@ access (e.g. assets) and metadata organization.
 
 \itemize{
   \item \code{\link{stac_request}}: makes HTTP requests to STAC web service.
-  \item \code{items_matched}: returns how many items matched the
+  \item \code{\link{items_matched}}: returns how many items matched the
     search criteria.
-  \item \code{items_length}: informs how many items are
+  \item \code{\link{items_length}}: informs how many items are
     stored locally.
   \item \code{items_fetch}: fetches all matched items from service.
   \item \code{items_group}: group items by some property field.
