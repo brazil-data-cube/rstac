@@ -2,11 +2,12 @@ Package: rstac
 Title: R client library for SpatioTemporal Asset Catalog (rstac)
 Version: 0.1.1
 Authors@R: 
-    c(person("Rolf", "Simoes", email = "rolfsimoes@inpe.br",
-             role = c("aut", "cre"),
+    c(person("Brazil Data Cube Project", email = "brazildatacube@dpi.inpe.br", 
+             role = c("cph", "cre")),
+      person("Rolf", "Simoes", email = "rolf.simoes@inpe.br",
+             role = c("aut"),
              comment = c(ORCID = "0000-0003-0953-4132")),
-      person("Felipe", "Souza", email = "",
-             role = c("aut")))
+      person("Felipe", "Souza", email = "", role = c("aut")))
 Description: 
     R client library for STAC is a R package that interfaces STAC API 
     endpoints.
