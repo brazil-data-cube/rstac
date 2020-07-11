@@ -4,35 +4,40 @@
 \alias{stac_request}
 \title{STAC functions}
 \usage{
-stac_request(stac, method = c("get", "post"), .headers = list())
+stac_request(stac, method = c("get", "post"), headers = list())
 }
 \arguments{
-\item{stac}{A \code{stac} object expressing a STAC search criteria.}
+\item{stac}{A \code{stac} object expressing a STAC search criteria or
+any \code{stac_*} object.}
 
 \item{method}{A \code{character} value informing the HTTP method to be
-used for this request. Accepted methods are \code{'get'} or \code{'post'}.}
+used for this request. Accepted methods are \code{'get'} or \code{'post'}.
+Only used if no HTTP \code{method} is defined in \code{stac} object
+parameter.}
 
-\item{.headers}{A \code{list} of named arguments to be passed as
-http request headers.}
+\item{headers}{A \code{list} of named arguments to be passed as
+http request headers. This is used in \emph{addition} to eventual headers
+defined in \code{stac} object parameter.}
 }
 \value{
-A \code{stac_catalog} object representing STAC Catalog definition.
+Either a \code{stac_collection} or a \code{stac_items} object
+depending of the \code{stac} parameter details.
 }
 \description{
-This function implements \code{/stac} API
-endpoint (v0.8.0). It retrieves the root STAC Catalog or STAC Collection
-that is the entry point to access any data published in a STAC web service.
+The \code{stac_request} is function that makes HTTP
+requests to STAC web services, retrieves, and parse the data.
 }
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
+    stac_request()
 }
 
 }
 \seealso{
-\code{\link{stac}}, \code{\link{stac_search}},
-\code{\link{stac_collections}}, and \code{\link{stac_items}}
+\code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
+\code{\link{stac_items}}
 }
 \author{
 Rolf Simoes

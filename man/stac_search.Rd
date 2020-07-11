@@ -70,7 +70,8 @@ provided to \code{stac_request}.
 }
 \description{
 (This document is based on STAC specification documentation
-\url{https://stacspec.org/} and reproduces some of its parts)
+\url{https://github.com/radiantearth/stac-spec/blob/v0.8.0/api-spec/STAC.yaml}
+and reproduces some of its parts)
 
 The \code{stac_search} function implements \code{/stac/search} API
 endpoint (v0.8.0). It prepares query parameters used in search API request,
@@ -91,10 +92,6 @@ stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
             collections = "MOD13Q1",
             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
     stac_request()
-
-stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-    stac_request()
-
 }
 
 }
