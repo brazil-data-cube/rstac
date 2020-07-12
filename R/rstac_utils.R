@@ -61,7 +61,7 @@
              stop(paste0("The closed date time provided is not in correct interval,
                   the first date time shold be less than second."), call. = F))
     }
-    # Checks if date time is a fixed interval
+    # Check if date time is a fixed interval
     else{
       if(!all(.check_rfc(split_datetime)) || length(split_datetime) != 1)
         stop(paste0("The date time provided not follow the RFC 3339 format,

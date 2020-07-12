@@ -3,13 +3,8 @@
 \docType{package}
 \name{rstac}
 \alias{rstac}
-<<<<<<< HEAD
-\alias{_PACKAGE}
-\title{rstac: R client library for SpatioTemporal Asset Catalog (rstac)}
-=======
 \alias{rstac-package}
 \title{R client library for STAC (rstac)}
->>>>>>> 001188094893634cb714fe7ab83dea2c6e2ecf7a
 \description{
 R client library for STAC is a R package that interfaces STAC API 
     endpoints.
@@ -68,11 +63,6 @@ the corresponding JSON STAC objects.
 Authors:
 \itemize{
   \item Rolf Simoes \email{rolf.simoes@inpe.br} (\href{https://orcid.org/0000-0003-0953-4132}{ORCID})
-  \item Felipe Souza
-}
-
-Authors:
-\itemize{
   \item Felipe Souza
 }
 

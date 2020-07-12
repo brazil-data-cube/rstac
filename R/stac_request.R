@@ -66,7 +66,17 @@ stac_request <- function(stac, method = c("get", "post"), headers = list()) {
   return(content)
 }
 
-
+#' @title stac method
+#'
+#' @author Rolf Simoes
+#'
+#' @description checks if the \code{stac} object inherits the \code{stac} class
+#'
+#' @param stac A \code{stac} object expressing a STAC search criteria or
+#' any \code{stac_*} object.
+#'
+#' @return An error if the given object does not belong to a \code{stac} class,
+#' otherwise the http request method is added to the attributes.
 .stac_method <- function(stac) {
 
   if (inherits(stac, "stac"))
