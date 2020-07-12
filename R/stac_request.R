@@ -1,60 +1,79 @@
-#' @title make url
+#' @title STAC functions
 #'
 #' @author Rolf Simoes
 #'
-#' @description This function
+#' @description The \code{stac_request} is function that makes HTTP
+#' requests to STAC web services, retrieves, and parse the data.
 #'
-#' @param url      A \code{character} informing the base url of a
-#' STAC web service.
+#' @param stac       A \code{stac} object expressing a STAC search criteria or
+#' any \code{stac_*} object.
 #'
-#' @param endpoint A \code{character} ..
+#' @param method     A \code{character} value informing the HTTP method to be
+#' used for this request. Accepted methods are \code{'get'} or \code{'post'}.
+#' Only used if no HTTP \code{method} is defined in \code{stac} object
+#' parameter.
 #'
-#' @param params A \code{list} ...
+#' @param headers    A \code{list} of named arguments to be passed as
+#' http request headers. This is used in \emph{addition} to eventual headers
+#' defined in \code{stac} object parameter.
 #'
-#' @param headers A \code{list} ...
+#' @seealso
+#' \code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
+#' \code{\link{stac_items}}
 #'
-#' @param method A \code{character} ...
+#' @return
+#' Either a \code{stac_collection} or a \code{stac_items} object
+#' depending of the \code{stac} parameter details.
 #'
-#' @return A res ...
-.stac_request <- function(url, endpoint = "/stac", params = list(), headers = list(),
-                        method = "get") {
-  #browser()
+#' @examples
+#' \dontrun{
+#'
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'     stac_request()
+#' }
+#'
+#' @export
+stac_request <- function(stac, method = c("get", "post"), headers = list()) {
 
-  ifelse(method == "get",
-         url <- .make_url(url = url, endpoint = endpoint, params = params),
-         url <- .make_url(url = url, endpoint = endpoint))
+  if (!inherits(stac, c("stac", "stac_collection", "stac_items")))
+    stop(sprintf("Invalid `stac` parameter value."), call. = FALSE)
 
+  method <- method[[1]]
+  if (!is.null(.stac_method(stac)))
+    method <- .stac_method(stac)
 
-  if (stac_dryrun()) {
-    message(url)
-    return(invisible(NULL))
+  if (!method %in% c("get", "post"))
+    stop(sprintf("Invalid request method '%s'.", method), call. = FALSE)
+
+  # TODO: implement POST request support
+  if (method == "get") {
+
+    # TODO: validate stac response
+    res <- .get_request(stac, headers = headers)
+
+    # TODO: check responses for method and content-type according to
+    # STAC spec v0.8.0. Maybe we need to create a function like
+    # .check_get_resquest() <<-- inspired by MVC
+    if (res$status_code != 200)
+      stop(sprintf("Error %s %s", res$content$code, res$content$description),
+           call. = FALSE)
+
+    content <- structure(res$content,
+                         stac = stac,
+                         class = c("stac_items"))
   }
 
-  tryCatch({
-    h <- curl::new_handle()
-    curl::handle_setheaders(h, .list = headers)
-    if(method == "post"){
-      curl::handle_setform(h, .list  = params)
-    }
-    res <- curl::curl_fetch_memory(url = url, handle = h)
-  },
-  error = function(e) {
+  return(content)
+}
 
-    stop(paste("Request error.", e$message), call. = FALSE)
-  })
 
-  res$content <- rawToChar(res$content)
+.stac_method <- function(stac) {
 
-  if (!jsonlite::validate(res$content))
-    stop("Invalid JSON response.", call. = FALSE)
+  if (inherits(stac, "stac"))
+    return(stac$method[[1]])
 
-  res$content <- jsonlite::fromJSON(res$content,
-                                    simplifyVector = TRUE,
-                                    simplifyDataFrame = FALSE,
-                                    simplifyMatrix = FALSE)
+  if (inherits(stac, c("stac_collection", "stac_items")))
+    return(attr(stac, "stac")$method[[1]])
 
-  if (res$status_code != 200)
-    stop(paste(res$content$code, res$content$description), call. = FALSE)
-
-  return(res)
+  stop(sprintf("Invalid `stac` parameter value."))
 }

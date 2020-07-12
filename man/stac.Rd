@@ -2,31 +2,36 @@
 % Please edit documentation in R/stac.R
 \name{stac}
 \alias{stac}
-\title{stac functions}
+\title{Endpoint functions}
 \usage{
-stac(url, .headers = list())
+stac(url)
 }
 \arguments{
 \item{url}{A \code{character} informing the base url of a
 STAC web service.}
-
-\item{.headers}{A \code{list} of named arguments to be passed as
-http request headers.}
 }
 \value{
-A STAC Catalog definition.
+A \code{stac} object containing all request parameters to be
+provided to \code{stac_request}.
 }
 \description{
 This function implements \code{/stac} API
-endpoint (v0.8.0). It retrieves the root STAC Catalog or STAC Collection
-that is the entry point to access any data published in STAC web service.
+endpoint (v0.8.0). It prepares query parameters to be provided to
+\code{stac_request} function.
+
+This endpoint should return a STAC Catalog containing all data Items
+searcheable in the API.
 }
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
+    stac_request()
 }
 
+}
+\seealso{
+\code{\link{stac_search}}, \code{\link{stac_request}}
 }
 \author{
 Rolf Simoes

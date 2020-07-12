@@ -1,4 +1,4 @@
-# rstac <img src="img/logo.png" align="right" width="120" />
+# rstac <img src="inst/extdata/img/logo.png" align="right" width="120" />
 R Client Library for SpatioTemporal Asset Catalog (rstac)
 
 [![Travis build status](https://travis-ci.com/OldLipe/stac.R.svg?branch=master)](https://travis-ci.com/OldLipe/stac.R) [![Build status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/stac-r) [![codecov](https://codecov.io/gh/OldLipe/stac.R/branch/master/graph/badge.svg)](https://codecov.io/gh/OldLipe/stac.R)
@@ -6,8 +6,8 @@ R Client Library for SpatioTemporal Asset Catalog (rstac)
 STAC is a specification of files and web services used to describe geospatial information assets.
 The specification can be consulted in [https://stacspec.org/].
 
-R client library for STAC (`Rstac`) was designed to fully support STAC v0.8.0. 
-As STAC spec is evolving fast and reaching its maturity, we plan update `Rstac` to support upcoming STAC 1.0.0 version soon.
+R client library for STAC (`rstac`) was designed to fully support STAC v0.8.0. 
+As STAC spec is evolving fast and reaching its maturity, we plan update `rstac` to support upcoming STAC 1.0.0 version soon.
 
 ## installation
 
@@ -20,13 +20,18 @@ install_github("brazil-data-cube/stac.R")
 
 ## usage
 
-In this version, we only implemented STAC endpoints (`'/stac'` and `'/stac/search'`) functions.
+In this version, we implemented STAC endpoints (`'/stac'`, `'/stac/search'`) as well as
+WFS3 endpoints (`'/collections'`, `'/collections/{collectionId}'`, 
+`'/collections/{collectionId}/items'`, and `'/collections/{collectionId}/items/{itemId}'`).
 
 ```R
 library(rstac)
+library(magrittr)
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+    stac_request()
 stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
             collections = "MOD13Q1",
-            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355))
+            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+    stac_request()
 ```
