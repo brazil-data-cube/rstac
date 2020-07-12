@@ -1,17 +1,22 @@
-
-
-#' @title stac functions
+#' @title Endpoint functions
 #'
 #' @author Rolf Simoes
 #'
-#' @description This function implements \code{/stac/search} API
-#' endpoint (v0.8.0). It retrieves items using search parameters criteria.
-#'
+#' @description
 #' (This document is based on STAC specification documentation
-#' \url{https://stacspec.org/})
+#' \url{https://github.com/radiantearth/stac-spec/blob/v0.8.0/api-spec/STAC.yaml}
+#' and reproduces some of its parts)
+#'
+#' The \code{stac_search} function implements \code{/stac/search} API
+#' endpoint (v0.8.0). It prepares query parameters used in search API request,
+#' a \code{stac} object with all filter parameters to be provided to
+#' \code{stac_request}. The GeoJSON content returned by the \code{stac_request}
+#' is a \code{stac_items} object, a regular R \code{list} representing
+#' a STAC ItemCollection.
 #'
 #' @param url         A \code{character} informing the base url of a
-#' STAC web service.
+#' STAC web service or any \code{stac} object containing \code{request}
+#' property.
 #'
 #' @param collections A \code{character} vector of collection IDs to include in
 #' the search for items. Only items in one of the provided collections will be
@@ -21,9 +26,11 @@
 #' parameters that futher restrict the number of search results
 #' (except \code{.next} and \code{.limit}) are ignored.
 #'
-#' @param datetime    Either a date-time or an interval, open or closed.
-#' Date and time expressions adhere to RFC 3339. Open intervals are
-#' expressed using double-dots.
+#' @param datetime    Either a date-time or an interval.
+#' Date and time strings needs to conform RFC 3339. Intervals are
+#' expressed by separating two date-time strings by \code{'/'} character.
+#' Open intervals are expressed by using \code{'..'} in place of date-time.
+#'
 #' Examples:
 #' \itemize{
 #'   \item A date-time: \code{"2018-02-12T23:20:50Z"}
@@ -32,14 +39,12 @@
 #'     \code{"../2018-03-18T12:31:12Z"}
 #' }
 #'
-#' Only features that have a temporal property that intersects the value of
-#' \code{datetime} are selected.
+#' Only features that have a \code{datetime} property that intersects
+#' the interval or date-time informed in \code{datetime} are selected.
 #'
-#' If a feature has multiple temporal properties, it is the decision of the
-#' server whether only a single temporal property is used to determine
-#' the extent or all relevant temporal properties.
-#'
-#' @param intersects An \code{Object} ...
+#' @note Param \code{intersects} is a \code{character} value expressing GeoJSON
+#' geometries objects as specified in RFC 7946. This param is not supported in
+#' current version.
 #'
 #' @param bbox        Only features that have a geometry that intersects the
 #' bounding box are selected. The bounding box is provided as four or six
@@ -55,19 +60,12 @@
 #' }
 #'
 #' The coordinate reference system of the values is WGS84
-#' longitude/latitude (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84})
-#' unless a different coordinate reference system is specified in the
-#' parameter \code{bbox-crs}.
-#'
-#' For WGS84 longitude/latitude the values are in most cases the sequence
-#' of minimum longitude, minimum latitude, maximum longitude and maximum
-#' latitude. However, in cases where the box spans the antimeridian the
-#' first value (west-most box edge) is larger than the third value
+#' longitude/latitude (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}).
+#' The values are in most cases the sequence of minimum longitude,
+#' minimum latitude, maximum longitude and maximum latitude. However,
+#' in cases where the box spans the antimeridian the first value
+#' (west-most box edge) is larger than the third value
 #' (east-most box edge).
-#'
-#' If a feature has multiple spatial geometry properties, it is the
-#' decision of the server whether only a single spatial geometry property
-#' is used to determine the extent or all relevant geometries.
 #'
 #' @param ...         Any additional non standard filter parameter.
 #'
@@ -77,25 +75,25 @@
 #' @param .next       An \code{integer} informing which set of results
 #' to return. Values less than 1 means all pages will be retrieved.
 #'
-#' @param .method A \code{character} ...
-#'
-#' @param .headers    A \code{list} of named arguments to be passed as
-#' http request headers.
+#' @seealso
+#' \code{\link{stac}}, \code{\link{stac_request}}
 #'
 #' @return
-#' A STAC item collection.
+#' A \code{stac} object containing all request parameters to be
+#' provided to \code{stac_request}.
 #'
 #' @examples
 #' \dontrun{
 #'
 #' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'      collections = "MOD13Q1",
-#'      bbox = c(-55.16335, -4.26325, -49.31739, -1.18355))
+#'             collections = "MOD13Q1",
+#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+#'     stac_request()
 #' }
 #'
 #' @export
-stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
-                        .limit = 10, .next = 1, .method = "get", .headers = list()) {
+stac_search <- function(url, collections, ids, bbox, datetime, ...,
+                        .limit = 10, .next = 1) {
 
   params <- list()
 
@@ -109,45 +107,31 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
   if (!missing(datetime))
     params[["datetime"]] <- datetime
 
-  # TODO check valid bbox
-  # TODO Only one of either intersects or bbox should be specified. If both are
-  # specified, a 400 Bad Request response should be returned.
-  if (!missing(bbox))
-    params[["bbox"]] <- bbox
+  if (!missing(bbox)) {
 
-  # TODO check valid intersects
-  if(!missing(intersects))
-    if(.method == "post")
-      params[["intersects"]] <- intersects
-    else{
-      warning("param `intersects` not valid for get request")
-    }
+    if (!length(bbox) %in% c(4, 6))
+      stop(sprintf("Param `bbox` must have 4 or 6 numbers, not %s.",
+                   length(bbox)))
+    params[["bbox"]] <- bbox
+  }
+
+  # TODO: implement intersects param
+  # if (!missing(intersects)) {
+  #
+  #   .method <- "post"
+  #   params[["intersects"]] <- intersects
+  # }
 
   if (!missing(...))
     params <- c(params, list(...))
 
-  if (!missing(.limit))
-    params["limit"] <- .limit
+  params["limit"] <- .limit
 
-  if (!missing(.next))
-    params["next"] <- .next
+  params["next"] <- .next
 
-  # TODO check valid stac response
-  res <- .stac_request(url = url,
-                   endpoint = "/stac/search",
-                   params = params,
-                   headers = .headers,
-                   method =  .method )
-  if (is.null(res))
-    return(invisible(NULL))
-
-  if(.method == "get"){
-    if (res$status_code != 200)
-      stop(paste(res$content$code, res$content$description), call. = FALSE)
-  } else {
-    # TODO: vertify return
-    stop(paste(res$content$code, res$content$description), call. = FALSE)
-  }
-
-  return(res)
+  content <- structure(list(url = url,
+                            endpoint = "/stac/search",
+                            params = params),
+                       class = c("stac"))
+  return(content)
 }

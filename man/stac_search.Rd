@@ -2,25 +2,14 @@
 % Please edit documentation in R/stac_search.R
 \name{stac_search}
 \alias{stac_search}
-\title{stac functions}
+\title{Endpoint functions}
 \usage{
-stac_search(
-  url,
-  collections,
-  ids,
-  bbox,
-  datetime,
-  intersects,
-  ...,
-  .limit = 10,
-  .next = 1,
-  .method = "get",
-  .headers = list()
-)
+stac_search(url, collections, ids, bbox, datetime, ..., .limit = 10, .next = 1)
 }
 \arguments{
 \item{url}{A \code{character} informing the base url of a
-STAC web service.}
+STAC web service or any \code{stac} object containing \code{request}
+property.}
 
 \item{collections}{A \code{character} vector of collection IDs to include in
 the search for items. Only items in one of the provided collections will be
@@ -44,23 +33,18 @@ vertical axis (elevation or depth):
 }
 
 The coordinate reference system of the values is WGS84
-longitude/latitude (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84})
-unless a different coordinate reference system is specified in the
-parameter \code{bbox-crs}.
+longitude/latitude (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}).
+The values are in most cases the sequence of minimum longitude,
+minimum latitude, maximum longitude and maximum latitude. However,
+in cases where the box spans the antimeridian the first value
+(west-most box edge) is larger than the third value
+(east-most box edge).}
 
-For WGS84 longitude/latitude the values are in most cases the sequence
-of minimum longitude, minimum latitude, maximum longitude and maximum
-latitude. However, in cases where the box spans the antimeridian the
-first value (west-most box edge) is larger than the third value
-(east-most box edge).
+\item{datetime}{Either a date-time or an interval.
+Date and time strings needs to conform RFC 3339. Intervals are
+expressed by separating two date-time strings by \code{'/'} character.
+Open intervals are expressed by using \code{'..'} in place of date-time.
 
-If a feature has multiple spatial geometry properties, it is the
-decision of the server whether only a single spatial geometry property
-is used to determine the extent or all relevant geometries.}
-
-\item{datetime}{Either a date-time or an interval, open or closed.
-Date and time expressions adhere to RFC 3339. Open intervals are
-expressed using double-dots.
 Examples:
 \itemize{
   \item A date-time: \code{"2018-02-12T23:20:50Z"}
@@ -69,14 +53,8 @@ Examples:
     \code{"../2018-03-18T12:31:12Z"}
 }
 
-Only features that have a temporal property that intersects the value of
-\code{datetime} are selected.
-
-If a feature has multiple temporal properties, it is the decision of the
-server whether only a single temporal property is used to determine
-the extent or all relevant temporal properties.}
-
-\item{intersects}{An \code{Object} ...}
+Only features that have a \code{datetime} property that intersects
+the interval or date-time informed in \code{datetime} are selected.}
 
 \item{...}{Any additional non standard filter parameter.}
 
@@ -85,30 +63,40 @@ to return. Defaults to 10.}
 
 \item{.next}{An \code{integer} informing which set of results
 to return. Values less than 1 means all pages will be retrieved.}
-
-\item{.method}{A \code{character} ...}
-
-\item{.headers}{A \code{list} of named arguments to be passed as
-http request headers.}
 }
 \value{
-A STAC item collection.
+A \code{stac} object containing all request parameters to be
+provided to \code{stac_request}.
 }
 \description{
-This function implements \code{/stac/search} API
-endpoint (v0.8.0). It retrieves items using search parameters criteria.
-
 (This document is based on STAC specification documentation
-\url{https://stacspec.org/})
+\url{https://github.com/radiantearth/stac-spec/blob/v0.8.0/api-spec/STAC.yaml}
+and reproduces some of its parts)
+
+The \code{stac_search} function implements \code{/stac/search} API
+endpoint (v0.8.0). It prepares query parameters used in search API request,
+a \code{stac} object with all filter parameters to be provided to
+\code{stac_request}. The GeoJSON content returned by the \code{stac_request}
+is a \code{stac_items} object, a regular R \code{list} representing
+a STAC ItemCollection.
+}
+\note{
+Param \code{intersects} is a \code{character} value expressing GeoJSON
+geometries objects as specified in RFC 7946. This param is not supported in
+current version.
 }
 \examples{
 \dontrun{
 
 stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-     collections = "MOD13Q1",
-     bbox = c(-55.16335, -4.26325, -49.31739, -1.18355))
+            collections = "MOD13Q1",
+            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+    stac_request()
 }
 
+}
+\seealso{
+\code{\link{stac}}, \code{\link{stac_request}}
 }
 \author{
 Rolf Simoes
