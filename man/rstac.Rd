@@ -4,11 +4,16 @@
 \name{rstac}
 \alias{rstac}
 \alias{_PACKAGE}
-\title{stac: SpatioTemporal Asset Catalog API Client (STAC client)}
+\title{rstac: R client library for SpatioTemporal Asset Catalog (rstac)}
 \description{
 ...
 }
 \author{
 \strong{Maintainer}: Rolf Simoes \email{rolfsimoes@inpe.br} (\href{https://orcid.org/0000-0003-0953-4132}{ORCID})
+
+Authors:
+\itemize{
+  \item Felipe Souza
+}
 
 }
