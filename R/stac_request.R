@@ -76,4 +76,3 @@ stac_request <- function(s, method = c("get", "post"),
 
   return(content)
 }
-
