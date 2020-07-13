@@ -128,10 +128,23 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
   params["limit"] <- .limit
 
   params["next"] <- .next
+  # TODO: follow specification strictly
+  expected <- list("get" =
+                     list(responses =
+                            list("200" =
+                                   list("application/geo+json" = "stac_items",
+                                        "application/json" = "stac_items"))),
+                   "post" =
+                     list(enctypes = c("application/json"),
+                          responses =
+                            list("200" =
+                                   list("application/geo+json" = "stac_items",
+                                        "application/json" = "stac_items"))))
 
   content <- structure(list(url = url,
                             endpoint = "/stac/search",
-                            params = params),
-                       class = c("stac"))
+                            params = params,
+                            expected_responses = expected),
+                       class = "stac")
   return(content)
 }

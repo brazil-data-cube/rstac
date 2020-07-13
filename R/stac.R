@@ -34,10 +34,20 @@ stac <- function(url) {
   # STAC API (>=0.9.0): "/"
   # How to check STAC API version:
   # Maybe request endpoint "/", the landing page endpoint of WFS3.
+  expected <- list("get" =
+                     list(responses =
+                            list("200" =
+                                   list("application/json" = "stac_catalog"))),
+                   "post" =
+                     list(enctypes = c("application/json"),
+                          responses =
+                            list("200" =
+                                   list("application/json" = "stac_catalog"))))
+
   content <- structure(list(url = url,
                             endpoint = "/stac",
                             params = list(),
-                            method = "get"),
+                            expected_responses = expected),
                        class = "stac")
   return(content)
 }

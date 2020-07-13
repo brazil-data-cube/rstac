@@ -9,7 +9,7 @@
 \usage{
 .get_request(s, headers = list())
 
-.post_request(s, headers = list())
+.post_request(s, enctype, headers = list())
 
 .make_url(url, endpoint = "", params = list())
 }
@@ -18,6 +18,11 @@
 
 \item{headers}{A named \code{list} informing HTTP request headers to be
 passed to \code{curl} package request functions.}
+
+\item{enctype}{A \code{character} informing the request body Content-Type.
+Accepted types \code{'application/json'},
+\code{'application/x-www-form-urlencoded'}, and
+\code{'multipart/form-data'}}
 
 \item{url}{A \code{character} informing the base url of a
 STAC web service.}

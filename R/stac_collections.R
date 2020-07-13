@@ -41,13 +41,40 @@
 #' @export
 stac_collections <- function(url, collection_id) {
 
-  endpoint <- "/collections"
-  if (!missing(collection_id))
-    endpoint <- paste(endpoint, collection_id, sep = "/")
+  if (missing(collection_id)) {
+
+    endpoint <- "/collections"
+    expected <- list("get" =
+                       list(responses =
+                              list("200" =
+                                     list("application/json" = ""))),
+                     "post" =
+                       list(enctypes = c("application/x-www-form-urlencoded",
+                                         "multipart/form-data"),
+                            responses =
+                              list("200" =
+                                     list("application/json" = ""))))
+
+  } else {
+    endpoint <- paste("/collections", collection_id, sep = "/")
+    expected <- list("get" =
+                       list(responses =
+                              list("200" =
+                                     list("application/json" =
+                                            "stac_collection"))),
+                     "post" =
+                       list(enctypes = c("application/x-www-form-urlencoded",
+                                         "multipart/form-data"),
+                            responses =
+                              list("200" =
+                                     list("application/json" =
+                                            "stac_collection"))))
+  }
 
   content <- structure(list(url = url,
                             endpoint = endpoint,
-                            params = list()),
-                       class = c("stac"))
+                            params = list(),
+                            expected_responses = expected),
+                       class = "stac")
   return(content)
 }
