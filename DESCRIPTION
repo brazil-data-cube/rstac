@@ -1,6 +1,6 @@
 Package: rstac
 Title: R client library for SpatioTemporal Asset Catalog (rstac)
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     c(person("Brazil Data Cube Project", email = "brazildatacube@dpi.inpe.br", 
              role = c("cph", "cre")),
