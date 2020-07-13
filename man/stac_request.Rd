@@ -4,24 +4,33 @@
 \alias{stac_request}
 \title{STAC functions}
 \usage{
-stac_request(stac, method = c("get", "post"), headers = list())
+stac_request(
+  s,
+  method = c("get", "post"),
+  post_enctype = c("application/json", "application/x-www-form-urlencoded",
+    "multipart/form-data"),
+  headers = list()
+)
 }
 \arguments{
-\item{stac}{A \code{stac} object expressing a STAC search criteria or
-any \code{stac_*} object.}
+\item{s}{A \code{stac} object expressing a STAC search criteria
+provided by \code{stac}, \code{stac_search}, \code{stac_collections},
+or \code{stac_items} functions.}
 
 \item{method}{A \code{character} value informing the HTTP method to be
-used for this request. Accepted methods are \code{'get'} or \code{'post'}.
-Only used if no HTTP \code{method} is defined in \code{stac} object
-parameter.}
+used for this request. Accepted methods are \code{'get'} or \code{'post'}.}
+
+\item{post_enctype}{A \code{character} informing the request body
+Content-Type. Accepted types \code{'application/json'},
+\code{'application/x-www-form-urlencoded'}, and
+\code{'multipart/form-data'}}
 
 \item{headers}{A \code{list} of named arguments to be passed as
-http request headers. This is used in \emph{addition} to eventual headers
-defined in \code{stac} object parameter.}
+HTTP request headers.}
 }
 \value{
 Either a \code{stac_collection} or a \code{stac_items} object
-depending of the \code{stac} parameter details.
+depending of the \code{s} parameter.
 }
 \description{
 The \code{stac_request} is function that makes HTTP

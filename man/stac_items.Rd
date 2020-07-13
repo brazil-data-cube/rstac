@@ -4,7 +4,7 @@
 \alias{stac_items}
 \title{Endpoint functions}
 \usage{
-stac_items(url, collection_id, item_id, ..., .limit, .next)
+stac_items(url, collection_id, item_id, bbox, datetime, ..., .limit = 10)
 }
 \arguments{
 \item{url}{A \code{character} informing the base url of a
@@ -17,14 +17,48 @@ collection details.}
 Only works if the \code{collection_id} is informed. This is equivalent to
 the endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.}
 
+\item{bbox}{Only features that have a geometry that intersects the
+bounding box are selected. The bounding box is provided as four or six
+numbers, depending on whether the coordinate reference system includes a
+vertical axis (elevation or depth):
+\itemize{
+  \item Lower left corner, coordinate axis 1
+  \item Lower left corner, coordinate axis 2
+  \item Lower left corner, coordinate axis 3 (optional)
+  \item Upper right corner, coordinate axis 1
+  \item Upper right corner, coordinate axis 2
+  \item Upper right corner, coordinate axis 3 (optional)
+}
+
+The coordinate reference system of the values is WGS84
+longitude/latitude (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}).
+The values are in most cases the sequence of minimum longitude,
+minimum latitude, maximum longitude and maximum latitude. However,
+in cases where the box spans the antimeridian the first value
+(west-most box edge) is larger than the third value
+(east-most box edge).}
+
+\item{datetime}{Either a date-time or an interval.
+Date and time strings needs to conform RFC 3339. Intervals are
+expressed by separating two date-time strings by \code{'/'} character.
+Open intervals are expressed by using \code{'..'} in place of date-time.
+
+Examples:
+\itemize{
+  \item A date-time: \code{"2018-02-12T23:20:50Z"}
+  \item A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"}
+  \item Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
+    \code{"../2018-03-18T12:31:12Z"}
+}
+
+Only features that have a \code{datetime} property that intersects
+the interval or date-time informed in \code{datetime} are selected.}
+
 \item{...}{Filter parameters. Accept the same filter parameters
 of \code{\link{stac_search}} function.}
 
 \item{.limit}{An \code{integer} defining the maximum number of results
 to return. Defaults to 10.}
-
-\item{.next}{An \code{integer} informing which set of results
-to return. Values less than 1 means all pages will be retrieved.}
 }
 \value{
 A \code{stac} object containing all request parameters to be
@@ -46,6 +80,11 @@ Each endpoint retrieves specific STAC objects:
 
 The endpoint \code{/collections/\{collectionId\}/items} accepts the same
 filters parameters of \code{\link{stac_search}} function.
+}
+\note{
+Param \code{intersects} is a \code{character} value expressing GeoJSON
+geometries objects as specified in RFC 7946. This param is not supported in
+current version.
 }
 \examples{
 \dontrun{

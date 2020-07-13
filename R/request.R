@@ -35,11 +35,7 @@
 
   tryCatch({
     h <- curl::new_handle()
-    stac_user_agent <- sprintf("R STAC client (%s)",
-                               as.character(utils::packageVersion("rstac")))
-    curl::handle_setheaders(h, .list = c(list(
-      "User-Agent" = stac_user_agent),
-      headers))
+    curl::handle_setheaders(h, .list = headers)
 
     res <- curl::curl_fetch_memory(url = url, handle = h)
   },
@@ -60,35 +56,48 @@
                                     simplifyMatrix = FALSE)
 
   res$headers <- curl::parse_headers(res$headers)
+
+  res$method <- "get"
 
   return(res)
 }
 
 #' @rdname http_request
 #'
+#' @param enctype   A \code{character} informing the request body Content-Type.
+#' Accepted types \code{'application/json'},
+#' \code{'application/x-www-form-urlencoded'}, and
+#' \code{'multipart/form-data'}
+#'
 #' @description \code{.post_request} is a function that generates HTTP POST
 #' requests. The object returned includes the same field of \code{.get_request}.
 #'
-.post_request <- function(s, headers = list()) {
+.post_request <- function(s, enctype, headers = list()) {
 
   if (!inherits(s, "stac"))
     stop(sprintf("Invalid `stac` object."), call. = FALSE)
 
+  h <- curl::new_handle()
+  curl::handle_setheaders(h, .list = headers)
+
+  enctype <- enctype[[1]]
+  if (enctype == "application/json") {
+
+    curl::handle_setheaders(h, "Content-Type" = enctype)
+    curl::handle_setopt(h, copypostfields =
+                          jsonlite::toJSON(s$params, auto_unbox = TRUE))
+  } else if (enctype == "application/x-www-form-urlencoded") {
+
+    curl::handle_setheaders(h, "Content-Type" = enctype)
+    curl::handle_setopt(h, copypostfields = .query_encode(s$params))
+  } else if (enctype == "multipart/form-data") {
+
+    curl::handle_setform(h, .list  = lapply(s$params, .query_encode))
+  }
+
   url <- .make_url(url = s$url, endpoint = s$endpoint)
 
   tryCatch({
-    h <- curl::new_handle()
-    stac_user_agent <- sprintf("STAC client for R (%s)",
-                               as.character(utils::packageVersion("rstac")))
-
-    # TODO: provide Content-Type as a function parameter
-    curl::handle_setheaders(h, .list = c(list(
-      "Content-Type" = "application/json",
-      "User-Agent" = stac_user_agent),
-      headers))
-
-    curl::handle_setform(h, .list  = s$params)
-
     res <- curl::curl_fetch_memory(url = url, handle = h)
   },
   error = function(e) {
@@ -108,6 +117,8 @@
                                     simplifyMatrix = FALSE)
 
   res$headers <- curl::parse_headers(res$headers)
+
+  res$method <- "post"
 
   return(res)
 }
@@ -150,12 +161,19 @@
 
     if (is.null(names(params)))
       stop("URL query values must be named.", call. = FALSE)
-    params <- paste(names(params),
-                    sapply(unname(params), paste0, collapse = ","),
-                    sep = "=", collapse = "&")
+    params <- .query_encode(params)
     res <- paste(res, params, sep = "?")
   }
 
   return(res)
 }
 
+
+.query_encode <- function(params) {
+
+  if (!is.null(names(params)))
+    return(paste(names(params),
+                 sapply(unname(params), paste0, collapse = ","),
+                 sep = "=", collapse = "&"))
+  return(paste0(params, collapse = ","))
+}

@@ -30,14 +30,52 @@
 #' Only works if the \code{collection_id} is informed. This is equivalent to
 #' the endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.
 #'
+#' @param datetime    Either a date-time or an interval.
+#' Date and time strings needs to conform RFC 3339. Intervals are
+#' expressed by separating two date-time strings by \code{'/'} character.
+#' Open intervals are expressed by using \code{'..'} in place of date-time.
+#'
+#' Examples:
+#' \itemize{
+#'   \item A date-time: \code{"2018-02-12T23:20:50Z"}
+#'   \item A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"}
+#'   \item Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
+#'     \code{"../2018-03-18T12:31:12Z"}
+#' }
+#'
+#' Only features that have a \code{datetime} property that intersects
+#' the interval or date-time informed in \code{datetime} are selected.
+#'
+#' @note Param \code{intersects} is a \code{character} value expressing GeoJSON
+#' geometries objects as specified in RFC 7946. This param is not supported in
+#' current version.
+#'
+#' @param bbox        Only features that have a geometry that intersects the
+#' bounding box are selected. The bounding box is provided as four or six
+#' numbers, depending on whether the coordinate reference system includes a
+#' vertical axis (elevation or depth):
+#' \itemize{
+#'   \item Lower left corner, coordinate axis 1
+#'   \item Lower left corner, coordinate axis 2
+#'   \item Lower left corner, coordinate axis 3 (optional)
+#'   \item Upper right corner, coordinate axis 1
+#'   \item Upper right corner, coordinate axis 2
+#'   \item Upper right corner, coordinate axis 3 (optional)
+#' }
+#'
+#' The coordinate reference system of the values is WGS84
+#' longitude/latitude (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}).
+#' The values are in most cases the sequence of minimum longitude,
+#' minimum latitude, maximum longitude and maximum latitude. However,
+#' in cases where the box spans the antimeridian the first value
+#' (west-most box edge) is larger than the third value
+#' (east-most box edge).
+#'
 #' @param ...       Filter parameters. Accept the same filter parameters
 #' of \code{\link{stac_search}} function.
 #'
 #' @param .limit    An \code{integer} defining the maximum number of results
 #' to return. Defaults to 10.
-#'
-#' @param .next     An \code{integer} informing which set of results
-#' to return. Values less than 1 means all pages will be retrieved.
 #'
 #' @seealso
 #' \code{\link{stac_request}}, \code{\link{stac_collections}}
@@ -60,7 +98,8 @@
 #' }
 #'
 #' @export
-stac_items <- function(url, collection_id, item_id, ..., .limit, .next) {
+stac_items <- function(url, collection_id, item_id, bbox, datetime, ...,
+                       .limit = 10) {
 
   params <- list()
 
@@ -69,17 +108,47 @@ stac_items <- function(url, collection_id, item_id, ..., .limit, .next) {
 
   params["limit"] <- .limit
 
-  params["next"] <- .next
+  if (missing(item_id)) {
 
-  endpoint <- paste("/collections", collection_id, "items", sep = "/")
-  if (!missing(item_id)) {
-    endpoint <- paste(endpoint, item_id, sep = "/")
+    # TODO: follow specification strictly
+    endpoint <- paste("/collections", collection_id, "items", sep = "/")
+    expected <- list("get" =
+                       list(responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_items",
+                                          "application/json" = "stac_items"))),
+                     "post" =
+                       list(enctypes = c("application/x-www-form-urlencoded",
+                                         "multipart/form-data"),
+                            responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_items",
+                                          "application/json" = "stac_items"))))
+  } else {
+
+    # TODO: follow specification strictly
+    endpoint <- paste("/collections", collection_id, "items",
+                      item_id, sep = "/")
+
+    expected <- list("get" =
+                       list(responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_item",
+                                          "application/json" = "stac_item"))),
+                     "post" =
+                       list(enctypes = c("application/x-www-form-urlencoded",
+                                         "multipart/form-data"),
+                            responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_item",
+                                          "application/json" = "stac_item"))))
     params <- list()
   }
 
   content <- structure(list(url = url,
                             endpoint = endpoint,
-                            params = params),
-                       class = c("stac"))
+                            params = params,
+                            expected_responses = expected),
+                       class = "stac")
   return(content)
 }

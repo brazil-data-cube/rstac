@@ -31,5 +31,9 @@ items_matched <- function(items) {
   if (!inherits(items, "stac_items"))
     stop(sprintf("Invalid `stac_items` object."))
 
-  return(items[["search:metadata"]][["matched"]])
+  matched <- items[["search:metadata"]][["matched"]]
+  if (is.null(matched))
+    warning("STAC 'search:metadata' extension not available", call. = FALSE)
+
+  return(matched)
 }
