@@ -95,6 +95,7 @@
 #' }
 #'
 #' @export
+#'
 stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
                         .limit = 10, .next = 1) {
 

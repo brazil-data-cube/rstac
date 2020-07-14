@@ -58,12 +58,12 @@ the corresponding JSON STAC objects.
 }
 
 \author{
-\strong{Maintainer}: Brazil Data Cube Project \email{brazildatacube@dpi.inpe.br} [copyright holder]
+\strong{Maintainer}: Brazil Data Cube Team \email{brazildatacube@dpi.inpe.br} [copyright holder]
 
 Authors:
 \itemize{
   \item Rolf Simoes \email{rolf.simoes@inpe.br} (\href{https://orcid.org/0000-0003-0953-4132}{ORCID})
-  \item Felipe Souza
+  \item Felipe Souza \email{lipecaso@gmail.com}
 }
 
 }
