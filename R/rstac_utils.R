@@ -97,15 +97,15 @@
 #' otherwise not.
 .check_rfc <- function(datetime){
   # Standard Regex of RFC 3339
-  pattern_rfc <-
-    "\\d{4}-[01]\\d-[0-3]\\d|T[0-2]\\d:[0-5]\\d:[0-5]\\d(?:\\.\\d+)?Z?"
+  pattern_rfc <- "^\\d{4}-\\d{2}-\\d{2}?(T\\d{2}:\\d{2}:\\d{2}Z)?$"
 
   check_pattern <- grepl(pattern_rfc, datetime, perl = TRUE)
 
   return(check_pattern)
 }
 
-.stac_version <- function(){
+# .stac_version <- function(url){
+#
+# }
 
-}
 
