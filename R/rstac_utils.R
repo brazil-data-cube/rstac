@@ -26,13 +26,13 @@
   check_interval <-
     grepl("(?=^(\\..\\/.*)).+|(.*/\\..)", datetime, perl = TRUE)
 
-  if(check_interval){
+  if (check_interval) {
     # regex to separate the open interval elements
     split_datetime <- strsplit(datetime, "(?(?=/..)|$(?=../))", perl = TRUE)
     # checking if date time is in the RFC standards
     match_rfc      <- .check_rfc(split_datetime)
 
-    if(match_rfc){
+    if (match_rfc) {
       return(datetime)
     } else{
       stop(paste0("The interval date time provided is not in RFC format,
@@ -44,14 +44,15 @@
     split_datetime <- unlist(split_datetime)
 
     # In case the vector has two elements it is a closed date time
-    if(length(split_datetime) == 2){
+    if (length(split_datetime) == 2) {
       # formatting the closed date time according to the RFC
       interval_dt <- as.POSIXct(split_datetime,
                                 tz = "UTC",
-                                tryFormats = c("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d"))
+                                tryFormats = c("%Y-%m-%dT%H:%M:%SZ",
+                                               "%Y-%m-%d"))
 
       # Checks if there is FALSE value in vector
-      if(!all(.check_rfc(interval_dt)))
+      if (!all(.check_rfc(interval_dt)))
         stop(paste0("The date time provided not follow the RFC 3339 format,
                     please check the RFC 3339 rules."), call. = F)
 
@@ -63,7 +64,7 @@
     }
     # Check if date time is a fixed interval
     else{
-      if(!all(.check_rfc(split_datetime)) || length(split_datetime) != 1)
+      if (!all(.check_rfc(split_datetime)) || length(split_datetime) != 1)
         stop(paste0("The date time provided not follow the RFC 3339 format,
                     please check the RFC 3339 rules."), call. = F)
 
@@ -103,3 +104,8 @@
 
   return(check_pattern)
 }
+
+.stac_version <- function(){
+
+}
+

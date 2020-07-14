@@ -67,6 +67,9 @@
 #' (west-most box edge) is larger than the third value
 #' (east-most box edge).
 #'
+#' @param intersects Only returns items that intersect with the provided
+#' polygon.
+#'
 #' @param ...         Any additional non standard filter parameter.
 #'
 #' @param .limit      An \code{integer} defining the maximum number of results
@@ -92,7 +95,7 @@
 #' }
 #'
 #' @export
-stac_search <- function(url, collections, ids, bbox, datetime, ...,
+stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
                         .limit = 10, .next = 1) {
 
   params <- list()
@@ -103,10 +106,10 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
   if (!missing(ids))
     params[["ids"]] <- ids
 
-  # TODO check valid datetime & interval
-  if (!missing(datetime))
+  if (!missing(datetime)) {
     .verify_datetime(datetime)
     params[["datetime"]] <- datetime
+  }
 
   if (!missing(bbox)) {
 
@@ -116,12 +119,10 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
     params[["bbox"]] <- bbox
   }
 
-  # TODO: implement intersects param
-  # if (!missing(intersects)) {
-  #
-  #   .method <- "post"
-  #   params[["intersects"]] <- intersects
-  # }
+  # TODO: validate polygon
+  if (!missing(intersects)) {
+    params[["intersects"]] <- intersects
+  }
 
   if (!missing(...))
     params <- c(params, list(...))
@@ -130,17 +131,34 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
 
   params["next"] <- .next
   # TODO: follow specification strictly
-  expected <- list("get" =
-                     list(responses =
-                            list("200" =
-                                   list("application/geo+json" = "stac_items",
-                                        "application/json" = "stac_items"))),
-                   "post" =
-                     list(enctypes = c("application/json"),
-                          responses =
-                            list("200" =
-                                   list("application/geo+json" = "stac_items",
-                                        "application/json" = "stac_items"))))
+
+  if (!is.null(params[["intersects"]])) {
+    if ("bbox" %in% names(params)) {
+      warning("Only one of either intersects or bbox should be specified.
+              The bbox parameter will be ignored.", call. = FALSE)
+
+      params[["bbox"]] <- NULL
+    }
+
+    expected <- list("post" =
+                       list(enctypes = c("application/json"),
+                            responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_items",
+                                          "application/json" = "stac_items"))))
+  } else{
+    expected <- list("get" =
+                       list(responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_items",
+                                          "application/json" = "stac_items"))),
+                     "post" =
+                       list(enctypes = c("application/json"),
+                            responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_items",
+                                          "application/json" = "stac_items"))))
+  }
 
   content <- structure(list(url = url,
                             endpoint = "/stac/search",
@@ -149,3 +167,4 @@ stac_search <- function(url, collections, ids, bbox, datetime, ...,
                        class = "stac")
   return(content)
 }
+
