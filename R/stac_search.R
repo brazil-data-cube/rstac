@@ -168,10 +168,3 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
                        class = "stac")
   return(content)
 }
-
-
-# a <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#             collections = "MOD13Q1",
-#             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-#   stac_request()
-
