@@ -35,6 +35,7 @@ testthat::test_that("stac new object", {
       expected = "stac"
       )
 
+    ########### Check errors in fixed date time
     # check fixed date time
     testthat::expect_error(
       rstac::stac_search(
@@ -46,9 +47,25 @@ testthat::test_that("stac new object", {
     testthat::expect_error(
       rstac::stac_search(
         url      = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        datetime = "20-2012-20T00:00:00Z")
+    )
+
+    # check fixed date time
+    testthat::expect_error(
+      rstac::stac_search(
+        url      = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
         datetime = "20-02-2012")
     )
 
+    # check fixed date time
+    testthat::expect_equal(
+      object     = class(rstac::stac_search(
+        url      = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        datetime = "2019-02-12T00:00:00Z")),
+      expected   = "stac"
+    )
+
+    ########### Check errors in closed date time
     # check closed date time
     testthat::expect_error(
       rstac::stac_search(
@@ -56,6 +73,15 @@ testthat::test_that("stac new object", {
         datetime = "2019-02-12T00:00:00Z/2018-03-18T12:31:12Z")
     )
 
+    # check fixed date time
+    testthat::expect_equal(
+      object     = class(rstac::stac_search(
+        url      = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        datetime = "2018-02-12T00:00:00Z/2018-03-18T12:31:12Z")),
+      expected   = "stac"
+    )
+
+    ########### Check errors in interval date time
     # check interval date time
     testthat::expect_error(
       rstac::stac_search(
@@ -82,6 +108,14 @@ testthat::test_that("stac new object", {
       rstac::stac_search(
         url      = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
         datetime = "20-03-2018T12:31:12Z/..")
+    )
+
+    # check fixed date time
+    testthat::expect_equal(
+      object     = class(rstac::stac_search(
+        url      = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        datetime = "2018-03-20T12:31:12Z/..")),
+      expected   = "stac"
     )
   })
 })
