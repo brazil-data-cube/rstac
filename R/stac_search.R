@@ -72,12 +72,6 @@
 #'
 #' @param ...         Any additional non standard filter parameter.
 #'
-#' @param .limit      An \code{integer} defining the maximum number of results
-#' to return. Defaults to 10.
-#'
-#' @param .next       An \code{integer} informing which set of results
-#' to return. Values less than 1 means all pages will be retrieved.
-#'
 #' @seealso
 #' \code{\link{stac}}, \code{\link{stac_request}}
 #'
@@ -95,9 +89,8 @@
 #' }
 #'
 #' @export
-#'
-stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
-                        .limit = 10, .next = 1) {
+stac_search <- function(url, collections, ids, bbox, datetime, intersects,
+                        ...) {
 
   params <- list()
 
@@ -107,7 +100,9 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
   if (!missing(ids))
     params[["ids"]] <- ids
 
+  # TODO check valid datetime & interval
   if (!missing(datetime)) {
+
     .verify_datetime(datetime)
     params[["datetime"]] <- datetime
   }
@@ -122,21 +117,18 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects, ...,
 
   # TODO: validate polygon
   if (!missing(intersects)) {
+
     params[["intersects"]] <- intersects
   }
 
   if (!missing(...))
     params <- c(params, list(...))
 
-  params["limit"] <- .limit
-
-  params["next"] <- .next
   # TODO: follow specification strictly
-
   if (!is.null(params[["intersects"]])) {
     if ("bbox" %in% names(params)) {
-      warning("Only one of either intersects or bbox should be specified.
-              The bbox parameter will be ignored.", call. = FALSE)
+      warning("Only one of either `intersects` or bbox should be specified.
+              The `bbox` parameter will be ignored.", call. = FALSE)
 
       params[["bbox"]] <- NULL
     }
