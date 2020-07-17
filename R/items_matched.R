@@ -32,6 +32,11 @@ items_matched <- function(items) {
     stop(sprintf("Invalid `stac_items` object."))
 
   matched <- items[["search:metadata"]][["matched"]]
+
+  # try WFS3 spec
+  if (is.null(matched))
+    matched <- items[["numberMached"]]
+
   if (is.null(matched))
     warning("STAC 'search:metadata' extension not available", call. = FALSE)
 
