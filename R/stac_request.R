@@ -9,6 +9,10 @@
 #' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
 #' or \code{stac_items} functions.
 #'
+#' @param limit      An \code{integer} defining the maximum number of results
+#' to return. If \code{NULL} it defaults to the service implementation.
+#' Defaults to 10.
+#'
 #' @param method     A \code{character} value informing the HTTP method to be
 #' used for this request. Accepted methods are \code{'get'} or \code{'post'}.
 #'
@@ -32,11 +36,12 @@
 #' \dontrun{
 #'
 #' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'     stac_request()
+#'     stac_request(limit = 100)
 #' }
 #'
 #' @export
-stac_request <- function(s, method = c("get", "post"),
+stac_request <- function(s, limit = 10,
+                         method = c("get", "post"),
                          post_enctype = c("application/json",
                                           "application/x-www-form-urlencoded",
                                           "multipart/form-data"),
@@ -45,7 +50,10 @@ stac_request <- function(s, method = c("get", "post"),
   if (!inherits(s, "stac"))
     stop(sprintf("Invalid `stac` object."), call. = FALSE)
 
-  method <- method[[1]]
+  if (!is.null(limit))
+    s$params[["limit"]] <- limit
+
+  method <- tolower(method[[1]])
   if (!method %in% names(s$expected_responses))
     stop(sprintf("Invalid HTTP method '%s' for this operation.", method),
          call. = FALSE)
@@ -56,7 +64,7 @@ stac_request <- function(s, method = c("get", "post"),
 
   } else if (method == "post") {
 
-    post_enctype <- post_enctype[[1]]
+    post_enctype <- tolower(post_enctype[[1]])
     if (!post_enctype %in% s$expected_responses$post$enctypes)
       stop(sprintf("Invalid HTTP body request enctype '%s' for this operation.",
                    post_enctype),
