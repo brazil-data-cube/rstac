@@ -27,14 +27,16 @@
     grepl("(?=^(\\..\\/.*)).+|(.*/\\..)", datetime, perl = TRUE)
 
   if (check_interval) {
-
     # regex to separate the open interval elements
-    split_datetime <- strsplit(datetime, "(?(?=/..)|$(?=../))", perl = TRUE)
+    split_datetime <- strsplit(datetime, "(\\/\\..)|(\\..\\/)", perl = TRUE)
+    split_datetime <- split_datetime[[1]][which(unlist(split_datetime) != "")]
 
     # checking if date time is in the RFC standards
     match_rfc <- .check_rfc(split_datetime)
 
-    if (!match_rfc)
+    if (match_rfc) {
+      return(datetime)
+    } else
       stop(paste0("The interval date time provided is not in RFC format,
                   please check the RFC 3339 rules."), call. = FALSE)
 
@@ -48,16 +50,16 @@
 
     # In case the vector has two elements it is a closed date time
     if (length(split_datetime) == 2) {
+      # Checks if there is FALSE value in vector
+      if (!all(.check_rfc(split_datetime)))
+        stop(paste0("The date time provided not follow the RFC 3339 format,
+                    please check the RFC 3339 rules."), call. = F)
 
       # formatting the closed date time according to the RFC
       interval_dt <- as.POSIXct(split_datetime,
                                 tz = "UTC",
-                                tryFormats = c("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d"))
-
-      # Checks if there is FALSE value in vector
-      if (!all(.check_rfc(interval_dt)))
-        stop(paste0("The date time provided not follow the RFC 3339 format,
-                    please check the RFC 3339 rules."), call. = F)
+                                tryFormats = c("%Y-%m-%dT%H:%M:%SZ",
+                                               "%Y-%m-%d"))
 
       # Check the interval, if the interval is wrong an error is returned
       ifelse(interval_dt[1] < interval_dt[2],
@@ -68,7 +70,6 @@
 
     # Check if date time is a fixed interval
     else {
-
       if (!all(.check_rfc(split_datetime)) || length(split_datetime) != 1)
         stop(paste0("The date time provided not follow the RFC 3339 format,
                     please check the RFC 3339 rules."), call. = F)
@@ -103,8 +104,7 @@
 .check_rfc <- function(datetime) {
 
   # Standard Regex of RFC 3339
-  pattern_rfc <-
-    "\\d{4}-[01]\\d-[0-3]\\d|T[0-2]\\d:[0-5]\\d:[0-5]\\d(?:\\.\\d+)?Z?"
+  pattern_rfc <- "^\\d{4}-\\d{2}-\\d{2}?(T\\d{2}:\\d{2}:\\d{2}Z)?$"
 
   check_pattern <- grepl(pattern_rfc, datetime, perl = TRUE)
 

@@ -4,7 +4,7 @@
 \alias{stac_search}
 \title{Endpoint functions}
 \usage{
-stac_search(url, collections, ids, bbox, datetime, ...)
+stac_search(url, collections, ids, bbox, datetime, intersects, ...)
 }
 \arguments{
 \item{url}{A \code{character} informing the base url of a
@@ -55,6 +55,9 @@ Examples:
 
 Only features that have a \code{datetime} property that intersects
 the interval or date-time informed in \code{datetime} are selected.}
+
+\item{intersects}{Only returns items that intersect with the provided
+polygon.}
 
 \item{...}{Any additional non standard filter parameter.}
 }

@@ -1,9 +1,8 @@
-#' @title STAC functions
+#' @title Items function
 #'
 #' @author Rolf Simoes
 #'
-#' @description The \code{stac_request} is function that makes HTTP
-#' requests to STAC web services, retrieves, and parse the data.
+#' @description The \code{items_fetch} ...
 #'
 #' @param items      A \code{stac_items} object representing the result of
 #' \code{/stac/search}, \code{/collections/{collectionId}/items}, or

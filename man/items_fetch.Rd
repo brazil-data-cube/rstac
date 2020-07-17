@@ -2,7 +2,7 @@
 % Please edit documentation in R/items_fetch.R
 \name{items_fetch}
 \alias{items_fetch}
-\title{STAC functions}
+\title{Items function}
 \usage{
 items_fetch(items, headers = list())
 }
@@ -19,8 +19,7 @@ defined in \code{stac} object parameter.}
 A \code{stac_items} object.
 }
 \description{
-The \code{stac_request} is function that makes HTTP
-requests to STAC web services, retrieves, and parse the data.
+The \code{items_fetch} ...
 }
 \examples{
 \dontrun{

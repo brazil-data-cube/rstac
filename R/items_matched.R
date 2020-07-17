@@ -28,6 +28,7 @@ items_matched <- function(items) {
   # STAC API (>=0.9.0): "context"
   # How to check STAC API version:
   # Maybe `stac_version` field.
+  # .stac_version <- function()
   if (!inherits(items, "stac_items"))
     stop(sprintf("Invalid `stac_items` object."))
 
@@ -42,3 +43,6 @@ items_matched <- function(items) {
 
   return(matched)
 }
+
+
+# TODO:

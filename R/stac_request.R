@@ -46,7 +46,7 @@ stac_request <- function(s, limit = 10,
                                           "application/x-www-form-urlencoded",
                                           "multipart/form-data"),
                          headers = list()) {
-
+  # check the object class
   if (!inherits(s, "stac"))
     stop(sprintf("Invalid `stac` object."), call. = FALSE)
 
@@ -59,24 +59,26 @@ stac_request <- function(s, limit = 10,
          call. = FALSE)
 
   if (method == "get") {
-
+    # call the requisition subroutine
     res <- .get_request(s, headers = headers)
 
   } else if (method == "post") {
 
     post_enctype <- tolower(post_enctype[[1]])
+    # check if the provided expected response is valid for this endpoint
     if (!post_enctype %in% s$expected_responses$post$enctypes)
       stop(sprintf("Invalid HTTP body request enctype '%s' for this operation.",
                    post_enctype),
            call. = FALSE)
 
+    # call the requisition subroutine
     res <- .post_request(s, enctype = post_enctype, headers = headers)
-
   }
 
   # check expected status-code and content-type
   content_class <- .check_response(res, s$expected_responses)
-  content <- res$content
+  content       <- res$content
+
   if (!is.null(content_class))
     content <- structure(content,
                          stac = s,

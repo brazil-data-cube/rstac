@@ -105,6 +105,9 @@
     stop(paste("Request error.", e$message), call. = FALSE)
   })
 
+  # stopifnot(res$response_headers$`content-type` %in% c('application/json',
+  #                                                      application/geo+json')
+
   res$content <- rawToChar(res$content)
 
   # TODO: check content type response

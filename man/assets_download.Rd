@@ -4,7 +4,7 @@
 \alias{assets_download}
 \title{stac download}
 \usage{
-assets_download(res, output_dir)
+assets_download(res, output_dir = "./", curl_hearder = list())
 }
 \arguments{
 \item{res}{...}
