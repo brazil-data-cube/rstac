@@ -4,7 +4,7 @@
 \alias{stac_search}
 \title{Endpoint functions}
 \usage{
-stac_search(url, collections, ids, bbox, datetime, ..., .limit = 10, .next = 1)
+stac_search(url, collections, ids, bbox, datetime, ...)
 }
 \arguments{
 \item{url}{A \code{character} informing the base url of a
@@ -57,12 +57,6 @@ Only features that have a \code{datetime} property that intersects
 the interval or date-time informed in \code{datetime} are selected.}
 
 \item{...}{Any additional non standard filter parameter.}
-
-\item{.limit}{An \code{integer} defining the maximum number of results
-to return. Defaults to 10.}
-
-\item{.next}{An \code{integer} informing which set of results
-to return. Values less than 1 means all pages will be retrieved.}
 }
 \value{
 A \code{stac} object containing all request parameters to be
