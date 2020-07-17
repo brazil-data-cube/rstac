@@ -4,17 +4,18 @@
 #'
 #' @description baixar as imagens que vem do res e organizar em repo
 #'
-#' @param res ...
-#' @param output_dir ...
+#' @param res res parameter
+#' @param output_dir output_dir parameter
+#' @param curl_header curl_he
 #'
 #' @export
-assets_download <- function(res, output_dir = "./", curl_hearder = list()){
+assets_download <- function(res, output_dir = "./", curl_header = list()){
 
   # check the object class
   if (!inherits(res, "stac_items"))
     stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
 
-  items_len <- rstac::items_length(res)
+  items_len <- items_length(res)
   if (items_len == 0)
     stop(sprintf("Query provided returned 0 items.
                  Please verify your query"), call. = FALSE)
@@ -45,7 +46,7 @@ assets_download <- function(res, output_dir = "./", curl_hearder = list()){
                                              output_dir,
                                              feat_id,
                                              asset_name),
-                          handle   =  curl_hearder)
+                          handle   =  curl_header)
     }
 
   }
