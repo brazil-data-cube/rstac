@@ -17,10 +17,16 @@ assets_download(
 \item{output_dir}{...}
 
 \item{assets_name}{...}
+
+\item{curl_header}{...}
+}
+\value{
+...
 }
 \description{
-baixar as imagens que vem do res e organizar em repo
+The \code{assets_download} function downloads the assets
+provided by the STAC API
 }
 \author{
-...
+Felipe Carvalho and Rolf Simoes
 }

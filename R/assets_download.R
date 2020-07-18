@@ -1,24 +1,25 @@
 #' @title stac download
 #'
-#' @author ...
+#' @author Felipe Carvalho and Rolf Simoes
 #'
-#' @description baixar as imagens que vem do res e organizar em repo
+#' @description The \code{assets_download} function downloads the assets
+#' provided by the STAC API
 #'
 #' @param res ...
 #' @param output_dir ...
+#' @param curl_header ...
 #' @param assets_name ...
 #'
+#' @return ...
+#'
 #' @export
-#'
-#'
 assets_download <- function(res, output_dir = "./", curl_hearder = list(),
                             assets_name = c()){
-
   # check the object class
   if (!inherits(res, "stac_items"))
     stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
 
-  items_len <- rstac::items_length(res)
+  items_len <- items_length(res)
   if (items_len == 0)
     stop(sprintf("Query provided returned 0 items.
                  Please verify your query"), call. = FALSE)
@@ -53,7 +54,7 @@ assets_download <- function(res, output_dir = "./", curl_hearder = list(),
                                              output_dir,
                                              feat_id,
                                              asset_name),
-                          handle   =  curl_hearder)
+                          handle   =  curl_header)
     }
   }
 
@@ -63,14 +64,16 @@ assets_download <- function(res, output_dir = "./", curl_hearder = list(),
 
 #' @title items function
 #'
-#' @author Felipe Carvalho
+#' @author Felipe Carvalho and Rolf Simoes
 #'
-#' @description baixar as imagens que vem do res e organizar em repo
+#' @description  The \code{items_assets} function lists the names of each assets
+#' from each STAC item.
 #'
 #' @param obj_stac A \code{stac} object expressing a STAC search criteria
 #' provided by \code{stac_items} functions.
 #'
-#' @return ...
+#' @return A \code{list} with information of the assets of each item, where
+#' each index represents one item.
 #'
 #' @export
 items_assets <- function(obj_stac){

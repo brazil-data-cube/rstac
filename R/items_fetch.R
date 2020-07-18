@@ -32,8 +32,14 @@
 #' @export
 items_fetch <- function(items, headers = list()) {
 
-  if (!inherits(items, "stac_items"))
+  if (!inherits(items, "stac_items", "stac_item"))
     stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
+
+  next_url <- Filter(function(x) x$rel == "next", items$links)
+  if (length(next_url) == 0)
+    return(items)
+
+  next_url <- next_url[[1]]$href
 
   s <- attr(items, "stac")
   content <- stac_request(s, method = s$method)

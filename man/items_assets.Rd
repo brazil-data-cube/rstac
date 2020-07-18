@@ -11,11 +11,13 @@ items_assets(obj_stac)
 provided by \code{stac_items} functions.}
 }
 \value{
-...
+A \code{list} with information of the assets of each item, where
+each index represents one item.
 }
 \description{
-baixar as imagens que vem do res e organizar em repo
+The \code{items_assets} function lists the names of each assets
+from each STAC item.
 }
 \author{
-Felipe Carvalho
+Felipe Carvalho and Rolf Simoes
 }
