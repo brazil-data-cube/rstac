@@ -105,18 +105,3 @@
 
   return(check_pattern)
 }
-
-stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-            collections = "MOD13Q1",
-            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-    stac_request()
-
-
-a <- rstac::stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-                        collections = "MOD13Q1",
-                        datetime = "2019-09-01/2019-11-01",
-                        bbox = c(-55.16335,-4.26325,-49.31739,-1.18355),
-                        .limit = 100) %>%
-  rstac::stac_request()
-
-length(a$features)

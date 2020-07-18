@@ -4,12 +4,19 @@
 \alias{assets_download}
 \title{stac download}
 \usage{
-assets_download(res, output_dir)
+assets_download(
+  res,
+  output_dir = "./",
+  curl_hearder = list(),
+  assets_name = c()
+)
 }
 \arguments{
 \item{res}{...}
 
 \item{output_dir}{...}
+
+\item{assets_name}{...}
 }
 \description{
 baixar as imagens que vem do res e organizar em repo

@@ -61,10 +61,18 @@ assets_download <- function(res, output_dir = "./", curl_hearder = list(),
   return(invisible(NULL))
 }
 
+#' @title items function
 #'
+#' @author Felipe Carvalho
 #'
+#' @description baixar as imagens que vem do res e organizar em repo
 #'
+#' @param obj_stac A \code{stac} object expressing a STAC search criteria
+#' provided by \code{stac_items} functions.
 #'
+#' @return ...
+#'
+#' @export
 items_assets <- function(obj_stac){
 
   if (!inherits(obj_stac, "stac_items"))
@@ -83,8 +91,7 @@ items_assets <- function(obj_stac){
     feature_id  <- res_features[[feature]][["id"]]
 
     items_assets[[feature]] <- list(collection_name = feature_id,
-                                    assets_name = assets_name)
+                                    assets_name     = assets_name)
   }
-
   return(items_assets)
 }
