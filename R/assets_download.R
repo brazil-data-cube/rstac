@@ -10,7 +10,7 @@
 #' @param curl_header ...
 #' @param assets_name ...
 #'
-#' @return ...
+#' @return ... adicionar aqui que as urls os assets baixos apontam para os arquivos locais
 #'
 #' @export
 assets_download <- function(res, output_dir = "./", curl_header = list(),
@@ -86,6 +86,17 @@ assets_download <- function(res, output_dir = "./", curl_header = list(),
 #' @return A \code{list} with information of the assets of each item, where
 #' each index represents one item.
 #'
+#' @examples
+#' \dontrun{
+#'
+#' obj_stac <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+#'             collections = "MOD13Q1",
+#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+#'     stac_request()
+#'
+#' items_names <- items_assets(obj_stac)
+#' }
+#'
 #' @export
 items_assets <- function(obj_stac){
 
@@ -106,9 +117,16 @@ items_assets <- function(obj_stac){
   return(items_assets)
 }
 
-#'@description function from \code{tools} package
+#' @title Helper function of \code{assets_download}
 #'
+#' @author Implemented by \ref{tools package}
 #'
+#' @description  The \code{.file_ext} is function to extract the extension
+#' from a file
+#'
+#' @param assert_url A \code{character} URL provided from a \code{stac_search}.
+#'
+#' @return A \code{character} of the extracted file extension.
 .file_ext <- function(asset_url){
   pos   <- regexpr("\\.([[:alnum:]]+)$", asset_url)
   str_t <- ifelse(pos > -1L, substring(asset_url, pos + 1L), "")
@@ -116,11 +134,27 @@ items_assets <- function(obj_stac){
   return(str_t)
 }
 
+#' @title Helper function of \code{assets_download} function
 #'
+#' @author Felipe Carvalho
 #'
+#' @description The helper function \code{.select_assets} selects the names of
+#' each asset provided by users
 #'
+#' @param assets_list A \code{list} with the information of each item provided
+#' by API STAC
 #'
+#' @param assets_names A \code{character} with the assets names to be filtered.
+#'
+#' @return A \code{list} in the same format as the list of assets, but with the
+#'  selected assets names.
 .select_assets <- function(assets_list = list(), assets_names = c()){
+
+  # If not provided the assets name, by default all assets will be used
+  if (length(assets_names) == 0) {
+    return(assets_list)
+  }
+
   index_filter <- which(names(assets_list) %in% assets_names)
   if (length(index_filter) == 0) {
     warning("The provided assets names do not match with the API assets names.
@@ -128,5 +162,6 @@ items_assets <- function(obj_stac){
     return(assets_list)
   }
   assets_list <- assets_list[index_filter]
+
   return(assets_list)
 }
