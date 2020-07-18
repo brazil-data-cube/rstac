@@ -13,8 +13,10 @@
 #' @return ...
 #'
 #' @export
-assets_download <- function(res, output_dir = "./", curl_hearder = list(),
+assets_download <- function(res, output_dir = "./", curl_header = list(),
                             assets_name = c()){
+  #browser()
+
   # check the object class
   if (!inherits(res, "stac_items"))
     stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
@@ -25,12 +27,12 @@ assets_download <- function(res, output_dir = "./", curl_hearder = list(),
                  Please verify your query"), call. = FALSE)
 
 
-  # TODO: Verificar a quantidade de items por pagina
-  # items_total <- rstac::items_fetch()
-  # TODO: Verificar a quantidade de items <<- item_fetch
+  if (!dir.exists(output_dir))
+    stop(sprintf("The directory provided does not exist.
+                  Please specify a valid directory."), call. = FALSE)
+
   # TODO: Ajustar a barra de download
   # TODO: verificar como baixar as imagens cortadas usando vci direto do servidor
-
 
   # pb <- progress::progress_bar$new(
   #   format = "  downloading [:bar] :percent eta: :eta",
@@ -39,28 +41,37 @@ assets_download <- function(res, output_dir = "./", curl_hearder = list(),
   for (feature in 1:items_len) {
     #pb$tick()
 
-    assets   <- res_features[[feature]][["assets"]]
+    # TODO: verificar se o param n ta vazio
+    assets   <- .select_assets(
+                            assets_list  = res_features[[feature]][["assets"]],
+                            assets_names = assets_name)
     feat_id  <- res_features[[feature]][["id"]]
 
     for (asset in 1:length(assets)) {
+
       asset_name <- names(assets[asset])
       asset_href <- assets[[asset]]$href
-      # TODO: criar um regex para extrair a ext do arquivo: se é
-      # .tif ou .png
+      file_ext   <- .file_ext(asset_href)
 
-      #TODO:  Verificar o formato do arquivo antes de baixor
-      curl::curl_download(url      = asset_href,
-                          destfile = sprintf("%s/%s_%s.tif",
-                                             output_dir,
-                                             feat_id,
-                                             asset_name),
-                          handle   =  curl_header)
+      dest_file <- sprintf("%s/%s_%s.%s", output_dir, feat_id, asset_name,
+                           file_ext)
+
+      tryCatch({
+        curl::curl_download(url      = asset_href,
+                            destfile = dest_file)
+      }, error = function(error){
+        message(paste(error, "in ", asset_href))
+      })
+
+      if (file.exists(dest_file))
+        res$features[[feature]][["assets"]][[asset_name]]$href <-
+          dest_file
     }
   }
 
-  # Retorno stac_items com a  url apontada para cada item da maquina o usuario
-  return(invisible(NULL))
+  return(res)
 }
+
 
 #' @title items function
 #'
@@ -87,14 +98,35 @@ items_assets <- function(obj_stac){
                  Please verify your query"), call. = FALSE)
 
   res_features <- obj_stac$features
-  items_assets <- list()
+  items_assets <- lapply(res_features, function(feature){
+    list(collection_name = feature[["id"]],
+         assets_name     = names(feature[["assets"]]))
+  })
 
-  for (feature in 1:items_len) {
-    assets_name <- names(res_features[[feature]][["assets"]])
-    feature_id  <- res_features[[feature]][["id"]]
-
-    items_assets[[feature]] <- list(collection_name = feature_id,
-                                    assets_name     = assets_name)
-  }
   return(items_assets)
+}
+
+#'@description function from \code{tools} package
+#'
+#'
+.file_ext <- function(asset_url){
+  pos   <- regexpr("\\.([[:alnum:]]+)$", asset_url)
+  str_t <- ifelse(pos > -1L, substring(asset_url, pos + 1L), "")
+
+  return(str_t)
+}
+
+#'
+#'
+#'
+#'
+.select_assets <- function(assets_list = list(), assets_names = c()){
+  index_filter <- which(names(assets_list) %in% assets_names)
+  if (length(index_filter) == 0) {
+    warning("The provided assets names do not match with the API assets names.
+             By default, all assets will be used", call. = FALSE)
+    return(assets_list)
+  }
+  assets_list <- assets_list[index_filter]
+  return(assets_list)
 }
