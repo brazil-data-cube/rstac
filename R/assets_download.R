@@ -1,20 +1,38 @@
-#' @title stac download
+#' @title assets download
 #'
 #' @author Felipe Carvalho and Rolf Simoes
 #'
 #' @description The \code{assets_download} function downloads the assets
 #' provided by the STAC API
 #'
-#' @param res ...
-#' @param output_dir ...
-#' @param curl_header ...
-#' @param assets_name ...
+#' @param res A \code{stac} object expressing a STAC search criteria
+#' provided by \code{stac_items} functions.
 #'
-#' @return ... adicionar aqui que as urls os assets baixos apontam para os arquivos locais
+#' @param assets_name A \code{character} with the assets names to be filtered.
+#'
+#' @param output_dir A \code{character} directory in which the images will be
+#' saved.
+#'
+#' @param curl_header a curl handle object
+#'
+#' @examples
+#' \dontrun{
+#'
+#' obj_stac <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+#'             collections = "MOD13Q1",
+#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+#'     stac_request() %>%
+#'     assets_download(assets_name = c("blue", "ndvi"), output_dir = "./")
+#' }
+#'
+#'
+#'
+#' @return The same \code{stac_items} object, but with the link of the item
+#' pointing to the directory where the assets were saved.
 #'
 #' @export
-assets_download <- function(res, output_dir = "./", curl_header = list(),
-                            assets_name = c()){
+assets_download <- function(res, assets_name = c(), output_dir = "./",
+                            curl_header = list()){
   #browser()
 
   # check the object class
@@ -119,12 +137,12 @@ items_assets <- function(obj_stac){
 
 #' @title Helper function of \code{assets_download}
 #'
-#' @author Implemented by \ref{tools package}
+#' @author Implemented by \code{tools package}
 #'
 #' @description  The \code{.file_ext} is function to extract the extension
 #' from a file
 #'
-#' @param assert_url A \code{character} URL provided from a \code{stac_search}.
+#' @param asset_url A \code{character} URL provided from a \code{stac_search}.
 #'
 #' @return A \code{character} of the extracted file extension.
 .file_ext <- function(asset_url){

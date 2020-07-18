@@ -18,6 +18,18 @@ each index represents one item.
 The \code{items_assets} function lists the names of each assets
 from each STAC item.
 }
+\examples{
+\dontrun{
+
+obj_stac <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+            collections = "MOD13Q1",
+            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+    stac_request()
+
+items_names <- items_assets(obj_stac)
+}
+
+}
 \author{
 Felipe Carvalho and Rolf Simoes
 }
