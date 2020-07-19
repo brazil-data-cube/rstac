@@ -28,10 +28,39 @@ WFS3 endpoints (`'/collections'`, `'/collections/{collectionId}'`,
 library(rstac)
 library(magrittr)
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-    stac_request()
-stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-            collections = "MOD13Q1",
-            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-    stac_request()
+# Create a stac object and return a STAC Catalog
+stac_catalog <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+                stac_request()
+    
+
+# Creates a stac_items object and return STAC items
+items <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+                    collections = "MOD13Q1",
+                    bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+        stac_request()
+        
+# Createa stac object and returns a list of STAC Collections
+col <- stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+       stac_request()
+
+```
+
+### Items functions
+
+```R
+# Pagination of items returned by API STAC
+items %>% items_fetch()
+
+# Count how many items matched the search criteria
+items %>% items_matched()
+
+# Count how many items are in the object
+items %>% items_length()
+```
+
+### Download assets
+
+```R
+# Downloads the assets provided by the STAC API
+items %>% assets_download(assets_name = c("blue", "ndvi"), output_dir = "./")
 ```

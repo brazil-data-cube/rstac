@@ -33,33 +33,31 @@
 #' @export
 assets_download <- function(res, assets_name = c(), output_dir = "./",
                             curl_header = list()){
-  #browser()
 
   # check the object class
   if (!inherits(res, "stac_items"))
     stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
 
-  items_len <- items_length(res)
+  res_features <- res$features
+  items_len    <- items_length(res)
+
   if (items_len == 0)
     stop(sprintf("Query provided returned 0 items.
                  Please verify your query"), call. = FALSE)
-
 
   if (!dir.exists(output_dir))
     stop(sprintf("The directory provided does not exist.
                   Please specify a valid directory."), call. = FALSE)
 
-  # TODO: Ajustar a barra de download
-  # TODO: verificar como baixar as imagens cortadas usando vci direto do servidor
 
-  # pb <- progress::progress_bar$new(
-  #   format = "  downloading [:bar] :percent eta: :eta",
-  #   total = items_len, clear = FALSE, width = 60)
-  res_features <- res$features
+  # setting a progress bar
+  prog_bar <- progress::progress_bar$new(
+    format = "  downloading assets [:bar] :percent eta: :eta",
+    total  = items_len, clear = FALSE, width = 60)
+
   for (feature in 1:items_len) {
-    #pb$tick()
+    prog_bar$tick()
 
-    # TODO: verificar se o param n ta vazio
     assets   <- .select_assets(
                             assets_list  = res_features[[feature]][["assets"]],
                             assets_names = assets_name)
@@ -78,7 +76,7 @@ assets_download <- function(res, assets_name = c(), output_dir = "./",
         curl::curl_download(url      = asset_href,
                             destfile = dest_file)
       }, error = function(error){
-        message(paste(error, "in ", asset_href))
+        message(paste("\n", error, "in ", asset_href))
       })
 
       if (file.exists(dest_file))
