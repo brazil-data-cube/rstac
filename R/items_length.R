@@ -5,7 +5,7 @@
 #' @description The \code{items_length} function returns how many items
 #' there are in the \code{items} object.
 #'
-#' @param items    A \code{stac_items} object.
+#' @param items A \code{stac_items} object.
 #'
 #' @return
 #' An \code{integer} value.

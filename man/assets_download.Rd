@@ -12,19 +12,19 @@ assets_download(
 )
 }
 \arguments{
-\item{res}{A \code{stac} object expressing a STAC search criteria
-provided by \code{stac_items} functions.}
+\item{res}{A \code{stac_items} or \code{stac_item} objects expressing a STAC
+search criteria provided by \code{stac_search} functions.}
 
 \item{assets_name}{A \code{character} with the assets names to be filtered.}
 
 \item{output_dir}{A \code{character} directory in which the images will be
 saved.}
 
-\item{curl_header}{a curl handle object}
+\item{curl_header}{a curl handle object.}
 }
 \value{
 The same \code{stac_items} object, but with the link of the item
-pointing to the directory where the assets were saved.
+ pointing to the directory where the assets were saved.
 }
 \description{
 The \code{assets_download} function downloads the assets
@@ -40,8 +40,9 @@ obj_stac <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0"
     assets_download(assets_name = c("blue", "ndvi"), output_dir = "./")
 }
 
-
-
+}
+\seealso{
+\code{\link{stac_search}}, \code{\link{stac_request}}
 }
 \author{
 Felipe Carvalho and Rolf Simoes

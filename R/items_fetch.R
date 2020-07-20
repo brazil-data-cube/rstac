@@ -2,15 +2,16 @@
 #'
 #' @author Rolf Simoes
 #'
-#' @description The \code{items_fetch} ...
+#' @description The \code{items_fetch} function returns the pagination of all
+#'  items of the stac object
 #'
 #' @param items      A \code{stac_items} object representing the result of
-#' \code{/stac/search}, \code{/collections/{collectionId}/items}, or
-#' \code{/collections/{collectionId}/items/{itemId}} endpoints.
+#'  \code{/stac/search}, \code{/collections/{collectionId}/items}, or
+#'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
 #' @param headers    A \code{list} of named arguments to be passed as
-#' http request headers. This is used in \emph{addition} to eventual headers
-#' defined in \code{stac} object parameter.
+#'  http request headers. This is used in \emph{addition} to eventual headers
+#'  defined in \code{stac} object parameter.
 #'
 #' @seealso
 #' \code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
@@ -45,5 +46,3 @@ items_fetch <- function(items, headers = list()) {
   content <- stac_request(s, method = s$method)
   return(content)
 }
-
-

@@ -22,7 +22,7 @@
 #'  date time provided as \code{character}.
 .verify_datetime <- function(datetime) {
 
-  # checks if the date time provided is an open interval
+  # check if the date time provided is an open interval
   check_interval <-
     grepl("(?=^(\\..\\/.*)).+|(.*/\\..)", datetime, perl = TRUE)
 
@@ -105,8 +105,7 @@
 .check_rfc <- function(datetime) {
 
   # Standard Regex of RFC 3339
-  pattern_rfc <- "^\\d{4}-\\d{2}-\\d{2}?(T\\d{2}:\\d{2}:\\d{2}Z)?$"
-
+  pattern_rfc   <- "^\\d{4}-\\d{2}-\\d{2}?(T\\d{2}:\\d{2}:\\d{2}Z)?$"
   check_pattern <- grepl(pattern_rfc, datetime, perl = TRUE)
 
   return(check_pattern)

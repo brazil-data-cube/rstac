@@ -9,7 +9,7 @@ The specification can be consulted in [https://stacspec.org/].
 R client library for STAC (`rstac`) was designed to fully support STAC v0.8.0. 
 As STAC spec is evolving fast and reaching its maturity, we plan update `rstac` to support upcoming STAC 1.0.0 version soon.
 
-## installation
+## Installation
 
 To install `rstac` for R, run the following commands 
 
@@ -18,7 +18,7 @@ library(devtools)
 install_github("brazil-data-cube/stac.R")
 ```
 
-## usage
+## Usage
 
 In this version, we implemented STAC endpoints (`'/stac'`, `'/stac/search'`) as well as
 WFS3 endpoints (`'/collections'`, `'/collections/{collectionId}'`, 
@@ -33,13 +33,13 @@ stac_catalog <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
                 stac_request()
     
 
-# Creates a stac_items object and return STAC items
+# Create a stac_items object and return STAC items
 items <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
                     collections = "MOD13Q1",
                     bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
         stac_request()
         
-# Createa stac object and returns a list of STAC Collections
+# Create a stac object and returns a list of STAC Collections
 col <- stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
        stac_request()
 
@@ -48,13 +48,13 @@ col <- stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
 ### Items functions
 
 ```R
-# Pagination of items returned by API STAC
+# Pagination of items in the `stac_items` object
 items %>% items_fetch()
 
 # Count how many items matched the search criteria
 items %>% items_matched()
 
-# Count how many items are in the object
+# Count how many items are in the `stac_items` object
 items %>% items_length()
 ```
 

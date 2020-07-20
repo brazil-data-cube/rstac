@@ -16,11 +16,11 @@ provided to \code{stac_request}.
 }
 \description{
 This function implements \code{/stac} API
-endpoint (v0.8.0). It prepares query parameters to be provided to
-\code{stac_request} function.
+ endpoint (v0.8.0). It prepares query parameters to be provided to
+ \code{stac_request} function.
 
 This endpoint should return a STAC Catalog containing all data Items
-searcheable in the API.
+ searchable in the API.
 }
 \examples{
 \dontrun{

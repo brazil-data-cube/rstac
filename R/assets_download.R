@@ -5,15 +5,18 @@
 #' @description The \code{assets_download} function downloads the assets
 #' provided by the STAC API
 #'
-#' @param res A \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac_items} functions.
+#' @param res A \code{stac_items} or \code{stac_item} objects expressing a STAC
+#'  search criteria provided by \code{stac_search} functions.
 #'
 #' @param assets_name A \code{character} with the assets names to be filtered.
 #'
 #' @param output_dir A \code{character} directory in which the images will be
-#' saved.
+#'  saved.
 #'
-#' @param curl_header a curl handle object
+#' @param curl_header a curl handle object.
+#'
+#' @seealso
+#' \code{\link{stac_search}}, \code{\link{stac_request}}
 #'
 #' @examples
 #' \dontrun{
@@ -25,30 +28,36 @@
 #'     assets_download(assets_name = c("blue", "ndvi"), output_dir = "./")
 #' }
 #'
-#'
-#'
 #' @return The same \code{stac_items} object, but with the link of the item
-#' pointing to the directory where the assets were saved.
+#'  pointing to the directory where the assets were saved.
 #'
 #' @export
 assets_download <- function(res, assets_name = c(), output_dir = "./",
-                            curl_header = list()){
+                            curl_header = list()) {
 
   # check the object class
-  if (!inherits(res, "stac_items"))
-    stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
+  if (!inherits(res, c("stac_items", "stac_item")))
+    stop(sprintf("Invalid `stac_items` or `stac_item` object."), call. = FALSE)
 
-  res_features <- res$features
-  items_len    <- items_length(res)
-
-  if (items_len == 0)
-    stop(sprintf("Query provided returned 0 items.
-                 Please verify your query"), call. = FALSE)
-
+  # check output dir
   if (!dir.exists(output_dir))
     stop(sprintf("The directory provided does not exist.
                   Please specify a valid directory."), call. = FALSE)
 
+  # TODO: enhance this code
+  if (inherits(res, "stac_item")) {
+    res$features <- list(res)
+    res_features <- res$features
+    items_len    <- 1
+  } else {
+    res_features <- res$features
+    items_len    <- items_length(res)
+
+    # Queries that return without features
+    if (items_len == 0)
+      stop(sprintf("Query provided returned 0 items.
+                 Please verify your query"), call. = FALSE)
+    }
 
   # setting a progress bar
   prog_bar <- progress::progress_bar$new(
@@ -56,12 +65,13 @@ assets_download <- function(res, assets_name = c(), output_dir = "./",
     total  = items_len, clear = FALSE, width = 60)
 
   for (feature in 1:items_len) {
+    # toggle bar
     prog_bar$tick()
 
-    assets   <- .select_assets(
-                            assets_list  = res_features[[feature]][["assets"]],
-                            assets_names = assets_name)
-    feat_id  <- res_features[[feature]][["id"]]
+    assets  <- .select_assets(
+                             assets_list  = res_features[[feature]][["assets"]],
+                             assets_names = assets_name)
+    feat_id <- res_features[[feature]][["id"]]
 
     for (asset in 1:length(assets)) {
 
@@ -79,15 +89,16 @@ assets_download <- function(res, assets_name = c(), output_dir = "./",
         message(paste("\n", error, "in ", asset_href))
       })
 
-      if (file.exists(dest_file))
+      # Check if the assets have been downloaded
+      if (file.exists(dest_file)) {
         res$features[[feature]][["assets"]][[asset_name]]$href <-
           dest_file
+      }
     }
   }
 
   return(res)
 }
-
 
 #' @title items function
 #'
@@ -114,7 +125,7 @@ assets_download <- function(res, assets_name = c(), output_dir = "./",
 #' }
 #'
 #' @export
-items_assets <- function(obj_stac){
+items_assets <- function(obj_stac) {
 
   if (!inherits(obj_stac, "stac_items"))
     stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
@@ -137,13 +148,13 @@ items_assets <- function(obj_stac){
 #'
 #' @author Implemented by \code{tools package}
 #'
-#' @description  The \code{.file_ext} is function to extract the extension
+#' @description The \code{.file_ext} is function to extract the extension
 #' from a file
 #'
 #' @param asset_url A \code{character} URL provided from a \code{stac_search}.
 #'
 #' @return A \code{character} of the extracted file extension.
-.file_ext <- function(asset_url){
+.file_ext <- function(asset_url) {
   pos   <- regexpr("\\.([[:alnum:]]+)$", asset_url)
   str_t <- ifelse(pos > -1L, substring(asset_url, pos + 1L), "")
 
@@ -164,7 +175,7 @@ items_assets <- function(obj_stac){
 #'
 #' @return A \code{list} in the same format as the list of assets, but with the
 #'  selected assets names.
-.select_assets <- function(assets_list = list(), assets_names = c()){
+.select_assets <- function(assets_list = list(), assets_names = c()) {
 
   # If not provided the assets name, by default all assets will be used
   if (length(assets_names) == 0) {
