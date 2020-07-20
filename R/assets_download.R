@@ -13,8 +13,6 @@
 #' @param output_dir A \code{character} directory in which the images will be
 #'  saved.
 #'
-#' @param curl_header a curl handle object.
-#'
 #' @seealso
 #' \code{\link{stac_search}}, \code{\link{stac_request}}
 #'
@@ -32,8 +30,7 @@
 #'  pointing to the directory where the assets were saved.
 #'
 #' @export
-assets_download <- function(res, assets_name = c(), output_dir = "./",
-                            curl_header = list()) {
+assets_download <- function(res, assets_name = c(), output_dir = "./") {
 
   # check the object class
   if (!inherits(res, c("stac_items", "stac_item")))
@@ -44,20 +41,19 @@ assets_download <- function(res, assets_name = c(), output_dir = "./",
     stop(sprintf("The directory provided does not exist.
                   Please specify a valid directory."), call. = FALSE)
 
-  # TODO: enhance this code
   if (inherits(res, "stac_item")) {
-    res$features <- list(res)
-    res_features <- res$features
-    items_len    <- 1
-  } else {
-    res_features <- res$features
-    items_len    <- items_length(res)
+    res <- .item_download(stac_item   = res,
+                          assets_name = assets_name,
+                          output_dir  = output_dir)
 
-    # Queries that return without features
-    if (items_len == 0)
-      stop(sprintf("Query provided returned 0 items.
-                 Please verify your query"), call. = FALSE)
-    }
+    return(res)
+  }
+
+  items_len <- items_length(res)
+  # Queries that return without features
+  if (items_len == 0)
+    stop(sprintf("Query provided returned 0 items.
+                  Please verify your query"), call. = FALSE)
 
   # setting a progress bar
   prog_bar <- progress::progress_bar$new(
@@ -68,36 +64,54 @@ assets_download <- function(res, assets_name = c(), output_dir = "./",
     # toggle bar
     prog_bar$tick()
 
-    assets  <- .select_assets(
-                             assets_list  = res_features[[feature]][["assets"]],
-                             assets_names = assets_name)
-    feat_id <- res_features[[feature]][["id"]]
+    res$features[[feature]] <- .item_download(res$features[[feature]],
+                                             assets_name, output_dir)
+  }
+  return(res)
+}
 
-    for (asset in 1:length(assets)) {
+#' @title Helper function of \code{assets_download} function
+#'
+#' @description the \code{.item_download} function downloads the assets of a
+#'  stac_item
+#'
+#' @param stac_item A  \code{stac_item} object expressing a STAC
+#'  search criteria provided by \code{stac_item} function.
+#'
+#' @param assets_name A \code{character} with the assets names to be filtered.
+#'
+#' @param output_dir A \code{character} directory in which the images will be
+#'  saved.
+#'
+#' @return The same \code{stac_item} object, but with the link of the item
+#'  pointing to the directory where the assets were saved.
+.item_download <- function(stac_item, assets_name = c(), output_dir = "./") {
 
-      asset_name <- names(assets[asset])
-      asset_href <- assets[[asset]]$href
-      file_ext   <- .file_ext(asset_href)
+  feat_id <- stac_item[["id"]]
+  assets  <- .select_assets(stac_item[["assets"]], assets_name)
 
-      dest_file <- sprintf("%s/%s_%s.%s", output_dir, feat_id, asset_name,
-                           file_ext)
+  for (asset in 1:length(assets)) {
+    # store the names of assets
+    asset_name <- names(assets[asset])
+    asset_href <- assets[[asset]]$href
+    file_ext   <- .file_ext(asset_href)
 
-      tryCatch({
-        curl::curl_download(url      = asset_href,
-                            destfile = dest_file)
-      }, error = function(error){
-        message(paste("\n", error, "in ", asset_href))
-      })
+    # create a full path name
+    dest_file  <- sprintf("%s/%s_%s.%s", output_dir, feat_id, asset_name,
+                         file_ext)
 
-      # Check if the assets have been downloaded
-      if (file.exists(dest_file)) {
-        res$features[[feature]][["assets"]][[asset_name]]$href <-
-          dest_file
-      }
+    tryCatch({
+      curl::curl_download(url      = asset_href,
+                          destfile = dest_file)
+    }, error = function(error){
+      message(paste("\n", error, "in ", asset_href))
+    })
+
+    if (file.exists(dest_file)) {
+      stac_item[["assets"]][[asset_name]]$href <- dest_file
     }
   }
-
-  return(res)
+  return(stac_item)
 }
 
 #' @title items function
@@ -144,7 +158,7 @@ items_assets <- function(obj_stac) {
   return(items_assets)
 }
 
-#' @title Helper function of \code{assets_download}
+#' @title Helper function of \code{assets_download} function
 #'
 #' @author Implemented by \code{tools package}
 #'

@@ -4,12 +4,7 @@
 \alias{assets_download}
 \title{assets download}
 \usage{
-assets_download(
-  res,
-  assets_name = c(),
-  output_dir = "./",
-  curl_header = list()
-)
+assets_download(res, assets_name = c(), output_dir = "./")
 }
 \arguments{
 \item{res}{A \code{stac_items} or \code{stac_item} objects expressing a STAC
@@ -19,8 +14,6 @@ search criteria provided by \code{stac_search} functions.}
 
 \item{output_dir}{A \code{character} directory in which the images will be
 saved.}
-
-\item{curl_header}{a curl handle object.}
 }
 \value{
 The same \code{stac_items} object, but with the link of the item
