@@ -167,7 +167,7 @@
   return(paste0(params, collapse = ","))
 }
 
-.parse_url <- function(url) {
+.url_to_stac <- function(url) {
 
   url <- url[[1]]
 
@@ -176,9 +176,10 @@
   if (grepl("^([^?]+)\\?(.*)$", url))
     query <- gsub("^([^?]+)\\?(.*)$", "\\2", url)
 
-  components <- list(url = base_url,
-                     query = query)
-  return(components)
+  s <- structure(list(url = base_url,
+                      params = .query_decode(query)),
+                 class = "stac")
+  return(s)
 }
 
 .query_decode <- function(query) {
