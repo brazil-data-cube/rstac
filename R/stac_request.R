@@ -68,6 +68,7 @@ stac_request <- function(s, limit = 10,
     content_class <- .check_response(res, s$expected_responses)
     content <- res$content
 
+    # apply corresponding stac class
     if (!is.null(content_class))
       content <- structure(content,
                            stac = s,
@@ -90,6 +91,7 @@ stac_request <- function(s, limit = 10,
     content_class <- .check_response(res, s$expected_responses)
     content <- res$content
 
+    # apply corresponding stac class
     if (!is.null(content_class))
       content <- structure(content,
                            stac = s,
