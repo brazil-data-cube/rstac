@@ -63,6 +63,17 @@ stac_request <- function(s, limit = 10,
 
     # call the requisition subroutine
     res <- .get_request(s, headers = headers)
+
+    # check expected status-code and content-type
+    content_class <- .check_response(res, s$expected_responses)
+    content <- res$content
+
+    if (!is.null(content_class))
+      content <- structure(content,
+                           stac = s,
+                           request = list(
+                             method = method),
+                           class = content_class)
   } else if (method == "post") {
 
     post_enctype <- tolower(post_enctype[[1]])
@@ -74,16 +85,19 @@ stac_request <- function(s, limit = 10,
 
     # call the requisition subroutine
     res <- .post_request(s, enctype = post_enctype, headers = headers)
+
+    # check expected status-code and content-type
+    content_class <- .check_response(res, s$expected_responses)
+    content <- res$content
+
+    if (!is.null(content_class))
+      content <- structure(content,
+                           stac = s,
+                           request = list(
+                             method = method,
+                             post_enctype = post_enctype),
+                           class = content_class)
   }
-
-  # check expected status-code and content-type
-  content_class <- .check_response(res, s$expected_responses)
-  content <- res$content
-
-  if (!is.null(content_class))
-    content <- structure(content,
-                         stac = s,
-                         class = content_class)
 
   return(content)
 }
