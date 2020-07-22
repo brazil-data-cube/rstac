@@ -74,9 +74,6 @@
 #' @param ...       Filter parameters. Accept the same filter parameters
 #' of \code{\link{stac_search}} function.
 #'
-#' @param .limit    An \code{integer} defining the maximum number of results
-#' to return. Defaults to 10.
-#'
 #' @seealso
 #' \code{\link{stac_request}}, \code{\link{stac_collections}}
 #'
@@ -98,20 +95,19 @@
 #' }
 #'
 #' @export
-stac_items <- function(url, collection_id, item_id, bbox, datetime, ...,
-                       .limit = 10) {
+stac_items <- function(url, collection_id, item_id, bbox, datetime, ...) {
 
   params <- list()
 
   if (!missing(...))
     params <- c(params, list(...))
 
-  params["limit"] <- .limit
-
   if (missing(item_id)) {
 
     # TODO: follow specification strictly
     endpoint <- paste("/collections", collection_id, "items", sep = "/")
+
+    # TODO: add these code excerpts bellow in different file
     expected <- list("get" =
                        list(responses =
                               list("200" =
@@ -130,6 +126,7 @@ stac_items <- function(url, collection_id, item_id, bbox, datetime, ...,
     endpoint <- paste("/collections", collection_id, "items",
                       item_id, sep = "/")
 
+    # TODO: add these code excerpts bellow in different file
     expected <- list("get" =
                        list(responses =
                               list("200" =
@@ -145,8 +142,7 @@ stac_items <- function(url, collection_id, item_id, bbox, datetime, ...,
     params <- list()
   }
 
-  content <- structure(list(url = url,
-                            endpoint = endpoint,
+  content <- structure(list(url = .make_url(url, endpoint = endpoint),
                             params = params,
                             expected_responses = expected),
                        class = "stac")

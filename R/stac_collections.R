@@ -45,6 +45,8 @@ stac_collections <- function(url, collection_id) {
   if (missing(collection_id)) {
 
     endpoint <- "/collections"
+
+    # TODO: add these code excerpts bellow in different file
     expected <- list("get" =
                        list(responses =
                               list("200" =
@@ -58,6 +60,8 @@ stac_collections <- function(url, collection_id) {
 
   } else {
     endpoint <- paste("/collections", collection_id, sep = "/")
+
+    # TODO: add these code excerpts bellow in different file
     expected <- list("get" =
                        list(responses =
                               list("200" =
@@ -72,8 +76,7 @@ stac_collections <- function(url, collection_id) {
                                             "stac_collection"))))
   }
 
-  content <- structure(list(url = url,
-                            endpoint = endpoint,
+  content <- structure(list(url = .make_url(url, endpoint = endpoint),
                             params = list(),
                             expected_responses = expected),
                        class = "stac")
