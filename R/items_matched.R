@@ -36,7 +36,7 @@ items_matched <- function(items) {
 
   # try WFS3 spec
   if (is.null(matched))
-    matched <- items[["numberMached"]]
+    matched <- items[["numberMatched"]]
 
   if (is.null(matched))
     warning("STAC 'search:metadata' extension not available", call. = FALSE)
