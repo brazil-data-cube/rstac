@@ -59,7 +59,7 @@ stac_collections <- function(url, collection_id) {
                                      list("application/json" = ""))))
 
   } else {
-    endpoint <- paste("/collections", collection_id, sep = "/")
+    endpoint <- paste("/collections", collection_id[[1]], sep = "/")
 
     # TODO: add these code excerpts bellow in different file
     expected <- list("get" =
