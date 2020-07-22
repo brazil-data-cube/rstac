@@ -95,15 +95,15 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
   params <- list()
 
   if (!missing(collections))
-    params[["collections"]] <- collections
+    params[["collections"]] <- .query_encode(collections)
 
   if (!missing(ids))
-    params[["ids"]] <- ids
+    params[["ids"]] <- .query_encode(ids)
 
   if (!missing(datetime)) {
 
     .verify_datetime(datetime)
-    params[["datetime"]] <- datetime
+    params[["datetime"]] <- .query_encode(datetime)
   }
 
   if (!missing(bbox)) {
@@ -111,13 +111,13 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
     if (!length(bbox) %in% c(4, 6))
       stop(sprintf("Param `bbox` must have 4 or 6 numbers, not %s.",
                    length(bbox)))
-    params[["bbox"]] <- bbox
+    params[["bbox"]] <- .query_encode(bbox)
   }
 
   # TODO: validate polygon
   if (!missing(intersects)) {
 
-    params[["intersects"]] <- intersects
+    params[["intersects"]] <- .query_encode(intersects)
   }
 
   if (!missing(...))
@@ -132,6 +132,7 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
       params[["bbox"]] <- NULL
     }
 
+    # TODO: add these code excerpts bellow in different file
     expected <- list("post" =
                        list(enctypes = c("application/json"),
                             responses =
@@ -152,8 +153,7 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
                                           "application/json" = "stac_items"))))
   }
 
-  content <- structure(list(url = url,
-                            endpoint = "/stac/search",
+  content <- structure(list(url = .make_url(url, endpoint = "/stac/search"),
                             params = params,
                             expected_responses = expected),
                        class = "stac")
