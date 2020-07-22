@@ -43,6 +43,3 @@ items_matched <- function(items) {
 
   return(matched)
 }
-
-
-# TODO:

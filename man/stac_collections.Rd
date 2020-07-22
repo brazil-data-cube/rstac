@@ -34,6 +34,7 @@ Each endpoint retrieves specific STAC objects:
 
 stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
     stac_request()
+
 stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
                  collection_id = "CB_64_16D_STK") \%>\%
     stac_request()

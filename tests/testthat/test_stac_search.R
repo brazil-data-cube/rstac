@@ -1,5 +1,4 @@
 context("test_stac_search")
-# TODO: change name of context and cassete
 
 testthat::test_that("stac new object", {
   vcr::use_cassette("stac_new_obj", {

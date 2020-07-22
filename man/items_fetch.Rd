@@ -19,7 +19,8 @@ defined in \code{stac} object parameter.}
 A \code{stac_items} object.
 }
 \description{
-The \code{items_fetch} ...
+The \code{items_fetch} function returns the pagination of all
+ items of the stac object
 }
 \examples{
 \dontrun{

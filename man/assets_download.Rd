@@ -2,20 +2,41 @@
 % Please edit documentation in R/assets_download.R
 \name{assets_download}
 \alias{assets_download}
-\title{stac download}
+\title{assets download}
 \usage{
-assets_download(res, output_dir = "./", curl_header = list())
+assets_download(res, assets_name = c(), output_dir = "./")
 }
 \arguments{
-\item{res}{res parameter}
+\item{res}{A \code{stac_items} or \code{stac_item} objects expressing a STAC
+search criteria provided by \code{stac_search} functions.}
 
-\item{output_dir}{output_dir parameter}
+\item{assets_name}{A \code{character} with the assets names to be filtered.}
 
-\item{curl_header}{curl_he}
+\item{output_dir}{A \code{character} directory in which the images will be
+saved.}
+}
+\value{
+The same \code{stac_items} object, but with the link of the item
+ pointing to the directory where the assets were saved.
 }
 \description{
-baixar as imagens que vem do res e organizar em repo
+The \code{assets_download} function downloads the assets
+provided by the STAC API
+}
+\examples{
+\dontrun{
+
+obj_stac <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+            collections = "MOD13Q1",
+            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+    stac_request() \%>\%
+    assets_download(assets_name = c("blue", "ndvi"), output_dir = "./")
+}
+
+}
+\seealso{
+\code{\link{stac_search}}, \code{\link{stac_request}}
 }
 \author{
-...
+Felipe Carvalho and Rolf Simoes
 }

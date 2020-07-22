@@ -3,14 +3,14 @@
 #' @author Rolf Simoes
 #'
 #' @description This function implements \code{/stac} API
-#' endpoint (v0.8.0). It prepares query parameters to be provided to
-#' \code{stac_request} function.
+#'  endpoint (v0.8.0). It prepares query parameters to be provided to
+#'  \code{stac_request} function.
 #'
 #' This endpoint should return a STAC Catalog containing all data Items
-#' searcheable in the API.
+#'  searchable in the API.
 #'
 #' @param url     A \code{character} informing the base url of a
-#' STAC web service.
+#'  STAC web service.
 #'
 #' @seealso
 #' \code{\link{stac_search}}, \code{\link{stac_request}}
@@ -29,13 +29,6 @@
 #' @export
 stac <- function(url) {
 
-  # TODO: check stac API version and generate the properly endpoint
-  # STAC API (<=0.8.0): "/stac"
-  # STAC API (>=0.9.0): "/"
-  # How to check STAC API version:
-  # Maybe request endpoint "/", the landing page endpoint of WFS3.
-  # endpoint <- .stac_version(endpoint = TRUE)
-
   expected <- list("get" =
                      list(responses =
                             list("200" =
@@ -46,7 +39,6 @@ stac <- function(url) {
                             list("200" =
                                    list("application/json" = "stac_catalog"))))
 
-  # sub o endpoint que recebe a versão
   content <- structure(list(url = url,
                             endpoint = "/stac",
                             params = list(),
