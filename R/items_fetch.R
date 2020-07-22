@@ -42,6 +42,8 @@ items_fetch <- function(items, headers = list()) {
   next_url <- next_url[[1]]$href
 
   s <- attr(items, "stac")
+  # if (is.null(s) || (inherits(s, "stac") && s$))
+
   content <- stac_request(s, method = s$method)
   return(content)
 }
