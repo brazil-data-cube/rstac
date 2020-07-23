@@ -43,5 +43,4 @@ NULL
 
 #' @importFrom jsonlite validate fromJSON
 #' @importFrom curl curl_fetch_memory new_handle handle_setheaders curl_download
-#' @importFrom progress progress_bar
 NULL

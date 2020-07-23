@@ -7,7 +7,7 @@ Authors@R:
       person("Rolf", "Simoes", email = "rolf.simoes@inpe.br",
              role = c("aut"),
              comment = c(ORCID = "0000-0003-0953-4132")),
-      person("Felipe", "Carvalho", email = "lipecaso@gmail.com", role = c("aut")))
+      person("Felipe", "Carvalho", email = "felipe.carvalho@inpe.br", role = c("aut")))
 Description: 
     R client library for STAC is a R package that interfaces STAC API 
     endpoints.
@@ -20,8 +20,7 @@ LazyData: true
 RoxygenNote: 7.1.1
 Depends:
     jsonlite,
-    curl,
-    progress
+    curl
 Suggests: 
     covr,
     magrittr,

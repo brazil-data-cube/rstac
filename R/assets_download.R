@@ -8,10 +8,13 @@
 #' @param res A \code{stac_items} or \code{stac_item} objects expressing a STAC
 #'  search criteria provided by \code{stac_search} functions.
 #'
-#' @param assets_name A \code{character} with the assets names to be filtered.
+#' @param assets_name  A \code{character} with the assets names to be filtered.
 #'
-#' @param output_dir A \code{character} directory in which the images will be
+#' @param output_dir  A \code{character} directory in which the images will be
 #'  saved.
+#'
+#' @param progress    A \code{logical} indicating if a progress bar must be
+#'  shown or not. Defaults to \code{TRUE}.
 #'
 #' @seealso
 #' \code{\link{stac_search}}, \code{\link{stac_request}}
@@ -30,7 +33,8 @@
 #'  pointing to the directory where the assets were saved.
 #'
 #' @export
-assets_download <- function(res, assets_name = c(), output_dir = "./") {
+assets_download <- function(res, assets_name = c(), output_dir = "./",
+                            progress = TRUE) {
 
   # check the object class
   if (!inherits(res, c("stac_items", "stac_item")))
@@ -55,63 +59,24 @@ assets_download <- function(res, assets_name = c(), output_dir = "./") {
     stop(sprintf("Query provided returned 0 items.
                   Please verify your query"), call. = FALSE)
 
-  # setting a progress bar
-  prog_bar <- progress::progress_bar$new(
-    format = "  downloading assets [:bar] :percent eta: :eta",
-    total  = items_len, clear = FALSE, width = 60)
+  # verify if progress bar can be shown
+  progress <- progress & (!is.null(items_len))
+  if (progress)
+    pb <- utils::txtProgressBar(min = 0, max = items_len, style = 3, width = 50)
 
   for (feature in 1:items_len) {
     # toggle bar
-    prog_bar$tick()
+    if (progress)
+      utils::setTxtProgressBar(pb, feature)
 
     res$features[[feature]] <- .item_download(res$features[[feature]],
                                              assets_name, output_dir)
   }
+  # close progress bar
+  if (progress)
+    close(pb)
+
   return(res)
-}
-
-#' @title Helper function of \code{assets_download} function
-#'
-#' @description the \code{.item_download} function downloads the assets of a
-#'  stac_item
-#'
-#' @param stac_item A  \code{stac_item} object expressing a STAC
-#'  search criteria provided by \code{stac_item} function.
-#'
-#' @param assets_name A \code{character} with the assets names to be filtered.
-#'
-#' @param output_dir A \code{character} directory in which the images will be
-#'  saved.
-#'
-#' @return The same \code{stac_item} object, but with the link of the item
-#'  pointing to the directory where the assets were saved.
-.item_download <- function(stac_item, assets_name = c(), output_dir = "./") {
-
-  feat_id <- stac_item[["id"]]
-  assets  <- .select_assets(stac_item[["assets"]], assets_name)
-
-  for (asset in 1:length(assets)) {
-    # store the names of assets
-    asset_name <- names(assets[asset])
-    asset_href <- assets[[asset]]$href
-    file_ext   <- .file_ext(asset_href)
-
-    # create a full path name
-    dest_file  <- sprintf("%s/%s_%s.%s", output_dir, feat_id, asset_name,
-                         file_ext)
-
-    tryCatch({
-      curl::curl_download(url      = asset_href,
-                          destfile = dest_file)
-    }, error = function(error){
-      message(paste("\n", error, "in ", asset_href))
-    })
-
-    if (file.exists(dest_file)) {
-      stac_item[["assets"]][[asset_name]]$href <- dest_file
-    }
-  }
-  return(stac_item)
 }
 
 #' @title items function
@@ -158,6 +123,54 @@ items_assets <- function(obj_stac) {
   return(items_assets)
 }
 
+# helpers ----------------------------------------------------------------------
+
+#' @title Helper function of \code{assets_download} function
+#'
+#' @description the \code{.item_download} function downloads the assets of a
+#'  stac_item
+#'
+#' @param stac_item A  \code{stac_item} object expressing a STAC
+#'  search criteria provided by \code{stac_item} function.
+#'
+#' @param assets_name A \code{character} with the assets names to be filtered.
+#'
+#' @param output_dir A \code{character} directory in which the images will be
+#'  saved.
+#'
+#' @return The same \code{stac_item} object, but with the link of the item
+#'  pointing to the directory where the assets were saved.
+#'
+#' @noRd
+.item_download <- function(stac_item, assets_name = c(), output_dir = "./") {
+
+  feat_id <- stac_item[["id"]]
+  assets  <- .select_assets(stac_item[["assets"]], assets_name)
+
+  for (asset in 1:length(assets)) {
+    # store the names of assets
+    asset_name <- names(assets[asset])
+    asset_href <- assets[[asset]]$href
+    file_ext   <- .file_ext(asset_href)
+
+    # create a full path name
+    dest_file  <- sprintf("%s/%s_%s.%s", output_dir, feat_id, asset_name,
+                         file_ext)
+
+    tryCatch({
+      curl::curl_download(url      = asset_href,
+                          destfile = dest_file)
+    }, error = function(error){
+      message(paste("\n", error, "in ", asset_href))
+    })
+
+    if (file.exists(dest_file)) {
+      stac_item[["assets"]][[asset_name]]$href <- dest_file
+    }
+  }
+  return(stac_item)
+}
+
 #' @title Helper function of \code{assets_download} function
 #'
 #' @author Implemented by \code{tools package}
@@ -168,6 +181,8 @@ items_assets <- function(obj_stac) {
 #' @param asset_url A \code{character} URL provided from a \code{stac_search}.
 #'
 #' @return A \code{character} of the extracted file extension.
+#'
+#' @noRd
 .file_ext <- function(asset_url) {
   pos   <- regexpr("\\.([[:alnum:]]+)$", asset_url)
   str_t <- ifelse(pos > -1L, substring(asset_url, pos + 1L), "")
@@ -189,6 +204,8 @@ items_assets <- function(obj_stac) {
 #'
 #' @return A \code{list} in the same format as the list of assets, but with the
 #'  selected assets names.
+#'
+#' @noRd
 .select_assets <- function(assets_list = list(), assets_names = c()) {
 
   # If not provided the assets name, by default all assets will be used

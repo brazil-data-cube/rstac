@@ -1,6 +1,4 @@
-#' @title verify date time
-#'
-#' @name .verify_datetime
+#' @title STAC utils
 #'
 #' @author Felipe Carvalho
 #'
@@ -20,6 +18,8 @@
 #'
 #' @return An error if the date does not follow the specified standards or the
 #'  date time provided as \code{character}.
+#'
+#' @noRd
 .verify_datetime <- function(datetime) {
 
   # check if the date time provided is an open interval
@@ -80,9 +80,7 @@
   }
 }
 
-#' @title check date time as RFC patterns
-#'
-#' @name .check_rfc
+#' @title STAC utils
 #'
 #' @author Felipe Carvalho
 #'
@@ -102,6 +100,8 @@
 #'
 #' @return A \code{logical} if TRUE the date time provided is correct,
 #' otherwise not.
+#'
+#' @noRd
 .check_rfc <- function(datetime) {
 
   # Standard Regex of RFC 3339
@@ -112,6 +112,8 @@
 }
 
 
+#' @title STAC utils
+#'
 #' @rdname http_request
 #'
 #' @description
@@ -137,7 +139,6 @@
 #'
 #' @return
 #' \code{.make_url} returns an url to access STAC endpoints.
-#'
 .make_url <- function(url, endpoint = "", params = list()) {
 
   endpoint <- paste0(endpoint, collapse = "/")
