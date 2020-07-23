@@ -71,6 +71,10 @@
 #' (west-most box edge) is larger than the third value
 #' (east-most box edge).
 #'
+#' @param limit       An \code{integer} defining the maximum number of results
+#' to return. If \code{NULL} it defaults to the service implementation.
+#' Defaults to 10.
+#'
 #' @param ...       Filter parameters. Accept the same filter parameters
 #' of \code{\link{stac_search}} function.
 #'
@@ -95,7 +99,8 @@
 #' }
 #'
 #' @export
-stac_items <- function(url, collection_id, item_id, datetime, bbox, ...) {
+stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
+                       ...) {
 
   params <- list()
 
@@ -112,6 +117,9 @@ stac_items <- function(url, collection_id, item_id, datetime, bbox, ...) {
                    length(bbox)))
     params[["bbox"]] <- .query_encode(bbox)
   }
+
+  if (!is.null(limit))
+    params[["limit"]] <- limit
 
   if (!missing(...))
     params <- c(params, list(...))

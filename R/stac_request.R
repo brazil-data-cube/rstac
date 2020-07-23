@@ -9,10 +9,6 @@
 #' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
 #' or \code{stac_items} functions.
 #'
-#' @param limit      An \code{integer} defining the maximum number of results
-#' to return. If \code{NULL} it defaults to the service implementation.
-#' Defaults to 10.
-#'
 #' @param method     A \code{character} value informing the HTTP method to be
 #' used for this request. Accepted methods are \code{'get'} or \code{'post'}.
 #'
@@ -35,12 +31,12 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'     stac_request(limit = 100)
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0", limit = 100) %>%
+#'     stac_request()
 #' }
 #'
 #' @export
-stac_request <- function(s, limit = 10,
+stac_request <- function(s,
                          method = c("get", "post"),
                          post_enctype = c("application/json",
                                           "application/x-www-form-urlencoded",
@@ -50,9 +46,6 @@ stac_request <- function(s, limit = 10,
   # check the object class
   if (!inherits(s, "stac"))
     stop(sprintf("Invalid `stac` object."), call. = FALSE)
-
-  if (!is.null(limit))
-    s$params[["limit"]] <- limit
 
   method <- tolower(method[[1]])
   if (!method %in% names(s$expected_responses))

@@ -70,6 +70,10 @@
 #' @param intersects Only returns items that intersect with the provided
 #' polygon.
 #'
+#' @param limit       An \code{integer} defining the maximum number of results
+#' to return. If \code{NULL} it defaults to the service implementation.
+#' Defaults to 10.
+#'
 #' @param ...         Any additional non standard filter parameter.
 #'
 #' @seealso
@@ -90,7 +94,7 @@
 #'
 #' @export
 stac_search <- function(url, collections, ids, bbox, datetime, intersects,
-                        ...) {
+                        limit = 10, ...) {
 
   params <- list()
 
@@ -103,7 +107,7 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
   if (!missing(datetime)) {
 
     .verify_datetime(datetime)
-    params[["datetime"]] <- .query_encode(datetime)
+    params[["datetime"]] <- datetime
   }
 
   if (!missing(bbox)) {
@@ -119,6 +123,9 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
 
     params[["intersects"]] <- .query_encode(intersects)
   }
+
+  if (!is.null(limit))
+    params[["limit"]] <- limit
 
   if (!missing(...))
     params <- c(params, list(...))
