@@ -11,15 +11,17 @@ testthat::test_that("assets download", {
         url         = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
         collections = "MOD13Q1",
         datetime    = "2019-09-01/2019-11-01",
-        bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-      rstac::stac_request(., limit = 0) %>%
+        bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
+        limit       = 0) %>%
+      rstac::stac_request(.) %>%
       rstac::assets_download(., assets_name = c("blue", "evi")))
 
     # error - given another object
      testthat::expect_error(
        rstac::stac(
-         url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-       rstac::stac_request(., limit = 2) %>%
+         url   = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+         limit = 2) %>%
+       rstac::stac_request(.) %>%
        rstac::assets_download(., assets_name = c("blue", "evi")))
 
    # error - wrong path
@@ -28,8 +30,9 @@ testthat::test_that("assets download", {
        url         = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
        collections = "MOD13Q1",
        datetime    = "2019-09-01/2019-11-01",
-       bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-     rstac::stac_request(., limit = 1) %>%
+       bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
+       limit       = 1) %>%
+     rstac::stac_request(.) %>%
      rstac::assets_download(., assets_name = c("thumbnail"),
                             output_dir = "./my-dir/"))
 
@@ -40,8 +43,9 @@ testthat::test_that("assets download", {
           url         = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
           collections = "MOD13Q1",
           datetime    = "2019-09-01/2019-11-01",
-          bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-        rstac::stac_request(., limit = 1) %>%
+          bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
+          limit       = 1) %>%
+        rstac::stac_request(.) %>%
         rstac::assets_download(., assets_name = c("thumbnail"))),
       expected = "stac_items"
     )
@@ -51,8 +55,9 @@ testthat::test_that("assets download", {
 
     # error - given another object
     testthat::expect_error(
-     rstac::stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-     rstac::stac_request(., limit = 2) %>%
+     rstac::stac(url   = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+                 limit = 2) %>%
+     rstac::stac_request(.) %>%
      rstac::items_assets(.))
 
     # error - zero items
@@ -61,8 +66,9 @@ testthat::test_that("assets download", {
         url         = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
         collections = "MOD13Q1",
         datetime    = "2019-09-01/2019-11-01",
-        bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-      rstac::stac_request(., limit = 0) %>%
+        bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
+        limit       = 0) %>%
+      rstac::stac_request(.) %>%
       rstac::items_assets(.))
 
     # ok - return a stac_items
@@ -72,8 +78,9 @@ testthat::test_that("assets download", {
           url         = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
           collections = "MOD13Q1",
           datetime    = "2019-09-01/2019-11-01",
-          bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-        rstac::stac_request(., limit = 1) %>%
+          bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
+          limit       = 1) %>%
+        rstac::stac_request(.) %>%
         rstac::items_assets(.)),
       expected = "list"
     )
