@@ -4,7 +4,7 @@
 \alias{assets_download}
 \title{assets download}
 \usage{
-assets_download(res, assets_name = c(), output_dir = "./")
+assets_download(res, assets_name = c(), output_dir = "./", progress = TRUE)
 }
 \arguments{
 \item{res}{A \code{stac_items} or \code{stac_item} objects expressing a STAC
@@ -14,6 +14,9 @@ search criteria provided by \code{stac_search} functions.}
 
 \item{output_dir}{A \code{character} directory in which the images will be
 saved.}
+
+\item{progress}{A \code{logical} indicating if a progress bar must be
+shown or not. Defaults to \code{TRUE}.}
 }
 \value{
 The same \code{stac_items} object, but with the link of the item
