@@ -20,7 +20,8 @@ LazyData: true
 RoxygenNote: 7.1.1
 Depends:
     jsonlite,
-    curl
+    curl,
+    httr
 Suggests: 
     covr,
     magrittr,

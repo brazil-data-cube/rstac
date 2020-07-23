@@ -29,6 +29,7 @@
 #' @export
 stac <- function(url) {
 
+  # TODO: add these code excerpts bellow in different file
   expected <- list("get" =
                      list(responses =
                             list("200" =
@@ -39,8 +40,7 @@ stac <- function(url) {
                             list("200" =
                                    list("application/json" = "stac_catalog"))))
 
-  content <- structure(list(url = url,
-                            endpoint = "/stac",
+  content <- structure(list(url = .make_url(url, endpoint = "/stac"),
                             params = list(),
                             expected_responses = expected),
                        class = "stac")

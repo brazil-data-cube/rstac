@@ -89,12 +89,12 @@
 #' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1",
 #'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-#'     stac_request()
+#'     get_request()
 #' }
 #'
 #' @export
 stac_search <- function(url, collections, ids, bbox, datetime, intersects,
-                        limit = 10, ...) {
+                        limit, ...) {
 
   params <- list()
 
@@ -124,7 +124,7 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
     params[["intersects"]] <- .query_encode(intersects)
   }
 
-  if (!is.null(limit))
+  if (!missing(limit) && !is.null(limit))
     params[["limit"]] <- limit
 
   if (!missing(...))

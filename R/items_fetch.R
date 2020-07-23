@@ -28,14 +28,17 @@
 #'
 #' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1",
-#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-#'     stac_request() %>%
+#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
+#'             limit = 500) %>%
+#'     get_request() %>%
 #'     items_fetch()
 #' }
 #'
 #' @export
-items_fetch <- function(items, progress = TRUE, headers = list()) {
+items_fetch <- function(items, progress = TRUE, headers = c()) {
 
+
+  # TODO: create a function to check object
   if (!inherits(items, c("stac_items", "stac_item")))
     stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
 
@@ -74,9 +77,15 @@ items_fetch <- function(items, progress = TRUE, headers = list()) {
       request <- list(method = "get")
 
     # call request
-    content <- stac_request(next_stac,
-                            method = request$method,
-                            post_enctype = request$post_enctype)
+    if (request$method == "get") {
+      content <- get_request(next_stac, headers = headers)
+    } else if (request$method == "post") {
+      content <- post_request(next_stac,
+                              encode = request$enctype,
+                              headers = headers)
+    } else {
+      stop(sprintf("Invalid HTTP method."), call. = FALSE)
+    }
 
     if (!inherits(content, "stac_items"))
       stop(sprintf("Invalid content response."), call. = FALSE)

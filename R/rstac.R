@@ -43,4 +43,5 @@ NULL
 
 #' @importFrom jsonlite validate fromJSON
 #' @importFrom curl curl_fetch_memory new_handle handle_setheaders curl_download
+#' @importFrom httr GET POST write_disk add_headers content status_code http_type
 NULL

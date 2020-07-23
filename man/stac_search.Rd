@@ -4,7 +4,7 @@
 \alias{stac_search}
 \title{Endpoint functions}
 \usage{
-stac_search(url, collections, ids, bbox, datetime, intersects, limit = 10, ...)
+stac_search(url, collections, ids, bbox, datetime, intersects, limit, ...)
 }
 \arguments{
 \item{url}{A \code{character} informing the base url of a
@@ -92,7 +92,7 @@ current version.
 stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
             collections = "MOD13Q1",
             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
-    stac_request()
+    get_request()
 }
 
 }

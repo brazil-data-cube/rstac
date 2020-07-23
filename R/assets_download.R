@@ -22,11 +22,11 @@
 #' @examples
 #' \dontrun{
 #'
-#' obj_stac <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+#' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1",
-#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-#'     stac_request() %>%
-#'     assets_download(assets_name = c("blue", "ndvi"), output_dir = "./")
+#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355), limit = 10) %>%
+#'     get_request() %>%
+#'     assets_download(assets_name = c("thumbnail"), output_dir = "./")
 #' }
 #'
 #' @return The same \code{stac_items} object, but with the link of the item
@@ -158,8 +158,11 @@ items_assets <- function(obj_stac) {
                          file_ext)
 
     tryCatch({
-      curl::curl_download(url      = asset_href,
-                          destfile = dest_file)
+      # TODO: ver o config
+      httr::GET(url      = asset_href,
+                httr::write_disk(path = dest_file))
+      #curl::curl_download(url      = asset_href,
+      #                    destfile = dest_file)
     }, error = function(error){
       message(paste("\n", error, "in ", asset_href))
     })

@@ -10,7 +10,7 @@ testthat::test_that("items functions", {
                   collections = "MOD13Q1",
                   bbox  = c(-55.16335, -4.26325, -49.31739, -1.18355),
                   limit = 500) %>%
-          rstac::stac_request(.)
+          rstac::get_request(.)
 
     # items_fetch---------------------------------------------------------------
     # error - given another object

@@ -91,16 +91,20 @@
 #' stac_items("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'            collection_id = "CB_64_16D_STK",
 #'            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-#'     stac_request()
+#'     get_request()
+#'
 #' stac_items("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'            collection_id = "MOD13Q1",
 #'            item_id = "MOD13Q1.A2019241.h13v09.006.2019262164754") %>%
-#'     stac_request()
+#'     get_request()
 #' }
 #'
 #' @export
 stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
                        ...) {
+
+  if (missing(collection_id))
+    stop(paste("Not informed `collection_id` parameter."), .call = FALSE)
 
   params <- list()
 
@@ -118,7 +122,7 @@ stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
     params[["bbox"]] <- .query_encode(bbox)
   }
 
-  if (!is.null(limit))
+  if (!missing(limit) && !is.null(limit))
     params[["limit"]] <- limit
 
   if (!missing(...))

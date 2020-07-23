@@ -20,6 +20,14 @@ testthat::test_that("stac new object", {
       expected = "stac"
     )
 
+    # # check object class of stac_item
+    # testthat::expect_equal(
+    #   object   = class(rstac::stac_items(
+    #     url    = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+    #     bbox   = c(-55.16335, -4.26325, -49.31739, -1.18355))),
+    #   expected = "stac_items"
+    # )
+
     # check object class of stac collections
     s_col <- rstac::stac_collections(
       url  = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
