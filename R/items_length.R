@@ -22,7 +22,7 @@
 items_length <- function(items) {
 
   if (!inherits(items, "stac_items"))
-    stop(sprintf("Invalid `stac_items` object."))
+    stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
 
   return(length(items$features))
 }

@@ -30,7 +30,7 @@ items_matched <- function(items) {
   # Maybe `stac_version` field.
   # .stac_version <- function()
   if (!inherits(items, "stac_items"))
-    stop(sprintf("Invalid `stac_items` object."))
+    stop(sprintf("Invalid `stac_items` object."), .call = FALSE)
 
   matched <- items[["search:metadata"]][["matched"]]
 

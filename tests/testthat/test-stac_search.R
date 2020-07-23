@@ -5,6 +5,46 @@ testthat::test_that("stac new object", {
     # skip cran check test
     testthat::skip_on_cran()
 
+    # check object class of stac
+    testthat::expect_equal(
+      object   = class(rstac::stac(
+        url    = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")),
+      expected = "stac"
+    )
+
+    # check object class of stac_search
+    testthat::expect_equal(
+      object   = class(rstac::stac_search(
+        url    = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        bbox   = c(-55.16335, -4.26325, -49.31739, -1.18355))),
+      expected = "stac"
+    )
+
+    # check object class of stac collections
+    s_col <- rstac::stac_collections(
+      url  = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+
+    testthat::expect_equal(
+      object   = s_col$expected_responses$post$responses$`200`$`application/json`,
+      expected = ""
+    )
+
+    # check object class of stac collections
+    testthat::expect_equal(
+      object   = class(s_col),
+      expected = "stac"
+    )
+
+    # check object class of stac collections
+    s_colid <- rstac::stac_collections(
+      url           = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+      collection_id = "CB_64_16D_STK")
+
+    testthat::expect_equal(
+      object   = s_colid$expected_responses$post$responses$`200`$`application/json`,
+      expected = "stac_collection"
+    )
+
     # Error when creating the stac object by parameter bbox
     testthat::expect_error(
       rstac::stac_search(
@@ -25,14 +65,6 @@ testthat::test_that("stac new object", {
                                             -1.18355)))
         )
     )
-
-    # check object class
-    testthat::expect_equal(
-      object   = class(rstac::stac_search(
-        url    = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-        bbox   = c(-55.16335, -4.26325, -49.31739, -1.18355))),
-      expected = "stac"
-      )
 
     ########### Check errors in fixed date time
     # check fixed date time
