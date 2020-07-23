@@ -2,7 +2,7 @@
 % Please edit documentation in R/assets_download.R
 \name{.item_download}
 \alias{.item_download}
-\title{Helper function of \code{assets_download}}
+\title{Helper function of \code{assets_download} function}
 \usage{
 .item_download(stac_item, assets_name = c(), output_dir = "./")
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/assets_download.R
 \name{.file_ext}
 \alias{.file_ext}
-\title{Helper function of \code{assets_download}}
+\title{Helper function of \code{assets_download} function}
 \usage{
 .file_ext(asset_url)
 }

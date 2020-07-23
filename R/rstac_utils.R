@@ -157,7 +157,15 @@
   return(res)
 }
 
-
+#' @title STAC utils
+#'
+#' @author Rolf Simoes
+#'
+#' @description The \code{.query_encode} ...
+#'
+#' @param query ...
+#'
+#' @return ...
 .query_encode <- function(params) {
 
   if (!is.null(names(params)))
@@ -167,6 +175,15 @@
   return(paste0(params, collapse = ","))
 }
 
+#' @title STAC utils
+#'
+#' @author Rolf Simoes
+#'
+#' @description The \code{.url_to_stac} ...
+#'
+#' @param query ...
+#'
+#' @return ...
 .url_to_stac <- function(url) {
 
   url <- url[[1]]
@@ -182,6 +199,15 @@
   return(s)
 }
 
+#' @title STAC utils
+#'
+#' @author Rolf Simoes
+#'
+#' @description The \code{.query_decode} ...
+#'
+#' @param query ...
+#'
+#' @return ...
 .query_decode <- function(query) {
 
   values <- lapply(strsplit(query, split = "&")[[1]],
