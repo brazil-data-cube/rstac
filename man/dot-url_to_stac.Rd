@@ -7,7 +7,7 @@
 .url_to_stac(url)
 }
 \arguments{
-\item{query}{...}
+\item{url}{...}
 }
 \value{
 ...

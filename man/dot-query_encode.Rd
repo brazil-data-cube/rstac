@@ -7,7 +7,7 @@
 .query_encode(params)
 }
 \arguments{
-\item{query}{...}
+\item{params}{...}
 }
 \value{
 ...

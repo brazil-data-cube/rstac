@@ -63,7 +63,7 @@ the corresponding JSON STAC objects.
 Authors:
 \itemize{
   \item Rolf Simoes \email{rolf.simoes@inpe.br} (\href{https://orcid.org/0000-0003-0953-4132}{ORCID})
-  \item Felipe Souza \email{lipecaso@gmail.com}
+  \item Felipe Carvalho \email{lipecaso@gmail.com}
 }
 
 }
