@@ -110,3 +110,111 @@
 
   return(check_pattern)
 }
+
+
+#' @rdname http_request
+#'
+#' @description
+#' \code{.make_url} is a helper function to generate url. The returned
+#' url is formed by appending \code{endpoint} at the end of base url
+#' informed by \code{url} parameter. If \code{endpoint} has multiple elements
+#' it will be collapsed using \code{'/'} character.
+#'
+#' Note that \code{.make_url} function differs from standards of relative URI
+#' path resolution (RFC 3986). Any existing path in base url
+#' is maintained in the final url, and a simple string contatenation is made
+#' whithout including any character separator. For this reason, this function
+#' does not support the query and fragment URI components in the base url.
+#'
+#' @param url         A \code{character} informing the base url of a
+#' STAC web service.
+#'
+#' @param endpoint    A \code{character} a path to be appended in the final
+#' url.
+#'
+#' @param params      A \code{list} with all url query parameters to be
+#' appended in final url.
+#'
+#' @return
+#' \code{.make_url} returns an url to access STAC endpoints.
+#'
+.make_url <- function(url, endpoint = "", params = list()) {
+
+  endpoint <- paste0(endpoint, collapse = "/")
+
+  # TODO: URI resolution for previous existing query and fragment URI components
+  # in informed url.
+  res <- paste0(url, endpoint)
+
+  if (length(params) > 0) {
+
+    if (is.null(names(params)))
+      stop("URL query values must be named.", call. = FALSE)
+    params <- .query_encode(params)
+    res <- paste(res, params, sep = "?")
+  }
+
+  return(res)
+}
+
+#' @title STAC utils
+#'
+#' @author Rolf Simoes
+#'
+#' @description The \code{.query_encode} ...
+#'
+#' @param params ...
+#'
+#' @return ...
+.query_encode <- function(params) {
+
+  if (!is.null(names(params)))
+    return(paste(names(params),
+                 sapply(unname(params), paste0, collapse = ","),
+                 sep = "=", collapse = "&"))
+  return(paste0(params, collapse = ","))
+}
+
+#' @title STAC utils
+#'
+#' @author Rolf Simoes
+#'
+#' @description The \code{.url_to_stac} ...
+#'
+#' @param url ...
+#'
+#' @return ...
+.url_to_stac <- function(url) {
+
+  url <- url[[1]]
+
+  base_url <- gsub("^([^?]+)\\?(.*)$", "\\1", url)
+  query <- ""
+  if (grepl("^([^?]+)\\?(.*)$", url))
+    query <- gsub("^([^?]+)\\?(.*)$", "\\2", url)
+
+  s <- structure(list(url = base_url,
+                      params = .query_decode(query)),
+                 class = "stac")
+  return(s)
+}
+
+#' @title STAC utils
+#'
+#' @author Rolf Simoes
+#'
+#' @description The \code{.query_decode} ...
+#'
+#' @param query ...
+#'
+#' @return ...
+.query_decode <- function(query) {
+
+  values <- lapply(strsplit(query, split = "&")[[1]],
+                   function(x) strsplit(x, split = "=")[[1]])
+
+  params <- lapply(values, `[[`, 2)
+  names(params) <- sapply(values, `[[`, 1)
+
+  return(params)
+}

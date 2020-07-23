@@ -70,6 +70,10 @@
 #' @param intersects Only returns items that intersect with the provided
 #' polygon.
 #'
+#' @param limit       An \code{integer} defining the maximum number of results
+#' to return. If \code{NULL} it defaults to the service implementation.
+#' Defaults to 10.
+#'
 #' @param ...         Any additional non standard filter parameter.
 #'
 #' @seealso
@@ -90,15 +94,15 @@
 #'
 #' @export
 stac_search <- function(url, collections, ids, bbox, datetime, intersects,
-                        ...) {
+                        limit = 10, ...) {
 
   params <- list()
 
   if (!missing(collections))
-    params[["collections"]] <- collections
+    params[["collections"]] <- .query_encode(collections)
 
   if (!missing(ids))
-    params[["ids"]] <- ids
+    params[["ids"]] <- .query_encode(ids)
 
   if (!missing(datetime)) {
 
@@ -111,14 +115,17 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
     if (!length(bbox) %in% c(4, 6))
       stop(sprintf("Param `bbox` must have 4 or 6 numbers, not %s.",
                    length(bbox)))
-    params[["bbox"]] <- bbox
+    params[["bbox"]] <- .query_encode(bbox)
   }
 
   # TODO: validate polygon
   if (!missing(intersects)) {
 
-    params[["intersects"]] <- intersects
+    params[["intersects"]] <- .query_encode(intersects)
   }
+
+  if (!is.null(limit))
+    params[["limit"]] <- limit
 
   if (!missing(...))
     params <- c(params, list(...))
@@ -132,6 +139,7 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
       params[["bbox"]] <- NULL
     }
 
+    # TODO: add these code excerpts bellow in different file
     expected <- list("post" =
                        list(enctypes = c("application/json"),
                             responses =
@@ -152,8 +160,7 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
                                           "application/json" = "stac_items"))))
   }
 
-  content <- structure(list(url = url,
-                            endpoint = "/stac/search",
+  content <- structure(list(url = .make_url(url, endpoint = "/stac/search"),
                             params = params,
                             expected_responses = expected),
                        class = "stac")

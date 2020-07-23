@@ -9,10 +9,6 @@
 #' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
 #' or \code{stac_items} functions.
 #'
-#' @param limit      An \code{integer} defining the maximum number of results
-#' to return. If \code{NULL} it defaults to the service implementation.
-#' Defaults to 10.
-#'
 #' @param method     A \code{character} value informing the HTTP method to be
 #' used for this request. Accepted methods are \code{'get'} or \code{'post'}.
 #'
@@ -35,23 +31,21 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'     stac_request(limit = 100)
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0", limit = 100) %>%
+#'     stac_request()
 #' }
 #'
 #' @export
-stac_request <- function(s, limit = 10,
+stac_request <- function(s,
                          method = c("get", "post"),
                          post_enctype = c("application/json",
                                           "application/x-www-form-urlencoded",
                                           "multipart/form-data"),
                          headers = list()) {
+
   # check the object class
   if (!inherits(s, "stac"))
     stop(sprintf("Invalid `stac` object."), call. = FALSE)
-
-  if (!is.null(limit))
-    s$params[["limit"]] <- limit
 
   method <- tolower(method[[1]])
   if (!method %in% names(s$expected_responses))
@@ -59,9 +53,21 @@ stac_request <- function(s, limit = 10,
          call. = FALSE)
 
   if (method == "get") {
+
     # call the requisition subroutine
     res <- .get_request(s, headers = headers)
 
+    # check expected status-code and content-type
+    content_class <- .check_response(res, s$expected_responses)
+    content <- res$content
+
+    # apply corresponding stac class
+    if (!is.null(content_class))
+      content <- structure(content,
+                           stac = s,
+                           request = list(
+                             method = method),
+                           class = content_class)
   } else if (method == "post") {
 
     post_enctype <- tolower(post_enctype[[1]])
@@ -73,16 +79,20 @@ stac_request <- function(s, limit = 10,
 
     # call the requisition subroutine
     res <- .post_request(s, enctype = post_enctype, headers = headers)
+
+    # check expected status-code and content-type
+    content_class <- .check_response(res, s$expected_responses)
+    content <- res$content
+
+    # apply corresponding stac class
+    if (!is.null(content_class))
+      content <- structure(content,
+                           stac = s,
+                           request = list(
+                             method = method,
+                             post_enctype = post_enctype),
+                           class = content_class)
   }
-
-  # check expected status-code and content-type
-  content_class <- .check_response(res, s$expected_responses)
-  content       <- res$content
-
-  if (!is.null(content_class))
-    content <- structure(content,
-                         stac = s,
-                         class = content_class)
 
   return(content)
 }

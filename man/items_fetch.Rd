@@ -4,12 +4,15 @@
 \alias{items_fetch}
 \title{Items function}
 \usage{
-items_fetch(items, headers = list())
+items_fetch(items, progress = TRUE, headers = list())
 }
 \arguments{
 \item{items}{A \code{stac_items} object representing the result of
 \code{/stac/search}, \code{/collections/{collectionId}/items}, or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
+
+\item{progress}{A \code{logical} indicating if a progress bar must be
+shown or not. Defaults to \code{TRUE}.}
 
 \item{headers}{A \code{list} of named arguments to be passed as
 http request headers. This is used in \emph{addition} to eventual headers

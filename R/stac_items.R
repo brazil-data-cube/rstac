@@ -71,11 +71,12 @@
 #' (west-most box edge) is larger than the third value
 #' (east-most box edge).
 #'
+#' @param limit       An \code{integer} defining the maximum number of results
+#' to return. If \code{NULL} it defaults to the service implementation.
+#' Defaults to 10.
+#'
 #' @param ...       Filter parameters. Accept the same filter parameters
 #' of \code{\link{stac_search}} function.
-#'
-#' @param .limit    An \code{integer} defining the maximum number of results
-#' to return. Defaults to 10.
 #'
 #' @seealso
 #' \code{\link{stac_request}}, \code{\link{stac_collections}}
@@ -98,20 +99,37 @@
 #' }
 #'
 #' @export
-stac_items <- function(url, collection_id, item_id, bbox, datetime, ...,
-                       .limit = 10) {
+stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
+                       ...) {
 
   params <- list()
 
+  if (!missing(datetime)) {
+
+    .verify_datetime(datetime)
+    params[["datetime"]] <- .query_encode(datetime)
+  }
+
+  if (!missing(bbox)) {
+
+    if (!length(bbox) %in% c(4, 6))
+      stop(sprintf("Param `bbox` must have 4 or 6 numbers, not %s.",
+                   length(bbox)))
+    params[["bbox"]] <- .query_encode(bbox)
+  }
+
+  if (!is.null(limit))
+    params[["limit"]] <- limit
+
   if (!missing(...))
     params <- c(params, list(...))
-
-  params["limit"] <- .limit
 
   if (missing(item_id)) {
 
     # TODO: follow specification strictly
     endpoint <- paste("/collections", collection_id, "items", sep = "/")
+
+    # TODO: add these code excerpts bellow in different file
     expected <- list("get" =
                        list(responses =
                               list("200" =
@@ -130,6 +148,7 @@ stac_items <- function(url, collection_id, item_id, bbox, datetime, ...,
     endpoint <- paste("/collections", collection_id, "items",
                       item_id, sep = "/")
 
+    # TODO: add these code excerpts bellow in different file
     expected <- list("get" =
                        list(responses =
                               list("200" =
@@ -145,8 +164,7 @@ stac_items <- function(url, collection_id, item_id, bbox, datetime, ...,
     params <- list()
   }
 
-  content <- structure(list(url = url,
-                            endpoint = endpoint,
+  content <- structure(list(url = .make_url(url, endpoint = endpoint),
                             params = params,
                             expected_responses = expected),
                        class = "stac")
