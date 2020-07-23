@@ -55,10 +55,18 @@ items_fetch <- function(items, progress = TRUE, headers = list()) {
                          "from matched items (%s)."),
                    items_length(items), matched), call. = FALSE)
 
-    # get url of the next page
-    next_stac <- .items_get_next_stac(items)
-    if (is.null(next_stac))
+    s <- attr(items, "stac")
+    if (is.null(s))
       return(items)
+
+    # get url of the next page
+    next_url <- Filter(function(x) x$rel == "next", items$links)
+    if (length(next_url) == 0)
+      return(items)
+
+    # update stac object with params of the next url
+    next_stac <- .url_to_stac(next_url[[1]]$href)
+    next_stac$expected_responses <- s$expected_responses
 
     # get request method
     request <- attr(items, "request")
@@ -66,19 +74,19 @@ items_fetch <- function(items, progress = TRUE, headers = list()) {
       request <- list(method = "get")
 
     # call request
-    content <- stac_request(next_stac, method = request$method,
+    content <- stac_request(next_stac,
+                            method = request$method,
                             post_enctype = request$post_enctype)
 
     if (!inherits(content, "stac_items"))
       stop(sprintf("Invalid content response."), call. = FALSE)
 
     # merge features result into resulting content
-    content$features <- c(items$features,
-                          content$features)
+    content$features <- c(items$features, content$features)
 
     # update progress bar
     if (progress)
-      utils::setTxtProgressBar(pb, items_length(items))
+      utils::setTxtProgressBar(pb, items_length(content))
 
     # prepares next iteration
     items <- content
@@ -89,21 +97,4 @@ items_fetch <- function(items, progress = TRUE, headers = list()) {
     close(pb)
 
   return(items)
-}
-
-
-.items_get_next_stac <- function(items) {
-
-  s <- attr(items, "stac")
-  if (is.null(s))
-    return(NULL)
-
-  next_url <- Filter(function(x) x$rel == "next", items$links)
-  if (length(next_url) == 0)
-    return(NULL)
-
-  # update stac object with params of the next url
-  next_stac <- .url_to_stac(next_url[[1]]$href)
-  next_stac$expected_responses <- s$expected_responses
-  return(next_stac)
 }
