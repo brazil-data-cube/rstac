@@ -110,7 +110,7 @@ items_assets <- function(obj_stac) {
   if (!inherits(obj_stac, "stac_items"))
     stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
 
-  items_len <- rstac::items_length(obj_stac)
+  items_len <- items_length(obj_stac)
   if (items_len == 0)
     stop(sprintf("Query provided returned 0 items.
                  Please verify your query"), call. = FALSE)
