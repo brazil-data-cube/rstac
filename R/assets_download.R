@@ -5,8 +5,9 @@
 #' @description The \code{assets_download} function downloads the assets
 #' provided by the STAC API
 #'
-#' @param res A \code{stac_items} or \code{stac_item} objects expressing a STAC
-#'  search criteria provided by \code{stac_search} functions.
+#' @param items      A \code{stac_items} object representing the result of
+#'  \code{/stac/search}, \code{/collections/{collectionId}/items}, or
+#'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
 #' @param assets_name  A \code{character} with the assets names to be filtered.
 #'
@@ -34,26 +35,26 @@
 #'  pointing to the directory where the assets were saved.
 #'
 #' @export
-assets_download <- function(res, assets_name = c(), output_dir = "./",
+assets_download <- function(items, assets_name = c(), output_dir = "./",
                             progress = TRUE) {
 
   #check the object class
-  .check_obj(res, expected = c("stac_items", "stac_item"))
+  .check_obj(items, expected = c("stac_items", "stac_item"))
 
   # check output dir
   if (!dir.exists(output_dir))
     stop(sprintf("The directory provided does not exist.
                   Please specify a valid directory."), call. = FALSE)
 
-  if (inherits(res, "stac_item")) {
-    res <- .item_download(stac_item   = res,
-                          assets_name = assets_name,
-                          output_dir  = output_dir)
+  if (inherits(items, "stac_item")) {
+    items <- .item_download(stac_item   = items,
+                            assets_name = assets_name,
+                            output_dir  = output_dir)
 
-    return(res)
+    return(items)
   }
 
-  items_len <- items_length(res)
+  items_len <- items_length(items)
   # Queries that return without features
   if (items_len == 0)
     stop(sprintf("Query provided returned 0 items.
@@ -69,14 +70,14 @@ assets_download <- function(res, assets_name = c(), output_dir = "./",
     if (progress)
       utils::setTxtProgressBar(pb, feature)
 
-    res$features[[feature]] <- .item_download(res$features[[feature]],
-                                             assets_name, output_dir)
+    items$features[[feature]] <- .item_download(items$features[[feature]],
+                                                assets_name, output_dir)
   }
   # close progress bar
   if (progress)
     close(pb)
 
-  return(res)
+  return(items)
 }
 
 #' @title items function
@@ -155,7 +156,7 @@ items_assets <- function(obj_stac) {
 
     # create a full path name
     dest_file  <- sprintf("%s/%s_%s.%s", output_dir, feat_id, asset_name,
-                         file_ext)
+                          file_ext)
 
     tryCatch({
       # TODO: ver o config
