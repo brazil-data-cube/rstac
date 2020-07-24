@@ -38,7 +38,8 @@ stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 
 }
 \seealso{
-\code{\link{stac_search}}, \code{\link{stac_request}}
+\code{\link{stac_search}}, \code{\link{get_request}},
+ \code{\link{post_request}}
 }
 \author{
 Felipe Carvalho and Rolf Simoes

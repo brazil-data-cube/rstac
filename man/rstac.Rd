@@ -39,7 +39,10 @@ access (e.g. assets) and metadata organization.
 \section{Data access and organization functions}{
 
 \itemize{
-  \item \code{\link{stac_request}}: makes HTTP requests to STAC web service.
+  \item \code{\link{get_request}}: makes HTTP GET requests to STAC web
+  service.
+  \item \code{\link{post_request}}: makes HTTP POST requests to STAC web
+  service.
   \item \code{\link{items_matched}}: returns how many items matched the
     search criteria.
   \item \code{\link{items_length}}: informs how many items are

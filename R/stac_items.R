@@ -79,7 +79,8 @@
 #' of \code{\link{stac_search}} function.
 #'
 #' @seealso
-#' \code{\link{stac_request}}, \code{\link{stac_collections}}
+#' \code{\link{get_request}},  \code{\link{post_request}},
+#'  \code{\link{stac_collections}}
 #'
 #' @return
 #' A \code{stac} object containing all request parameters to be

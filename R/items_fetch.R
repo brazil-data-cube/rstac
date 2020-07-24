@@ -37,10 +37,8 @@
 #' @export
 items_fetch <- function(items, progress = TRUE, headers = c()) {
 
-
-  # TODO: create a function to check object
-  if (!inherits(items, c("stac_items", "stac_item")))
-    stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
+  # Check object class
+  .check_obj(items, expected = c("stac_items", "stac_item"))
 
   matched <- items_matched(items)
 

@@ -21,8 +21,8 @@
 #' @export
 items_length <- function(items) {
 
-  if (!inherits(items, "stac_items"))
-    stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
+  # Check object class
+  .check_obj(items, expected = c("stac_items"))
 
   return(length(items$features))
 }

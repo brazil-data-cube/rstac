@@ -77,7 +77,7 @@
 #' @param ...         Any additional non standard filter parameter.
 #'
 #' @seealso
-#' \code{\link{stac}}, \code{\link{stac_request}}
+#' \code{\link{stac}}, \code{\link{get_request}}, \code{\link{post_request}}
 #'
 #' @return
 #' A \code{stac} object containing all request parameters to be

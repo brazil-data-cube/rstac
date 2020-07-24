@@ -13,7 +13,8 @@
 #'  STAC web service.
 #'
 #' @seealso
-#' \code{\link{stac_search}}, \code{\link{stac_request}}
+#' \code{\link{stac_search}}, \code{\link{get_request}},
+#'  \code{\link{post_request}}
 #'
 #' @return
 #' A \code{stac} object containing all request parameters to be

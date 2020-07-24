@@ -20,7 +20,8 @@
 #' @param collection_id A \code{character} collection id to be retrieved.
 #'
 #' @seealso
-#' \code{\link{stac_request}}, \code{\link{stac_items}}
+#' \code{\link{get_request}}, \code{\link{post_request}},
+#'  \code{\link{stac_items}}
 #'
 #' @return
 #'

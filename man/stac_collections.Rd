@@ -42,7 +42,8 @@ stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 
 }
 \seealso{
-\code{\link{stac_request}}, \code{\link{stac_items}}
+\code{\link{get_request}}, \code{\link{post_request}},
+ \code{\link{stac_items}}
 }
 \author{
 Rolf Simoes

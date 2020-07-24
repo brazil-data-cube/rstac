@@ -112,6 +112,26 @@
 }
 
 
+#' @title helper function
+#'
+#' @param obj      a \code{object} to compare.
+#'
+#' @param expected a \code{character} with the expected classes.
+#'
+#' @return An error if the provided object is not of the expected class.
+#'
+#' @noRd
+.check_obj <- function(obj, expected = c("stac_items")) {
+
+  if (!inherits(obj, expected))
+      stop(sprintf("Invalid %s object.
+                   The object must be %s", class(obj),
+                   paste0(expected, collapse = " or ")),
+           call. = FALSE)
+
+  return(invisible(NULL))
+}
+
 #' @title STAC utils
 #'
 #' @rdname http_request

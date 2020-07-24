@@ -13,21 +13,13 @@ or \code{stac_items} functions.}
 
 \item{headers}{A \code{list} of named arguments to be passed as
 HTTP request headers.}
-
-\item{method}{A \code{character} value informing the HTTP method to be
-used for this request. Accepted methods are \code{'get'} or \code{'post'}.}
-
-\item{post_enctype}{A \code{character} informing the request body
-Content-Type. Accepted types \code{'application/json'},
-\code{'application/x-www-form-urlencoded'}, and
-\code{'multipart/form-data'}}
 }
 \value{
 Either a \code{stac_collection} or a \code{stac_items} object
 depending of the \code{s} parameter.
 }
 \description{
-The \code{stac_request} is function that makes HTTP
+The \code{get_request} is function that makes HTTP
 requests to STAC web services, retrieves, and parse the data.
 }
 \examples{

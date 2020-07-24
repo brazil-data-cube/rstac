@@ -17,7 +17,8 @@
 #'  shown or not. Defaults to \code{TRUE}.
 #'
 #' @seealso
-#' \code{\link{stac_search}}, \code{\link{stac_request}}
+#' \code{\link{stac_search}}, \code{\link{get_request}},
+#'  \code{\link{post_request}}
 #'
 #' @examples
 #' \dontrun{
@@ -36,9 +37,8 @@
 assets_download <- function(res, assets_name = c(), output_dir = "./",
                             progress = TRUE) {
 
-  # check the object class
-  if (!inherits(res, c("stac_items", "stac_item")))
-    stop(sprintf("Invalid `stac_items` or `stac_item` object."), call. = FALSE)
+  #check the object class
+  .check_obj(res, expected = c("stac_items", "stac_item"))
 
   # check output dir
   if (!dir.exists(output_dir))

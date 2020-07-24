@@ -4,37 +4,34 @@
 \alias{post_request}
 \title{STAC functions}
 \usage{
-post_request(s, encode = c("multipart", "form", "json"), headers = list())
+post_request(s, encode = c("multipart", "form", "json"), headers = c())
 }
 \arguments{
 \item{s}{A \code{stac} object expressing a STAC search criteria
 provided by \code{stac}, \code{stac_search}, \code{stac_collections},
 or \code{stac_items} functions.}
 
-\item{headers}{A \code{list} of named arguments to be passed as
+\item{encode}{A \code{character} informing the request body
+Content-Type. Accepted types \code{'json'} \code{('application/json')},
+\code{'form'} \code{('application/x-www-form-urlencoded')},
+and \code{'multipart'} \code{('multipart/form-data')}.}
+
+\item{headers}{A \code{character} of named arguments to be passed as
 HTTP request headers.}
-
-\item{method}{A \code{character} value informing the HTTP method to be
-used for this request. Accepted methods are \code{'get'} or \code{'post'}.}
-
-\item{post_enctype}{A \code{character} informing the request body
-Content-Type. Accepted types \code{'application/json'},
-\code{'application/x-www-form-urlencoded'}, and
-\code{'multipart/form-data'}}
 }
 \value{
 Either a \code{stac_collection} or a \code{stac_items} object
 depending of the \code{s} parameter.
 }
 \description{
-The \code{stac_request} is function that makes HTTP
+The \code{post_request} is function that makes HTTP
 requests to STAC web services, retrieves, and parse the data.
 }
 \examples{
 \dontrun{
 
 stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0", limit = 100) \%>\%
-    get_request()
+    post_request()
 }
 
 }
