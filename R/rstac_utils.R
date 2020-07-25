@@ -127,15 +127,21 @@
 #'
 #' @param obj      a \code{object} to compare.
 #'
-#' @param expected a \code{character} with the expected classes.
+#' @param expected an \code{character} with the expected classes.
 #'
-#' @return An error if the provided object is not of the expected class.
+#' @return An error if the provided object class is not in expected parameter.
 #'
 #' @noRd
 .check_obj <- function(obj, expected) {
 
+  obj_name <- as.character(substitute(obj))
+
+  if (missing(obj))
+    .error("Param `%s` is missing.", obj_name)
+
   if (!inherits(obj, expected))
-    .error("Invalid %s value.", paste0("`", expected, "`", collapse = " or "))
+    .error("Invalid %s value in `%s` param.",
+           paste0("`", expected, "`", collapse = " or "), obj_name)
 }
 
 #' @title STAC utils
