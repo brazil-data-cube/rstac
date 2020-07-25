@@ -46,10 +46,6 @@
 #' Only features that have a \code{datetime} property that intersects
 #' the interval or date-time informed in \code{datetime} are selected.
 #'
-#' @note Param \code{intersects} is a \code{character} value expressing GeoJSON
-#' geometries objects as specified in RFC 7946. This param is not supported in
-#' current version.
-#'
 #' @param bbox        Only features that have a geometry that intersects the
 #' bounding box are selected. The bounding box is provided as four or six
 #' numbers, depending on whether the coordinate reference system includes a
