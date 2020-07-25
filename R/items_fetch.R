@@ -63,8 +63,12 @@ items_fetch <- function(items, progress = TRUE, headers = c()) {
     if (length(next_url) == 0)
       return(items)
 
-    # update stac object with params of the next url
-    next_stac <- .url_to_stac(next_url[[1]]$href)
+    # create a new stac object with params from the next url
+    base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url[[1]]$href)
+    query <- substring(gsub("^([^?]+)(\\?.*)?$", "\\2", next_url[[1]]$href), 2)
+    next_stac <- structure(list(url = base_url,
+                                params = .query_decode(query)),
+                           class = "stac")
     next_stac$expected_responses <- s$expected_responses
 
     # get request method
@@ -74,12 +78,15 @@ items_fetch <- function(items, progress = TRUE, headers = c()) {
 
     # call request
     if (request$method == "get") {
+
       content <- get_request(next_stac, headers = headers)
     } else if (request$method == "post") {
+
       content <- post_request(next_stac,
                               enctype = request$enctype,
                               headers = headers)
     } else {
+
       .error("Invalid HTTP method.")
     }
 
