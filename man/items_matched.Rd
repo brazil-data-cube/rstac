@@ -24,7 +24,7 @@ extension (v0.8.0).
 \dontrun{
 
 stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-    stac_request() \%>\%
+    get_request() \%>\%
     items_matched()
 }
 

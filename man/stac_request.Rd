@@ -7,7 +7,7 @@
 \usage{
 get_request(s, headers = c())
 
-post_request(s, enctype = c("multipart", "form", "json"), headers = c())
+post_request(s, enctype = c("json", "multipart", "form"), headers = c())
 }
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria
@@ -20,7 +20,8 @@ HTTP request headers.}
 \item{enctype}{a \code{character} informing the request body
 Content-Type. Accepted types are \code{'json'} (\code{'application/json'}),
 \code{'form'} (\code{'application/x-www-form-urlencoded'}),
-and \code{'multipart'} (\code{'multipart/form-data'}).}
+and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
+\code{'json'}.}
 }
 \value{
 Either a \code{stac_collection} or a \code{stac_items} object

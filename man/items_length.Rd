@@ -22,7 +22,7 @@ there are in the \code{items} object.
 \dontrun{
 
 stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-    stac_request() \%>\%
+    get_request() \%>\%
     items_length()
 }
 
