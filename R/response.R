@@ -2,13 +2,14 @@
 #'
 #' @author Rolf Simoes
 #'
-#' @description The \code{stac_request} ...
+#' @description The \code{.check_response} function that checks if the request's
+#' response is in accordance with the \code{expected} parameters.
 #'
-#' @param res ...
+#' @param res  a \code{httr} \code{response} object.
 #'
-#' @param expected ...
+#' @param expected a \code{list} containing the expected parameters values.
 #'
-#' @return ...
+#' @return a \code{character} with document class
 .check_response <- function(res, expected) {
 
   method <- expected[[tolower(res$request$method)]]

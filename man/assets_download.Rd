@@ -4,18 +4,19 @@
 \alias{assets_download}
 \title{assets download}
 \usage{
-assets_download(res, assets_name = c(), output_dir = "./", progress = TRUE)
+assets_download(items, assets_name = c(), output_dir = "./", progress = TRUE)
 }
 \arguments{
-\item{res}{A \code{stac_items} or \code{stac_item} objects expressing a STAC
-search criteria provided by \code{stac_search} functions.}
+\item{items}{a \code{stac_items} object representing the result of
+\code{/stac/search}, \code{/collections/{collectionId}/items}, or
+\code{/collections/{collectionId}/items/{itemId}} endpoints.}
 
-\item{assets_name}{A \code{character} with the assets names to be filtered.}
+\item{assets_name}{a \code{character} with the assets names to be filtered.}
 
-\item{output_dir}{A \code{character} directory in which the images will be
+\item{output_dir}{a \code{character} directory in which the images will be
 saved.}
 
-\item{progress}{A \code{logical} indicating if a progress bar must be
+\item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 }
 \value{

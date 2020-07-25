@@ -5,16 +5,15 @@
 #' @description The \code{items_fetch} function returns the pagination of all
 #'  items of the stac object
 #'
-#' @param items      A \code{stac_items} object representing the result of
-#'  \code{/stac/search}, \code{/collections/{collectionId}/items}, or
+#' @param items      a \code{stac_items} object representing the request
+#'  results of \code{/stac/search}, \code{/collections/{collectionId}/items}, or
 #'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
-#' @param progress   A \code{logical} indicating if a progress bar must be
+#' @param progress   a \code{logical} indicating if a progress bar must be
 #' shown or not. Defaults to \code{TRUE}.
 #'
-#' @param headers    A \code{list} of named arguments to be passed as
-#'  http request headers. This is used in \emph{addition} to eventual headers
-#'  defined in \code{stac} object parameter.
+#' @param headers    a \code{character} of named arguments to be passed as
+#' HTTP request headers.
 #'
 #' @seealso
 #' \code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
@@ -79,7 +78,7 @@ items_fetch <- function(items, progress = TRUE, headers = c()) {
       content <- get_request(next_stac, headers = headers)
     } else if (request$method == "post") {
       content <- post_request(next_stac,
-                              encode = request$enctype,
+                              enctype = request$enctype,
                               headers = headers)
     } else {
       stop(sprintf("Invalid HTTP method."), call. = FALSE)

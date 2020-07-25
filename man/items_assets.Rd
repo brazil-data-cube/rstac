@@ -7,7 +7,7 @@
 items_assets(obj_stac)
 }
 \arguments{
-\item{obj_stac}{A \code{stac} object expressing a STAC search criteria
+\item{obj_stac}{a \code{stac} object expressing a STAC search criteria
 provided by \code{stac_items} functions.}
 }
 \value{
@@ -26,10 +26,10 @@ obj_stac <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0"
             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
     stac_request()
 
-items_names <- items_assets(obj_stac)
+items_assets(obj_stac)
 }
 
 }
 \author{
-Felipe Carvalho and Rolf Simoes
+Felipe Carvalho
 }

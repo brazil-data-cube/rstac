@@ -5,16 +5,16 @@
 #' @description The \code{assets_download} function downloads the assets
 #' provided by the STAC API
 #'
-#' @param items      A \code{stac_items} object representing the result of
+#' @param items       a \code{stac_items} object representing the result of
 #'  \code{/stac/search}, \code{/collections/{collectionId}/items}, or
 #'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
-#' @param assets_name  A \code{character} with the assets names to be filtered.
+#' @param assets_name a \code{character} with the assets names to be filtered.
 #'
-#' @param output_dir  A \code{character} directory in which the images will be
+#' @param output_dir  a \code{character} directory in which the images will be
 #'  saved.
 #'
-#' @param progress    A \code{logical} indicating if a progress bar must be
+#' @param progress    a \code{logical} indicating if a progress bar must be
 #'  shown or not. Defaults to \code{TRUE}.
 #'
 #' @seealso
@@ -82,12 +82,12 @@ assets_download <- function(items, assets_name = c(), output_dir = "./",
 
 #' @title items function
 #'
-#' @author Felipe Carvalho and Rolf Simoes
+#' @author Felipe Carvalho
 #'
 #' @description  The \code{items_assets} function lists the names of each assets
 #' from each STAC item.
 #'
-#' @param obj_stac A \code{stac} object expressing a STAC search criteria
+#' @param obj_stac  a \code{stac} object expressing a STAC search criteria
 #' provided by \code{stac_items} functions.
 #'
 #' @return A \code{list} with information of the assets of each item, where
@@ -101,7 +101,7 @@ assets_download <- function(items, assets_name = c(), output_dir = "./",
 #'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
 #'     stac_request()
 #'
-#' items_names <- items_assets(obj_stac)
+#' items_assets(obj_stac)
 #' }
 #'
 #' @export
@@ -131,12 +131,12 @@ items_assets <- function(obj_stac) {
 #' @description the \code{.item_download} function downloads the assets of a
 #'  stac_item
 #'
-#' @param stac_item A  \code{stac_item} object expressing a STAC
+#' @param stac_item   a  \code{stac_item} object expressing a STAC
 #'  search criteria provided by \code{stac_item} function.
 #'
-#' @param assets_name A \code{character} with the assets names to be filtered.
+#' @param assets_name a \code{character} with the assets names to be filtered.
 #'
-#' @param output_dir A \code{character} directory in which the images will be
+#' @param output_dir  a \code{character} directory in which the images will be
 #'  saved.
 #'
 #' @return The same \code{stac_item} object, but with the link of the item
@@ -182,7 +182,7 @@ items_assets <- function(obj_stac) {
 #' @description The \code{.file_ext} is function to extract the extension
 #' from a file
 #'
-#' @param asset_url A \code{character} URL provided from a \code{stac_search}.
+#' @param asset_url  a \code{character} URL provided from a \code{stac_search}.
 #'
 #' @return A \code{character} of the extracted file extension.
 #'
@@ -201,10 +201,10 @@ items_assets <- function(obj_stac) {
 #' @description The helper function \code{.select_assets} selects the names of
 #' each asset provided by users
 #'
-#' @param assets_list A \code{list} with the information of each item provided
+#' @param assets_list  a \code{list} with the information of each item provided
 #' by API STAC
 #'
-#' @param assets_names A \code{character} with the assets names to be filtered.
+#' @param assets_names a \code{character} with the assets names to be filtered.
 #'
 #' @return A \code{list} in the same format as the list of assets, but with the
 #'  selected assets names.

@@ -1,15 +1,17 @@
 #' @title STAC functions
 #'
+#' @rdname stac_request
+#'
 #' @author Rolf Simoes and Felipe Carvalho
 #'
-#' @description The \code{get_request} is function that makes HTTP
+#' @description The \code{get_request} is function that makes HTTP GET
 #' requests to STAC web services, retrieves, and parse the data.
 #'
-#' @param s          A \code{stac} object expressing a STAC search criteria
+#' @param s          a \code{stac} object expressing a STAC search criteria
 #' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
 #' or \code{stac_items} functions.
 #'
-#' @param headers    A \code{list} of named arguments to be passed as
+#' @param headers    a \code{character} of named arguments to be passed as
 #' HTTP request headers.
 #'
 #' @seealso
@@ -64,30 +66,15 @@ get_request <- function(s, headers = c()) {
 
 #' @title STAC functions
 #'
-#' @author Rolf Simoes and Felipe Carvalho
+#' @rdname stac_request
 #'
-#' @description The \code{post_request} is function that makes HTTP
+#' @description The \code{post_request} is function that makes HTTP POST
 #' requests to STAC web services, retrieves, and parse the data.
 #'
-#' @param s          A \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-#' or \code{stac_items} functions.
-#'
-#' @param enctype     A \code{character} informing the request body
-#' Content-Type. Accepted types \code{'json'} \code{('application/json')},
-#' \code{'form'} \code{('application/x-www-form-urlencoded')},
-#' and \code{'multipart'} \code{('multipart/form-data')}.
-#'
-#' @param headers    A \code{character} of named arguments to be passed as
-#' HTTP request headers.
-#'
-#' @seealso
-#' \code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
-#' \code{\link{stac_items}}
-#'
-#' @return
-#' Either a \code{stac_collection} or a \code{stac_items} object
-#' depending of the \code{s} parameter.
+#' @param enctype     a \code{character} informing the request body
+#' Content-Type. Accepted types are \code{'json'} (\code{'application/json'}),
+#' \code{'form'} (\code{'application/x-www-form-urlencoded'}),
+#' and \code{'multipart'} (\code{'multipart/form-data'}).
 #'
 #' @examples
 #' \dontrun{

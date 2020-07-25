@@ -7,10 +7,10 @@
 stac_collections(url, collection_id)
 }
 \arguments{
-\item{url}{A \code{character} informing the base url of a
+\item{url}{a \code{character} informing the base url of a
 STAC web service.}
 
-\item{collection_id}{A \code{character} collection id to be retrieved.}
+\item{collection_id}{a \code{character} collection id to be retrieved.}
 }
 \value{
 If no \code{collection_id} is informed, \code{stac_collections} returns a

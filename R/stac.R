@@ -9,7 +9,7 @@
 #' This endpoint should return a STAC Catalog containing all data Items
 #'  searchable in the API.
 #'
-#' @param url     A \code{character} informing the base url of a
+#' @param url     a \code{character} informing the base url of a
 #'  STAC web service.
 #'
 #' @seealso

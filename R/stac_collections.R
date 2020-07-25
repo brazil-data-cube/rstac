@@ -14,10 +14,10 @@
 #'     Collection object
 #' }
 #'
-#' @param url       A \code{character} informing the base url of a
+#' @param url       a \code{character} informing the base url of a
 #' STAC web service.
 #'
-#' @param collection_id A \code{character} collection id to be retrieved.
+#' @param collection_id a \code{character} collection id to be retrieved.
 #'
 #' @seealso
 #' \code{\link{get_request}}, \code{\link{post_request}},

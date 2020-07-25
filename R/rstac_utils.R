@@ -132,11 +132,10 @@
 #' @return An error if the provided object is not of the expected class.
 #'
 #' @noRd
-.check_obj <- function(obj, classes) {
+.check_obj <- function(obj, expected) {
 
-  if (!inherits(obj, classes))
-    .error("Invalid %s object.",
-           paste0("`", classes, "`", collapse = " or "))
+  if (!inherits(obj, expected))
+    .error("Invalid %s value.", paste0("`", expected, "`", collapse = " or "))
 }
 
 #' @title STAC utils
@@ -155,14 +154,14 @@
 #' whithout including any character separator. For this reason, this function
 #' does not support the query and fragment URI components in the base url.
 #'
-#' @param url         A \code{character} informing the base url of a
+#' @param url         a \code{character} informing the base url of a
 #' STAC web service.
 #'
-#' @param endpoint    A \code{character} a path to be appended in the final
+#' @param endpoint    a \code{character} a path to be appended in the final
 #' url.
 #'
-#' @param params      A \code{list} with all url query parameters to be
-#' appended in final url.
+#' @param params      a named \code{list} with all url query parameters to be
+#' appended in the url.
 #'
 #' @return
 #' \code{.make_url} returns an url to access STAC endpoints.

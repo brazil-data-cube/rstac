@@ -6,7 +6,9 @@
 #' search criteria. It implements \code{search:metadata} STAC API
 #' extension (v0.8.0).
 #'
-#' @param items    A \code{stac_items} object.
+#' @param items      a \code{stac_items} object representing the request
+#'  results of \code{/stac/search}, \code{/collections/{collectionId}/items}, or
+#'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
 #' @return
 #' An \code{integer} value. If STAC web server does not support this
