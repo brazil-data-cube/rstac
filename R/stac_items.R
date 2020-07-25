@@ -151,6 +151,7 @@ stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
                       item_id, sep = "/")
 
     # TODO: add these code excerpts bellow in different file
+    # TODO: this could be returned by the STAC service
     expected <- list("get" =
                        list(responses =
                               list("200" =
