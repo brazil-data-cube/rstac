@@ -41,7 +41,7 @@ get_request <- function(s, headers = c()) {
   },
   error = function(e) {
 
-    stop(paste("Request error.", e$message), call. = FALSE)
+    .error("Request error. %s", e$message)
   })
 
   # check expected status-code and content-type
@@ -101,7 +101,7 @@ post_request <- function(s, enctype =  c("multipart", "form", "json"),
                       httr::add_headers(headers))
   },
   error = function(e) {
-    stop(paste("Request error.", e$message), call. = FALSE)
+    .error("Request error. %s", e$message)
   })
 
   # check expected status-code and content-type
