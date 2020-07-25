@@ -16,7 +16,7 @@
 #' \dontrun{
 #'
 #' stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'     stac_request() %>%
+#'     get_request() %>%
 #'     items_length()
 #' }
 #'
@@ -24,7 +24,7 @@
 items_length <- function(items) {
 
   # Check object class
-  .check_obj(items, expected = c("stac_items"))
+  .check_obj(items, "stac_items")
 
   return(length(items$features))
 }

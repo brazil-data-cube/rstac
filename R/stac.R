@@ -30,6 +30,9 @@
 #' @export
 stac <- function(url) {
 
+  # check url parameter
+  .check_obj(url, "character")
+
   # TODO: add these code excerpts bellow in different file
   expected <- list("get" =
                      list(responses =

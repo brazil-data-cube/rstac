@@ -91,6 +91,9 @@
 stac_search <- function(url, collections, ids, bbox, datetime, intersects,
                         limit, ...) {
 
+  # check url parameter
+  .check_obj(url, "character")
+
   params <- list()
 
   if (!missing(collections))

@@ -60,8 +60,7 @@ geometries objects as specified in RFC 7946. Only returns items that
 intersect with the provided polygon.}
 
 \item{limit}{an \code{integer} defining the maximum number of results
-to return. If \code{NULL} it defaults to the service implementation.
-Defaults to 10.}
+to return. If not informed it defaults to the service implementation.}
 
 \item{...}{any additional non standard filter parameter.}
 }

@@ -37,7 +37,7 @@
 items_fetch <- function(items, progress = TRUE, headers = c()) {
 
   # Check object class
-  .check_obj(items, expected = c("stac_items", "stac_item"))
+  .check_obj(items, "stac_items")
 
   matched <- items_matched(items)
 

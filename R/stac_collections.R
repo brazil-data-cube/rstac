@@ -43,6 +43,9 @@
 #' @export
 stac_collections <- function(url, collection_id) {
 
+  # check url parameter
+  .check_obj(url, "character")
+
   if (missing(collection_id)) {
 
     endpoint <- "/collections"

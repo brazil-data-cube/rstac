@@ -99,6 +99,9 @@
 stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
                        ...) {
 
+  # check url parameter
+  .check_obj(url, "character")
+
   if (missing(collection_id))
     stop(paste("Not informed `collection_id` parameter."), .call = FALSE)
 

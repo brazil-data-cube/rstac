@@ -18,7 +18,7 @@
 #' \dontrun{
 #'
 #' stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'     stac_request() %>%
+#'     get_request() %>%
 #'     items_matched()
 #' }
 #'
@@ -33,7 +33,7 @@ items_matched <- function(items) {
   # .stac_version <- function()
 
   # Check object class
-  .check_obj(items, expected = c("stac_items"))
+  .check_obj(items, "stac_items")
 
   matched <- items[["search:metadata"]][["matched"]]
 

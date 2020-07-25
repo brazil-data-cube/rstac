@@ -88,7 +88,7 @@ post_request <- function(s, enctype =  c("multipart", "form", "json"),
                          headers = c()) {
 
   # check the object class
-  .check_obj(s, expected = c("stac"))
+  .check_obj(s, "stac")
 
   # check if the provided expected response is valid for this endpoint
   if (!enctype %in% s$expected_responses$post$enctypes)
