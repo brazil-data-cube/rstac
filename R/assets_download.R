@@ -80,50 +80,6 @@ assets_download <- function(items, assets_name = c(), output_dir = "./",
   return(items)
 }
 
-#' @title items function
-#'
-#' @author Felipe Carvalho
-#'
-#' @description  The \code{items_assets} function lists the names of each assets
-#' from each STAC item.
-#'
-#' @param obj_stac  a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac_items} functions.
-#'
-#' @return A \code{list} with information of the assets of each item, where
-#' each index represents one item.
-#'
-#' @examples
-#' \dontrun{
-#'
-#' obj_stac <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1",
-#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-#'     stac_request()
-#'
-#' items_assets(obj_stac)
-#' }
-#'
-#' @export
-items_assets <- function(obj_stac) {
-
-  # check object
-  .check_obj(obj_stac, "stac_items")
-
-  items_len <- items_length(obj_stac)
-  if (items_len == 0)
-    .error(paste("Query provided returned 0 items.",
-                 "Please verify your query"))
-
-  res_features <- obj_stac$features
-  items_assets <- lapply(res_features, function(feature){
-    list(collection_name = feature[["id"]],
-         assets_name     = names(feature[["assets"]]))
-  })
-
-  return(items_assets)
-}
-
 # helpers ----------------------------------------------------------------------
 
 #' @title Helper function of \code{assets_download} function
