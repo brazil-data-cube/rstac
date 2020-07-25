@@ -35,6 +35,9 @@ get_request <- function(s, headers = c()) {
   # check the object class
   .check_obj(s, "stac")
 
+  if (!"get" %in% names(s$expected_responses))
+    .error("HTTP GET method is invalid for this request.")
+
   tryCatch({
     res <- httr::GET(url =  .make_url(s$url, params = s$params),
                      httr::add_headers(headers))
@@ -73,7 +76,8 @@ get_request <- function(s, headers = c()) {
 #' @param enctype     a \code{character} informing the request body
 #' Content-Type. Accepted types are \code{'json'} (\code{'application/json'}),
 #' \code{'form'} (\code{'application/x-www-form-urlencoded'}),
-#' and \code{'multipart'} (\code{'multipart/form-data'}).
+#' and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
+#' \code{'json'}.
 #'
 #' @examples
 #' \dontrun{
@@ -83,16 +87,23 @@ get_request <- function(s, headers = c()) {
 #' }
 #'
 #' @export
-post_request <- function(s, enctype =  c("multipart", "form", "json"),
+post_request <- function(s, enctype =  c("json", "multipart", "form"),
                          headers = c()) {
 
   # check the object class
   .check_obj(s, "stac")
 
+  if (!"post" %in% names(s$expected_responses))
+    .error("HTTP POST method is invalid for this request.")
+
   # check if the provided expected response is valid for this endpoint
-  if (!enctype %in% s$expected_responses$post$enctypes)
-    .error("Invalid HTTP body request enctype '%s' for this operation.",
-           enctype)
+  enctype <- enctype[[1]]
+  if (length(s$expected_responses$post$enctypes) > 0 &&
+      !enctype %in% s$expected_responses$post$enctypes)
+    .error(paste("The body request enctype '%s' is invalid",
+                 "for this operation. Allowed enctypes are %s."),
+           enctype, paste0("'", s$expected_responses$post$enctypes, "'",
+                           collapse = " or "))
 
   # call the requisition subroutine
   tryCatch({
