@@ -35,6 +35,7 @@ items_matched <- function(items) {
   # Check object class
   .check_obj(items, "stac_items")
 
+  # v0.8.0 extension
   matched <- items[["search:metadata"]][["matched"]]
 
   # try WFS3 spec
