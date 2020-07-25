@@ -27,7 +27,7 @@ testthat::test_that("stac search object", {
           object   = class(rstac::stac_search(
             url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
             datetime = "2018-01-01/..") %>%
-              post_request(encode = "json")),
+              post_request(enctype = "json")),
           expected = "stac_items"
     )
 

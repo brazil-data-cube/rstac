@@ -84,7 +84,7 @@ get_request <- function(s, headers = c()) {
 #'
 #' stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1") %>%
-#'      post_request(encode = "json")
+#'      post_request(enctype = "json")
 #' }
 #'
 #' @export
