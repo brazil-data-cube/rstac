@@ -44,13 +44,12 @@ get_request <- function(s, headers = c()) {
     stop(paste("Request error.", e$message), call. = FALSE)
   })
 
-
   # check expected status-code and content-type
   content_class <- .check_response(res, s$expected_responses)
-  content <- httr::content(res, simplifyVector = TRUE,
+  content <- httr::content(res,
+                           simplifyVector = TRUE,
                            simplifyDataFrame = FALSE,
                            simplifyMatrix = FALSE)
-
 
   # apply corresponding stac class
   if (!is.null(content_class))
@@ -107,9 +106,10 @@ post_request <- function(s, enctype =  c("multipart", "form", "json"),
 
   # check expected status-code and content-type
   content_class <- .check_response(res, s$expected_responses)
-  content <- httr::content(res, simplifyVector = TRUE,
-                             simplifyDataFrame = FALSE,
-                                simplifyMatrix = FALSE)
+  content <- httr::content(res,
+                           simplifyVector = TRUE,
+                           simplifyDataFrame = FALSE,
+                           simplifyMatrix = FALSE)
 
   # apply corresponding stac class
   if (!is.null(content_class))
