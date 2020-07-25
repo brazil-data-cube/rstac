@@ -32,9 +32,10 @@ provided by the STAC API
 
 stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
             collections = "MOD13Q1",
-            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355), limit = 10) \%>\%
-    get_request() \%>\%
-    assets_download(assets_name = c("thumbnail"), output_dir = "./")
+            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
+            limit = 10) \%>\%
+     get_request() \%>\%
+     assets_download(assets_name = c("thumbnail"), output_dir = "./")
 }
 
 }

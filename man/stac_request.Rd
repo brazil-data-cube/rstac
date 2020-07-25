@@ -43,8 +43,9 @@ stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0", limit = 100) \%>\%
-    post_request()
+stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+            collections = "MOD13Q1") \%>\%
+     post_request(encode = "json")
 }
 
 }

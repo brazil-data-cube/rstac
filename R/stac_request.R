@@ -82,8 +82,9 @@ get_request <- function(s, headers = c()) {
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0", limit = 100) %>%
-#'     post_request()
+#' stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+#'             collections = "MOD13Q1") %>%
+#'      post_request(encode = "json")
 #' }
 #'
 #' @export
@@ -93,13 +94,19 @@ post_request <- function(s, enctype =  c("json", "multipart", "form"),
   # check the object class
   .check_obj(s, "stac")
 
+  # check if the provided expected response is valid for this endpoint...
+  # ...check for method
   if (!"post" %in% names(s$expected_responses))
     .error("HTTP POST method is invalid for this request.")
 
-  # check if the provided expected response is valid for this endpoint
+  # ...check for body request content-type (enctype)
+  friendly_enctype <-
+    list("application/json" = "json",
+         "application/x-www-form-urlencoded" = "form",
+         "multipart/form-data" = "multipart")
   enctype <- enctype[[1]]
   if (length(s$expected_responses$post$enctypes) > 0 &&
-      !enctype %in% s$expected_responses$post$enctypes)
+      !enctype %in% friendly_enctype[s$expected_responses$post$enctypes])
     .error(paste("The body request enctype '%s' is invalid",
                  "for this operation. Allowed enctypes are %s."),
            enctype, paste0("'", s$expected_responses$post$enctypes, "'",

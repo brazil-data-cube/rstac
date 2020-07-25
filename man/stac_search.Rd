@@ -82,11 +82,15 @@ a STAC ItemCollection.
 }
 \examples{
 \dontrun{
-
+# GET request
 stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-            collections = "MOD13Q1",
-            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
-    get_request()
+            collections = "MOD13Q1") \%>\%
+     get_request()
+
+# POST request
+stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+            collections = "MOD13Q1") \%>\%
+     post_request()
 }
 
 }
