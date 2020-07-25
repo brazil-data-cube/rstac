@@ -73,7 +73,7 @@ get_request <- function(s, headers = c()) {
 #' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
 #' or \code{stac_items} functions.
 #'
-#' @param encode A \code{character} informing the request body
+#' @param enctype     A \code{character} informing the request body
 #' Content-Type. Accepted types \code{'json'} \code{('application/json')},
 #' \code{'form'} \code{('application/x-www-form-urlencoded')},
 #' and \code{'multipart'} \code{('multipart/form-data')}.
@@ -97,22 +97,22 @@ get_request <- function(s, headers = c()) {
 #' }
 #'
 #' @export
-post_request <- function(s, encode =  c("multipart", "form", "json"),
+post_request <- function(s, enctype =  c("multipart", "form", "json"),
                          headers = c()) {
 
   # check the object class
   .check_obj(s, expected = c("stac"))
 
   # check if the provided expected response is valid for this endpoint
-  if (!encode %in% s$expected_responses$post$enctypes)
+  if (!enctype %in% s$expected_responses$post$enctypes)
     stop(sprintf("Invalid HTTP body request enctype '%s' for this operation.",
-                 encode),
+                 enctype),
          call. = FALSE)
 
   # call the requisition subroutine
   tryCatch({
     res <- httr::POST(url =  s$url, body = s$params,
-                      encode = encode,
+                      encode = enctype,
                       httr::add_headers(headers))
   },
   error = function(e) {
@@ -131,7 +131,7 @@ post_request <- function(s, encode =  c("multipart", "form", "json"),
                          stac = s,
                          request = list(
                            method = "post",
-                           enctype = encode),
+                           enctype = enctype),
                          class = content_class)
 
   return(content)
