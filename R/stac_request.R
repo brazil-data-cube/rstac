@@ -92,27 +92,44 @@ get_request <- function(s, headers = c()) {
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0", limit = 100) %>%
-#'     post_request()
+#' stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+#'             collections = "MOD13Q1") %>%
+#' post_request(encode = "json")
 #' }
 #'
 #' @export
-post_request <- function(s, encode =  c("multipart", "form", "json"),
+post_request <- function(s, encode =  c("json", "multipart", "form"),
                          headers = c()) {
 
   # check the object class
   .check_obj(s, expected = c("stac"))
 
+  # TODO: temporary solution
+  if (!missing(encode) && !is.null(encode)) {
+    if (encode[1] == "json") {
+      enctype_encode = "application/json"
+    }else if (encode[1]  == "multipart") {
+      enctype_encode = "multipart/form-data"
+    } else if (encode[1]  == "form") {
+      enctype_encode = "application/x-www-form-urlencoded"
+    } else{
+      stop(sprintf("the encode provided is not covered by this package"),
+           call. = FALSE)
+    }
+  } else{
+    enctype_encode = "application/json"
+  }
+
   # check if the provided expected response is valid for this endpoint
-  if (!encode %in% s$expected_responses$post$enctypes)
-    stop(sprintf("Invalid HTTP body request enctype '%s' for this operation.",
-                 encode),
-         call. = FALSE)
+  if (!enctype_encode %in% s$expected_responses$post$enctypes)
+     stop(sprintf("Invalid HTTP body request enctype '%s' for this operation.",
+                  enctype_encode),
+          call. = FALSE)
 
   # call the requisition subroutine
   tryCatch({
     res <- httr::POST(url =  s$url, body = s$params,
-                      encode = encode,
+                      encode = encode[1],
                       httr::add_headers(headers))
   },
   error = function(e) {

@@ -4,7 +4,7 @@
 \alias{post_request}
 \title{STAC functions}
 \usage{
-post_request(s, encode = c("multipart", "form", "json"), headers = c())
+post_request(s, encode = c("json", "multipart", "form"), headers = c())
 }
 \arguments{
 \item{s}{A \code{stac} object expressing a STAC search criteria
@@ -30,8 +30,9 @@ requests to STAC web services, retrieves, and parse the data.
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0", limit = 100) \%>\%
-    post_request()
+stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+            collections = "MOD13Q1") \%>\%
+post_request(encode = "json")
 }
 
 }

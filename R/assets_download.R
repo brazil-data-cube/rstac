@@ -25,9 +25,10 @@
 #'
 #' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1",
-#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355), limit = 10) %>%
-#'     get_request() %>%
-#'     assets_download(assets_name = c("thumbnail"), output_dir = "./")
+#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
+#'             limit = 10) %>%
+#' get_request() %>%
+#' assets_download(assets_name = c("thumbnail"), output_dir = "./")
 #' }
 #'
 #' @return The same \code{stac_items} object, but with the link of the item
@@ -64,13 +65,13 @@ assets_download <- function(res, assets_name = c(), output_dir = "./",
   if (progress)
     pb <- utils::txtProgressBar(min = 0, max = items_len, style = 3, width = 50)
 
-  for (feature in 1:items_len) {
+  for (i in seq_len(items_len)) {
     # toggle bar
     if (progress)
-      utils::setTxtProgressBar(pb, feature)
+      utils::setTxtProgressBar(pb, i)
 
-    res$features[[feature]] <- .item_download(res$features[[feature]],
-                                             assets_name, output_dir)
+    res$features[[i]] <- .item_download(res$features[[i]],
+                                        assets_name, output_dir)
   }
   # close progress bar
   if (progress)
@@ -98,7 +99,7 @@ assets_download <- function(res, assets_name = c(), output_dir = "./",
 #' obj_stac <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1",
 #'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-#'     stac_request()
+#' stac_request()
 #'
 #' items_names <- items_assets(obj_stac)
 #' }
@@ -147,10 +148,10 @@ items_assets <- function(obj_stac) {
   feat_id <- stac_item[["id"]]
   assets  <- .select_assets(stac_item[["assets"]], assets_name)
 
-  for (asset in 1:length(assets)) {
+  for (i in seq_along(assets)) {
     # store the names of assets
-    asset_name <- names(assets[asset])
-    asset_href <- assets[[asset]]$href
+    asset_name <- names(assets[i])
+    asset_href <- assets[[i]]$href
     file_ext   <- .file_ext(asset_href)
 
     # create a full path name
@@ -161,8 +162,7 @@ items_assets <- function(obj_stac) {
       # TODO: ver o config
       httr::GET(url      = asset_href,
                 httr::write_disk(path = dest_file))
-      #curl::curl_download(url      = asset_href,
-      #                    destfile = dest_file)
+
     }, error = function(error){
       message(paste("\n", error, "in ", asset_href))
     })

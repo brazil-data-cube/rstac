@@ -1,7 +1,8 @@
 context("test_stac_obj")
 
 testthat::test_that("stac search object", {
-  vcr::use_cassette("stac_search_obj", {
+  vcr::use_cassette("stac_search_obj",
+                    match_requests_on = c("body", "method", "uri", "headers"),{
     # skip cran check test
     testthat::skip_on_cran()
 
@@ -13,13 +14,21 @@ testthat::test_that("stac search object", {
       expected = "stac"
     )
 
-    # check request from stac_search object
+    # check GET request from stac_search object
     testthat::expect_equal(
       object   = class(rstac::stac_search(
         url    = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
         bbox   = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
           get_request()),
       expected = "stac_items"
+    )
+
+    testthat::expect_equal(
+          object   = class(rstac::stac_search(
+            url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+            datetime = "2018-01-01/..") %>%
+              post_request(encode = "json")),
+          expected = "stac_items"
     )
 
     # Error when creating the stac object by parameter bbox
