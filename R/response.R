@@ -14,8 +14,7 @@
 
   method <- expected[[tolower(res$request$method)]]
   if (is.null(method))
-    stop(sprintf("HTTP method '%s' not defined for this operation.", res$method),
-         call. = FALSE)
+    .error("HTTP method '%s' not defined for this operation.", res$method)
 
   # TODO: validate stac response
   # .stac_response_type(res, expected)
@@ -24,16 +23,15 @@
   if (is.null(status_code)) {
     content <- httr::content(res)
     if (!is.null(content$code))
-      stop(sprintf("%s %s", content$code, content$description),
-           call. = FALSE)
-    stop(sprintf("HTTP status '%s' not defined for this operation.",
-                 res$status_code), call. = FALSE)
+      .error("%s %s", content$code, content$description)
+    .error("HTTP status '%s' not defined for this operation.",
+           res$status_code)
   }
   content_type  <- httr::http_type(res)
   content_class <- status_code[[content_type]]
   if (is.null(content_class))
-    stop(sprintf("HTTP content type response '%s' not defined for this operation.",
-                 content_type))
+    .error("HTTP content type response '%s' not defined for this operation.",
+           content_type)
 
   if (content_class == "")
     content_class <- NULL

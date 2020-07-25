@@ -43,8 +43,8 @@ assets_download <- function(items, assets_name = c(), output_dir = "./",
 
   # check output dir
   if (!dir.exists(output_dir))
-    stop(sprintf("The directory provided does not exist.
-                  Please specify a valid directory."), call. = FALSE)
+    .error(paste("The directory provided does not exist.",
+                 "Please specify a valid directory."))
 
   if (inherits(items, "stac_item")) {
     items <- .item_download(stac_item   = items,
@@ -57,8 +57,8 @@ assets_download <- function(items, assets_name = c(), output_dir = "./",
   items_len <- items_length(items)
   # Queries that return without features
   if (items_len == 0)
-    stop(sprintf("Query provided returned 0 items.
-                  Please verify your query"), call. = FALSE)
+    .error(paste("Query provided returned 0 items.",
+                 "Please verify your query"))
 
   # verify if progress bar can be shown
   progress <- progress & (!is.null(items_len))
@@ -107,13 +107,13 @@ assets_download <- function(items, assets_name = c(), output_dir = "./",
 #' @export
 items_assets <- function(obj_stac) {
 
-  if (!inherits(obj_stac, "stac_items"))
-    stop(sprintf("Invalid `stac_items` object."), call. = FALSE)
+  # check object
+  .check_obj(obj_stac, "stac_items")
 
   items_len <- items_length(obj_stac)
   if (items_len == 0)
-    stop(sprintf("Query provided returned 0 items.
-                 Please verify your query"), call. = FALSE)
+    .error(paste("Query provided returned 0 items.",
+                 "Please verify your query"))
 
   res_features <- obj_stac$features
   items_assets <- lapply(res_features, function(feature){

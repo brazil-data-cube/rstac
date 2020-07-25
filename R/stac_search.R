@@ -111,8 +111,7 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
   if (!missing(bbox)) {
 
     if (!length(bbox) %in% c(4, 6))
-      stop(sprintf("Param `bbox` must have 4 or 6 numbers, not %s.",
-                   length(bbox)))
+      .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
     params[["bbox"]] <- .query_encode(bbox)
   }
 

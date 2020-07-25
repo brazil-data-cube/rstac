@@ -51,9 +51,8 @@ items_fetch <- function(items, progress = TRUE, headers = c()) {
 
     # protect against infinite loop
     if (!is.null(matched) && (items_length(items) > matched))
-      stop(sprintf(paste("Length of returned items (%s) is different",
-                         "from matched items (%s)."),
-                   items_length(items), matched), call. = FALSE)
+      .error(paste("Length of returned items (%s) is different",
+                   "from matched items (%s)."), items_length(items), matched)
 
     s <- attr(items, "stac")
     if (is.null(s))
@@ -81,11 +80,11 @@ items_fetch <- function(items, progress = TRUE, headers = c()) {
                               enctype = request$enctype,
                               headers = headers)
     } else {
-      stop(sprintf("Invalid HTTP method."), call. = FALSE)
+      .error("Invalid HTTP method.")
     }
 
-    if (!inherits(content, "stac_items"))
-      stop(sprintf("Invalid content response."), call. = FALSE)
+    # check content response
+    .check_obj(content, "stac_items")
 
     # merge features result into resulting content
     content$features <- c(items$features, content$features)

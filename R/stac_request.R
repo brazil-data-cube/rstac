@@ -92,9 +92,8 @@ post_request <- function(s, enctype =  c("multipart", "form", "json"),
 
   # check if the provided expected response is valid for this endpoint
   if (!enctype %in% s$expected_responses$post$enctypes)
-    stop(sprintf("Invalid HTTP body request enctype '%s' for this operation.",
-                 enctype),
-         call. = FALSE)
+    .error("Invalid HTTP body request enctype '%s' for this operation.",
+           enctype)
 
   # call the requisition subroutine
   tryCatch({
