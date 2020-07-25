@@ -1,0 +1,28 @@
+http_interactions:
+- request:
+    method: get
+    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Sat, 25 Jul 2020 12:56:55 GMT
+      server: nginx/1.17.3
+      content-type: application/json
+      content-length: '2235'
+      access-control-allow-origin: '*'
+    body:
+      encoding: UTF-8
+      file: no
+      string: |
+        {"assets":{"blue":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_blue.tif"},"evi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_evi.tif"},"ndvi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_ndvi.tif"},"nir":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_nir.tif"},"red":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_red.tif"},"reliability":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_reliability.tif"},"swir2":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_swir2.tif"},"thumbnail":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754.png"}},"bbox":[-50.7713305942872,-10.0,-40.0,0.0],"collection":"MOD13Q1","geometry":{"coordinates":[[[[-50,0],[-40,0],[-40.617064475,-10],[-50.771330594,-10],[-50,0]]]],"type":"MultiPolygon"},"id":"MOD13Q1.A2019241.h13v09.006.2019262164754","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"collection"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:tile":"013009","datetime":"2019-08-29"},"stac_version":"0.8.0","type":"Feature"}
+  recorded_at: 2020-07-25 12:56:55 GMT
+  recorded_with: vcr/0.5.4, webmockr/0.6.2
