@@ -65,7 +65,7 @@
       ifelse(interval_dt[1] < interval_dt[2],
              return(datetime),
              stop(
-             paste0("The closed date time provided is not in correct interval,
+               paste0("The closed date time provided is not in correct interval,
                   the first date time shold be less than second."), call. = F))
     }
 
@@ -111,6 +111,17 @@
   return(check_pattern)
 }
 
+#' @title utils functions
+#'
+#' @param msg   a \code{character} string with format error message.
+#'
+#' @param ...   values to be passed to \code{msg} parameter.
+#'
+#' @noRd
+.error <- function(msg, ...) {
+
+  stop(sprintf(msg, ...), call. = FALSE)
+}
 
 #' @title helper function
 #'
@@ -121,15 +132,11 @@
 #' @return An error if the provided object is not of the expected class.
 #'
 #' @noRd
-.check_obj <- function(obj, expected = c("stac_items")) {
+.check_obj <- function(obj, classes) {
 
-  if (!inherits(obj, expected))
-      stop(sprintf("Invalid %s object.
-                   The object must be %s", class(obj),
-                   paste0(expected, collapse = " or ")),
-           call. = FALSE)
-
-  return(invisible(NULL))
+  if (!inherits(obj, classes))
+    .error("Invalid %s object.",
+           paste0("`", classes, "`", collapse = " or "))
 }
 
 #' @title STAC utils
