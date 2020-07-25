@@ -1,6 +1,6 @@
 #' @title STAC functions
 #'
-#' @author Rolf Simoes
+#' @author Rolf Simoes and Felipe Carvalho
 #'
 #' @description The \code{get_request} is function that makes HTTP
 #' requests to STAC web services, retrieves, and parse the data.
@@ -64,7 +64,7 @@ get_request <- function(s, headers = c()) {
 
 #' @title STAC functions
 #'
-#' @author Rolf Simoes
+#' @author Rolf Simoes and Felipe Carvalho
 #'
 #' @description The \code{post_request} is function that makes HTTP
 #' requests to STAC web services, retrieves, and parse the data.
