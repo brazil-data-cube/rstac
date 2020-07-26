@@ -7,7 +7,7 @@
 stac(url)
 }
 \arguments{
-\item{url}{A \code{character} informing the base url of a
+\item{url}{a \code{character} informing the base url of a
 STAC web service.}
 }
 \value{

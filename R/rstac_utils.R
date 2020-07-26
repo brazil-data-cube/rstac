@@ -65,7 +65,7 @@
       ifelse(interval_dt[1] < interval_dt[2],
              return(datetime),
              stop(
-             paste0("The closed date time provided is not in correct interval,
+               paste0("The closed date time provided is not in correct interval,
                   the first date time shold be less than second."), call. = F))
     }
 
@@ -111,25 +111,78 @@
   return(check_pattern)
 }
 
+#' @title utils functions
+#'
+#' @param msg   a \code{character} string with format error message.
+#'
+#' @param ...   values to be passed to \code{msg} parameter.
+#'
+#' @noRd
+.error <- function(msg, ...) {
+
+  stop(sprintf(msg, ...), call. = FALSE)
+}
 
 #' @title helper function
 #'
 #' @param obj      a \code{object} to compare.
 #'
-#' @param expected a \code{character} with the expected classes.
+#' @param expected an \code{character} with the expected classes.
 #'
-#' @return An error if the provided object is not of the expected class.
+#' @return An error if the provided object class is not in expected parameter.
 #'
 #' @noRd
-.check_obj <- function(obj, expected = c("stac_items")) {
+.check_obj <- function(obj, expected) {
+
+  obj_name <- as.character(substitute(obj))
+
+  if (missing(obj))
+    .error("Param `%s` is missing.", obj_name)
 
   if (!inherits(obj, expected))
-      stop(sprintf("Invalid %s object.
-                   The object must be %s", class(obj),
-                   paste0(expected, collapse = " or ")),
-           call. = FALSE)
+    .error("Invalid %s value in `%s` param.",
+           paste0("`", expected, "`", collapse = " or "), obj_name)
+}
 
-  return(invisible(NULL))
+#' @title STAC utils
+#'
+#' @author Rolf Simoes
+#'
+#' @description The \code{.check_response} function that checks if the request's
+#' response is in accordance with the \code{expected} parameters.
+#'
+#' @param res  a \code{httr} \code{response} object.
+#'
+#' @param expected a \code{list} containing the expected parameters values.
+#'
+#' @return a \code{character} with document class
+.check_response <- function(res, expected) {
+
+  method <- expected[[tolower(res$request$method)]]
+  if (is.null(method))
+    .error("HTTP method '%s' not defined for this operation.", res$method)
+
+  # TODO: validate stac response
+  # .stac_response_type(res, expected)
+
+  status_code <- method$responses[[as.character(res$status_code)]]
+  if (is.null(status_code)) {
+    content <- httr::content(res)
+    if (!is.null(content$code))
+      .error("%s %s", content$code, content$description)
+    .error("HTTP status '%s' not defined for this operation.",
+           res$status_code)
+  }
+  content_type  <- httr::http_type(res)
+  content_class <- status_code[[content_type]]
+  if (is.null(content_class))
+    .error("HTTP content type response '%s' not defined for this operation.",
+           content_type)
+
+  if (content_class == "")
+    content_class <- NULL
+
+  return(content_class)
 }
 
 #' @title STAC utils
@@ -148,14 +201,14 @@
 #' whithout including any character separator. For this reason, this function
 #' does not support the query and fragment URI components in the base url.
 #'
-#' @param url         A \code{character} informing the base url of a
+#' @param url         a \code{character} informing the base url of a
 #' STAC web service.
 #'
-#' @param endpoint    A \code{character} a path to be appended in the final
+#' @param endpoint    a \code{character} a path to be appended in the final
 #' url.
 #'
-#' @param params      A \code{list} with all url query parameters to be
-#' appended in final url.
+#' @param params      a named \code{list} with all url query parameters to be
+#' appended in the url.
 #'
 #' @return
 #' \code{.make_url} returns an url to access STAC endpoints.
@@ -194,30 +247,6 @@
                  sapply(unname(params), paste0, collapse = ","),
                  sep = "=", collapse = "&"))
   return(paste0(params, collapse = ","))
-}
-
-#' @title STAC utils
-#'
-#' @author Rolf Simoes
-#'
-#' @description The \code{.url_to_stac} ...
-#'
-#' @param url ...
-#'
-#' @return ...
-.url_to_stac <- function(url) {
-
-  url <- url[[1]]
-
-  base_url <- gsub("^([^?]+)\\?(.*)$", "\\1", url)
-  query <- ""
-  if (grepl("^([^?]+)\\?(.*)$", url))
-    query <- gsub("^([^?]+)\\?(.*)$", "\\2", url)
-
-  s <- structure(list(url = base_url,
-                      params = .query_decode(query)),
-                 class = "stac")
-  return(s)
 }
 
 #' @title STAC utils

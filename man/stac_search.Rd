@@ -11,15 +11,14 @@ stac_search(url, collections, ids, bbox, datetime, intersects, limit, ...)
 STAC web service or any \code{stac} object containing \code{request}
 property.}
 
-\item{collections}{A \code{character} vector of collection IDs to include in
+\item{collections}{a \code{character} vector of collection IDs to include in
 the search for items. Only items in one of the provided collections will be
 searched.}
 
-\item{ids}{A \code{character} vector of item IDs. All other filter
-parameters that futher restrict the number of search results
-(except \code{.next} and \code{.limit}) are ignored.}
+\item{ids}{a \code{character} vector with item IDs. All other filter
+parameters that futher restrict the number of search results are ignored.}
 
-\item{bbox}{Only features that have a geometry that intersects the
+\item{bbox}{only features that have a geometry that intersects the
 bounding box are selected. The bounding box is provided as four or six
 numbers, depending on whether the coordinate reference system includes a
 vertical axis (elevation or depth):
@@ -40,7 +39,7 @@ in cases where the box spans the antimeridian the first value
 (west-most box edge) is larger than the third value
 (east-most box edge).}
 
-\item{datetime}{Either a date-time or an interval.
+\item{datetime}{either a date-time or an interval.
 Date and time strings needs to conform RFC 3339. Intervals are
 expressed by separating two date-time strings by \code{'/'} character.
 Open intervals are expressed by using \code{'..'} in place of date-time.
@@ -56,14 +55,14 @@ Examples:
 Only features that have a \code{datetime} property that intersects
 the interval or date-time informed in \code{datetime} are selected.}
 
-\item{intersects}{Only returns items that intersect with the provided
-polygon.}
+\item{intersects}{a \code{character} value expressing GeoJSON
+geometries objects as specified in RFC 7946. Only returns items that
+intersect with the provided polygon.}
 
-\item{limit}{An \code{integer} defining the maximum number of results
-to return. If \code{NULL} it defaults to the service implementation.
-Defaults to 10.}
+\item{limit}{an \code{integer} defining the maximum number of results
+to return. If not informed it defaults to the service implementation.}
 
-\item{...}{Any additional non standard filter parameter.}
+\item{...}{any additional non standard filter parameter.}
 }
 \value{
 A \code{stac} object containing all request parameters to be
@@ -81,22 +80,17 @@ a \code{stac} object with all filter parameters to be provided to
 is a \code{stac_items} object, a regular R \code{list} representing
 a STAC ItemCollection.
 }
-\note{
-Param \code{intersects} is a \code{character} value expressing GeoJSON
-geometries objects as specified in RFC 7946. This param is not supported in
-current version.
-}
 \examples{
 \dontrun{
 # GET request
 stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
             collections = "MOD13Q1") \%>\%
-get_request()
+     get_request()
 
 # POST request
 stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
             collections = "MOD13Q1") \%>\%
-post_request()
+     post_request()
 }
 
 }

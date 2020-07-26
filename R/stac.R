@@ -9,7 +9,7 @@
 #' This endpoint should return a STAC Catalog containing all data Items
 #'  searchable in the API.
 #'
-#' @param url     A \code{character} informing the base url of a
+#' @param url     a \code{character} informing the base url of a
 #'  STAC web service.
 #'
 #' @seealso
@@ -29,6 +29,9 @@
 #'
 #' @export
 stac <- function(url) {
+
+  # check url parameter
+  .check_obj(url, "character")
 
   # TODO: add these code excerpts bellow in different file
   expected <- list("get" =

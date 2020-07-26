@@ -7,7 +7,9 @@
 items_matched(items)
 }
 \arguments{
-\item{items}{A \code{stac_items} object.}
+\item{items}{a \code{stac_items} object representing the request
+results of \code{/stac/search}, \code{/collections/{collectionId}/items}, or
+\code{/collections/{collectionId}/items/{itemId}} endpoints.}
 }
 \value{
 An \code{integer} value. If STAC web server does not support this
@@ -22,7 +24,7 @@ extension (v0.8.0).
 \dontrun{
 
 stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-    stac_request() \%>\%
+    get_request() \%>\%
     items_matched()
 }
 

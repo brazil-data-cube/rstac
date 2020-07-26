@@ -6,7 +6,9 @@
 #' search criteria. It implements \code{search:metadata} STAC API
 #' extension (v0.8.0).
 #'
-#' @param items    A \code{stac_items} object.
+#' @param items      a \code{stac_items} object representing the request
+#'  results of \code{/stac/search}, \code{/collections/{collectionId}/items}, or
+#'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
 #' @return
 #' An \code{integer} value. If STAC web server does not support this
@@ -16,7 +18,7 @@
 #' \dontrun{
 #'
 #' stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'     stac_request() %>%
+#'     get_request() %>%
 #'     items_matched()
 #' }
 #'
@@ -31,8 +33,9 @@ items_matched <- function(items) {
   # .stac_version <- function()
 
   # Check object class
-  .check_obj(items, expected = c("stac_items"))
+  .check_obj(items, "stac_items")
 
+  # v0.8.0 extension
   matched <- items[["search:metadata"]][["matched"]]
 
   # try WFS3 spec

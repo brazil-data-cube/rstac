@@ -18,15 +18,14 @@
 #' STAC web service or any \code{stac} object containing \code{request}
 #' property.
 #'
-#' @param collections A \code{character} vector of collection IDs to include in
+#' @param collections a \code{character} vector of collection IDs to include in
 #' the search for items. Only items in one of the provided collections will be
 #' searched.
 #'
-#' @param ids         A \code{character} vector of item IDs. All other filter
-#' parameters that futher restrict the number of search results
-#' (except \code{.next} and \code{.limit}) are ignored.
+#' @param ids         a \code{character} vector with item IDs. All other filter
+#' parameters that futher restrict the number of search results are ignored.
 #'
-#' @param datetime    Either a date-time or an interval.
+#' @param datetime    either a date-time or an interval.
 #' Date and time strings needs to conform RFC 3339. Intervals are
 #' expressed by separating two date-time strings by \code{'/'} character.
 #' Open intervals are expressed by using \code{'..'} in place of date-time.
@@ -42,11 +41,7 @@
 #' Only features that have a \code{datetime} property that intersects
 #' the interval or date-time informed in \code{datetime} are selected.
 #'
-#' @note Param \code{intersects} is a \code{character} value expressing GeoJSON
-#' geometries objects as specified in RFC 7946. This param is not supported in
-#' current version.
-#'
-#' @param bbox        Only features that have a geometry that intersects the
+#' @param bbox        only features that have a geometry that intersects the
 #' bounding box are selected. The bounding box is provided as four or six
 #' numbers, depending on whether the coordinate reference system includes a
 #' vertical axis (elevation or depth):
@@ -67,14 +62,14 @@
 #' (west-most box edge) is larger than the third value
 #' (east-most box edge).
 #'
-#' @param intersects Only returns items that intersect with the provided
-#' polygon.
+#' @param intersects  a \code{character} value expressing GeoJSON
+#' geometries objects as specified in RFC 7946. Only returns items that
+#' intersect with the provided polygon.
 #'
-#' @param limit       An \code{integer} defining the maximum number of results
-#' to return. If \code{NULL} it defaults to the service implementation.
-#' Defaults to 10.
+#' @param limit       an \code{integer} defining the maximum number of results
+#' to return. If not informed it defaults to the service implementation.
 #'
-#' @param ...         Any additional non standard filter parameter.
+#' @param ...         any additional non standard filter parameter.
 #'
 #' @seealso
 #' \code{\link{stac}}, \code{\link{get_request}}, \code{\link{post_request}}
@@ -88,17 +83,21 @@
 #' # GET request
 #' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1") %>%
-#' get_request()
+#'      get_request()
 #'
 #' # POST request
 #' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1") %>%
-#' post_request()
+#'      post_request()
 #' }
 #'
 #' @export
 stac_search <- function(url, collections, ids, bbox, datetime, intersects,
                         limit, ...) {
+
+  # check url parameter
+  .check_obj(url, "character")
+
   params <- list()
 
   if (!missing(collections))
@@ -116,8 +115,7 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
   if (!missing(bbox)) {
 
     if (!length(bbox) %in% c(4, 6))
-      stop(sprintf("Param `bbox` must have 4 or 6 numbers, not %s.",
-                   length(bbox)))
+      .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
     params[["bbox"]] <- .query_encode(bbox)
   }
 
