@@ -1,35 +1,52 @@
-
-
-#' @title stac functions
+#' @title Endpoint functions
 #'
 #' @author Rolf Simoes
 #'
 #' @description This function implements \code{/stac} API
-#' endpoint (v0.8.0). It retrieves the root STAC Catalog or STAC Collection
-#' that is the entry point to access any data published in STAC web service.
+#'  endpoint (v0.8.0). It prepares query parameters to be provided to
+#'  \code{stac_request} function.
 #'
-#' @param url     A \code{character} informing the base url of a
-#' STAC web service.
+#' This endpoint should return a STAC Catalog containing all data Items
+#'  searchable in the API.
 #'
-#' @param .headers   A \code{list} of named arguments to be passed as
-#' http request headers.
+#' @param url     a \code{character} informing the base url of a
+#'  STAC web service.
 #'
-#' @return A STAC Catalog definition.
+#' @seealso
+#' \code{\link{stac_search}}, \code{\link{get_request}},
+#'  \code{\link{post_request}}
+#'
+#' @return
+#' A \code{stac} object containing all request parameters to be
+#' provided to \code{stac_request}.
 #'
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'     stac_request()
 #' }
 #'
 #' @export
-stac <- function(url, .headers = list()) {
+stac <- function(url) {
 
-  # TODO check valid stac response
-  res <- .stac_get(url = url, endpoint = "/stac", headers = .headers)
+  # check url parameter
+  .check_obj(url, "character")
 
-  if (is.null(res))
-    return(invisible(NULL))
+  # TODO: add these code excerpts bellow in different file
+  expected <- list("get" =
+                     list(responses =
+                            list("200" =
+                                   list("application/json" = "stac_catalog"))),
+                   "post" =
+                     list(enctypes = c("application/json"),
+                          responses =
+                            list("200" =
+                                   list("application/json" = "stac_catalog"))))
 
-  return(res)
+  content <- structure(list(url = .make_url(url, endpoint = "/stac"),
+                            params = list(),
+                            expected_responses = expected),
+                       class = "stac")
+  return(content)
 }

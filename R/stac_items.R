@@ -3,27 +3,32 @@
 #' @author Rolf Simoes
 #'
 #' @description
-#' (This document is based on STAC specification documentation
-#' \url{https://github.com/radiantearth/stac-spec/blob/v0.8.0/api-spec/STAC.yaml}
-#' and reproduces some of its parts)
+#' The \code{stac_items} function implements WFS3
+#' \code{/collections/\{collectionId\}/items}, and
+#' \code{/collections/\{collectionId\}/items/\{itemId\}}
+#' endpoints (v0.8.0).
 #'
-#' The \code{stac_search} function implements \code{/stac/search} API
-#' endpoint (v0.8.0). It prepares query parameters used in search API request,
-#' a \code{stac} object with all filter parameters to be provided to
-#' \code{stac_request}. The GeoJSON content returned by the \code{stac_request}
-#' is a \code{stac_items} object, a regular R \code{list} representing
-#' a STAC ItemCollection.
+#' Each endpoint retrieves specific STAC objects:
+#' \itemize{
+#'   \item \code{/collections/\{collectionId\}/items}: Returns a STAC Items
+#'     collection (GeoJSON)
+#'   \item \code{/collections/\{collectionId\}/items/\{itemId\}}: Returns a
+#'     STAC Item (GeoJSON Feature)
+#' }
 #'
-#' @param url         A \code{character} informing the base url of a
-#' STAC web service or any \code{stac} object containing \code{request}
-#' property.
+#' The endpoint \code{/collections/\{collectionId\}/items} accepts the same
+#' filters parameters of \code{\link{stac_search}} function.
 #'
-#' @param collections a \code{character} vector of collection IDs to include in
-#' the search for items. Only items in one of the provided collections will be
-#' searched.
 #'
-#' @param ids         a \code{character} vector with item IDs. All other filter
-#' parameters that futher restrict the number of search results are ignored.
+#' @param url         a \code{character} informing the base url of a
+#' STAC web service.
+#'
+#' @param collection_id a \code{character} with a collection id to retrieve
+#' collection details.
+#'
+#' @param item_id     a \code{character} with item id to be fetched.
+#' Only works if the \code{collection_id} is informed. This is equivalent to
+#' the endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.
 #'
 #' @param datetime    either a date-time or an interval.
 #' Date and time strings needs to conform RFC 3339. Intervals are
@@ -62,17 +67,15 @@
 #' (west-most box edge) is larger than the third value
 #' (east-most box edge).
 #'
-#' @param intersects  a \code{character} value expressing GeoJSON
-#' geometries objects as specified in RFC 7946. Only returns items that
-#' intersect with the provided polygon.
-#'
 #' @param limit       an \code{integer} defining the maximum number of results
 #' to return. If not informed it defaults to the service implementation.
 #'
-#' @param ...         any additional non standard filter parameter.
+#' @param ...         filter parameters. Accept the same filter parameters
+#' of \code{\link{stac_search}} function.
 #'
 #' @seealso
-#' \code{\link{stac}}, \code{\link{get_request}}, \code{\link{post_request}}
+#' \code{\link{get_request}},  \code{\link{post_request}},
+#'  \code{\link{stac_collections}}
 #'
 #' @return
 #' A \code{stac} object containing all request parameters to be
@@ -80,36 +83,34 @@
 #'
 #' @examples
 #' \dontrun{
-#' # GET request
-#' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1") %>%
-#'      get_request()
 #'
-#' # POST request
-#' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1") %>%
-#'      post_request()
+#' stac_items("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+#'            collection_id = "CB_64_16D_STK",
+#'            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+#'     get_request()
+#'
+#' stac_items("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+#'            collection_id = "MOD13Q1",
+#'            item_id = "MOD13Q1.A2019241.h13v09.006.2019262164754") %>%
+#'     get_request()
 #' }
 #'
 #' @export
-stac_search <- function(url, collections, ids, bbox, datetime, intersects,
-                        limit, ...) {
+stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
+                       ...) {
 
   # check url parameter
   .check_obj(url, "character")
 
+  if (missing(collection_id))
+    stop(sprintf("Not informed `collection_id` parameter."), call. = FALSE)
+
   params <- list()
-
-  if (!missing(collections))
-    params[["collections"]] <- .query_encode(collections)
-
-  if (!missing(ids))
-    params[["ids"]] <- .query_encode(ids)
 
   if (!missing(datetime)) {
 
     .verify_datetime(datetime)
-    params[["datetime"]] <- datetime
+    params[["datetime"]] <- .query_encode(datetime)
   }
 
   if (!missing(bbox)) {
@@ -119,49 +120,54 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
     params[["bbox"]] <- .query_encode(bbox)
   }
 
-  # TODO: validate polygon
-  if (!missing(intersects)) {
-
-    params[["intersects"]] <- .query_encode(intersects)
-  }
-
   if (!missing(limit) && !is.null(limit))
     params[["limit"]] <- limit
 
   if (!missing(...))
     params <- c(params, list(...))
 
-  # TODO: follow specification strictly
-  if (!is.null(params[["intersects"]])) {
-    if ("bbox" %in% names(params)) {
-      warning("Only one of either `intersects` or bbox should be specified.
-              The `bbox` parameter will be ignored.", call. = FALSE)
+  if (missing(item_id)) {
 
-      params[["bbox"]] <- NULL
-    }
+    # TODO: follow specification strictly
+    endpoint <- paste("/collections", collection_id, "items", sep = "/")
 
     # TODO: add these code excerpts bellow in different file
-    expected <- list("post" =
-                       list(enctypes = c("application/json"),
-                            responses =
-                              list("200" =
-                                     list("application/geo+json" = "stac_items",
-                                          "application/json" = "stac_items"))))
-  } else{
     expected <- list("get" =
                        list(responses =
                               list("200" =
                                      list("application/geo+json" = "stac_items",
                                           "application/json" = "stac_items"))),
                      "post" =
-                       list(enctypes = c("application/json"),
+                       list(enctypes = c("application/x-www-form-urlencoded",
+                                         "multipart/form-data"),
                             responses =
                               list("200" =
                                      list("application/geo+json" = "stac_items",
                                           "application/json" = "stac_items"))))
+  } else {
+
+    # TODO: follow specification strictly
+    endpoint <- paste("/collections", collection_id, "items",
+                      item_id, sep = "/")
+
+    # TODO: add these code excerpts bellow in different file
+    # TODO: this could be returned by the STAC service
+    expected <- list("get" =
+                       list(responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_item",
+                                          "application/json" = "stac_item"))),
+                     "post" =
+                       list(enctypes = c("application/x-www-form-urlencoded",
+                                         "multipart/form-data"),
+                            responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_item",
+                                          "application/json" = "stac_item"))))
+    params <- list()
   }
 
-  content <- structure(list(url = .make_url(url, endpoint = "/stac/search"),
+  content <- structure(list(url = .make_url(url, endpoint = endpoint),
                             params = params,
                             expected_responses = expected),
                        class = "stac")
