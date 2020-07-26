@@ -25,4 +25,6 @@ Suggests:
     covr,
     magrittr,
     testthat,
-    vcr
+    vcr,
+    knitr,
+    rmarkdown
