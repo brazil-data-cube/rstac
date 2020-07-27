@@ -214,6 +214,8 @@
 #'
 #' @return
 #' \code{.make_url} returns an url to access STAC endpoints.
+#'
+#' @noRd
 .make_url <- function(url, endpoint = "", params = list()) {
 
   endpoint <- paste0(endpoint, collapse = "/")
