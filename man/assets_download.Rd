@@ -4,18 +4,19 @@
 \alias{assets_download}
 \title{assets download}
 \usage{
-assets_download(res, assets_name = c(), output_dir = "./", progress = TRUE)
+assets_download(items, assets_name = c(), output_dir = "./", progress = TRUE)
 }
 \arguments{
-\item{res}{A \code{stac_items} or \code{stac_item} objects expressing a STAC
-search criteria provided by \code{stac_search} functions.}
+\item{items}{a \code{stac_items} object representing the result of
+\code{/stac/search}, \code{/collections/{collectionId}/items}, or
+\code{/collections/{collectionId}/items/{itemId}} endpoints.}
 
-\item{assets_name}{A \code{character} with the assets names to be filtered.}
+\item{assets_name}{a \code{character} with the assets names to be filtered.}
 
-\item{output_dir}{A \code{character} directory in which the images will be
+\item{output_dir}{a \code{character} directory in which the images will be
 saved.}
 
-\item{progress}{A \code{logical} indicating if a progress bar must be
+\item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 }
 \value{
@@ -24,7 +25,7 @@ The same \code{stac_items} object, but with the link of the item
 }
 \description{
 The \code{assets_download} function downloads the assets
-provided by the STAC API
+provided by the STAC API.
 }
 \examples{
 \dontrun{
@@ -33,8 +34,8 @@ stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
             collections = "MOD13Q1",
             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
             limit = 10) \%>\%
-get_request() \%>\%
-assets_download(assets_name = c("thumbnail"), output_dir = "./")
+     get_request() \%>\%
+     assets_download(assets_name = c("thumbnail"), output_dir = "./")
 }
 
 }

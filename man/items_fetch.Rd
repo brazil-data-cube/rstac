@@ -7,16 +7,15 @@
 items_fetch(items, progress = TRUE, headers = c())
 }
 \arguments{
-\item{items}{A \code{stac_items} object representing the result of
-\code{/stac/search}, \code{/collections/{collectionId}/items}, or
+\item{items}{a \code{stac_items} object representing the request
+results of \code{/stac/search}, \code{/collections/{collectionId}/items}, or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
 
-\item{progress}{A \code{logical} indicating if a progress bar must be
+\item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
-\item{headers}{A \code{list} of named arguments to be passed as
-http request headers. This is used in \emph{addition} to eventual headers
-defined in \code{stac} object parameter.}
+\item{headers}{a \code{character} of named arguments to be passed as
+HTTP request headers.}
 }
 \value{
 A \code{stac_items} object.

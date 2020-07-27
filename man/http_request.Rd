@@ -7,14 +7,14 @@
 .make_url(url, endpoint = "", params = list())
 }
 \arguments{
-\item{url}{A \code{character} informing the base url of a
+\item{url}{a \code{character} informing the base url of a
 STAC web service.}
 
-\item{endpoint}{A \code{character} a path to be appended in the final
+\item{endpoint}{a \code{character} a path to be appended in the final
 url.}
 
-\item{params}{A \code{list} with all url query parameters to be
-appended in final url.}
+\item{params}{a named \code{list} with all url query parameters to be
+appended in the url.}
 }
 \value{
 \code{.make_url} returns an url to access STAC endpoints.

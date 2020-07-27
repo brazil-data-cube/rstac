@@ -7,17 +7,17 @@
 stac_items(url, collection_id, item_id, datetime, bbox, limit, ...)
 }
 \arguments{
-\item{url}{A \code{character} informing the base url of a
+\item{url}{a \code{character} informing the base url of a
 STAC web service.}
 
-\item{collection_id}{A \code{character} with a collection id to retrieve
+\item{collection_id}{a \code{character} with a collection id to retrieve
 collection details.}
 
-\item{item_id}{A \code{character} with item id to be fetched.
+\item{item_id}{a \code{character} with item id to be fetched.
 Only works if the \code{collection_id} is informed. This is equivalent to
 the endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.}
 
-\item{datetime}{Either a date-time or an interval.
+\item{datetime}{either a date-time or an interval.
 Date and time strings needs to conform RFC 3339. Intervals are
 expressed by separating two date-time strings by \code{'/'} character.
 Open intervals are expressed by using \code{'..'} in place of date-time.
@@ -33,7 +33,7 @@ Examples:
 Only features that have a \code{datetime} property that intersects
 the interval or date-time informed in \code{datetime} are selected.}
 
-\item{bbox}{Only features that have a geometry that intersects the
+\item{bbox}{only features that have a geometry that intersects the
 bounding box are selected. The bounding box is provided as four or six
 numbers, depending on whether the coordinate reference system includes a
 vertical axis (elevation or depth):
@@ -54,11 +54,10 @@ in cases where the box spans the antimeridian the first value
 (west-most box edge) is larger than the third value
 (east-most box edge).}
 
-\item{limit}{An \code{integer} defining the maximum number of results
-to return. If \code{NULL} it defaults to the service implementation.
-Defaults to 10.}
+\item{limit}{an \code{integer} defining the maximum number of results
+to return. If not informed it defaults to the service implementation.}
 
-\item{...}{Filter parameters. Accept the same filter parameters
+\item{...}{filter parameters. Accept the same filter parameters
 of \code{\link{stac_search}} function.}
 }
 \value{
@@ -81,11 +80,6 @@ Each endpoint retrieves specific STAC objects:
 
 The endpoint \code{/collections/\{collectionId\}/items} accepts the same
 filters parameters of \code{\link{stac_search}} function.
-}
-\note{
-Param \code{intersects} is a \code{character} value expressing GeoJSON
-geometries objects as specified in RFC 7946. This param is not supported in
-current version.
 }
 \examples{
 \dontrun{

@@ -7,7 +7,9 @@
 items_length(items)
 }
 \arguments{
-\item{items}{A \code{stac_items} object.}
+\item{items}{a \code{stac_items} object representing the request
+results of \code{/stac/search}, \code{/collections/{collectionId}/items}, or
+\code{/collections/{collectionId}/items/{itemId}} endpoints.}
 }
 \value{
 An \code{integer} value.
@@ -20,7 +22,7 @@ there are in the \code{items} object.
 \dontrun{
 
 stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-    stac_request() \%>\%
+    get_request() \%>\%
     items_length()
 }
 

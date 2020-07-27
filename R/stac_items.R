@@ -20,17 +20,17 @@
 #' filters parameters of \code{\link{stac_search}} function.
 #'
 #'
-#' @param url       A \code{character} informing the base url of a
+#' @param url         a \code{character} informing the base url of a
 #' STAC web service.
 #'
-#' @param collection_id A \code{character} with a collection id to retrieve
+#' @param collection_id a \code{character} with a collection id to retrieve
 #' collection details.
 #'
-#' @param item_id   A \code{character} with item id to be fetched.
+#' @param item_id     a \code{character} with item id to be fetched.
 #' Only works if the \code{collection_id} is informed. This is equivalent to
 #' the endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.
 #'
-#' @param datetime    Either a date-time or an interval.
+#' @param datetime    either a date-time or an interval.
 #' Date and time strings needs to conform RFC 3339. Intervals are
 #' expressed by separating two date-time strings by \code{'/'} character.
 #' Open intervals are expressed by using \code{'..'} in place of date-time.
@@ -46,11 +46,7 @@
 #' Only features that have a \code{datetime} property that intersects
 #' the interval or date-time informed in \code{datetime} are selected.
 #'
-#' @note Param \code{intersects} is a \code{character} value expressing GeoJSON
-#' geometries objects as specified in RFC 7946. This param is not supported in
-#' current version.
-#'
-#' @param bbox        Only features that have a geometry that intersects the
+#' @param bbox        only features that have a geometry that intersects the
 #' bounding box are selected. The bounding box is provided as four or six
 #' numbers, depending on whether the coordinate reference system includes a
 #' vertical axis (elevation or depth):
@@ -71,11 +67,10 @@
 #' (west-most box edge) is larger than the third value
 #' (east-most box edge).
 #'
-#' @param limit       An \code{integer} defining the maximum number of results
-#' to return. If \code{NULL} it defaults to the service implementation.
-#' Defaults to 10.
+#' @param limit       an \code{integer} defining the maximum number of results
+#' to return. If not informed it defaults to the service implementation.
 #'
-#' @param ...       Filter parameters. Accept the same filter parameters
+#' @param ...         filter parameters. Accept the same filter parameters
 #' of \code{\link{stac_search}} function.
 #'
 #' @seealso
@@ -104,6 +99,9 @@
 stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
                        ...) {
 
+  # check url parameter
+  .check_obj(url, "character")
+
   if (missing(collection_id))
     stop(sprintf("Not informed `collection_id` parameter."), call. = FALSE)
 
@@ -118,8 +116,7 @@ stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
   if (!missing(bbox)) {
 
     if (!length(bbox) %in% c(4, 6))
-      stop(sprintf("Param `bbox` must have 4 or 6 numbers, not %s.",
-                   length(bbox)))
+      .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
     params[["bbox"]] <- .query_encode(bbox)
   }
 
@@ -154,6 +151,7 @@ stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
                       item_id, sep = "/")
 
     # TODO: add these code excerpts bellow in different file
+    # TODO: this could be returned by the STAC service
     expected <- list("get" =
                        list(responses =
                               list("200" =

@@ -5,16 +5,15 @@
 #' @description The \code{items_fetch} function returns the pagination of all
 #'  items of the stac object
 #'
-#' @param items      A \code{stac_items} object representing the result of
-#'  \code{/stac/search}, \code{/collections/{collectionId}/items}, or
+#' @param items      a \code{stac_items} object representing the request
+#'  results of \code{/stac/search}, \code{/collections/{collectionId}/items}, or
 #'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
-#' @param progress   A \code{logical} indicating if a progress bar must be
+#' @param progress   a \code{logical} indicating if a progress bar must be
 #' shown or not. Defaults to \code{TRUE}.
 #'
-#' @param headers    A \code{list} of named arguments to be passed as
-#'  http request headers. This is used in \emph{addition} to eventual headers
-#'  defined in \code{stac} object parameter.
+#' @param headers    a \code{character} of named arguments to be passed as
+#' HTTP request headers.
 #'
 #' @seealso
 #' \code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
@@ -38,7 +37,7 @@
 items_fetch <- function(items, progress = TRUE, headers = c()) {
 
   # Check object class
-  .check_obj(items, expected = c("stac_items", "stac_item"))
+  .check_obj(items, "stac_items")
 
   matched <- items_matched(items)
 
@@ -52,9 +51,8 @@ items_fetch <- function(items, progress = TRUE, headers = c()) {
 
     # protect against infinite loop
     if (!is.null(matched) && (items_length(items) > matched))
-      stop(sprintf(paste("Length of returned items (%s) is different",
-                         "from matched items (%s)."),
-                   items_length(items), matched), call. = FALSE)
+      .error(paste("Length of returned items (%s) is different",
+                   "from matched items (%s)."), items_length(items), matched)
 
     s <- attr(items, "stac")
     if (is.null(s))
@@ -65,8 +63,12 @@ items_fetch <- function(items, progress = TRUE, headers = c()) {
     if (length(next_url) == 0)
       return(items)
 
-    # update stac object with params of the next url
-    next_stac <- .url_to_stac(next_url[[1]]$href)
+    # create a new stac object with params from the next url
+    base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url[[1]]$href)
+    query <- substring(gsub("^([^?]+)(\\?.*)?$", "\\2", next_url[[1]]$href), 2)
+    next_stac <- structure(list(url = base_url,
+                                params = .query_decode(query)),
+                           class = "stac")
     next_stac$expected_responses <- s$expected_responses
 
     # get request method
@@ -76,17 +78,20 @@ items_fetch <- function(items, progress = TRUE, headers = c()) {
 
     # call request
     if (request$method == "get") {
+
       content <- get_request(next_stac, headers = headers)
     } else if (request$method == "post") {
+
       content <- post_request(next_stac,
-                              encode = request$enctype,
+                              enctype = request$enctype,
                               headers = headers)
     } else {
-      stop(sprintf("Invalid HTTP method."), call. = FALSE)
+
+      .error("Invalid HTTP method.")
     }
 
-    if (!inherits(content, "stac_items"))
-      stop(sprintf("Invalid content response."), call. = FALSE)
+    # check content response
+    .check_obj(content, "stac_items")
 
     # merge features result into resulting content
     content$features <- c(items$features, content$features)

@@ -30,7 +30,7 @@
 #'     search criteria.
 #'   \item \code{\link{items_length}}: informs how many items are
 #'     stored locally.
-#'   \item \code{items_fetch}: fetches all matched items from service.
+#'   \item \code{\link{items_fetch}}: fetches all matched items from service.
 #'   \item \code{items_group}: group items by some property field.
 #'   \item \code{\link{assets_download}}: download all assets in batch.
 #' }
