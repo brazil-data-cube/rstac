@@ -32,7 +32,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#' a <- stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
 #'     get_request()
 #'
 #' stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
@@ -86,3 +86,56 @@ stac_collections <- function(url, collection_id) {
                        class = "stac")
   return(content)
 }
+
+#' @export
+print.stac_collection <- function(x, ...) {
+
+  if (length(x$links) > 1) {
+    links_print <- lapply(x$links, function(y){
+
+    as.matrix(
+      data.frame(
+        title = ifelse(is.null(y$title), "NULL", y$title),
+        rel = y$rel,
+        href = y$href
+      )
+    )
+    })
+
+    if (!is.null(getOption("max.links"))) {
+      format(x, links_print)
+    } else {
+      options(max.links = length(links_print))
+      format(x, links_print)
+    }
+  } else {
+    print(x)
+  }
+  return(invisible(x))
+}
+
+#' @export
+format.stac_collection <- function(x, links_print, ...) {
+
+  print_size <- getOption("max.links")
+
+  if (print_size >= length(x$links)) {
+    print(links_print)
+  } else if (print_size >= 1) {
+    print(links_print[1:print_size])
+
+    if ((length(x$links) - print_size) == 0)
+      return(invisible(x))
+
+    limit_print <-
+      sprintf("# ... with more %s links to show.
+      To change use <options(max.links = ...)>",
+              (length(x$links) - print_size))
+
+    cat(limit_print)
+  } else {
+    warning("Please set a value greater than 0.
+    Use <options(max.links = ...)> ", call. = FALSE)
+  }
+}
+

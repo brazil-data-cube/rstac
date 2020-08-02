@@ -65,7 +65,6 @@ get_request <- function(s, headers = c()) {
   return(content)
 }
 
-
 #' @title STAC functions
 #'
 #' @rdname stac_request

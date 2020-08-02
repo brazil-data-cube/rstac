@@ -276,3 +276,17 @@
 
   return(params)
 }
+
+#' @description function from httr package
+#'
+#' @references `httr`package (https://CRAN.R-project.org/package=httr)
+#'
+#' @noRd
+named_vector <- function(title, x) {
+  if (length(x) == 0) return()
+
+  cat(title, ":\n", sep = "")
+  bullets <- paste0("- ", names(x), ": ", as.character(x))
+  cat(bullets, sep = "\n")
+}
+
