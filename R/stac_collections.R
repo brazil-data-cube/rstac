@@ -32,7 +32,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' a <- stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#' stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
 #'     get_request()
 #'
 #' stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
@@ -109,9 +109,8 @@ print.stac_collection <- function(x, ...) {
       format(x, links_print)
     }
   } else {
-    print(x)
+    print.default(x)
   }
-  return(invisible(x))
 }
 
 #' @export

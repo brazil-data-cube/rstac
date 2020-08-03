@@ -84,7 +84,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' a <- stac_items("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+#' stac_items("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'            collection_id = "MOD13Q1",
 #'            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
 #' get_request()
@@ -173,3 +173,4 @@ stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
                        class = "stac")
   return(content)
 }
+
