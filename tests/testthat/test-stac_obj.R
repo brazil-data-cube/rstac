@@ -1,8 +1,7 @@
 context("test_stac_obj")
 
 testthat::test_that("stac search object", {
-  vcr::use_cassette("stac_search_obj",
-                    match_requests_on = c("body", "method", "uri", "headers"),{
+  vcr::use_cassette("stac_search_obj",{
     # skip cran check test
     testthat::skip_on_cran()
 
@@ -30,6 +29,35 @@ testthat::test_that("stac search object", {
               post_request(enctype = "json")),
           expected = "stac_items"
     )
+
+    # Check print function------------------------------------------------------
+
+    ## show only one object
+    options(n.items = 1)
+    testthat::expect_output(
+      object   = print(rstac::stac_search(
+        url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        datetime = "2018-01-01/..", limit = 10) %>% get_request()),
+      regexp = "# ... with more 9 items to show."
+    )
+
+    ## show all of them
+    options(n.items = 10)
+    testthat::expect_output(
+      object   = str(print(rstac::stac_search(
+        url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        datetime = "2018-01-01/..", limit = 10) %>% get_request())),
+      regexp = "List of 10"
+    )
+
+    ## error when setting itens equal or less than 0
+    options(n.items = 0)
+    testthat::expect_warning(
+      object   = print(rstac::stac_search(
+        url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        datetime = "2018-01-01/..", limit = 10) %>% get_request())
+    )
+
 
     # Error when creating the stac object by parameter bbox
     testthat::expect_error(
@@ -168,11 +196,36 @@ testthat::test_that("stac collection object", {
       expected = "stac_collection"
     )
 
+    # check print stac object
+    testthat::expect_output(
+      object   = print(s_colid),
+      regexp = "<stac>"
+    )
+
     # check request from stac collections object
     testthat::expect_equal(
       object   = class(s_colid %>% get_request()),
       expected = "stac_collection"
     )
+
+    # check print stac_collection object
+    options(max.links = 1)
+    testthat::expect_output(
+      object   = print((s_colid %>% get_request())),
+      regexp   = "# ... with more 4 links to show."
+    )
+
+    # check print stac_collection object
+    options(max.links = 10)
+    testthat::expect_output(
+      object   = str(print((s_colid %>% get_request()))),
+      regexp   = "List of 5"
+    )
+
+    # check print stac_collection object
+    options(max.links = 0)
+    testthat::expect_warning(
+      object = print((s_colid %>% get_request())))
   })
 })
 

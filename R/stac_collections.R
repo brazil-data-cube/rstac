@@ -137,4 +137,3 @@ format.stac_collection <- function(x, links_print, ...) {
     Use <options(max.links = ...)> ", call. = FALSE)
   }
 }
-
