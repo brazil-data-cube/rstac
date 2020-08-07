@@ -72,7 +72,7 @@
 #' # GET request
 #' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1",
-#'             limit = 5) %>%
+#'             limit = 10) %>%
 #'      get_request()
 #'
 #' # POST request
@@ -157,56 +157,3 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
                        class = "stac")
   return(content)
 }
-
-#' @export
-print.stac_items <- function(x, ...) {
-
-  if (items_length(x) >= 1) {
-    items_print <- lapply(x$features, function(y){
-      as.matrix(
-        data.frame(
-          collection = y$collection,
-          bbox = paste(y$bbox, collapse = ","),
-          datetime = y$properties$datetime,
-          assets_names = c(names(y$assets))
-        )
-      )
-    })
-    names(items_print) <- rep(c("feature"), items_length(x))
-
-    if (!is.null(getOption("n.items"))) {
-      format(x, items_print)
-    } else {
-      options(n.items = 3)
-      format(x, items_print)
-    }
-  } else {
-    print.default(x)
-  }
-}
-
-#' @export
-format.stac_items <- function(x, items_print, ...) {
-
-  print_size <- getOption("n.items")
-
-  if (print_size >= items_length(x)) {
-    print(items_print)
-  } else if (print_size >= 1) {
-    print(items_print[1:print_size])
-
-    if ((items_length(x) - print_size) == 0)
-      return(invisible(x))
-
-    limit_print <-
-      sprintf("# ... with more %s items to show.
-      To change use <options(n.items = ...)>",
-              (items_length(x) - print_size))
-
-    cat(limit_print)
-  } else {
-    warning("Please set a value greater than 0.
-    Use <options(n.items = ...)> ", call. = FALSE)
-  }
-}
-

@@ -30,18 +30,18 @@ library(magrittr)
 
 # Create a stac object and return a STAC Catalog
 stac_catalog <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-                stac_request()
+                get_request()
     
 
 # Create a stac_items object and return STAC items
 items <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
                     collections = "MOD13Q1",
                     bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-        stac_request()
+        get_request()
         
 # Create a stac object and returns a list of STAC Collections
 col <- stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-       stac_request()
+       get_request()
 
 ```
 
@@ -62,5 +62,6 @@ items %>% items_length()
 
 ```R
 # Downloads the assets provided by the STAC API
-items %>% assets_download(assets_name = c("blue", "ndvi"), output_dir = "./")
+download_items <- 
+  items %>% assets_download(assets_name = c("thumbnail"))
 ```

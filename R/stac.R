@@ -50,11 +50,3 @@ stac <- function(url) {
                        class = "stac")
   return(content)
 }
-
-#' @export
-print.stac <- function(x, ...) {
-  cat("<stac>\n")
-
-  named_vector("$url", x$url)
-  named_vector("$params", x$params)
-}

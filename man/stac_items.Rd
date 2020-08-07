@@ -85,14 +85,14 @@ filters parameters of \code{\link{stac_search}} function.
 \dontrun{
 
 stac_items("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-           collection_id = "CB_64_16D_STK",
+           collection_id = "MOD13Q1",
            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
-    get_request()
+get_request()
 
 stac_items("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
            collection_id = "MOD13Q1",
            item_id = "MOD13Q1.A2019241.h13v09.006.2019262164754") \%>\%
-    get_request()
+get_request()
 }
 
 }

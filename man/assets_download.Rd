@@ -4,7 +4,13 @@
 \alias{assets_download}
 \title{assets download}
 \usage{
-assets_download(items, assets_name = c(), output_dir = "./", progress = TRUE)
+assets_download(
+  items,
+  assets_name,
+  output_dir = ".",
+  progress = TRUE,
+  headers = c()
+)
 }
 \arguments{
 \item{items}{a \code{stac_items} object representing the result of
@@ -18,6 +24,9 @@ saved.}
 
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
+
+\item{headers}{a \code{character} of named arguments to be passed as
+HTTP request headers.}
 }
 \value{
 The same \code{stac_items} object, but with the link of the item
@@ -33,9 +42,9 @@ provided by the STAC API.
 stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
             collections = "MOD13Q1",
             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
-            limit = 10) \%>\%
+            limit = 2) \%>\%
      get_request() \%>\%
-     assets_download(assets_name = c("thumbnail"), output_dir = "./")
+     assets_download(assets_name = c("thumbnail"), output_dir = ".")
 }
 
 }

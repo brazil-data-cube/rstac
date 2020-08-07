@@ -17,6 +17,9 @@
 #' @param progress    a \code{logical} indicating if a progress bar must be
 #'  shown or not. Defaults to \code{TRUE}.
 #'
+#' @param headers    a \code{character} of named arguments to be passed as
+#' HTTP request headers.
+#'
 #' @seealso
 #' \code{\link{stac_search}}, \code{\link{get_request}},
 #'  \code{\link{post_request}}
@@ -27,17 +30,17 @@
 #' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1",
 #'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
-#'             limit = 10) %>%
+#'             limit = 2) %>%
 #'      get_request() %>%
-#'      assets_download(assets_name = c("thumbnail"), output_dir = "./")
+#'      assets_download(assets_name = c("thumbnail"), output_dir = ".")
 #' }
 #'
 #' @return The same \code{stac_items} object, but with the link of the item
 #'  pointing to the directory where the assets were saved.
 #'
 #' @export
-assets_download <- function(items, assets_name = c(), output_dir = "./",
-                            progress = TRUE) {
+assets_download <- function(items, assets_name, output_dir = ".",
+                            progress = TRUE, headers = c()) {
 
   #check the object class
   .check_obj(items, expected = c("stac_items", "stac_item"))
@@ -97,11 +100,14 @@ assets_download <- function(items, assets_name = c(), output_dir = "./",
 #' @param output_dir  a \code{character} directory in which the images will be
 #'  saved.
 #'
+#' @param headers    a \code{character} of named arguments to be passed as
+#' HTTP request headers.
+#'
 #' @return The same \code{stac_item} object, but with the link of the item
 #'  pointing to the directory where the assets were saved.
 #'
 #' @noRd
-.item_download <- function(stac_item, assets_name = c(), output_dir = "./") {
+.item_download <- function(stac_item, assets_name, output_dir, headers = c()) {
 
   feat_id <- stac_item[["id"]]
   assets  <- .select_assets(stac_item[["assets"]], assets_name)
@@ -117,12 +123,12 @@ assets_download <- function(items, assets_name = c(), output_dir = "./",
                           file_ext)
 
     tryCatch({
-      # TODO: ver o config
-      httr::GET(url      = asset_href,
-                httr::write_disk(path = dest_file))
+      httr::GET(url = asset_href,
+                httr::write_disk(path = dest_file),
+                httr::add_headers(headers))
 
     }, error = function(error){
-      message(paste("\n", error, "in ", asset_href))
+      warning(paste("\n", error, "in ", asset_href))
     })
 
     if (file.exists(dest_file)) {
@@ -167,20 +173,18 @@ assets_download <- function(items, assets_name = c(), output_dir = "./",
 #'  selected assets names.
 #'
 #' @noRd
-.select_assets <- function(assets_list = list(), assets_names = c()) {
+.select_assets <- function(assets, assets_names) {
 
   # If not provided the assets name, by default all assets will be used
-  if (length(assets_names) == 0) {
-    return(assets_list)
+  if (missing(assets_names)) {
+    return(assets)
   }
 
-  index_filter <- which(names(assets_list) %in% assets_names)
-  if (length(index_filter) == 0) {
-    warning("The provided assets names do not match with the API assets names.
-             By default, all assets will be used", call. = FALSE)
-    return(assets_list)
+  if (!all(assets_names %in% names(assets))) {
+    .error(paste("The provided assets names do not match with the API",
+                 "assets names. By default, all assets will be used"))
   }
-  assets_list <- assets_list[index_filter]
+  assets <- assets[names(assets) %in% assets_names]
 
-  return(assets_list)
+  return(assets)
 }

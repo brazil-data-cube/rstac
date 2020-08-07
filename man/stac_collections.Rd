@@ -36,7 +36,7 @@ stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
     get_request()
 
 stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-                 collection_id = "CB_64_16D_STK") \%>\%
+                 collection_id = "MOD13Q1") \%>\%
     get_request()
 }
 

@@ -3,3 +3,7 @@
 ^codecov\.yml$
 ^appveyor\.yml$
 ^\.travis\.yml$
+^\.httr-oauth$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

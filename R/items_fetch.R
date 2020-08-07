@@ -105,6 +105,8 @@ items_fetch <- function(items, progress = TRUE, headers = c()) {
   }
 
   # close progress bar
+  # TODO: insert \n at the end
+  # TODO: report numbers of items fetched
   if (progress)
     close(pb)
 
