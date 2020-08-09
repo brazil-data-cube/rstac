@@ -54,13 +54,15 @@ stac_collections <- function(url, collection_id) {
     expected <- list("get" =
                        list(responses =
                               list("200" =
-                                     list("application/json" = ""))),
+                                     list("application/json" =
+                                            "stac_catalog"))),
                      "post" =
                        list(enctypes = c("application/x-www-form-urlencoded",
                                          "multipart/form-data"),
                             responses =
                               list("200" =
-                                     list("application/json" = ""))))
+                                     list("application/json" =
+                                            "stac_catalog"))))
 
   } else {
     endpoint <- paste("/collections", collection_id[[1]], sep = "/")
