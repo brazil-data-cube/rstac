@@ -20,19 +20,41 @@ install_github("brazil-data-cube/stac.R")
 
 ## Usage
 
-In this version, we implemented STAC endpoints (`'/stac'`, `'/stac/search'`) as well as
-WFS3 endpoints (`'/collections'`, `'/collections/{collectionId}'`, 
-`'/collections/{collectionId}/items'`, and `'/collections/{collectionId}/items/{itemId}'`).
+In this version, we implemented STAC endpoints (`'/stac'`, `'/stac/search'`) as 
+well as WFS3 endpoints (`'/collections'`, `'/collections/{collectionId}'`, 
+`'/collections/{collectionId}/items'`, and 
+`'/collections/{collectionId}/items/{itemId}'`). You can get a detailed 
+explanation about each STAC (v0.8.0) endpoint at   
+[STAC spec GitHub](https://github.com/radiantearth/stac-spec/tree/v0.8.0).
 
+Let us begin our example by loading some libraries and creating a `stac` object:
 ```R
 library(rstac)
 library(magrittr)
 
 # Create a stac object and return a STAC Catalog
-stac_catalog <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-                get_request()
-    
+s_obj <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+```
 
+The example URL points to a valid STAC API web service from the 
+[Brazil Data Cube](http://brazildatacube.org/) project of the Brazilian 
+National Space Research Institute (INPE).
+
+Now, `s_obj` variable holds our stac object that is a simple reference to 
+`/stac` endpoint. This endpoint gives us a list of all catalogs available in
+the service. However, `stac()` function does not try any connection to the 
+server, it just store some key information about the service such as the 
+allowed HTTP methods and expected content type responses by the server.
+
+To retrieve data from this endpoint, we can call the `get_request()` function 
+to do an HTTP GET connection to the server:
+
+```R
+s_obj %>% get_request()
+```
+
+
+```R
 # Create a stac_items object and return STAC items
 items <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
                     collections = "MOD13Q1",
