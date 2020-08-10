@@ -22,15 +22,34 @@ print.stac_catalog <- function(x, n = 10, ...) {
   }
 }
 
+print_header <- function(x, ...) {
+  UseMethod("print_header", x)
+}
+
+print_header.stac_collection <- function(x, ...) {
+  cat(crayon::bold(crayon::yellow("### STAC Collection")), fill = TRUE)
+  cat("- stac_version:", crayon::green(paste0('"', x$stac_version, '"')), fill = TRUE)
+  cat("- id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
+  if (!is.null(x$description))
+    cat("- description:", crayon::green(paste0('"', x$description, '"')), fill = TRUE)
+  if (!is.null(x$license))
+    cat("- license:", crayon::green(paste0('"', x$license, '"')), fill = TRUE)
+}
+
+print_header.stac_catalog <- function(x, ...) {
+  cat(crayon::bold(crayon::yellow("### STAC Catalog")), fill = TRUE)
+  cat("- stac_version:", crayon::green(paste0('"', x$stac_version, '"')), fill = TRUE)
+  cat("- id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
+  if (!is.null(x$description))
+    cat("- description:", crayon::green(paste0('"', x$description, '"')), fill = TRUE)
+}
+
+
 #' @export
 print.stac_collection <- function(x, n = 10, ...) {
 
-  cat("stac_version:", crayon::green(paste0('"', x$stac_version, '"')), fill = TRUE)
-  cat("id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
-  if (!is.null(x$description))
-    cat("description:", crayon::green(paste0('"', x$description, '"')), fill = TRUE)
-  if (!is.null(x$license))
-    cat("license:", crayon::green(paste0('"', x$license, '"')), fill = TRUE)
+  # print headers
+  print_header(x)
 
   # properties
   if (!is.null(x$properties) && length(x$properties) > 0) {
@@ -42,7 +61,7 @@ print.stac_collection <- function(x, n = 10, ...) {
   if (!is.null(x$links)) {
     links <- Filter(function(e) e$rel == "child", x$links)
     if (length(links) > 0) {
-      cat("links:", fill = TRUE)
+      cat("- links:", fill = TRUE)
       for (i in seq_len(min(n, length(links)))) {
         e <- links[[i]]
         cat("-",
