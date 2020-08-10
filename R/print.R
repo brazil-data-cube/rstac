@@ -13,12 +13,11 @@ print.stac_catalog <- function(x, n = 10, ...) {
       cat("links:", fill = TRUE)
       for (i in seq_len(min(n, length(links)))) {
         e <- links[[i]]
-        cat("-",
-            paste0(crayon::red(crayon::bold(e$title)), ' ',
-                   '(', crayon::underline(e$href), ')'), fill = TRUE)
+        cat("-", crayon::red(crayon::bold(e$title)),
+            paste0('(', crayon::underline(e$href), ')'), fill = TRUE)
       }
       if (n < length(links))
-        cat(crayon::silver(sprintf("# \U2026 with %s more links", length(links) - n)), fill = TRUE)
+        cat(crayon::silver(sprintf("> \U2026 with %s more links", length(links) - n)), fill = TRUE)
     }
   }
 }
