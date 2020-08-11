@@ -63,15 +63,15 @@
 #'
 #' @seealso \code{\link{stac}}, \code{\link{get_request}},
 #' \code{\link{post_request}}
-#'
+  #'
 #' @return A \code{stac} object containing all request parameters to be provided
 #' to \code{stac_request}.
 #'
 #' @examples
 #' \dontrun{
 #' # GET request
-#' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1",
+#' x <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+#'
 #'             limit = 10) %>%
 #'      get_request()
 #'
@@ -157,3 +157,10 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
                        class = "stac")
   return(content)
 }
+
+#' #' @export
+#' `[[.stac_items` <- function(x, i){
+#'   result <- x$features[[i]]
+#'   class(result) <- "stac_item"
+#'   return(result)
+#' }

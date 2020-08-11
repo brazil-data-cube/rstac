@@ -1,16 +1,70 @@
+# headers-----------------------------------------------------------------------
+print_header <- function(x, ...) {
+  UseMethod("print_header", x)
+}
+
+print_header.stac_item <- function(x, ...) {
+  cat(crayon::bold(crayon::magenta("### STAC Item")), fill = TRUE)
+  cat("- stac_version:", crayon::green(paste0('"', x$stac_version, '"')),
+      fill = TRUE)
+  cat("- id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
+  if (!is.null(x$bbox)) {
+    cat("- bbox:",
+        paste0("  - xmin:", crayon::green(sprintf('"%.4f"', x$bbox[1])), "\n",
+               "  - ymin:", crayon::green(sprintf('"%.4f"', x$bbox[2])), "\n",
+               "  - xmax:", crayon::green(sprintf('"%.4f"', x$bbox[3])), "\n",
+               "  - ymax:", crayon::green(sprintf('"%.4f"', x$bbox[4]))),
+      fill = TRUE)
+
+  }
+  if (!is.null(x$properties$datetime))
+    cat("- datetime:", crayon::green(paste0('"', x$properties$datetime, '"')), fill = TRUE)
+}
+
+print_header.stac_items <- function(x, ...) {
+  cat(crayon::bold(crayon::magenta("### STAC Items")), fill = TRUE)
+}
+
+
+bb_wrap = function(bb) {
+  if (is.numeric(bb) && length(bb) == 4) {
+    bb <-
+      structure(as.double(bb), names = c("xmin", "ymin", "xmax", "ymax"))
+    return(bb)
+  }
+  return(invisible(NULL))
+}
+
+
+print_header.stac_collection <- function(x, ...) {
+  cat(crayon::bold(crayon::magenta("### STAC Collection")), fill = TRUE)
+  cat("- stac_version:", crayon::green(paste0('"', x$stac_version, '"')), fill = TRUE)
+  cat("- id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
+  if (!is.null(x$datetime))
+    cat("- description:", crayon::green(paste0('"', x$description, '"')), fill = TRUE)
+  if (!is.null(x$license))
+    cat("- license:", crayon::green(paste0('"', x$license, '"')), fill = TRUE)
+}
+
+print_header.stac_catalog <- function(x, ...) {
+  cat(crayon::bold("### STAC Catalog"), fill = TRUE)
+  cat("- stac_version:", crayon::green(paste0('"', x$stac_version, '"')), fill = TRUE)
+  cat("- id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
+  if (!is.null(x$description))
+    cat("- description:", crayon::green(paste0('"', x$description, '"')), fill = TRUE)
+}
+
+# prints------------------------------------------------------------------------
+
 #' @export
 print.stac_catalog <- function(x, n = 10, ...) {
 
-  cat("stac_version:", crayon::green(paste0('"', x$stac_version, '"')), fill = TRUE)
-  cat("id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
-  if (!is.null(x$description))
-    cat("description:", crayon::green(paste0('"', x$description, '"')), fill = TRUE)
-
+ print_header(x)
   # links
   if (!is.null(x$links)) {
     links <- Filter(function(e) e$rel == "child", x$links)
     if (length(links) > 0) {
-      cat("links:", fill = TRUE)
+      cat("- links:", fill = TRUE)
       for (i in seq_len(min(n, length(links)))) {
         e <- links[[i]]
         cat("-", crayon::red(crayon::bold(e$title)),
@@ -21,29 +75,6 @@ print.stac_catalog <- function(x, n = 10, ...) {
     }
   }
 }
-
-print_header <- function(x, ...) {
-  UseMethod("print_header", x)
-}
-
-print_header.stac_collection <- function(x, ...) {
-  cat(crayon::bold(crayon::yellow("### STAC Collection")), fill = TRUE)
-  cat("- stac_version:", crayon::green(paste0('"', x$stac_version, '"')), fill = TRUE)
-  cat("- id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
-  if (!is.null(x$description))
-    cat("- description:", crayon::green(paste0('"', x$description, '"')), fill = TRUE)
-  if (!is.null(x$license))
-    cat("- license:", crayon::green(paste0('"', x$license, '"')), fill = TRUE)
-}
-
-print_header.stac_catalog <- function(x, ...) {
-  cat(crayon::bold(crayon::yellow("### STAC Catalog")), fill = TRUE)
-  cat("- stac_version:", crayon::green(paste0('"', x$stac_version, '"')), fill = TRUE)
-  cat("- id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
-  if (!is.null(x$description))
-    cat("- description:", crayon::green(paste0('"', x$description, '"')), fill = TRUE)
-}
-
 
 #' @export
 print.stac_collection <- function(x, n = 10, ...) {
@@ -69,11 +100,10 @@ print.stac_collection <- function(x, n = 10, ...) {
                    '(', crayon::underline(e$href), ')'), fill = TRUE)
       }
       if (n < length(links))
-        cat(crayon::silver(sprintf("# \U2026 with %s more links", length(links) - n)), fill = TRUE)
+        cat(crayon::silver(sprintf("> \U2026 with %s more links", length(links) - n)), fill = TRUE)
     }
   }
 }
-
 
 print_stac <- function(x, n) {
 
@@ -130,107 +160,64 @@ print_unnamed <- function(x, n, pad = 0, align_first = FALSE) {
 
 #' @export
 print.stac_items <- function(x, n = 3, ...) {
-  if (items_length(x) >= 1) {
-    items_print <- lapply(x$features, function(y) {
-      # header <- sprintf(
-      #   "collection: %s,
-      #    bbox: %.5f, %.5f, %.5f, %.5f,
-      #    datetime: %s", y$collection, y$bbox[[1]],
-      #                                 y$bbox[[2]],
-      #                                 y$bbox[[3]],
-      #                                 y$bbox[[4]],
-      #   y$properties$datetime)
+  print_header(x)
 
-      header <- sprintf( "datetime: %s", y$properties$datetime)
-      item_tbl <- tibble::tibble(assets_names = c(names(y$assets)))
+  if (items_length(x) > 0) {
+    for (i in seq_len(min(n, items_length(x)))) {
+      feature <- x$features[[i]]
 
-      items_list <- list(header, item_tbl)
-    })
-    names(items_print) <- rep(c("feature"), items_length(x))
-    format(x, items_print, n)
-  } else {
-    print.default(x)
+      if (!is.null(feature$collection))
+        cat("- collection:", crayon::green(paste0(feature$collection)), fill = TRUE)
+      if (!is.null(feature$properties$date))
+        cat("- datetime:", crayon::green(paste0(feature$properties$date)), fill = TRUE)
+      if (length(feature$assets) > 0) {
+        cat("- assets:", fill = TRUE)
+        for (j in seq_len(length(feature$assets))) {
+          e <- feature$assets
+          cat(" -",
+              paste0(crayon::red(crayon::bold(names(e[j])))), fill = TRUE)
+        }
+      }
+    }
+  }
+  if (n < items_length(x)) {
+    cat(crayon::silver(sprintf("> \U2026 with %s more links", items_length(x) - n)), fill = TRUE)
   }
 }
 
 #' @export
-format.stac_items <- function(x, items_print, n, ...) {
+print.stac_item <- function(x, ...){
+  print_header(x)
 
-  print_size <- n
-
-  if (print_size >= items_length(x)) {
-    print(items_print)
-  } else if (print_size >= 1) {
-    print(items_print[1:print_size])
-
-    if ((items_length(x) - print_size) == 0)
-      return(invisible(x))
-
-    limit_print <-
-      sprintf("# ... with more %s items to show.
-      To change use <print(obj, n = ...)>",
-              (items_length(x) - print_size))
-
-    cat(crayon::bold(limit_print))
-  } else {
-    warning("Please set a value greater than 0.
-    Use <print(obj, n = ...)> ", call. = FALSE)
+  if (length(x$assets) > 0) {
+    cat("- assets:", fill = TRUE)
+    for (i in seq_len(length(x$assets))) {
+      e <- x$assets
+      cat(" -",
+          paste0(crayon::red(crayon::bold(names(e[i]))), ' ',
+                 '(', crayon::underline(e[[i]]$href), ')'), fill = TRUE)
+    }
   }
 }
 
+#' @description function from httr package
+#'
+#' @references `httr`package (https://CRAN.R-project.org/package=httr)
+#'
+#' @noRd
+named_vector <- function(title, x) {
+  if (length(x) == 0) return()
+
+  cat(title, "\n")
+  cat(" -", paste0(names(x), crayon::green(as.character(x))))
+}
 
 # TODO: stac_catalog print
 # TODO: header: description, id e stac_version
 #' @export
 print.stac <- function(x, ...) {
-  cat("<stac>\n")
+  cat(crayon::bold(crayon::magenta("### STAC")), sep = "\n")
 
-  named_vector("$url", x$url)
-  named_vector("$params", x$params)
+  named_vector("- url", x$url)
+  named_vector("- params", x$params)
 }
-
-#' #' @export
-#' print.stac_collection <- function(x, n = 3, ...) {
-#'
-#'   if (length(x$links) > 1) {
-#'     links_print <- lapply(x$links, function(y){
-#'       as.data.frame(y, stringsAsFactors = FALSE)
-#'     })
-#'
-#'     # TODO: print header
-#'     # TODO: tibble of tibble's
-#'     links_print <- do.call(rbind, links_print)
-#'     links_print <- tibble::as_tibble(links_print)
-#'
-#'     print(links_print)
-#'   } else {
-#'     print.default(x)
-#'   }
-#' }
-#'
-#' #' @export
-#' format.stac_collection <- function(x, links_print, n, ...) {
-#'
-#'   print_size <- n
-#'
-#'   if (print_size >= length(x$links)) {
-#'     print(links_print)
-#'   } else if (print_size >= 1) {
-#'     print(links_print[1:print_size])
-#'
-#'     if ((length(x$links) - print_size) == 0)
-#'       return(invisible(x))
-#'
-#'     limit_print <-
-#'       sprintf("# ... with more %s links to show.",
-#'               (length(x$links) - print_size))
-#'
-#'     cat(crayon::bold(limit_print))
-#'   } else {
-#'     warning("Please set a value greater than 0.
-#'     Use <print(obj, n = ...)> ", call. = FALSE)
-#'   }
-#' }
-
-
-# TODO: stac_item print

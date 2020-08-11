@@ -175,7 +175,7 @@ testthat::test_that("stac collection object", {
 
     testthat::expect_equal(
       object   = s_col$expected_responses$post$responses$`200`$`application/json`,
-      expected = ""
+      expected = "stac_catalog"
     )
 
     # check object class of stac collections
