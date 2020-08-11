@@ -3,6 +3,9 @@ print_header <- function(x, ...) {
   UseMethod("print_header", x)
 }
 
+# TODO: formatar bbox seguindo OGC - RFC
+# TODO: Formatar geometria seguindo OGC
+# TODO: adicionar as properties como raiz, igual na collection
 print_header.stac_item <- function(x, ...) {
   cat(crayon::bold(crayon::magenta("### STAC Item")), fill = TRUE)
   cat("- stac_version:", crayon::green(paste0('"', x$stac_version, '"')),
@@ -17,8 +20,6 @@ print_header.stac_item <- function(x, ...) {
       fill = TRUE)
 
   }
-  if (!is.null(x$properties$datetime))
-    cat("- datetime:", crayon::green(paste0('"', x$properties$datetime, '"')), fill = TRUE)
 }
 
 print_header.stac_items <- function(x, ...) {
@@ -63,13 +64,14 @@ print.stac_catalog <- function(x, n = 10, ...) {
   # links
   if (!is.null(x$links)) {
     links <- Filter(function(e) e$rel == "child", x$links)
+
     if (length(links) > 0) {
+      links_chunked <- links[1:min(n, length(links))]
       cat("- links:", fill = TRUE)
-      for (i in seq_len(min(n, length(links)))) {
-        e <- links[[i]]
-        cat("-", crayon::red(crayon::bold(e$title)),
-            paste0('(', crayon::underline(e$href), ')'), sep = " ", fill = TRUE)
-      }
+
+      print_link_highlight(sapply(links_chunked, function(x){
+        x$title}), sapply(links_chunked, function(x){x$href}), pad = 2)
+
       if (n < length(links))
         cat(crayon::silver(crayon::bold(sprintf("> \U2026 with %s more links", length(links) - n))), fill = TRUE)
     }
@@ -84,33 +86,49 @@ print.stac_collection <- function(x, n = 10, ...) {
 
   # properties
   if (!is.null(x$properties) && length(x$properties) > 0) {
-    cat("properties:", fill = TRUE)
-    print_stac(x$properties, n = n)
+    cat("- properties:", fill = TRUE)
+    print_named(x$properties, n = Inf, pad = 2)
   }
 
   # links
   if (!is.null(x$links)) {
-    links <- Filter(function(e) e$rel == "child", x$links)
-    if (length(links) > 0) {
+    #links <- Filter(function(e) e$rel == "child", x$links)
+    if (length(x$links) > 0) {
       cat("- links:", fill = TRUE)
-      for (i in seq_len(min(n, length(links)))) {
-        e <- links[[i]]
-        cat("-",
-            paste0(crayon::red(crayon::bold(e$title)), ' ',
-                   '(', crayon::underline(e$href), ')'), fill = TRUE)
-      }
-      if (n < length(links))
-        cat(crayon::silver(sprintf("> \U2026 with %s more links", length(links) - n)), fill = TRUE)
+      print_unnamed(x$links, n = n, pad = 2)
+      # for (i in seq_len(min(n, length(links)))) {
+      #   e <- links[[i]]
+      #   cat("-",
+      #       paste0(crayon::red(crayon::bold(e$title)), ' ',
+      #              '(', crayon::underline(e$href), ')'), fill = TRUE)
+      # }
+      if (n < length(x$links))
+        cat(crayon::silver(sprintf("> \U2026 with %s more links", length(x$links) - n)), fill = TRUE)
     }
   }
 }
 
-print_stac <- function(x, n) {
+# print_stac <- function(x, n, pad = 0) {
+#
+#   if (is.null(names(x)))
+#     print_unnamed(x, n = n, pad = pad, align_first = FALSE)
+#   else
+#     print_named(x, n = n, pad = pad, align_first = FALSE)
+# }
 
-  if (is.null(names(x)))
-    print_unnamed(x, n = n, pad = 0, align_first = FALSE)
-  else
-    print_named(x, n = n, pad = 0, align_first = FALSE)
+print_data <- function(x, n, pad = 0, ...) {
+  if (is.character(x))
+    cat(paste0(sapply(x, function(e) crayon::green(paste0('"', e, '"'))),
+               collapse = ", "), sep = "", fill = TRUE)
+  else if (is.numeric(x))
+    cat(paste0(sapply(x, function(e) crayon::red(e)), collapse = ", "), sep = "", fill = TRUE)
+  else if (is.list(x)) {
+    if (is.null(names(x)))
+      print_unnamed(x, n = n, pad + 2, align_first = TRUE)
+    else
+      print_named(x, n = n, pad + 2, align_first = TRUE)
+  } else
+    cat("null", fill = TRUE)
 }
 
 print_named <- function(x, n, pad = 0, align_first = FALSE) {
@@ -120,18 +138,8 @@ print_named <- function(x, n, pad = 0, align_first = FALSE) {
       cat("- ", k, ": ", sep = "")
     else
       cat(rep(" ", pad), "- ", k, ": ", sep = "")
-    if (is.character(x[[k]]))
-      cat(paste0(sapply(x[[k]], function(e) crayon::green(paste0('"', e, '"'))), collapse = ", "), sep = "", fill = TRUE)
-    else if (is.numeric(x[[k]]))
-      cat(paste0(sapply(x[[k]], function(e) crayon::red(e)), collapse = ", "), sep = "", fill = TRUE)
-    else if (is.list(x[[k]])) {
-      cat("", fill = TRUE)
-      if (is.null(names(x[[k]])))
-        print_unnamed(x[[k]], n = n, pad + 2, align_first = FALSE)
-      else
-        print_named(x[[k]], n = n, pad + 2, align_first = FALSE)
-    } else
-      cat("null", fill = TRUE)
+
+    print_data(x[[k]], n = n, pad = pad)
     align_first = FALSE
   }
 }
@@ -143,18 +151,20 @@ print_unnamed <- function(x, n, pad = 0, align_first = FALSE) {
       cat("- ", sep = "")
     else
       cat(rep(" ", pad), "- ", sep = "")
-    if (is.character(x[[i]]))
-      cat(paste0(sapply(x[[i]], function(e) crayon::green(paste0('"', e, '"'))), collapse = ", "), sep = "", fill = TRUE)
-    else if (is.numeric(x[[i]]))
-      cat(paste0(sapply(x[[i]], function(e) crayon::red(e)), collapse = ", "), sep = "", fill = TRUE)
-    else if (is.list(x[[i]])) {
-      if (is.null(names(x[[i]])))
-        print_unnamed(x[[i]], n = n, pad + 2, align_first = TRUE)
-      else
-        print_named(x[[i]], n = n, pad + 2, align_first = TRUE)
-    } else
-      cat("null", fill = TRUE)
+
+    print_data(x[[i]], n = n, pad = pad)
     align_first = FALSE
+  }
+}
+
+
+print_link_highlight <- function(titles, hrefs, pad = 2) {
+  #print(pad)
+  for (i in seq_len(length(titles))) {
+    cat(rep(" ", pad), "- ", sep = "")
+    cat(crayon::red(crayon::bold(titles[[i]])),
+        paste0('(', crayon::underline(hrefs[[i]]), ')'), sep = " ",
+        fill = TRUE)
   }
 }
 
@@ -165,18 +175,16 @@ print.stac_items <- function(x, n = 3, ...) {
   if (items_length(x) > 0) {
     for (i in seq_len(min(n, items_length(x)))) {
       feature <- x$features[[i]]
-
+      cat("- feature:", fill = TRUE)
       if (!is.null(feature$collection))
-        cat("- collection:", crayon::green(paste0(feature$collection)), fill = TRUE)
+        cat("  - collection:", crayon::green(paste0(feature$collection)), fill = TRUE)
       if (!is.null(feature$properties$date))
-        cat("- datetime:", crayon::green(paste0(feature$properties$date)), fill = TRUE)
-      if (length(feature$assets) > 0) {
-        cat("- assets:", fill = TRUE)
-        for (j in seq_len(length(feature$assets))) {
-          e <- feature$assets
-          cat(" -",
-              paste0(crayon::red(crayon::bold(names(e[j])))), fill = TRUE)
-        }
+        cat("  - datetime:", crayon::green(paste0(feature$properties$date)), fill = TRUE)
+      if (items_matched(x) > 0) {
+        cat("  - assets: ", fill = FALSE)
+
+      print_data(names(feature$assets), n = Inf, pad = 4)
+
       }
     }
   }
@@ -186,19 +194,43 @@ print.stac_items <- function(x, n = 3, ...) {
 }
 
 #' @export
-print.stac_item <- function(x, ...){
+print.stac_item <- function(x, n = 10, ...){
   print_header(x)
+
+  # properties
+  if (!is.null(x$properties) && length(x$properties) > 0) {
+    cat("- properties:", fill = TRUE)
+    print_named(x$properties, n = Inf, pad = 2)
+  }
+
+
+  if (!is.null(x$links)) {
+    #links <- Filter(function(e) e$rel == "child", x$links)
+    if (length(x$links) > 0) {
+      cat("- links:", fill = TRUE)
+      print_unnamed(x$links, n = n, pad = 2)
+      # for (i in seq_len(min(n, length(links)))) {
+      #   e <- links[[i]]
+      #   cat("-",
+      #       paste0(crayon::red(crayon::bold(e$title)), ' ',
+      #              '(', crayon::underline(e$href), ')'), fill = TRUE)
+      # }
+      if (n < length(x$links))
+        cat(crayon::silver(sprintf("> \U2026 with %s more links", length(x$links) - n)), fill = TRUE)
+    }
+  }
 
   if (length(x$assets) > 0) {
     cat("- assets:", fill = TRUE)
-    for (i in seq_len(length(x$assets))) {
-      e <- x$assets
-      cat(" -",
-          paste0(crayon::red(crayon::bold(names(e[i]))), ' ',
-                 '(', crayon::underline(e[[i]]$href), ')'), fill = TRUE)
-    }
+
+    print_link_highlight(names(x$assets),
+                         unname(sapply(x$assets, function(x){
+                           x$href})), pad = 2)
   }
+
 }
+
+
 
 #' @description function from httr package
 #'

@@ -157,10 +157,3 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
                        class = "stac")
   return(content)
 }
-
-#' #' @export
-#' `[[.stac_items` <- function(x, i){
-#'   result <- x$features[[i]]
-#'   class(result) <- "stac_item"
-#'   return(result)
-#' }
