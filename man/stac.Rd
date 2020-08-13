@@ -25,7 +25,7 @@ This endpoint should return a STAC Catalog containing all data Items
 \examples{
 \dontrun{
 
- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
  get_request()
 }
 

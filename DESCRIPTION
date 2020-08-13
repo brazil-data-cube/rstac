@@ -21,7 +21,6 @@ RoxygenNote: 7.1.1
 Depends:
     jsonlite,
     httr,
-    tibble,
     crayon
 Suggests: 
     covr,

@@ -23,7 +23,7 @@
 #' @examples
 #' \dontrun{
 #'
-#'  stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
 #'  get_request()
 #' }
 #'
