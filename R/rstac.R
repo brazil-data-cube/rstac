@@ -46,6 +46,5 @@ NULL
 
 #' @importFrom jsonlite validate fromJSON
 #' @importFrom httr GET POST write_disk add_headers content status_code http_type
-#' @importFrom tibble tibble
 #' @importFrom crayon bold
 NULL

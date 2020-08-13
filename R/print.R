@@ -4,60 +4,60 @@ print_header <- function(x, ...) {
 }
 
 print_header.stac_item <- function(x, ...) {
-  cat(crayon::bold(crayon::magenta("### STAC Item")), fill = TRUE)
-  cat("- stac_version:", crayon::green(paste0('"', x$stac_version, '"')),
+  cat(crayon::bold("### STAC Item"), fill = TRUE)
+  cat("- stac_version:", crayon::bold(paste0('"', x$stac_version, '"')),
       fill = TRUE)
-  cat("- id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
+  cat("- id:", crayon::bold(paste0('"', x$id, '"')), fill = TRUE)
   if (!is.null(x$bbox) & length(x$bbox) == 4) {
     cat("- bbox:",
-        paste0("  - xmin: ", crayon::red(sprintf('%.5f', x$bbox[1])), "\n",
-               "  - ymin: ", crayon::red(sprintf('%.5f', x$bbox[2])), "\n",
-               "  - xmax: ", crayon::red(sprintf('%.5f', x$bbox[3])), "\n",
-               "  - ymax: ", crayon::red(sprintf('%.5f', x$bbox[4]))),
+        paste0("  - xmin: ", crayon::bold(sprintf('%.5f', x$bbox[1])), "\n",
+               "  - ymin: ", crayon::bold(sprintf('%.5f', x$bbox[2])), "\n",
+               "  - xmax: ", crayon::bold(sprintf('%.5f', x$bbox[3])), "\n",
+               "  - ymax: ", crayon::bold(sprintf('%.5f', x$bbox[4]))),
         fill = TRUE)
 
   }
 }
 
 print_header.stac_items <- function(x, ...) {
-  cat(crayon::bold(crayon::magenta("### STAC Items")), fill = TRUE)
+  cat(crayon::bold("### STAC Items"), fill = TRUE)
 
   if (!is.null(x$type)) {
-    cat("- type:", crayon::green(paste0('"', x$type, '"')), fill = TRUE)
+    cat("- type:", crayon::bold(paste0('"', x$type, '"')), fill = TRUE)
   }
 
   if (!is.null(items_length(x))) {
-    cat("- numberReturned:", crayon::red(items_length(x)),
+    cat("- numberReturned:", crayon::bold(items_length(x)),
         fill = TRUE)
   }
 }
 
 print_header.stac_collection <- function(x, ...) {
-  cat(crayon::bold(crayon::magenta("### STAC Collection")), fill = TRUE)
-  cat("- stac_version:", crayon::green(paste0('"', x$stac_version, '"')),
+  cat(crayon::bold("### STAC Collection"), fill = TRUE)
+  cat("- stac_version:", crayon::bold(paste0('"', x$stac_version, '"')),
       fill = TRUE)
-  cat("- id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
+  cat("- id:", crayon::bold(paste0('"', x$id, '"')), fill = TRUE)
   if (!is.null(x$datetime))
-    cat("- description:", crayon::green(paste0('"', x$description, '"')),
+    cat("- description:", crayon::bold(paste0('"', x$description, '"')),
         fill = TRUE)
   if (!is.null(x$license))
-    cat("- license:", crayon::green(paste0('"', x$license, '"')), fill = TRUE)
+    cat("- license:", crayon::bold(paste0('"', x$license, '"')), fill = TRUE)
 }
 
 print_header.stac_catalog <- function(x, ...) {
   cat(crayon::bold("### STAC Catalog"), fill = TRUE)
-  cat("- stac_version:", crayon::green(paste0('"', x$stac_version, '"')),
+  cat("- stac_version:", crayon::bold(paste0('"', x$stac_version, '"')),
       fill = TRUE)
-  cat("- id:", crayon::green(paste0('"', x$id, '"')), fill = TRUE)
+  cat("- id:", crayon::bold(paste0('"', x$id, '"')), fill = TRUE)
   if (!is.null(x$description))
-    cat("- description:", crayon::green(paste0('"', x$description, '"')),
+    cat("- description:", crayon::bold(paste0('"', x$description, '"')),
         fill = TRUE)
 }
 
 # prints------------------------------------------------------------------------
 #' @export
 print.stac <- function(x, ...) {
-  cat(crayon::bold(crayon::magenta("### STAC")), sep = "\n")
+  cat(crayon::bold("### STAC"), sep = "\n")
 
   named_vector("- url", x$url)
   named_vector("- params", x$params)
@@ -166,12 +166,13 @@ print.stac_item <- function(x, n = 10, ...){
 
 # helpers-----------------------------------------------------------------------
 print_data <- function(x, n, pad = 0, is_nested = FALSE, ...) {
+
   if (is.character(x))
-    cat(paste0(sapply(x, function(e) crayon::green(paste0('"', e, '"'))),
+    cat(paste0(sapply(x, function(e) crayon::bold(paste0('"', e, '"'))),
                collapse = ", "), sep = "", fill = TRUE)
   else if (is.numeric(x))
-    cat(paste0(sapply(x, function(e) crayon::red(e)), collapse = ", "), sep = "",
-        fill = TRUE)
+    cat(paste0(sapply(x, function(e) crayon::bold(e)), collapse = ", "),
+        sep = "", fill = TRUE)
   else if (is.list(x)) {
     #cat(fill = TRUE)
     if (is.null(names(x)))
@@ -221,10 +222,10 @@ print_unnamed <- function(x, n = 10, pad = 0, align_first = FALSE) {
 format_bbox <- function(bbox) {
 
   if (!is.null(bbox) & length(bbox) == 4) {
-    paste0("xmin: ", crayon::red(sprintf('%.5f ', bbox[1])),
-           "ymin: ", crayon::red(sprintf('%.5f ', bbox[2])),
-           "xmax: ", crayon::red(sprintf('%.5f ', bbox[3])),
-           "ymax: ", crayon::red(sprintf('%.5f',  bbox[4])))
+    paste0("xmin: ", crayon::bold(sprintf('%.5f ', bbox[1])),
+           "ymin: ", crayon::bold(sprintf('%.5f ', bbox[2])),
+           "xmax: ", crayon::bold(sprintf('%.5f ', bbox[3])),
+           "ymax: ", crayon::bold(sprintf('%.5f',  bbox[4])))
   }
 }
 
@@ -232,7 +233,7 @@ print_link_highlight <- function(titles, hrefs, pad = 2) {
 
   for (i in seq_len(length(titles))) {
     cat(rep(" ", pad), "- ", sep = "")
-    cat(crayon::yellow(crayon::bold(titles[[i]])),
+    cat(crayon::bold(titles[[i]]),
         paste0('(', crayon::underline(hrefs[[i]]), ')'), sep = " ",
         fill = TRUE)
   }
@@ -247,5 +248,5 @@ named_vector <- function(title, x) {
   if (length(x) == 0) return()
 
   cat(title, "\n")
-  cat(" -", paste0(names(x), crayon::green(as.character(x))))
+  cat(" -", paste0(names(x), crayon::bold(as.character(x))))
 }
