@@ -19,8 +19,8 @@
 #' \code{\link{stac_items}}
 #'
 #' @return
-#' Either a \code{stac_collection} or a \code{stac_items} object
-#' depending of the \code{s} parameter.
+#' Either a \code{stac_catalog}, \code{stac_collection}, \code{stac_items},
+#' or \code{stac_item} object depending on the \code{s} parameter.
 #'
 #' @examples
 #' \dontrun{
