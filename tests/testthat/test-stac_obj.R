@@ -33,29 +33,28 @@ testthat::test_that("stac search object", {
     # Check print function------------------------------------------------------
 
     ## show only one object
-    # testthat::expect_output(
-    #   object   = print(rstac::stac_search(
-    #     url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-    #     datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 1),
-    #   regexp = "# ... with more 9 items to show."
-    # )
+    testthat::expect_output(
+      object   = print(rstac::stac_search(
+        url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 1),
+      regexp = "> … with 9 more links"
+    )
 
     ## show all of them
-    # testthat::expect_output(
-    #   object   = str(print(rstac::stac_search(
-    #     url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-    #     datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 10)),
-    #   regexp = "List of 10"
-    # )
+    testthat::expect_output(
+      object   = print(rstac::stac_search(
+        url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 10),
+      regexp = "numberReturned: 10"
+    )
 
     ## error when setting itens equal or less than 0
-    #options(n.items = 0)
-    # testthat::expect_warning(
-    #   object   = print(rstac::stac_search(
-    #     url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-    #     datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 0)
-    # )
-
+    testthat::expect_output(
+      object   = print(rstac::stac_search(
+        url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 0),
+      regexp = "> … with 10 more links"
+    )
 
     # Error when creating the stac object by parameter bbox
     testthat::expect_error(
@@ -186,7 +185,7 @@ testthat::test_that("stac collection object", {
 
     # check object class of stac collections
     s_colid <- rstac::stac_collections(
-      url           = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+      url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
       collection_id = "MOD13Q1")
 
     testthat::expect_equal(
@@ -195,10 +194,10 @@ testthat::test_that("stac collection object", {
     )
 
     # check print stac object
-    # testthat::expect_output(
-    #   object   = print(s_colid),
-    #   regexp = "<stac>"
-    # )
+    testthat::expect_output(
+      object = print(s_colid),
+      regexp = "### STAC"
+    )
 
     # check request from stac collections object
     testthat::expect_equal(
@@ -207,21 +206,16 @@ testthat::test_that("stac collection object", {
     )
 
     # check print stac_collection object
-    # testthat::expect_output(
-    #   object   = print((s_colid %>% get_request()), n = 1),
-    #   regexp   = "# ... with more 4 links to show."
-    # )
+    testthat::expect_output(
+      object   = print((s_colid %>% get_request()), n = 1),
+      regexp   = "> … with 4 more links"
+    )
 
     # check print stac_collection object
-    # testthat::expect_output(
-    #   object   = str(print((s_colid %>% get_request()), n = 10)),
-    #   regexp   = "List of 5"
-    # )
-
-    # check print stac_collection object
-    #options(max.links = 0)
-    # testthat::expect_warning(
-    #   object = print((s_colid %>% get_request()), n = 0))
+    testthat::expect_output(
+      object   = print((s_colid %>% get_request())),
+      regexp   = "### STAC Collection"
+    )
   })
 })
 
@@ -243,6 +237,14 @@ testthat::test_that("stac object", {
         url    = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
           get_request()),
       expected = "stac_catalog"
+    )
+
+    # check print stac_collection object
+    testthat::expect_output(
+      object   = print(rstac::stac(
+        url    = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+          get_request()),
+      regexp   = "### STAC Catalog"
     )
   })
 })
@@ -310,6 +312,30 @@ testthat::test_that("stac item object", {
         item_id       = "MOD13Q1.A2019241.h13v09.006.2019262164754",
         collection_id = "MOD13Q1") %>% get_request()),
       expected = "stac_item"
+    )
+
+    # output test
+    testthat::expect_output(
+      object   = print(rstac::stac_items(
+        url           = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        bbox          = c(-55.16335, -4.26325, -49.31739, -1.18355),
+        limit         = 10,
+        datetime      = "2018-02-01/..",
+        item_id       = "MOD13Q1.A2019241.h13v09.006.2019262164754",
+        collection_id = "MOD13Q1") %>% get_request()),
+      regexp   = "### STAC Item"
+    )
+
+    # output test
+    testthat::expect_output(
+      object   = print(rstac::stac_items(
+        url           = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+        bbox          = c(-55.16335, -4.26325, -49.31739, -1.18355),
+        limit         = 10,
+        datetime      = "2018-02-01/..",
+        item_id       = "MOD13Q1.A2019241.h13v09.006.2019262164754",
+        collection_id = "MOD13Q1") %>% get_request(), n = 1),
+      regexp   = "> … with 3 more links"
     )
   })
 })
