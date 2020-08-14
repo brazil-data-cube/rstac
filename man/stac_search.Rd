@@ -4,7 +4,17 @@
 \alias{stac_search}
 \title{Endpoint functions}
 \usage{
-stac_search(url, collections, ids, bbox, datetime, intersects, limit, ...)
+stac_search(
+  url,
+  collections,
+  ids,
+  bbox,
+  datetime,
+  intersects,
+  query,
+  limit,
+  ...
+)
 }
 \arguments{
 \item{url}{A \code{character} informing the base url of a STAC web
@@ -50,6 +60,9 @@ parameters that futher restrict the number of search results are ignored.}
 objects as specified in RFC 7946. Only returns items that intersect with
 the provided polygon.}
 
+\item{query}{a \code{stac_query} object representing extra search
+fields. This parameter can be obtained by \code{\link{ext_query}} function.}
+
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed it defaults to the service implementation.}
 
@@ -87,8 +100,8 @@ stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 
 }
 \seealso{
-\code{\link{stac}}, \code{\link{get_request}},
-\code{\link{post_request}}
+\code{\link{stac}}, \code{\link{ext_query}},
+\code{\link{get_request}}, \code{\link{post_request}}
 }
 \author{
 Rolf Simoes

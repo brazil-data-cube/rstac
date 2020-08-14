@@ -5,14 +5,16 @@
 \alias{post_request}
 \title{STAC functions}
 \usage{
-get_request(s, headers = c())
+get_request(s, ..., headers = c())
 
-post_request(s, enctype = c("json", "multipart", "form"), headers = c())
+post_request(s, ..., enctype = c("json", "multipart", "form"), headers = c())
 }
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria
 provided by \code{stac}, \code{stac_search}, \code{stac_collections},
 or \code{stac_items} functions.}
+
+\item{...}{other params to be passed to \link[httr]{POST} method}
 
 \item{headers}{a \code{character} of named arguments to be passed as
 HTTP request headers.}
@@ -24,8 +26,8 @@ and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
 \code{'json'}.}
 }
 \value{
-Either a \code{stac_collection} or a \code{stac_items} object
-depending of the \code{s} parameter.
+Either a \code{stac_catalog}, \code{stac_collection}, \code{stac_items},
+or \code{stac_item} object depending on the \code{s} parameter.
 }
 \description{
 The \code{get_request} is function that makes HTTP GET
