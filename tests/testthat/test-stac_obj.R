@@ -325,17 +325,5 @@ testthat::test_that("stac item object", {
         collection_id = "MOD13Q1") %>% get_request()),
       regexp   = "### STAC Item"
     )
-
-    # output test
-    testthat::expect_output(
-      object   = print(rstac::stac_items(
-        url           = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-        bbox          = c(-55.16335, -4.26325, -49.31739, -1.18355),
-        limit         = 10,
-        datetime      = "2018-02-01/..",
-        item_id       = "MOD13Q1.A2019241.h13v09.006.2019262164754",
-        collection_id = "MOD13Q1") %>% get_request(), n = 1),
-      regexp   = "> … with 3 more links"
-    )
   })
 })
