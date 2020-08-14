@@ -56,14 +56,17 @@
 #'   objects as specified in RFC 7946. Only returns items that intersect with
 #'   the provided polygon.
 #'
+#' @param query       a \code{stac_query} object representing extra search
+#' fields. This parameter can be obtained by \code{\link{ext_query}} function.
+#'
 #' @param limit       an \code{integer} defining the maximum number of results
 #'   to return. If not informed it defaults to the service implementation.
 #'
 #' @param ...         any additional non standard filter parameter.
 #'
-#' @seealso \code{\link{stac}}, \code{\link{get_request}},
-#' \code{\link{post_request}}
-  #'
+#' @seealso \code{\link{stac}}, \code{\link{ext_query}},
+#' \code{\link{get_request}}, \code{\link{post_request}}
+#'
 #' @return A \code{stac} object containing all request parameters to be provided
 #' to \code{stac_request}.
 #'
@@ -83,7 +86,7 @@
 #'
 #' @export
 stac_search <- function(url, collections, ids, bbox, datetime, intersects,
-                        limit, ...) {
+                        query, limit, ...) {
 
   # check url parameter
   .check_obj(url, "character")
@@ -115,6 +118,14 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
     params[["intersects"]] <- .query_encode(intersects)
   }
 
+  if (!missing(query)) {
+
+    if (!inherits(query, "stac_query"))
+      .error("Invalid query parameter value.")
+
+    params[["query"]] <- query$query
+  }
+
   if (!missing(limit) && !is.null(limit))
     params[["limit"]] <- limit
 
@@ -124,11 +135,36 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
   # TODO: follow specification strictly
   if (!is.null(params[["intersects"]])) {
     if ("bbox" %in% names(params)) {
-      warning("Only one of either `intersects` or bbox should be specified.
-              The `bbox` parameter will be ignored.", call. = FALSE)
+      .warning(paste("Parameter `intersects` was informed.",
+                     "The `bbox` parameter will be ignored."))
 
       params[["bbox"]] <- NULL
     }
+
+    # TODO: add these code excerpts bellow in different file
+    expected <- list("post" =
+                       list(enctypes = c("application/json"),
+                            responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_items",
+                                          "application/json" = "stac_items"))))
+  } else {
+    expected <- list("get" =
+                       list(responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_items",
+                                          "application/json" = "stac_items"))),
+                     "post" =
+                       list(enctypes = c("application/json"),
+                            responses =
+                              list("200" =
+                                     list("application/geo+json" = "stac_items",
+                                          "application/json" = "stac_items"))))
+  }
+
+
+  # TODO: follow specification strictly
+  if (!is.null(params[["query"]])) {
 
     # TODO: add these code excerpts bellow in different file
     expected <- list("post" =

@@ -11,6 +11,8 @@
 #' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
 #' or \code{stac_items} functions.
 #'
+#' @param ...        other params to be passed to \link[httr]{GET} method
+#'
 #' @param headers    a \code{character} of named arguments to be passed as
 #' HTTP request headers.
 #'
@@ -19,8 +21,8 @@
 #' \code{\link{stac_items}}
 #'
 #' @return
-#' Either a \code{stac_collection} or a \code{stac_items} object
-#' depending of the \code{s} parameter.
+#' Either a \code{stac_catalog}, \code{stac_collection}, \code{stac_items},
+#' or \code{stac_item} object depending on the \code{s} parameter.
 #'
 #' @examples
 #' \dontrun{
@@ -30,7 +32,7 @@
 #' }
 #'
 #' @export
-get_request <- function(s, headers = c()) {
+get_request <- function(s, ..., headers = c()) {
 
   # check the object class
   .check_obj(s, "stac")
@@ -40,7 +42,7 @@ get_request <- function(s, headers = c()) {
 
   tryCatch({
     res <- httr::GET(url =  .make_url(s$url, params = s$params),
-                     httr::add_headers(headers))
+                     httr::add_headers(headers), ...)
   },
   error = function(e) {
 
@@ -72,6 +74,8 @@ get_request <- function(s, headers = c()) {
 #' @description The \code{post_request} is function that makes HTTP POST
 #' requests to STAC web services, retrieves, and parse the data.
 #'
+#' @param ...         other params to be passed to \link[httr]{POST} method
+#'
 #' @param enctype     a \code{character} informing the request body
 #' Content-Type. Accepted types are \code{'json'} (\code{'application/json'}),
 #' \code{'form'} (\code{'application/x-www-form-urlencoded'}),
@@ -87,7 +91,7 @@ get_request <- function(s, headers = c()) {
 #' }
 #'
 #' @export
-post_request <- function(s, enctype =  c("json", "multipart", "form"),
+post_request <- function(s, ..., enctype =  c("json", "multipart", "form"),
                          headers = c()) {
 
   # check the object class
@@ -115,7 +119,7 @@ post_request <- function(s, enctype =  c("json", "multipart", "form"),
   tryCatch({
     res <- httr::POST(url =  s$url, body = s$params,
                       encode = enctype,
-                      httr::add_headers(headers))
+                      httr::add_headers(headers), ...)
   },
   error = function(e) {
     .error("Request error. %s", e$message)

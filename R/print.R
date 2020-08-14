@@ -96,7 +96,7 @@ print_header.stac_items <- function(x, ...) {
     cat("- type:", crayon::bold(paste0('"', x$type, '"')), fill = TRUE)
 
   if (!is.null(items_length(x)))
-    cat("- numberReturned:", crayon::bold(items_length(x)),
+    cat("- numberMatched:", crayon::bold(items_matched(x)),
         fill = TRUE)
 }
 
@@ -201,12 +201,12 @@ print.stac_collection <- function(x, n = 10, ...) {
 #' @title Printing functions
 #' @rdname print_functions
 #' @export
-print.stac_items <- function(x, n = 3, ...) {
+print.stac_items <- function(x, n = 5, ...) {
 
   # print headers
   print_header(x)
 
-  cat("- feature:", fill = TRUE)
+  cat("- features:", fill = TRUE)
 
   if (items_length(x) > 0) {
     feature <- x$features[seq_len(min(n, items_length(x)))]
@@ -217,7 +217,7 @@ print.stac_items <- function(x, n = 3, ...) {
            datetime = x$properties$datetime)}), pad = 2)
   }
   if (n < items_length(x)) {
-    cat(crayon::silver(sprintf("> \U2026 with %s more links",
+    cat(crayon::silver(sprintf("> \U2026 with %s more feature(s)",
                                items_length(x) - n)), fill = TRUE)
   }
 }

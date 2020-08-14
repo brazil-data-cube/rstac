@@ -103,7 +103,7 @@
 #' @noRd
 .check_rfc_3339 <- function(datetime) {
 
-  # Standard Regex of RFC 3339
+  # Standard regexp of RFC 3339
   pattern_rfc   <- "^\\d{4}-\\d{2}-\\d{2}?(T\\d{2}:\\d{2}:\\d{2}Z)?$"
   check_pattern <- grepl(pattern_rfc, datetime, perl = TRUE)
 
@@ -120,6 +120,18 @@
 .error <- function(msg, ...) {
 
   stop(sprintf(msg, ...), call. = FALSE)
+}
+
+#' @title utils functions
+#'
+#' @param msg   a \code{character} string with format warning message.
+#'
+#' @param ...   values to be passed to \code{msg} parameter.
+#'
+#' @noRd
+.warning <- function(msg, ...) {
+
+  warning(sprintf(msg, ...), call. = FALSE)
 }
 
 #' @title helper function

@@ -43,7 +43,7 @@ items_matched <- function(items) {
     matched <- items[["numberMatched"]]
 
   if (is.null(matched))
-    warning("STAC 'search:metadata' extension not available", call. = FALSE)
+    .warning("STAC 'search:metadata' extension not available")
 
   return(matched)
 }

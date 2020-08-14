@@ -37,7 +37,7 @@ testthat::test_that("stac search object", {
       object   = print(rstac::stac_search(
         url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
         datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 1),
-      regexp = "> … with 9 more links"
+      regexp = "> … with 9 more feature\\(s\\)"
     )
 
     ## show all of them
@@ -45,7 +45,7 @@ testthat::test_that("stac search object", {
       object   = print(rstac::stac_search(
         url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
         datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 10),
-      regexp = "numberReturned: 10"
+      regexp = "numberMatched: "
     )
 
     ## error when setting itens equal or less than 0
@@ -53,7 +53,7 @@ testthat::test_that("stac search object", {
       object   = print(rstac::stac_search(
         url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
         datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 0),
-      regexp = "> … with 10 more links"
+      regexp = "> … with 10 more feature\\(s\\)"
     )
 
     # Error when creating the stac object by parameter bbox

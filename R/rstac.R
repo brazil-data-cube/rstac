@@ -27,16 +27,15 @@
 #'   \item \code{\link{post_request}}: makes HTTP POST requests to STAC web
 #'   service.
 #'   \item \code{\link{items_matched}}: returns how many items matched the
-#'     search criteria.
+#'   search criteria.
 #'   \item \code{\link{items_length}}: informs how many items are
-#'     stored locally.
+#'   stored locally.
 #'   \item \code{\link{items_fetch}}: fetches all matched items from service.
-#'   \item \code{items_group}: group items by some property field.
 #'   \item \code{\link{assets_download}}: download all assets in batch.
 #' }
 #'
 #' @section Data types:
-#' The package implements two S3 classes, \code{stac_items} and
+#' The package implements two S3 classes, \code{stac_items}, and
 #' \code{stac_collection}. These classes are regular lists representing
 #' the corresponding JSON STAC objects.
 #'
