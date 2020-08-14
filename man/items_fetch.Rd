@@ -27,7 +27,7 @@ The \code{items_fetch} function returns the pagination of all
 \examples{
 \dontrun{
 
-stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+ stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
             collections = "MOD13Q1",
             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
             limit = 500) \%>\%

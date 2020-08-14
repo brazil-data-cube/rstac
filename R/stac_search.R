@@ -75,7 +75,7 @@
 #' # GET request
 #' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1",
-#'             limit = 10) %>%
+#'             limit = 1) %>%
 #'      get_request()
 #'
 #' # POST request
@@ -192,4 +192,21 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
                             expected_responses = expected),
                        class = "stac")
   return(content)
+}
+
+#' @export
+`[[.stac_items` <- function(x, i){
+
+  result <- x$features[[i]]
+  class(result) <- "stac_item"
+
+  return(result)
+}
+
+#' @export
+`[.stac_items` <- function(x, i){
+
+  x$features <- x$features[i]
+
+  return(x)
 }

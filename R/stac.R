@@ -44,9 +44,10 @@ stac <- function(url) {
                             list("200" =
                                    list("application/json" = "stac_catalog"))))
 
-  content <- structure(list(url = .make_url(url, endpoint = "/stac"),
-                            params = list(),
-                            expected_responses = expected),
-                       class = "stac")
+   content <- structure(list(url = .make_url(url, endpoint = "/stac"),
+                             params = list(),
+                             expected_responses = expected),
+                        class = "stac")
+
   return(content)
 }

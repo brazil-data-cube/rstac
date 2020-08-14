@@ -25,7 +25,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+#'  stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 #'             collections = "MOD13Q1",
 #'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
 #'             limit = 500) %>%
@@ -49,19 +49,18 @@ items_fetch <- function(items, progress = TRUE, headers = c()) {
 
   while (TRUE) {
 
+
     # protect against infinite loop
     if (!is.null(matched) && (items_length(items) > matched))
       .error(paste("Length of returned items (%s) is different",
                    "from matched items (%s)."), items_length(items), matched)
 
     s <- attr(items, "stac")
-    if (is.null(s))
-      return(items)
+    if (is.null(s)) break
 
     # get url of the next page
     next_url <- Filter(function(x) x$rel == "next", items$links)
-    if (length(next_url) == 0)
-      return(items)
+    if (length(next_url) == 0) break
 
     # create a new stac object with params from the next url
     base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url[[1]]$href)
@@ -105,10 +104,12 @@ items_fetch <- function(items, progress = TRUE, headers = c()) {
   }
 
   # close progress bar
-  # TODO: insert \n at the end
-  # TODO: report numbers of items fetched
-  if (progress)
+  if (progress) {
+    utils::setTxtProgressBar(pb, matched)
     close(pb)
+  }
+
+  # TODO: report numbers of items fetched
 
   return(items)
 }
