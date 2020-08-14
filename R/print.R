@@ -12,8 +12,6 @@
 #'   \item \code{\link{stac_items}}: implements
 #'     \code{/collections/\{collectionId\}/items} and
 #'     \code{/collections/\{collectionId\}/items/\{itemId\}} WFS3 endpoints.
-#'   \item \code{\link{stac_search}}: implements STAC \code{/stac/search}
-#'     endpoint.
 #'  }
 #'
 #' The rstac package objects visualization is based on **Markdown**, a
@@ -22,20 +20,19 @@
 #'
 #' For printing use the `print()` function directly, since the package has a
 #'  generic implementation for its objects. For console output control, you have
-#'  the option to determine how many items you want to see through the `n`in
+#'  the option to determine how many items you want to see through the `n` in
 #'  `print` objects parameters, the following objects have the `n` parameter:
 #'  * \code{\link{stac_items}}
 #'  * \code{\link{stac_collections}}
 #'  * \code{\link{stac}}
 #'
-#' @param x object STAC to print
+#' @param x object STAC to print.
 #' @param n number of lines to view on each object. Each object has its own type
 #'  of truncation in lines. In the \code{stac_catalog} object, by default, 10
 #'  links will be shown. In the \code{stac_collection} object, similarly, 10
-#'  links will be shown. In \code{stac_items} object. In \code{stac_items}, by
-#'  default, 3 features will be shown. If you want to show all lines of a rstac
-#'  object, use `n = Inf`.
-#' @param ... other parameters passed in the functions
+#'  links will be shown. In \code{stac_items}, by default, 3 features will be
+#'  shown. If you want to show all lines of a rstac object, use `n = Inf`.
+#' @param ... other parameters passed in the functions.
 #'
 #' @seealso
 #' \code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
