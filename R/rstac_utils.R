@@ -287,3 +287,16 @@
 
   return(params)
 }
+
+.params_merge <- function(x, y) {
+
+  n <- names(y)
+  has_name <- rep(FALSE, length(y))
+  if (!is.null(n)) {
+    has_name <- !is.na(n) & n != ""
+    x[n[has_name]] <- y[n[has_name]]
+  }
+  x <- c(x, y[!has_name])
+  return(x)
+}
+

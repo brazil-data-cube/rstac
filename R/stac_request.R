@@ -32,7 +32,7 @@
 #' }
 #'
 #' @export
-get_request <- function(s, ..., headers = c()) {
+get_request <- function(s, ..., headers = character()) {
 
   # check the object class
   .check_obj(s, "stac")
@@ -92,7 +92,7 @@ get_request <- function(s, ..., headers = c()) {
 #'
 #' @export
 post_request <- function(s, ..., enctype =  c("json", "multipart", "form"),
-                         headers = c()) {
+                         headers = character()) {
 
   # check the object class
   .check_obj(s, "stac")
