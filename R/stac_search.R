@@ -93,11 +93,18 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
 
   params <- list()
 
-  if (!missing(collections))
-    params[["collections"]] <- .query_encode(collections)
+  if (!missing(collections)) {
 
-  if (!missing(ids))
-    params[["ids"]] <- .query_encode(ids)
+    if (length(collections) == 1 && !is.list(collections))
+      collections <- list(collections)
+    params[["collections"]] <- collections
+  }
+
+  if (!missing(ids)) {
+
+    if (length(ids) == 1 && !is.list(ids)) ids <- list(ids)
+    params[["ids"]] <- ids
+  }
 
   if (!missing(datetime)) {
 
@@ -109,13 +116,13 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
 
     if (!length(bbox) %in% c(4, 6))
       .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
-    params[["bbox"]] <- .query_encode(bbox)
+    params[["bbox"]] <- bbox
   }
 
   # TODO: validate polygon
   if (!missing(intersects)) {
 
-    params[["intersects"]] <- .query_encode(intersects)
+    params[["intersects"]] <- intersects
   }
 
   if (!missing(query)) {

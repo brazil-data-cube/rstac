@@ -32,7 +32,7 @@
 #' }
 #'
 #' @export
-get_request <- function(s, ..., headers = c()) {
+get_request <- function(s, ..., headers = character()) {
 
   # check the object class
   .check_obj(s, "stac")
@@ -92,7 +92,7 @@ get_request <- function(s, ..., headers = c()) {
 #'
 #' @export
 post_request <- function(s, ..., enctype =  c("json", "multipart", "form"),
-                         headers = c()) {
+                         headers = character()) {
 
   # check the object class
   .check_obj(s, "stac")
@@ -108,7 +108,7 @@ post_request <- function(s, ..., enctype =  c("json", "multipart", "form"),
          "application/x-www-form-urlencoded" = "form",
          "multipart/form-data" = "multipart")
   enctype <- enctype[[1]]
-  if (length(s$expected_responses$post$enctypes) > 0 &&
+  if ((length(s$expected_responses$post$enctypes) > 0) &&
       !enctype %in% friendly_enctype[s$expected_responses$post$enctypes])
     .error(paste("The body request enctype '%s' is invalid",
                  "for this operation. Allowed enctypes are %s."),
