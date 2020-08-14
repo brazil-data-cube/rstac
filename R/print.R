@@ -1,8 +1,67 @@
-#' rstac print functions
+#' @title Printing functions
+#'
+#' @name print_functions
 #'
 #' @author Felipe Carvalho and Rolf Simoes
 #'
-#' @name print
+#' @description The print functions cover all objects in the rstac package:
+#' \itemize{
+#'   \item \code{\link{stac}}: implements STAC \code{/stac} endpoint.
+#'   \item \code{\link{stac_collections}}: implements \code{/collections}
+#'     and \code{/collections/\{collectionId\}} WFS3 endpoints.
+#'   \item \code{\link{stac_items}}: implements
+#'     \code{/collections/\{collectionId\}/items} and
+#'     \code{/collections/\{collectionId\}/items/\{itemId\}} WFS3 endpoints.
+#'  }
+#'
+#' The rstac package objects visualization is based on **Markdown**, a
+#'  lightweight markup language, so you can paste the output into any
+#'  **Markdown** editor for a better visualization.
+#'
+#' For printing use the `print()` function directly, since the package has a
+#'  generic implementation for its objects. For console output control, you have
+#'  the option to determine how many items you want to see through the `n` in
+#'  `print` objects parameters, the following objects have the `n` parameter:
+#'  * \code{\link{stac_items}}
+#'  * \code{\link{stac_collections}}
+#'  * \code{\link{stac}}
+#'
+#' @param x object STAC to print.
+#' @param n number of lines to view on each object. Each object has its own type
+#'  of truncation in lines. In the \code{stac_catalog} object, by default, 10
+#'  links will be shown. In the \code{stac_collection} object, similarly, 10
+#'  links will be shown. In \code{stac_items}, by default, 3 features will be
+#'  shown. If you want to show all lines of a rstac object, use `n = Inf`.
+#' @param ... other parameters passed in the functions.
+#'
+#' @seealso
+#' \code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
+#' \code{\link{stac_items}}
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # stac_items object
+#' stac_items <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+#'             collections = "MOD13Q1",
+#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
+#'             limit = 15) %>%
+#'      get_request()
+#'
+#' print(stac_items, n = 10)
+#'
+#' # stac_catalog object
+#' stac_catalog <-
+#' stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'     get_request()
+#'
+#' print(stac_catalog, n = 5)
+#'
+#' # stac object
+#' obj_stac <- stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+#'
+#' print(obj_stac)
+#' }
 NULL
 
 #### headers  ####
@@ -74,6 +133,8 @@ print_header.stac_catalog <- function(x, ...) {
 
 #### prints ####
 
+#' @title Printing functions
+#' @rdname print_functions
 #' @export
 print.stac <- function(x, ...) {
 
@@ -84,6 +145,8 @@ print.stac <- function(x, ...) {
   print_named(x, n = Inf, align_first = TRUE)
 }
 
+#' @title Printing functions
+#' @rdname print_functions
 #' @export
 print.stac_catalog <- function(x, n = 10, ...) {
 
@@ -108,6 +171,8 @@ print.stac_catalog <- function(x, n = 10, ...) {
   }
 }
 
+#' @title Printing functions
+#' @rdname print_functions
 #' @export
 print.stac_collection <- function(x, n = 10, ...) {
 
@@ -133,6 +198,8 @@ print.stac_collection <- function(x, n = 10, ...) {
   }
 }
 
+#' @title Printing functions
+#' @rdname print_functions
 #' @export
 print.stac_items <- function(x, n = 5, ...) {
 
@@ -155,8 +222,10 @@ print.stac_items <- function(x, n = 5, ...) {
   }
 }
 
+#' @title Printing functions
+#' @rdname print_functions
 #' @export
-print.stac_item <- function(x, n = 10, ...){
+print.stac_item <- function(x, ...){
 
   # print headers
   print_header(x)
@@ -180,7 +249,6 @@ print.stac_item <- function(x, n = 10, ...){
     print_link_highlight(names(x$assets),
                          unname(sapply(x$assets, function(x){x$href})), pad = 2)
   }
-
 }
 
 #### helpers ####
