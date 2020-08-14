@@ -15,7 +15,7 @@
 
 \method{print}{stac_collection}(x, n = 10, ...)
 
-\method{print}{stac_items}(x, n = 3, ...)
+\method{print}{stac_items}(x, n = 5, ...)
 
 \method{print}{stac_item}(x, ...)
 }
