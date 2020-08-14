@@ -24,21 +24,21 @@ a valid items' property. Supported \code{<fields>} depends
 on STAC API service implementation. The users must rely on service providers'
 documentation to know which properties can be passed to do the search.
 
-The query API extension (v0.8.0) allows the following \code{<operators>}:
+The \code{ext_query} function accepts the following \code{<operators>}
 \itemize{
-\item \code{==}: corresponds to \code{eq}
-\item \code{!=}: corresponds to \code{neq}
-\item \code{<}: corresponds to \code{lt}
-\item \code{<=}: corresponds to \code{lte}
-\item \code{>}: corresponds to \code{gt}
-\item \code{>=}: corresponds to \code{gte}
-\item \code{\%startsWith\%}: corresponds to \code{startsWith} and implements
+\item \code{==} corresponds to '\code{eq}'
+\item \code{!=} corresponds to '\code{neq}'
+\item \code{<} corresponds to '\code{lt}'
+\item \code{<=} corresponds to '\code{lte}'
+\item \code{>} corresponds to '\code{gt}'
+\item \code{>=} corresponds to '\code{gte}'
+\item \code{\%startsWith\%} corresponds to '\code{startsWith}' and implements
 a string prefix search operator.
-\item \code{\%endsWith\%}: corresponds to \code{endsWith} and implements a
+\item \code{\%endsWith\%} corresponds to '\code{endsWith}' and implements a
 string suffix search operator.
-\item \code{\%contains\%}: corresponds to \code{contains} and implements a
+\item \code{\%contains\%}: corresponds to '\code{contains}' and implements a
 string infix search operator.
-\item \code{\%in\%}: corresponds to \code{in} and implements a vector search
+\item \code{\%in\%}: corresponds to '\code{in}' and implements a vector search
 operator.
 }
 }
