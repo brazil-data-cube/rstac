@@ -13,8 +13,9 @@ assets_download(
 )
 }
 \arguments{
-\item{items}{a \code{stac_items} object representing the result of
-\code{/stac/search}, \code{/collections/{collectionId}/items}, or
+\item{items}{a \code{stac_items} or \code{stac_item} object
+representing the result of \code{/stac/search},
+ \code{/collections/{collectionId}/items} or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
 
 \item{assets_name}{a \code{character} with the assets names to be filtered.}
@@ -29,8 +30,8 @@ shown or not. Defaults to \code{TRUE}.}
 HTTP request headers.}
 }
 \value{
-The same \code{stac_items} object, but with the link of the item
- pointing to the directory where the assets were saved.
+The same \code{stac_items} or \code{stac_item} object, with the
+link of the item pointing to the directory where the assets were saved.
 }
 \description{
 The \code{assets_download} function downloads the assets
@@ -39,12 +40,12 @@ provided by the STAC API.
 \examples{
 \dontrun{
 
-stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-            collections = "MOD13Q1",
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
+ stac_search(collections = "MOD13Q1",
             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
             limit = 2) \%>\%
-     get_request() \%>\%
-     assets_download(assets_name = c("thumbnail"), output_dir = ".")
+ get_request() \%>\%
+ assets_download(assets_name = c("thumbnail"), output_dir = ".")
 }
 
 }

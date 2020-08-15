@@ -16,21 +16,20 @@
 #' HTTP request headers.
 #'
 #' @seealso
-#' \code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
-#' \code{\link{stac_items}}
+#' \code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
+#' \code{\link{items}}
 #'
-#' @return
-#' A \code{stac_items} object.
+#' @return a \code{stac_items} object.
 #'
 #' @examples
 #' \dontrun{
 #'
-#'  stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1",
-#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
-#'             limit = 500) %>%
-#'     get_request() %>%
-#'     items_fetch()
+#'  stac(http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0) %>%
+#'   search(collections = "MOD13Q1",
+#'          bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
+#'          limit = 500) %>%
+#'    get_request() %>%
+#'    items_fetch()
 #' }
 #'
 #' @export

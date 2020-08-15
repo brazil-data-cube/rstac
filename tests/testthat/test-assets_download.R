@@ -7,65 +7,30 @@ testthat::test_that("assets download", {
 
     # error - zero items
      testthat::expect_error(
-      rstac::stac_search(
-        url         = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-        collections = "MOD13Q1",
-        datetime    = "2019-09-01/2019-11-01",
-        bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
-        limit       = 0) %>%
-      rstac::get_request(.) %>%
-      rstac::assets_download(., assets_name = c("blue", "evi")))
+      rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+        stac_search(
+          collections = "MOD13Q1",
+          datetime    = "2019-09-01/2019-11-01",
+          bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
+          limit       = 0) %>%
+        get_request() %>%
+        assets_download(assets_name = c("blue", "evi")))
 
     # error - given another object
      testthat::expect_error(
-       rstac::stac(
-         url   = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-       rstac::get_request(.) %>%
-       rstac::assets_download(., assets_name = c("blue", "evi")))
+       stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+         get_request(.) %>%
+         assets_download(., assets_name = c("blue", "evi")))
 
    # error - wrong path
    testthat::expect_error(
-     rstac::stac_search(
-       url         = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-       collections = "MOD13Q1",
-       datetime    = "2019-09-01/2019-11-01",
-       bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
-       limit       = 1) %>%
-     rstac::get_request(.) %>%
-     rstac::assets_download(., assets_name = c("thumbnail"),
-                            output_dir = "./my-dir/"))
-
-    # ok - return a stac_items
-    # testthat::expect_equal(
-    #   object = class(
-    #     rstac::stac_search(
-    #       url         = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-    #       collections = "MOD13Q1",
-    #       datetime    = "2019-09-01/2019-11-01",
-    #       bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
-    #       limit       = 1) %>%
-    #     rstac::get_request(.) %>%
-    #     rstac::assets_download(., assets_name = c("thumbnail"))),
-    #   expected = "stac_items"
-    # )
+     stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+       stac_search(
+         collections = "MOD13Q1",
+         datetime    = "2019-09-01/2019-11-01",
+         bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
+         limit       = 1) %>%
+       get_request() %>%
+       assets_download(assets_name = c("thumbnail"), output_dir = "./my-dir/"))
   })
-  # vcr::use_cassette("assets_item", {
-  #   testthat::skip_on_cran()
-  #
-  #
-  #
-  #   # ok - return a stac_items
-  #   # testthat::expect_equal(
-  #   #   object = class(
-  #   #     rstac::stac_search(
-  #   #       url         = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-  #   #       collections = "MOD13Q1",
-  #   #       datetime    = "2019-09-01/2019-11-01",
-  #   #       bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
-  #   #       limit       = 1) %>%
-  #   #     rstac::get_request(.) %>%
-  #   #     rstac::items_assets(.)),
-  #   #   expected = "list"
-  #   # )
-  # })
 })

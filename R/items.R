@@ -3,7 +3,7 @@
 #' @author Rolf Simoes
 #'
 #' @description
-#' The \code{stac_items} function implements WFS3
+#' The \code{items} function implements WFS3
 #' \code{/collections/\{collectionId\}/items}, and
 #' \code{/collections/\{collectionId\}/items/\{itemId\}}
 #' endpoints (v0.8.0).
@@ -20,8 +20,8 @@
 #' filters parameters of \code{\link{stac_search}} function.
 #'
 #' @param s           a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-#' or \code{stac_items} functions.
+#' provided by \code{stac}, \code{stac_search}, \code{collections},
+#' or \code{items} functions.
 #'
 #' @param item_id     a \code{character} with item id to be fetched.
 #' Only works if the \code{collection_id} is informed. This is equivalent to
@@ -72,7 +72,7 @@
 #'
 #' @seealso
 #' \code{\link{get_request}},  \code{\link{post_request}},
-#'  \code{\link{stac_collections}}
+#'  \code{\link{collections}}
 #'
 #' @return
 #' A \code{stac} object containing all request parameters to be

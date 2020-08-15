@@ -5,34 +5,34 @@ testthat::test_that("items functions", {
     # skip cran check test
     testthat::skip_on_cran()
 
-    res <- rstac::stac_search(
-                  url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-                  collections = "MOD13Q1",
-                  bbox  = c(-55.16335, -4.26325, -49.31739, -1.18355),
-                  limit = 500) %>%
-          rstac::get_request(.)
+    res <- rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+      stac_search(
+        collections = "MOD13Q1",
+        bbox  = c(-55.16335, -4.26325, -49.31739, -1.18355),
+        limit = 500) %>%
+      get_request(.)
 
     # items_fetch---------------------------------------------------------------
     # error - given another object
-    testthat::expect_error(rstac::items_fetch(list(res)))
+    testthat::expect_error(items_fetch(list(res)))
 
    # ok - stac_items object
     testthat::expect_equal(
-      object   = class(rstac::items_fetch(res)),
+      object   = class(items_fetch(res)),
       expected = "stac_items")
 
     # items_length--------------------------------------------------------------
     # error - given another object
-    testthat::expect_error(rstac::items_length(list(res)))
+    testthat::expect_error(items_length(list(res)))
 
     # ok - return a numeric
-    testthat::expect_true(is.numeric(rstac::items_length(res)))
+    testthat::expect_true(is.numeric(items_length(res)))
 
     # items_matched-------------------------------------------------------------
     # error - given another object
-    testthat::expect_error(rstac::items_matched(list(res)))
+    testthat::expect_error(items_matched(list(res)))
 
     # ok - return a numeric
-    testthat::expect_true(is.numeric(rstac::items_matched(res)))
+    testthat::expect_true(is.numeric(items_matched(res)))
   })
 })

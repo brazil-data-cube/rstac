@@ -3,7 +3,7 @@
 #' @author Rolf Simoes
 #'
 #' @description
-#' The \code{stac_collections} function implements the WFS3 \code{/collections}
+#' The \code{collections} function implements the WFS3 \code{/collections}
 #' and \code{/collections/\{collectionId\}} endpoints (v0.8.0).
 #'
 #' Each endpoint retrieves specific STAC objects:
@@ -22,7 +22,7 @@
 #'
 #' @seealso
 #' \code{\link{get_request}}, \code{\link{post_request}},
-#'  \code{\link{stac_items}}
+#'  \code{\link{items}}
 #'
 #' @return
 #'

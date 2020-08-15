@@ -19,7 +19,7 @@ list of STAC Collections. Otherwise, it will return a \code{stac_collection} obj
 representing a specific STAC Collection.
 }
 \description{
-The \code{stac_collections} function implements the WFS3 \code{/collections}
+The \code{collections} function implements the WFS3 \code{/collections}
 and \code{/collections/\{collectionId\}} endpoints (v0.8.0).
 
 Each endpoint retrieves specific STAC objects:
@@ -33,18 +33,19 @@ Each endpoint retrieves specific STAC objects:
 \examples{
 \dontrun{
 
- stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-    get_request()
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
+  collections() \%>\%
+  get_request()
 
- stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-                 collection_id = "MOD13Q1") \%>\%
-    get_request()
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
+  collections(collection_id = "MOD13Q1") \%>\%
+  get_request()
 }
 
 }
 \seealso{
 \code{\link{get_request}}, \code{\link{post_request}},
- \code{\link{stac_items}}
+ \code{\link{items}}
 }
 \author{
 Rolf Simoes
