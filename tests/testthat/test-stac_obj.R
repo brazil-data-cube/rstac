@@ -30,6 +30,68 @@ testthat::test_that("stac search object", {
       expected = "stac_items"
     )
 
+    # Check extensions ---------------------------------------------------------
+
+    # check extension query - wrong contruction
+    testthat::expect_error(
+      object = stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+        extension_query("bdc:tile" == "022024") %>%
+        rstac::stac_search(datetime = "2018-01-01/..")
+    )
+
+    # check extension query - wrong contruction
+    testthat::expect_error(
+      object = stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+        stac_search(datetime = "2018-01-01/..") %>%
+        extension_query("bdc:tile" == "022024") %>%
+        stac_search(datetime = "2018-01-01/..")
+    )
+
+    # check extension query - wrong query
+    testthat::expect_error(
+      object = stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+        stac_search(datetime = "2018-01-01/..") %>%
+        extension_query("bdc:tile" == "022024", teste = "teste") %>%
+        stac_search(datetime = "2018-01-01/..")
+    )
+
+    # check extension query - wrong parameter
+    testthat::expect_error(
+      object = stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+        stac_search(datetime = "2018-01-01/..") %>%
+        extension_query("bdc:tile" + "022024") %>%
+        stac_search(datetime = "2018-01-01/..")
+    )
+
+    # check extension query - wrong request
+    testthat::expect_error(
+      object = stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+        stac_search(datetime = "2018-01-01/..") %>%
+        extension_query("bdc:tile" == "022024") %>%
+        get_request()
+    )
+
+    stac_search_obj <-
+      rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+      rstac::stac_search(datetime = "2018-01-01/..") %>%
+      extension_query("bdc:tile" == "022024")
+
+    # expected mutator
+    testthat::expect_equal(
+      object   =  stac_search_obj$mutator,
+      expected = "ext_query"
+    )
+
+    # expect http method
+    testthat::expect_true(
+      object = is.na(stac_search_obj$expected_responses$get))
+
+    # expect class
+    testthat::expect_equal(
+      object = class(stac_search_obj %>% post_request()),
+      expect = "stac_items"
+    )
+
     # Check print function------------------------------------------------------
 
     # show only one object

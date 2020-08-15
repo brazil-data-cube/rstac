@@ -32,5 +32,18 @@ testthat::test_that("assets download", {
          limit       = 1) %>%
        get_request() %>%
        assets_download(assets_name = c("thumbnail"), output_dir = "./my-dir/"))
+
+   # verify output object
+   testthat::expect_equal(
+     object = class(
+       stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+         stac_search(
+           collections = "MOD13Q1",
+           datetime    = "2019-09-01/2019-11-01",
+           bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
+           limit       = 1) %>%
+         get_request() %>%
+         assets_download(assets_name = c("thumbnail"), output_dir = ".")),
+     expected = "stac_items")
   })
 })
