@@ -31,7 +31,11 @@
 #' operator.
 #' }
 #'
-#' @param ...         entries with format \code{<field> <operator> <value>}.
+#' @param s             a \code{stac} object expressing a STAC search criteria
+#' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
+#' or \code{stac_items} functions.
+#'
+#' @param ...           entries with format \code{<field> <operator> <value>}.
 #'
 #' @seealso \code{\link{stac_search}}, \code{\link{post_request}}
 #'
@@ -46,19 +50,20 @@
 #' }
 #'
 #' @export
-ext_query <- function(...) {
+extension_query <- function(s, ...) {
 
-  #.check_mutator()
+  # check s parameter
+  .check_obj(s, "stac")
+
+  # check mutator
+  .check_mutator(s, c("search", "query"))
+
+  params <- list()
 
   dots <- substitute(list(...))[-1]
   tryCatch({
     ops <- lapply(dots, function(x) op <- as.character(x[[1]]))
-    keys <- lapply(dots, function(x) {
-      res <- eval(x[[2]])
-      if (!is.character(res))
-        .error("Invalid query expression.")
-      return(res)
-    })
+    keys <- lapply(dots, function(x) res <- as.character(x[[2]]))
     values <- lapply(dots, function(x) eval(x[[3]]))
   }, error = function(e) {
 
@@ -87,10 +92,25 @@ ext_query <- function(...) {
   })
   names(entries) <- uniq_keys
 
-  # update_stac <- function(old_stac, new_stac)
+  params[["query"]] <- entries
 
-  query <- structure(list(query = entries),
-                     class = "stac_query")
-  return(query)
+  # TODO: add these code excerpts bellow in different file
+  expected <- list("get" = NA,
+                   "post" =
+                     list(enctypes = c("application/json"),
+                          responses =
+                            list("200" =
+                                   list("application/geo+json" = "stac_items",
+                                        "application/json" = "stac_items"))))
+
+  content <- structure(list(url = s$url,
+                            endpoint = "/stac/search",
+                            params = params,
+                            expected_responses = expected,
+                            mutator = "search"),
+                       class = "stac")
+
+  content <- build_stac(content, s)
+
+  return(content)
 }
-

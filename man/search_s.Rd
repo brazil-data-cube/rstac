@@ -19,33 +19,33 @@ searched.}
 parameters that futher restrict the number of search results are ignored.}
 
 \item{bbox}{only features that have a geometry that intersects the
-  bounding box are selected. The bounding box is provided as four or six
-  numbers, depending on whether the coordinate reference system includes a
-  vertical axis (elevation or depth): \itemize{ \item Lower left corner,
-  coordinate axis 1 \item Lower left corner, coordinate axis 2 \item Lower
-  left corner, coordinate axis 3 (optional) \item Upper right corner,
-  coordinate axis 1 \item Upper right corner, coordinate axis 2 \item Upper
-  right corner, coordinate axis 3 (optional) }
+bounding box are selected. The bounding box is provided as four or six
+numbers, depending on whether the coordinate reference system includes a
+vertical axis (elevation or depth): \itemize{ \item Lower left corner,
+coordinate axis 1 \item Lower left corner, coordinate axis 2 \item Lower
+left corner, coordinate axis 3 (optional) \item Upper right corner,
+coordinate axis 1 \item Upper right corner, coordinate axis 2 \item Upper
+ right corner, coordinate axis 3 (optional) }
 
-  The coordinate reference system of the values is WGS84 longitude/latitude
-  (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}). The values are in
-  most cases the sequence of minimum longitude, minimum latitude, maximum
-  longitude and maximum latitude. However, in cases where the box spans the
-  antimeridian the first value (west-most box edge) is larger than the third
-  value (east-most box edge).}
+The coordinate reference system of the values is WGS84 longitude/latitude
+(\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}). The values are in
+most cases the sequence of minimum longitude, minimum latitude, maximum
+longitude and maximum latitude. However, in cases where the box spans the
+antimeridian the first value (west-most box edge) is larger than the third
+value (east-most box edge).}
 
 \item{datetime}{either a date-time or an interval. Date and time strings
-  needs to conform RFC 3339. Intervals are expressed by separating two
-  date-time strings by \code{'/'} character. Open intervals are expressed by
-  using \code{'..'} in place of date-time.
+needs to conform RFC 3339. Intervals are expressed by separating two
+date-time strings by \code{'/'} character. Open intervals are expressed by
+using \code{'..'} in place of date-time.
 
-  Examples: \itemize{ \item A date-time: \code{"2018-02-12T23:20:50Z"} \item
-  A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"} \item
-  Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
-  \code{"../2018-03-18T12:31:12Z"} }
+Examples: \itemize{ \item A date-time: \code{"2018-02-12T23:20:50Z"} \item
+A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"} \item
+Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
+\code{"../2018-03-18T12:31:12Z"} }
 
-  Only features that have a \code{datetime} property that intersects the
-  interval or date-time informed in \code{datetime} are selected.}
+Only features that have a \code{datetime} property that intersects the
+interval or date-time informed in \code{datetime} are selected.}
 
 \item{intersects}{a \code{character} value expressing GeoJSON geometries
 objects as specified in RFC 7946. Only returns items that intersect with

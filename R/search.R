@@ -18,50 +18,50 @@
 #' or \code{stac_items} functions.
 #'
 #' @param collections a \code{character} vector of collection IDs to include in
-#'   the search for items. Only items in one of the provided collections will be
-#'   searched.
+#' the search for items. Only items in one of the provided collections will be
+#' searched.
 #'
 #' @param ids         a \code{character} vector with item IDs. All other filter
-#'   parameters that futher restrict the number of search results are ignored.
+#' parameters that futher restrict the number of search results are ignored.
 #'
 #' @param datetime    either a date-time or an interval. Date and time strings
-#'   needs to conform RFC 3339. Intervals are expressed by separating two
-#'   date-time strings by \code{'/'} character. Open intervals are expressed by
-#'   using \code{'..'} in place of date-time.
+#' needs to conform RFC 3339. Intervals are expressed by separating two
+#' date-time strings by \code{'/'} character. Open intervals are expressed by
+#' using \code{'..'} in place of date-time.
 #'
-#'   Examples: \itemize{ \item A date-time: \code{"2018-02-12T23:20:50Z"} \item
-#'   A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"} \item
-#'   Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
-#'   \code{"../2018-03-18T12:31:12Z"} }
+#' Examples: \itemize{ \item A date-time: \code{"2018-02-12T23:20:50Z"} \item
+#' A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"} \item
+#' Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
+#' \code{"../2018-03-18T12:31:12Z"} }
 #'
-#'   Only features that have a \code{datetime} property that intersects the
-#'   interval or date-time informed in \code{datetime} are selected.
+#' Only features that have a \code{datetime} property that intersects the
+#' interval or date-time informed in \code{datetime} are selected.
 #'
 #' @param bbox        only features that have a geometry that intersects the
-#'   bounding box are selected. The bounding box is provided as four or six
-#'   numbers, depending on whether the coordinate reference system includes a
-#'   vertical axis (elevation or depth): \itemize{ \item Lower left corner,
-#'   coordinate axis 1 \item Lower left corner, coordinate axis 2 \item Lower
-#'   left corner, coordinate axis 3 (optional) \item Upper right corner,
-#'   coordinate axis 1 \item Upper right corner, coordinate axis 2 \item Upper
-#'   right corner, coordinate axis 3 (optional) }
+#' bounding box are selected. The bounding box is provided as four or six
+#' numbers, depending on whether the coordinate reference system includes a
+#' vertical axis (elevation or depth): \itemize{ \item Lower left corner,
+#' coordinate axis 1 \item Lower left corner, coordinate axis 2 \item Lower
+#' left corner, coordinate axis 3 (optional) \item Upper right corner,
+#' coordinate axis 1 \item Upper right corner, coordinate axis 2 \item Upper
+#'  right corner, coordinate axis 3 (optional) }
 #'
-#'   The coordinate reference system of the values is WGS84 longitude/latitude
-#'   (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}). The values are in
-#'   most cases the sequence of minimum longitude, minimum latitude, maximum
-#'   longitude and maximum latitude. However, in cases where the box spans the
-#'   antimeridian the first value (west-most box edge) is larger than the third
-#'   value (east-most box edge).
+#' The coordinate reference system of the values is WGS84 longitude/latitude
+#' (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}). The values are in
+#' most cases the sequence of minimum longitude, minimum latitude, maximum
+#' longitude and maximum latitude. However, in cases where the box spans the
+#' antimeridian the first value (west-most box edge) is larger than the third
+#' value (east-most box edge).
 #'
 #' @param intersects  a \code{character} value expressing GeoJSON geometries
-#'   objects as specified in RFC 7946. Only returns items that intersect with
-#'   the provided polygon.
+#' objects as specified in RFC 7946. Only returns items that intersect with
+#' the provided polygon.
 #'
 #' @param query       a \code{stac_query} object representing extra search
 #' fields. This parameter can be obtained by \code{\link{ext_query}} function.
 #'
 #' @param limit       an \code{integer} defining the maximum number of results
-#'   to return. If not informed it defaults to the service implementation.
+#' to return. If not informed it defaults to the service implementation.
 #'
 #' @param ...         any additional non standard filter parameter.
 #'
@@ -136,14 +136,6 @@ search_s <- function(s, collections, ids, bbox, datetime, intersects,
     params[["intersects"]] <- intersects
   }
 
-  # if (!missing(query)) {
-  #
-  #   if (!inherits(query, "stac_query"))
-  #     .error("Invalid query parameter value.")
-  #
-  #   params[["query"]] <- query$query
-  # }
-
   if (!missing(limit) && !is.null(limit))
     params[["limit"]] <- limit
 
@@ -179,29 +171,6 @@ search_s <- function(s, collections, ids, bbox, datetime, intersects,
                                      list("application/geo+json" = "stac_items",
                                           "application/json" = "stac_items"))))
   }
-  # TODO: follow specification strictly
-  # if (!is.null(params[["query"]])) {
-  #
-  #   # TODO: add these code excerpts bellow in different file
-  #   expected <- list("post" =
-  #                      list(enctypes = c("application/json"),
-  #                           responses =
-  #                             list("200" =
-  #                                    list("application/geo+json" = "stac_items",
-  #                                         "application/json" = "stac_items"))))
-  # } else{
-  # expected <- list("get" =
-  #                      list(responses =
-  #                             list("200" =
-  #                                    list("application/geo+json" = "stac_items",
-  #                                         "application/json" = "stac_items"))),
-  #                    "post" =
-  #                      list(enctypes = c("application/json"),
-  #                           responses =
-  #                             list("200" =
-  #                                    list("application/geo+json" = "stac_items",
-  #                                         "application/json" = "stac_items"))))
-
 
   content <- structure(list(url = s$url,
                             endpoint = "/stac/search",
