@@ -26,7 +26,7 @@ testthat::test_that("stac search object", {
       object   = class(
         rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
           rstac::stac_search(datetime = "2018-01-01/..") %>%
-          post_request()),
+          rstac::post_request(.)),
       expected = "stac_items"
     )
 

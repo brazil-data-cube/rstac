@@ -38,7 +38,7 @@ get_request <- function(s, ..., headers = character()) {
   .check_obj(s, "stac")
 
   if (!"get" %in% names(s$expected_responses) ||
-      is.na(s$expected_responses[["get"]]))
+      is.na(s$expected_responses[["get"]])[[1]])
     .error("HTTP GET method is invalid for this request.")
 
   tryCatch({
@@ -95,14 +95,13 @@ get_request <- function(s, ..., headers = character()) {
 #' @export
 post_request <- function(s, ..., enctype =  c("json", "multipart", "form"),
                          headers = character()) {
-
   # check the object class
   .check_obj(s, "stac")
 
   # check if the provided expected response is valid for this endpoint...
   # ...check for method
   if (!"post" %in% names(s$expected_responses) ||
-      is.na(s$expected_responses[["post"]]))
+      is.na(s$expected_responses[["post"]])[[1]])
     .error("HTTP POST method is invalid for this request.")
 
   # ...check for body request content-type (enctype)
