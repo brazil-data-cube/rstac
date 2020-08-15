@@ -7,82 +7,82 @@ testthat::test_that("stac search object", {
 
     # check object class of stac_search
     testthat::expect_equal(
-      object   = class(rstac::stac_search(
-        url    = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-        bbox   = c(-55.16335, -4.26325, -49.31739, -1.18355))),
+      object  = class(
+        rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+          rstac::stac_search(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355))),
       expected = "stac"
     )
 
     # check GET request from stac_search object
     testthat::expect_equal(
-      object   = class(rstac::stac_search(
-        url    = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-        bbox   = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+      object   = class(
+        rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+          rstac::stac_search(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
           get_request()),
       expected = "stac_items"
     )
 
     testthat::expect_equal(
-          object   = class(rstac::stac_search(
-            url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-            datetime = "2018-01-01/..") %>%
-              post_request(enctype = "json")),
-          expected = "stac_items"
+      object   = class(
+        rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+          rstac::stac_search(datetime = "2018-01-01/..") %>%
+          post_request(enctype = "json")),
+      expected = "stac_items"
     )
 
     # Check print function------------------------------------------------------
 
     ## show only one object
     testthat::expect_output(
-      object   = print(rstac::stac_search(
-        url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-        datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 1),
+      object   = print(
+        rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",) %>%
+          rstac::stac_search(datetime = "2018-01-01/..", limit = 10) %>%
+          get_request(), n = 1),
       regexp = "> … with 9 more feature\\(s\\)"
     )
 
     ## show all of them
     testthat::expect_output(
-      object   = print(rstac::stac_search(
-        url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-        datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 10),
+      object   = print(
+        rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+          rstac::stac_search(datetime = "2018-01-01/..", limit = 10) %>%
+          get_request(), n = 10),
       regexp = "numberMatched: "
     )
 
-    ## error when setting itens equal or less than 0
+    # error when setting itens equal or less than 0
     testthat::expect_output(
-      object   = print(rstac::stac_search(
-        url          = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-        datetime = "2018-01-01/..", limit = 10) %>% get_request(), n = 0),
-      regexp = "> … with 10 more feature\\(s\\)"
-    )
+      object = print(
+        rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+          rstac::stac_search(datetime = "2018-01-01/..", limit = 10) %>%
+          get_request(), n = 0),
+      regexp = "> … with 10 more feature\\(s\\)")
 
     # Error when creating the stac object by parameter bbox
     testthat::expect_error(
-      rstac::stac_search(
-        url  = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-        bbox = c(-55.16335, -4.26325, -49.31739))
-      )
+      rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+        rstac::stac_search(bbox = c(-55.16335, -4.26325, -49.31739))
+    )
 
     # providing the bbox and intersects parameters
     testthat::expect_warning(
-      rstac::stac_search(
-        url        = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-        bbox       = c(-55.16335, -4.26325, -49.31739, -1.18355),
-        intersects = toJSON(list(type = "Point",
+      rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+       rstac::stac_search(
+         bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
+        intersects = jsonlite::toJSON(list(type = "Point",
                                  "coordinates" = c(-55.16335, -4.26325),
                                  "bbox" = c(-55.16335,
                                             -4.26325,
                                             -49.31739,
                                             -1.18355)))
-        )
+      )
     )
 
     # Check errors in fixed date time-------------------------------------------
     # check fixed date time
     testthat::expect_error(
-      rstac::stac_search(
-        url      = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-        datetime = "20-02-2012T00:00:00Z")
+      rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+        rstac::stac_search(datetime = "20-02-2012T00:00:00Z")
     )
 
     # check fixed date time

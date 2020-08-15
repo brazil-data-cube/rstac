@@ -40,15 +40,22 @@
 #'
 #' @examples
 #' \dontrun{
-#' stac_search(url = "https://sat-api-dev.developmentseed.org",
-#'             collections = "landsat-8-l1") %>%
-#'      get_request()
+#'
+#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'   search(collections = "CB4_64_16D_STK") %>%
+#'   ext_query("bdc:tile" == "022024") %>%
+#'   post_request()
+#'
 #' }
 #'
 #' @export
-ext_query <- function(...) {
+ext_query <- function(s, ...) {
 
-  #.check_mutator()
+  # check s parameter
+  .check_obj(s, "stac")
+
+  # check mutator
+  .check_mutator(s, c("search", "ext_query"))
 
   dots <- substitute(list(...))[-1]
   tryCatch({
@@ -87,10 +94,21 @@ ext_query <- function(...) {
   })
   names(entries) <- uniq_keys
 
-  # update_stac <- function(old_stac, new_stac)
+  expected <- list("get" = NA,
+                   "post" =
+                     list(enctypes = c("application/json"),
+                          responses =
+                            list("200" =
+                                   list("application/geo+json" = "stac_items",
+                                        "application/json" = "stac_items"))))
 
-  query <- structure(list(query = entries),
-                     class = "stac_query")
+  query <- structure(list(params = entries,
+                          expected_responses = expected,
+                          mutator = "ext_query"),
+                     class = "stac")
+
+
+  query <- build_stac(query, s)
+
   return(query)
 }
-

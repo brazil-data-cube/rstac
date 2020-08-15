@@ -74,19 +74,18 @@
 #' @examples
 #' \dontrun{
 #' # GET request
-#' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1",
-#'             limit = 1) %>%
-#'      get_request()
+#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'   stac_search(collections = "MOD13Q1", limit = 1) %>%
+#'   get_request()
 #'
 #' # POST request
-#' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1") %>%
-#'      post_request()
+#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'   stac_search(collections = "MOD13Q1") %>%
+#'   post_request()
 #' }
 #'
 #' @export
-search_s <- function(s, collections, ids, bbox, datetime, intersects,
+stac_search <- function(s, collections, ids, bbox, datetime, intersects,
                         limit, ...) {
 
   # check s parameter
@@ -136,14 +135,6 @@ search_s <- function(s, collections, ids, bbox, datetime, intersects,
     params[["intersects"]] <- intersects
   }
 
-  # if (!missing(query)) {
-  #
-  #   if (!inherits(query, "stac_query"))
-  #     .error("Invalid query parameter value.")
-  #
-  #   params[["query"]] <- query$query
-  # }
-
   if (!missing(limit) && !is.null(limit))
     params[["limit"]] <- limit
 
@@ -179,29 +170,6 @@ search_s <- function(s, collections, ids, bbox, datetime, intersects,
                                      list("application/geo+json" = "stac_items",
                                           "application/json" = "stac_items"))))
   }
-  # TODO: follow specification strictly
-  # if (!is.null(params[["query"]])) {
-  #
-  #   # TODO: add these code excerpts bellow in different file
-  #   expected <- list("post" =
-  #                      list(enctypes = c("application/json"),
-  #                           responses =
-  #                             list("200" =
-  #                                    list("application/geo+json" = "stac_items",
-  #                                         "application/json" = "stac_items"))))
-  # } else{
-  # expected <- list("get" =
-  #                      list(responses =
-  #                             list("200" =
-  #                                    list("application/geo+json" = "stac_items",
-  #                                         "application/json" = "stac_items"))),
-  #                    "post" =
-  #                      list(enctypes = c("application/json"),
-  #                           responses =
-  #                             list("200" =
-  #                                    list("application/geo+json" = "stac_items",
-  #                                         "application/json" = "stac_items"))))
-
 
   content <- structure(list(url = s$url,
                             endpoint = "/stac/search",
