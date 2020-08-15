@@ -46,8 +46,8 @@
 #' \dontrun{
 #'
 #' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'   search(collections = "CB4_64_16D_STK") %>%
-#'   ext_query("bdc:tile" == "022024") %>%
+#'   stac_search(collections = "CB4_64_16D_STK") %>%
+#'   extension_query("bdc:tile" == "022024") %>%
 #'   post_request()
 #'
 #' }
