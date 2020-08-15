@@ -44,9 +44,12 @@
 #'
 #' @examples
 #' \dontrun{
-#' stac_search(url = "https://sat-api-dev.developmentseed.org",
-#'             collections = "landsat-8-l1") %>%
-#'      get_request()
+#'
+#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'   search(collections = "CB4_64_16D_STK") %>%
+#'   ext_query("bdc:tile" == "022024") %>%
+#'   post_request()
+#'
 #' }
 #'
 #' @export
@@ -56,14 +59,14 @@ extension_query <- function(s, ...) {
   .check_obj(s, "stac")
 
   # check mutator
-  .check_mutator(s, c("search", "query"))
+  .check_mutator(s, c("search", "ext_query"))
 
   params <- list()
 
   dots <- substitute(list(...))[-1]
   tryCatch({
-    ops <- lapply(dots, function(x) op <- as.character(x[[1]]))
-    keys <- lapply(dots, function(x) res <- as.character(x[[2]]))
+    ops <- lapply(dots, function(x) as.character(x[[1]]))
+    keys <- lapply(dots, function(x) as.character(x[[2]]))
     values <- lapply(dots, function(x) eval(x[[3]]))
   }, error = function(e) {
 
@@ -107,7 +110,7 @@ extension_query <- function(s, ...) {
                             endpoint = "/stac/search",
                             params = params,
                             expected_responses = expected,
-                            mutator = "search"),
+                            mutator = "ext_query"),
                        class = "stac")
 
   content <- build_stac(content, s)
