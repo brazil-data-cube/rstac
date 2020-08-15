@@ -14,8 +14,9 @@
 #'     Collection object
 #' }
 #'
-#' @param url       a \code{character} informing the base url of a
-#' STAC web service.
+#' @param s             a \code{stac} object expressing a STAC search criteria
+#' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
+#' or \code{stac_items} functions.
 #'
 #' @param collection_id a \code{character} collection id to be retrieved.
 #'
@@ -41,10 +42,15 @@
 #' }
 #'
 #' @export
-stac_collections <- function(url, collection_id) {
+collections <- function(s, collection_id) {
 
-  # check url parameter
-  .check_obj(url, "character")
+  # check s parameter
+  .check_obj(s, "stac")
+
+  # check mutator
+  .check_mutator(s, c("stac", "collections"))
+
+  params <- list()
 
   if (missing(collection_id)) {
 
@@ -65,6 +71,7 @@ stac_collections <- function(url, collection_id) {
                                             "stac_catalog"))))
 
   } else {
+    params[["collection_id"]] <- collection_id[[1]]
     endpoint <- paste("/collections", collection_id[[1]], sep = "/")
 
     # TODO: add these code excerpts bellow in different file
@@ -82,9 +89,14 @@ stac_collections <- function(url, collection_id) {
                                             "stac_collection"))))
   }
 
-  content <- structure(list(url = .make_url(url, endpoint = endpoint),
-                            params = list(),
-                            expected_responses = expected),
+  content <- structure(list(url = s$url,
+                            endpoint = endpoint,
+                            params = params,
+                            expected_responses = expected,
+                            mutator = "collections"),
                        class = "stac")
+
+  content <- build_stac(content, s)
+
   return(content)
 }

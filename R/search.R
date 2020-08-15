@@ -13,8 +13,9 @@
 #' is a \code{stac_items} object, a regular R \code{list} representing a STAC
 #' ItemCollection.
 #'
-#' @param url         A \code{character} informing the base url of a STAC web
-#'   service or any \code{stac} object containing \code{request} property.
+#' @param s             a \code{stac} object expressing a STAC search criteria
+#' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
+#' or \code{stac_items} functions.
 #'
 #' @param collections a \code{character} vector of collection IDs to include in
 #'   the search for items. Only items in one of the provided collections will be
@@ -85,11 +86,14 @@
 #' }
 #'
 #' @export
-stac_search <- function(url, collections, ids, bbox, datetime, intersects,
-                        query, limit, ...) {
+search_s <- function(s, collections, ids, bbox, datetime, intersects,
+                        limit, ...) {
 
-  # check url parameter
-  .check_obj(url, "character")
+  # check s parameter
+  .check_obj(s, "stac")
+
+  # check mutator
+  .check_mutator(s, c("stac", "search"))
 
   params <- list()
 
@@ -116,6 +120,13 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
 
     if (!length(bbox) %in% c(4, 6))
       .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
+
+    if (!is.null(s$params[["intersects"]])) {
+      s$params[["intersects"]] <- NULL
+
+      .warning(paste("Parameter `bbox` was informed.",
+                   "The `intersects` parameter will be ignored."))
+    }
     params[["bbox"]] <- bbox
   }
 
@@ -125,13 +136,13 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
     params[["intersects"]] <- intersects
   }
 
-  if (!missing(query)) {
-
-    if (!inherits(query, "stac_query"))
-      .error("Invalid query parameter value.")
-
-    params[["query"]] <- query$query
-  }
+  # if (!missing(query)) {
+  #
+  #   if (!inherits(query, "stac_query"))
+  #     .error("Invalid query parameter value.")
+  #
+  #   params[["query"]] <- query$query
+  # }
 
   if (!missing(limit) && !is.null(limit))
     params[["limit"]] <- limit
@@ -140,16 +151,16 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
     params <- c(params, list(...))
 
   # TODO: follow specification strictly
-  if (!is.null(params[["intersects"]])) {
-    if ("bbox" %in% names(params)) {
+  if (!is.null(params[["intersects"]]) || !is.null(s$params[["intersects"]])) {
+    if ("bbox" %in% names(params) || "bbox" %in% names(s$params)) {
       .warning(paste("Parameter `intersects` was informed.",
                      "The `bbox` parameter will be ignored."))
 
-      params[["bbox"]] <- NULL
+      params[["bbox"]]   <- NULL
+      s$params[["bbox"]] <- NULL
     }
-
     # TODO: add these code excerpts bellow in different file
-    expected <- list("post" =
+    expected <- list("get" = NA, "post" =
                        list(enctypes = c("application/json"),
                             responses =
                               list("200" =
@@ -168,36 +179,39 @@ stac_search <- function(url, collections, ids, bbox, datetime, intersects,
                                      list("application/geo+json" = "stac_items",
                                           "application/json" = "stac_items"))))
   }
-
-
   # TODO: follow specification strictly
-  if (!is.null(params[["query"]])) {
+  # if (!is.null(params[["query"]])) {
+  #
+  #   # TODO: add these code excerpts bellow in different file
+  #   expected <- list("post" =
+  #                      list(enctypes = c("application/json"),
+  #                           responses =
+  #                             list("200" =
+  #                                    list("application/geo+json" = "stac_items",
+  #                                         "application/json" = "stac_items"))))
+  # } else{
+  # expected <- list("get" =
+  #                      list(responses =
+  #                             list("200" =
+  #                                    list("application/geo+json" = "stac_items",
+  #                                         "application/json" = "stac_items"))),
+  #                    "post" =
+  #                      list(enctypes = c("application/json"),
+  #                           responses =
+  #                             list("200" =
+  #                                    list("application/geo+json" = "stac_items",
+  #                                         "application/json" = "stac_items"))))
 
-    # TODO: add these code excerpts bellow in different file
-    expected <- list("post" =
-                       list(enctypes = c("application/json"),
-                            responses =
-                              list("200" =
-                                     list("application/geo+json" = "stac_items",
-                                          "application/json" = "stac_items"))))
-  } else{
-    expected <- list("get" =
-                       list(responses =
-                              list("200" =
-                                     list("application/geo+json" = "stac_items",
-                                          "application/json" = "stac_items"))),
-                     "post" =
-                       list(enctypes = c("application/json"),
-                            responses =
-                              list("200" =
-                                     list("application/geo+json" = "stac_items",
-                                          "application/json" = "stac_items"))))
-  }
 
-  content <- structure(list(url = .make_url(url, endpoint = "/stac/search"),
+  content <- structure(list(url = s$url,
+                            endpoint = "/stac/search",
                             params = params,
-                            expected_responses = expected),
+                            expected_responses = expected,
+                            mutator = "search"),
                        class = "stac")
+
+  content <- build_stac(content, s)
+
   return(content)
 }
 

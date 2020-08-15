@@ -5,9 +5,14 @@
 \alias{post_request}
 \title{STAC functions}
 \usage{
-get_request(s, ..., headers = c())
+get_request(s, ..., headers = character())
 
-post_request(s, ..., enctype = c("json", "multipart", "form"), headers = c())
+post_request(
+  s,
+  ...,
+  enctype = c("json", "multipart", "form"),
+  headers = character()
+)
 }
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria

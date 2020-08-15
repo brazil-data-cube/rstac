@@ -48,6 +48,8 @@
 #' @export
 ext_query <- function(...) {
 
+  #.check_mutator()
+
   dots <- substitute(list(...))[-1]
   tryCatch({
     ops <- lapply(dots, function(x) op <- as.character(x[[1]]))
@@ -85,7 +87,10 @@ ext_query <- function(...) {
   })
   names(entries) <- uniq_keys
 
+  # update_stac <- function(old_stac, new_stac)
+
   query <- structure(list(query = entries),
                      class = "stac_query")
   return(query)
 }
+

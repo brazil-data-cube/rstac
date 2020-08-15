@@ -19,12 +19,9 @@
 #' The endpoint \code{/collections/\{collectionId\}/items} accepts the same
 #' filters parameters of \code{\link{stac_search}} function.
 #'
-#'
-#' @param url         a \code{character} informing the base url of a
-#' STAC web service.
-#'
-#' @param collection_id a \code{character} with a collection id to retrieve
-#' collection details.
+#' @param s           a \code{stac} object expressing a STAC search criteria
+#' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
+#' or \code{stac_items} functions.
 #'
 #' @param item_id     a \code{character} with item id to be fetched.
 #' Only works if the \code{collection_id} is informed. This is equivalent to
@@ -84,40 +81,43 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac_items("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'            collection_id = "MOD13Q1",
-#'            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-#' get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'   collections("MOD13Q1") %>%
+#'   items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+#'   get_request()
 #'
-#' stac_items("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'            collection_id = "MOD13Q1",
-#'            item_id = "MOD13Q1.A2019241.h13v09.006.2019262164754") %>%
-#' get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'   collections("MOD13Q1") %>%
+#'   items("MOD13Q1.A2019241.h13v09.006.2019262164754") %>%
+#'   get_request()
 #' }
 #'
 #' @export
-stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
-                       ...) {
+items <- function(s, item_id, datetime, bbox, limit, ...) {
 
-  # check url parameter
-  .check_obj(url, "character")
+  # check s parameter
+  .check_obj(s, "stac")
 
-  if (missing(collection_id))
-    stop(sprintf("Not informed `collection_id` parameter."), call. = FALSE)
+  # check mutator
+  .check_mutator(s, c("collections", "items"))
+
+
+  if (is.null(s$params[["collection_id"]]) && s$mutator == "collections")
+    .error("Not informed `collection_id` parameter.")
 
   params <- list()
 
   if (!missing(datetime)) {
 
     .verify_datetime(datetime)
-    params[["datetime"]] <- .query_encode(datetime)
+    params[["datetime"]] <- datetime
   }
 
   if (!missing(bbox)) {
 
     if (!length(bbox) %in% c(4, 6))
       .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
-    params[["bbox"]] <- .query_encode(bbox)
+    params[["bbox"]] <- bbox
   }
 
   if (!missing(limit) && !is.null(limit))
@@ -129,7 +129,8 @@ stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
   if (missing(item_id)) {
 
     # TODO: follow specification strictly
-    endpoint <- paste("/collections", collection_id, "items", sep = "/")
+    endpoint <- paste("/collections", s$params[["collection_id"]], "items",
+                      sep = "/")
 
     # TODO: add these code excerpts bellow in different file
     expected <- list("get" =
@@ -147,8 +148,9 @@ stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
   } else {
 
     # TODO: follow specification strictly
-    endpoint <- paste("/collections", collection_id, "items",
-                      item_id, sep = "/")
+
+   endpoint <- paste("/collections", s$params[["collection_id"]], "items",
+                        item_id, sep = "/")
 
     # TODO: add these code excerpts bellow in different file
     # TODO: this could be returned by the STAC service
@@ -167,10 +169,17 @@ stac_items <- function(url, collection_id, item_id, datetime, bbox, limit,
     params <- list()
   }
 
-  content <- structure(list(url = .make_url(url, endpoint = endpoint),
+  s$params[["collection_id"]] <- NULL
+
+  content <- structure(list(url = s$url,
+                            endpoint = ifelse(s$mutator == "collections",
+                                              endpoint, s$endpoint),
                             params = params,
-                            expected_responses = expected),
+                            expected_responses = expected,
+                            mutator = "items"),
                        class = "stac")
+
+  content <- build_stac(content, s)
+
   return(content)
 }
-

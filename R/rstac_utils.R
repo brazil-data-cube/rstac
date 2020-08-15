@@ -145,6 +145,7 @@
 #' @noRd
 .check_obj <- function(obj, expected) {
 
+  #browser()
   obj_name <- as.character(substitute(obj))
 
   if (missing(obj))
@@ -153,6 +154,14 @@
   if (!inherits(obj, expected))
     .error("Invalid %s value in `%s` param.",
            paste0("`", expected, "`", collapse = " or "), obj_name)
+}
+
+#' TODO: documenting
+.check_mutator <- function(obj, expected) {
+
+  if (!any(obj$mutator %in% expected))
+    .error("Expecting values from %s function(s).",
+           paste0("`", expected, "`", collapse = " or "))
 }
 
 #' @title STAC utils
@@ -288,15 +297,11 @@
   return(params)
 }
 
-.params_merge <- function(x, y) {
 
-  n <- names(y)
-  has_name <- rep(FALSE, length(y))
-  if (!is.null(n)) {
-    has_name <- !is.na(n) & n != ""
-    x[n[has_name]] <- y[n[has_name]]
-  }
-  x <- c(x, y[!has_name])
-  return(x)
+subs <- function(x, y) {
+
+  if (length(x) > 0)
+    return(x)
+  return(y)
+
 }
-

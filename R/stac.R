@@ -44,10 +44,20 @@ stac <- function(url) {
                             list("200" =
                                    list("application/json" = "stac_catalog"))))
 
-   content <- structure(list(url = .make_url(url, endpoint = "/stac"),
+   content <- structure(list(url = url,
+                             endpoint = "/stac",
                              params = list(),
-                             expected_responses = expected),
+                             expected_responses = expected,
+                             mutator = "stac"),
                         class = "stac")
 
   return(content)
+}
+
+build_stac <- function(new_stac, old_stac) {
+
+  new_stac <- utils::modifyList(as.list(old_stac), as.list(new_stac))
+  class(new_stac) <- "stac"
+
+  return(new_stac)
 }

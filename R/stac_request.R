@@ -37,11 +37,13 @@ get_request <- function(s, ..., headers = character()) {
   # check the object class
   .check_obj(s, "stac")
 
-  if (!"get" %in% names(s$expected_responses))
+  if (!"get" %in% names(s$expected_responses) ||
+      is.na(s$expected_responses[["get"]]))
     .error("HTTP GET method is invalid for this request.")
 
   tryCatch({
-    res <- httr::GET(url =  .make_url(s$url, params = s$params),
+    res <- httr::GET(url = .make_url(s$url, endpoint = s$endpoint,
+                                     params = s$params),
                      httr::add_headers(headers), ...)
   },
   error = function(e) {
@@ -99,7 +101,8 @@ post_request <- function(s, ..., enctype =  c("json", "multipart", "form"),
 
   # check if the provided expected response is valid for this endpoint...
   # ...check for method
-  if (!"post" %in% names(s$expected_responses))
+  if (!"post" %in% names(s$expected_responses) ||
+      is.na(s$expected_responses[["post"]]))
     .error("HTTP POST method is invalid for this request.")
 
   # ...check for body request content-type (enctype)
@@ -117,8 +120,8 @@ post_request <- function(s, ..., enctype =  c("json", "multipart", "form"),
 
   # call the requisition subroutine
   tryCatch({
-    res <- httr::POST(url =  s$url, body = s$params,
-                      encode = enctype,
+    res <- httr::POST(url = .make_url(s$url, endpoint = s$endpoint),
+                      body = s$params, encode = enctype,
                       httr::add_headers(headers), ...)
   },
   error = function(e) {
