@@ -74,19 +74,18 @@
 #' @examples
 #' \dontrun{
 #' # GET request
-#' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1",
-#'             limit = 1) %>%
-#'      get_request()
+#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'   stac_search(collections = "MOD13Q1", limit = 1) %>%
+#'   get_request()
 #'
 #' # POST request
-#' stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1") %>%
-#'      post_request()
+#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'   stac_search(collections = "MOD13Q1") %>%
+#'   post_request()
 #' }
 #'
 #' @export
-search_s <- function(s, collections, ids, bbox, datetime, intersects,
+stac_search <- function(s, collections, ids, bbox, datetime, intersects,
                         limit, ...) {
 
   # check s parameter
