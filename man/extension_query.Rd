@@ -48,9 +48,12 @@ operator.
 }
 \examples{
 \dontrun{
-stac_search(url = "https://sat-api-dev.developmentseed.org",
-            collections = "landsat-8-l1") \%>\%
-     get_request()
+
+stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
+  search(collections = "CB4_64_16D_STK") \%>\%
+  ext_query("bdc:tile" == "022024") \%>\%
+  post_request()
+
 }
 
 }
