@@ -49,7 +49,6 @@
 #'   stac_search(collections = "CB4_64_16D_STK") %>%
 #'   extension_query("bdc:tile" == "022024") %>%
 #'   post_request()
-#'
 #' }
 #'
 #' @export

@@ -72,7 +72,9 @@ collections <- function(s, collection_id) {
                                             "stac_catalog"))))
 
   } else {
+
     params[["collection_id"]] <- collection_id[[1]]
+
     endpoint <- paste("/collections", collection_id[[1]], sep = "/")
 
     # TODO: add these code excerpts bellow in different file
