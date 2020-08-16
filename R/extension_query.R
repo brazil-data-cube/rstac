@@ -104,14 +104,12 @@ extension_query <- function(s, ...) {
                                    list("application/geo+json" = "stac_items",
                                         "application/json" = "stac_items"))))
 
-  content <- structure(list(url = s$url,
-                            endpoint = "/stac/search",
-                            params = params,
-                            expected_responses = expected,
-                            mutator = "ext_query"),
-                       class = "stac")
-
-  content <- build_stac(content, s)
+  content <- build_stac(url = s$url,
+                        endpoint = "/stac/search",
+                        params = params,
+                        expected_responses = expected,
+                        mutator = "ext_query",
+                        old_stac = s)
 
   return(content)
 }

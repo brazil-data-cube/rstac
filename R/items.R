@@ -129,8 +129,10 @@ items <- function(s, item_id, datetime, bbox, limit, ...) {
   if (missing(item_id)) {
 
     # TODO: follow specification strictly
-    endpoint <- paste("/collections", s$params[["collection_id"]], "items",
-                      sep = "/")
+    endpoint <- s$endpoint
+    if (s$mutator == "collections")
+      endpoint <- paste("/collections", s$params[["collection_id"]], "items",
+                        sep = "/")
 
     # TODO: add these code excerpts bellow in different file
     expected <- list("get" =
@@ -148,8 +150,9 @@ items <- function(s, item_id, datetime, bbox, limit, ...) {
   } else {
 
     # TODO: follow specification strictly
-
-   endpoint <- paste("/collections", s$params[["collection_id"]], "items",
+    endpoint <- s$endpoint
+    if (s$mutator == "collections")
+      endpoint <- paste("/collections", s$params[["collection_id"]], "items",
                         item_id, sep = "/")
 
     # TODO: add these code excerpts bellow in different file
@@ -171,15 +174,29 @@ items <- function(s, item_id, datetime, bbox, limit, ...) {
 
   s$params[["collection_id"]] <- NULL
 
-  content <- structure(list(url = s$url,
-                            endpoint = ifelse(s$mutator == "collections",
-                                              endpoint, s$endpoint),
-                            params = params,
-                            expected_responses = expected,
-                            mutator = "items"),
-                       class = "stac")
-
-  content <- build_stac(content, s)
+  content <- build_stac(url = s$url,
+                        endpoint = endpoint,
+                        params = params,
+                        expected_responses = expected,
+                        mutator = "items",
+                        old_stac = s)
 
   return(content)
+}
+
+#' @export
+`[[.stac_items` <- function(x, i){
+
+  result <- x$features[[i]]
+  class(result) <- "stac_item"
+
+  return(result)
+}
+
+#' @export
+`[.stac_items` <- function(x, i){
+
+  x$features <- x$features[i]
+
+  return(x)
 }

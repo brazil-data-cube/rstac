@@ -84,7 +84,7 @@ testthat::test_that("stac search object", {
 
     # expect http method
     testthat::expect_true(
-      object = is.na(stac_search_obj$expected_responses$get))
+      object = is.null(stac_search_obj$expected_responses[["get"]]))
 
     # expect class
     testthat::expect_equal(

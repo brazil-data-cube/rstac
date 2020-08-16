@@ -92,14 +92,11 @@ collections <- function(s, collection_id) {
                                             "stac_collection"))))
   }
 
-  content <- structure(list(url = s$url,
-                            endpoint = endpoint,
-                            params = params,
-                            expected_responses = expected,
-                            mutator = "collections"),
-                       class = "stac")
-
-  content <- build_stac(content, s)
-
+  content <- build_stac(url = s$url,
+                        endpoint = endpoint,
+                        params = params,
+                        expected_responses = expected,
+                        mutator = "collections",
+                        old_stac = s)
   return(content)
 }

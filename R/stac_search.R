@@ -121,7 +121,7 @@ stac_search <- function(s, collections, ids, bbox, datetime, intersects,
       s$params[["intersects"]] <- NULL
 
       .warning(paste("Parameter `bbox` was informed.",
-                   "The `intersects` parameter will be ignored."))
+                     "The `intersects` parameter will be ignored."))
     }
     params[["bbox"]] <- bbox
   }
@@ -168,31 +168,12 @@ stac_search <- function(s, collections, ids, bbox, datetime, intersects,
                                           "application/json" = "stac_items"))))
   }
 
-  content <- structure(list(url = s$url,
-                            endpoint = "/stac/search",
-                            params = params,
-                            expected_responses = expected,
-                            mutator = "search"),
-                       class = "stac")
-
-  content <- build_stac(content, s)
+  content <- build_stac(url = s$url,
+                        endpoint = "/stac/search",
+                        params = params,
+                        expected_responses = expected,
+                        mutator = "search",
+                        old_stac = s)
 
   return(content)
-}
-
-#' @export
-`[[.stac_items` <- function(x, i){
-
-  result <- x$features[[i]]
-  class(result) <- "stac_item"
-
-  return(result)
-}
-
-#' @export
-`[.stac_items` <- function(x, i){
-
-  x$features <- x$features[i]
-
-  return(x)
 }
