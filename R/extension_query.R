@@ -97,8 +97,7 @@ extension_query <- function(s, ...) {
   params[["query"]] <- entries
 
   # TODO: add these code excerpts bellow in different file
-  expected <- list("get" = NA,
-                   "post" =
+  expected <- list("post" =
                      list(enctypes = c("application/json"),
                           responses =
                             list("200" =

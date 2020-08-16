@@ -148,7 +148,7 @@ stac_search <- function(s, collections, ids, bbox, datetime, intersects,
       s$params[["bbox"]] <- NULL
     }
     # TODO: add these code excerpts bellow in different file
-    expected <- list("get" = NA, "post" =
+    expected <- list("post" =
                        list(enctypes = c("application/json"),
                             responses =
                               list("200" =
