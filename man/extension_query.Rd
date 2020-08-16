@@ -14,12 +14,12 @@ or \code{stac_items} functions.}
 \item{...}{entries with format \code{<field> <operator> <value>}.}
 }
 \value{
-A \code{stac_query} object containing all request parameters to be
+A \code{stac} object containing all request parameters to be
 passed to \code{stac_search} function.
 }
 \description{
-The \code{ext_query} function implements query API extension (v0.8.0) that
-can be used in \code{/stac/search} endpoint using HTTP POST method
+The \code{extension_query} function implements query API extension (v0.8.0)
+that can be used in \code{/stac/search} endpoint using HTTP POST method
 (\code{\link{post_request}}). It allows that additional fields and
 operators can be passed to \code{\link{stac_search}} function (see examples).
 Each filter entry is an expression formed by
@@ -28,7 +28,7 @@ a valid items' property. Supported \code{<fields>} depends
 on STAC API service implementation. The users must rely on service providers'
 documentation to know which properties can be passed to do the search.
 
-The \code{ext_query} function accepts the following \code{<operators>}
+The \code{extension_query} function accepts the following \code{<operators>}
 \itemize{
 \item \code{==} corresponds to '\code{eq}'
 \item \code{!=} corresponds to '\code{neq}'

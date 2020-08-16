@@ -8,8 +8,8 @@
 #' requests to STAC web services, retrieves, and parse the data.
 #'
 #' @param s          a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-#' or \code{stac_items} functions.
+#' provided by \code{stac}, \code{stac_search}, \code{collections},
+#' or \code{items} functions.
 #'
 #' @param ...        other params to be passed to \link[httr]{GET} method
 #'
@@ -17,8 +17,8 @@
 #' HTTP request headers.
 #'
 #' @seealso
-#' \code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
-#' \code{\link{stac_items}}
+#' \code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
+#' \code{\link{items}}
 #'
 #' @return
 #' Either a \code{stac_catalog}, \code{stac_collection}, \code{stac_items},
@@ -97,7 +97,6 @@ post_request <- function(s, ...,
                                      "multipart/form-data",
                                      "application/x-www-form-urlencoded"),
                          headers = character()) {
-
   # check the object class
   .check_obj(s, "stac")
 

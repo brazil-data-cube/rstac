@@ -8,8 +8,8 @@ stac_search(s, collections, ids, bbox, datetime, intersects, limit, ...)
 }
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-or \code{stac_items} functions.}
+provided by \code{stac}, \code{stac_search}, \code{collections},
+or \code{items} functions.}
 
 \item{collections}{a \code{character} vector of collection IDs to include in
 the search for items. Only items in one of the provided collections will be
@@ -55,9 +55,6 @@ the provided polygon.}
 to return. If not informed it defaults to the service implementation.}
 
 \item{...}{any additional non standard filter parameter.}
-
-\item{query}{a \code{stac_query} object representing extra search
-fields. This parameter can be obtained by \code{\link{ext_query}} function.}
 }
 \value{
 A \code{stac} object containing all request parameters to be provided
@@ -72,7 +69,7 @@ The \code{stac_search} function implements \code{/stac/search} API endpoint
 (v0.8.0). It prepares query parameters used in search API request, a
 \code{stac} object with all filter parameters to be provided to
 \code{stac_request}. The GeoJSON content returned by the \code{stac_request}
-is a \code{stac_items} object, a regular R \code{list} representing a STAC
+is a \code{items} object, a regular R \code{list} representing a STAC
 ItemCollection.
 }
 \examples{
@@ -90,7 +87,7 @@ stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 
 }
 \seealso{
-\code{\link{stac}}, \code{\link{ext_query}},
+\code{\link{stac}}, \code{\link{extension_query}},
 \code{\link{get_request}}, \code{\link{post_request}}
 }
 \author{

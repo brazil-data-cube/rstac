@@ -156,7 +156,15 @@
            paste0("`", expected, "`", collapse = " or "), obj_name)
 }
 
-#' TODO: documenting
+#' @title helper function
+#'
+#' @param obj      a \code{object} to compare.
+#'
+#' @param expected a \code{object} with the expected mutator for comparison
+#'
+#' @return An error if the provided object class is not in expected parameter.
+#'
+#' @noRd
 .check_mutator <- function(obj, expected) {
 
   if (!any(obj$mutator %in% expected))

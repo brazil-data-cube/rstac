@@ -10,12 +10,12 @@
 #' (v0.8.0). It prepares query parameters used in search API request, a
 #' \code{stac} object with all filter parameters to be provided to
 #' \code{stac_request}. The GeoJSON content returned by the \code{stac_request}
-#' is a \code{stac_items} object, a regular R \code{list} representing a STAC
+#' is a \code{items} object, a regular R \code{list} representing a STAC
 #' ItemCollection.
 #'
 #' @param s             a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-#' or \code{stac_items} functions.
+#' provided by \code{stac}, \code{stac_search}, \code{collections},
+#' or \code{items} functions.
 #'
 #' @param collections a \code{character} vector of collection IDs to include in
 #' the search for items. Only items in one of the provided collections will be
@@ -57,15 +57,12 @@
 #' objects as specified in RFC 7946. Only returns items that intersect with
 #' the provided polygon.
 #'
-#' @param query       a \code{stac_query} object representing extra search
-#' fields. This parameter can be obtained by \code{\link{ext_query}} function.
-#'
 #' @param limit       an \code{integer} defining the maximum number of results
 #' to return. If not informed it defaults to the service implementation.
 #'
 #' @param ...         any additional non standard filter parameter.
 #'
-#' @seealso \code{\link{stac}}, \code{\link{ext_query}},
+#' @seealso \code{\link{stac}}, \code{\link{extension_query}},
 #' \code{\link{get_request}}, \code{\link{post_request}}
 #'
 #' @return A \code{stac} object containing all request parameters to be provided

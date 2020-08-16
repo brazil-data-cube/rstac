@@ -8,8 +8,8 @@ items(s, item_id, datetime, bbox, limit, ...)
 }
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-or \code{stac_items} functions.}
+provided by \code{stac}, \code{stac_search}, \code{collections},
+or \code{items} functions.}
 
 \item{item_id}{a \code{character} with item id to be fetched.
 Only works if the \code{collection_id} is informed. This is equivalent to
@@ -63,7 +63,7 @@ A \code{stac} object containing all request parameters to be
 provided to \code{stac_request}.
 }
 \description{
-The \code{stac_items} function implements WFS3
+The \code{items} function implements WFS3
 \code{/collections/\{collectionId\}/items}, and
 \code{/collections/\{collectionId\}/items/\{itemId\}}
 endpoints (v0.8.0).
@@ -96,7 +96,7 @@ stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 }
 \seealso{
 \code{\link{get_request}},  \code{\link{post_request}},
- \code{\link{stac_collections}}
+ \code{\link{collections}}
 }
 \author{
 Rolf Simoes

@@ -26,9 +26,9 @@ access (e.g. assets) and metadata organization.
 
 \itemize{
   \item \code{\link{stac}}: implements STAC \code{/stac} endpoint.
-  \item \code{\link{stac_collections}}: implements \code{/collections}
+  \item \code{\link{collections}}: implements \code{/collections}
     and \code{/collections/\{collectionId\}} WFS3 endpoints.
-  \item \code{\link{stac_items}}: implements
+  \item \code{\link{items}}: implements
     \code{/collections/\{collectionId\}/items} and
     \code{/collections/\{collectionId\}/items/\{itemId\}} WFS3 endpoints.
   \item \code{\link{stac_search}}: implements STAC \code{/stac/search}
@@ -54,9 +54,9 @@ access (e.g. assets) and metadata organization.
 
 \section{Data types}{
 
-The package implements two S3 classes, \code{stac_items}, and
-\code{stac_collection}. These classes are regular lists representing
-the corresponding JSON STAC objects.
+The package implements the follow S3 classes: \code{stac_items},
+ \code{stac_item}, \code{stac_catalog} and \code{stac_collection}. These
+ classes are regular lists representing the corresponding JSON STAC objects.
 }
 
 \author{

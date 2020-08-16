@@ -7,9 +7,9 @@
 #' @description The print functions cover all objects in the rstac package:
 #' \itemize{
 #'   \item \code{\link{stac}}: implements STAC \code{/stac} endpoint.
-#'   \item \code{\link{stac_collections}}: implements \code{/collections}
+#'   \item \code{\link{collections}}: implements \code{/collections}
 #'     and \code{/collections/\{collectionId\}} WFS3 endpoints.
-#'   \item \code{\link{stac_items}}: implements
+#'   \item \code{\link{items}}: implements
 #'     \code{/collections/\{collectionId\}/items} and
 #'     \code{/collections/\{collectionId\}/items/\{itemId\}} WFS3 endpoints.
 #'  }
@@ -22,8 +22,8 @@
 #'  generic implementation for its objects. For console output control, you have
 #'  the option to determine how many items you want to see through the `n` in
 #'  `print` objects parameters, the following objects have the `n` parameter:
-#'  * \code{\link{stac_items}}
-#'  * \code{\link{stac_collections}}
+#'  * \code{\link{items}}
+#'  * \code{\link{collections}}
 #'  * \code{\link{stac}}
 #'
 #' @param x object STAC to print.
@@ -35,30 +35,29 @@
 #' @param ... other parameters passed in the functions.
 #'
 #' @seealso
-#' \code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
-#' \code{\link{stac_items}}
+#' \code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
+#' \code{\link{items}}
 #'
 #' @examples
 #' \dontrun{
 #'
 #' # stac_items object
-#' stac_items <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-#'             collections = "MOD13Q1",
-#'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
-#'             limit = 15) %>%
-#'      get_request()
+#' stac_items <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'  search(collections = "MOD13Q1",
+#'         bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
+#'         limit = 15) %>% get_request()
 #'
 #' print(stac_items, n = 10)
 #'
 #' # stac_catalog object
-#' stac_catalog <-
-#' stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'     get_request()
+#' stac_catalog <-  stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'  collections() %>%
+#'  get_request()
 #'
 #' print(stac_catalog, n = 5)
 #'
 #' # stac object
-#' obj_stac <- stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+#' obj_stac <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
 #'
 #' print(obj_stac)
 #' }

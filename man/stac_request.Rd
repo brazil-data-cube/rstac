@@ -17,8 +17,8 @@ post_request(
 }
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-or \code{stac_items} functions.}
+provided by \code{stac}, \code{stac_search}, \code{collections},
+or \code{items} functions.}
 
 \item{...}{other params to be passed to \link[httr]{POST} method}
 
@@ -58,8 +58,8 @@ stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
 
 }
 \seealso{
-\code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
-\code{\link{stac_items}}
+\code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
+\code{\link{items}}
 }
 \author{
 Rolf Simoes and Felipe Carvalho
