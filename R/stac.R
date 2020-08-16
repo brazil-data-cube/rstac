@@ -54,10 +54,18 @@ stac <- function(url) {
   return(content)
 }
 
-build_stac <- function(new_stac, old_stac) {
+build_stac <- function(url, endpoint, params, expected_responses,
+                       mutator, old_stac) {
 
-  new_stac <- utils::modifyList(as.list(old_stac), as.list(new_stac))
-  class(new_stac) <- "stac"
+  old_params <- list()
+  if (!missing(old_stac) && inherits(old_stac, "stac"))
+    old_params <- old_stac$params
 
+  new_stac <- structure(list(url = url,
+                             endpoint = endpoint,
+                             params = utils::modifyList(old_params, params),
+                             expected_responses = expected_responses,
+                             mutator = mutator),
+                        class = "stac")
   return(new_stac)
 }
