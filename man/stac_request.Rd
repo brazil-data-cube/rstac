@@ -10,7 +10,8 @@ get_request(s, ..., headers = character())
 post_request(
   s,
   ...,
-  enctype = c("json", "multipart", "form"),
+  enctype = c("application/json", "multipart/form-data",
+    "application/x-www-form-urlencoded"),
   headers = character()
 )
 }
