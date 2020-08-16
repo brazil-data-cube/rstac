@@ -37,8 +37,7 @@ get_request <- function(s, ..., headers = character()) {
   # check the object class
   .check_obj(s, "stac")
 
-  if (!"get" %in% names(s$expected_responses) ||
-      is.na(s$expected_responses[["get"]]))
+  if (!"get" %in% names(s$expected_responses))
     .error("HTTP GET method is invalid for this request.")
 
   tryCatch({
@@ -93,7 +92,10 @@ get_request <- function(s, ..., headers = character()) {
 #' }
 #'
 #' @export
-post_request <- function(s, ..., enctype =  c("json", "multipart", "form"),
+post_request <- function(s, ...,
+                         enctype = c("application/json",
+                                     "multipart/form-data",
+                                     "application/x-www-form-urlencoded"),
                          headers = character()) {
 
   # check the object class
@@ -101,27 +103,26 @@ post_request <- function(s, ..., enctype =  c("json", "multipart", "form"),
 
   # check if the provided expected response is valid for this endpoint...
   # ...check for method
-  if (!"post" %in% names(s$expected_responses) ||
-      is.na(s$expected_responses[["post"]]))
+  if (!"post" %in% names(s$expected_responses))
     .error("HTTP POST method is invalid for this request.")
 
-  # ...check for body request content-type (enctype)
-  friendly_enctype <-
-    list("application/json" = "json",
-         "application/x-www-form-urlencoded" = "form",
-         "multipart/form-data" = "multipart")
+  # ...check for body request content-type
   enctype <- enctype[[1]]
   if ((length(s$expected_responses$post$enctypes) > 0) &&
-      !enctype %in% friendly_enctype[s$expected_responses$post$enctypes])
+      !enctype %in% s$expected_responses$post$enctypes)
     .error(paste("The body request enctype '%s' is invalid",
                  "for this operation. Allowed enctypes are %s."),
            enctype, paste0("'", s$expected_responses$post$enctypes, "'",
                            collapse = " or "))
 
   # call the requisition subroutine
+  httr_encode <-
+    list("application/json" = "json",
+         "multipart/form-data" = "multipart",
+         "application/x-www-form-urlencoded" = "form")
   tryCatch({
     res <- httr::POST(url = .make_url(s$url, endpoint = s$endpoint),
-                      body = s$params, encode = enctype,
+                      body = s$params, encode = httr_encode[[enctype]],
                       httr::add_headers(headers), ...)
   },
   error = function(e) {
