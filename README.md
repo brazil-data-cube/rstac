@@ -56,13 +56,13 @@ s_obj %>% get_request()
 
 ```R
 # Create a stac_items object and return STAC items
-items <- stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
+it_obj <- stac_search(s_obj,
                     collections = "MOD13Q1",
                     bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
         get_request()
         
 # Create a stac object and returns a list of STAC Collections
-col <- stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+col <- collections(s_obj) %>%
        get_request()
 
 ```
@@ -70,14 +70,11 @@ col <- stac_collections("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
 ### Items functions
 
 ```R
-# Pagination of items in the `stac_items` object
-items %>% items_fetch()
-
 # Count how many items matched the search criteria
-items %>% items_matched()
+it_obj %>% items_matched()
 
 # Count how many items are in the `stac_items` object
-items %>% items_length()
+it_obj %>% items_length()
 ```
 
 ### Download assets
@@ -85,5 +82,5 @@ items %>% items_length()
 ```R
 # Downloads the assets provided by the STAC API
 download_items <- 
-  items %>% assets_download(assets_name = c("thumbnail"))
+  it_obj %>% assets_download(assets_name = c("thumbnail"))
 ```
