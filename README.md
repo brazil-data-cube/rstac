@@ -24,7 +24,7 @@ In this version, we implemented STAC endpoints (`'/stac'`, `'/stac/search'`) as
 well as WFS3 endpoints (`'/collections'`, `'/collections/{collectionId}'`, 
 `'/collections/{collectionId}/items'`, and 
 `'/collections/{collectionId}/items/{itemId}'`). You can get a detailed 
-explanation about each STAC (v0.8.0) endpoint at [STAC spec GitHub](https://github.com/radiantearth/stac-spec/tree/v0.8.0).
+explanation about each STAC (v0.8.0) endpoint at [STAC spec GitHub](https://github.com/radiantearth/stac-spec/tree/v0.8.1).
 
 Let us begin our example by loading some libraries and creating a `stac` object:
 ```R
