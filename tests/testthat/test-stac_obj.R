@@ -76,7 +76,7 @@ testthat::test_that("stac search object", {
       rstac::stac_search(datetime = "2018-01-01/..") %>%
       extension_query("bdc:tile" == "022024")
 
-    # expected mutator
+    # expected class
     testthat::expect_equal(
       object   =  class(stac_search_obj),
       expected = c("ext_query", "stac")

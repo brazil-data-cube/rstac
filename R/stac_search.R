@@ -134,28 +134,28 @@ stac_search <- function(s, collections, ids, bbox, datetime, intersects,
   content <- build_stac(url = s$url,
                         endpoint = "/stac/search",
                         params = params,
-                        mutator = "search",
+                        subclass = "search",
                         base_stac = s)
 
   return(content)
 }
 
 
-params_get_mutator.search <- function(s) {
+params_get_request.search <- function(s) {
 
   if (!is.null(s$params[["intersects"]]))
     .error(paste0("Search param `intersects` is not supported by HTTP GET",
                   "method. Try use `post_request` method instead."))
 
-  # process stac mutator
-  params <- params_get_mutator.stac(s)
+  # process stac params
+  params <- params_get_request.stac(s)
   return(params)
 }
 
-params_post_mutator.search <- function(s, enctype) {
+params_post_request.search <- function(s, enctype) {
 
-  # process stac mutator
-  params <- params_post_mutator.stac(s, enctype = enctype)
+  # process stac params
+  params <- params_post_request.stac(s, enctype = enctype)
   return(params)
 }
 

@@ -62,29 +62,29 @@ collections <- function(s, collection_id) {
   content <- build_stac(url = s$url,
                         endpoint = endpoint,
                         params = params,
-                        mutator = "collections",
+                        subclass = "collections",
                         base_stac = s)
   return(content)
 }
 
-params_get_mutator.collections <- function(s) {
+params_get_request.collections <- function(s) {
 
   # ignore 'collection_id' param
   s$params[["collection_id"]] <- NULL
 
-  # process stac mutator
-  params <- params_get_mutator.stac(s)
+  # process stac params
+  params <- params_get_request.stac(s)
 
   return(params)
 }
 
-params_post_mutator.collections <- function(s, enctype) {
+params_post_request.collections <- function(s, enctype) {
 
   # ignore 'collection_id' param
   s$params[["collection_id"]] <- NULL
 
-  # process stac mutator
-  params <- params_post_mutator.stac(s, enctype = enctype)
+  # process stac params
+  params <- params_post_request.stac(s, enctype = enctype)
 
   return(params)
 }

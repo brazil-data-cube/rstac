@@ -100,22 +100,23 @@ extension_query <- function(s, ...) {
   content <- build_stac(url = s$url,
                         endpoint = "/stac/search",
                         params = params,
-                        mutator = "ext_query",
+                        subclass = "ext_query",
                         base_stac = s)
 
   return(content)
 }
 
 
-params_get_mutator.ext_query <- function(s) {
+params_get_request.ext_query <- function(s) {
 
   .error(paste0("STAC API query extension is not supported by HTTP GET method.",
                 "Try use `post_request` method instead."))
 }
 
-params_post_mutator.ext_query <- function(s, enctype) {
+params_post_request.ext_query <- function(s, enctype) {
 
-  params <- params_post_mutator.search(s, enctype = enctype)
+  # process search params
+  params <- params_post_request.search(s, enctype = enctype)
 
   return(params)
 }

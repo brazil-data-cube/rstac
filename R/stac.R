@@ -15,7 +15,7 @@
 #' \code{\link{post_request}}
 #'
 #' @return
-#' A \code{stac} object with subclass \code{mutator} containing all request
+#' A \code{stac} object with subclass \code{subclass} containing all request
 #' parameters to be provided to API service.
 #'
 #' @examples
@@ -39,7 +39,7 @@ stac <- function(url) {
   return(content)
 }
 
-build_stac <- function(url, endpoint, params, mutator, base_stac) {
+build_stac <- function(url, endpoint, params, subclass, base_stac) {
 
   base_params <- list()
   if (!missing(base_stac)) {
@@ -48,22 +48,22 @@ build_stac <- function(url, endpoint, params, mutator, base_stac) {
     base_params <- base_stac$params
   }
 
-  if (missing(mutator))
-    mutator <- character()
+  if (missing(subclass))
+    subclass <- character()
 
   new_stac <- structure(list(url = url,
                              endpoint = endpoint,
                              params = utils::modifyList(base_params, params)),
-                        class = c(mutator, "stac"))
+                        class = c(subclass, "stac"))
   return(new_stac)
 }
 
-params_get_mutator.stac <- function(s) {
+params_get_request.stac <- function(s) {
 
   return(s$params)
 }
 
-params_post_mutator.stac <- function(s, enctype) {
+params_post_request.stac <- function(s, enctype) {
 
   return(s$params)
 }
