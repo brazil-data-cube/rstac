@@ -11,28 +11,26 @@ stac(url)
 STAC web service.}
 }
 \value{
-A \code{stac} object containing all request parameters to be
-provided to \code{stac_request}.
+A \code{stac} object with subclass \code{mutator} containing all request
+parameters to be provided to API service.
 }
 \description{
-This function implements \code{/stac} API
- endpoint (v0.8.0). It prepares query parameters to be provided to
- \code{stac_request} function.
-
-This endpoint should return a STAC Catalog containing all data Items
- searchable in the API.
+The \code{stac} function implements \code{/stac} API
+endpoint (v0.8.0). It prepares query parameters to be provided to
+\code{stac_request} function. This endpoint should return a STAC
+Catalog containing all data Items searchable in the API.
 }
 \examples{
 \dontrun{
 
 stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
- get_request()
+    get_request()
 }
 
 }
 \seealso{
 \code{\link{stac_search}}, \code{\link{get_request}},
- \code{\link{post_request}}
+\code{\link{post_request}}
 }
 \author{
 Rolf Simoes

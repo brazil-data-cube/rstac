@@ -1,5 +1,7 @@
 #' @title Endpoint functions
 #'
+#' @rdname collections
+#'
 #' @author Rolf Simoes
 #'
 #' @description
@@ -41,63 +43,82 @@
 #'   collections(collection_id = "MOD13Q1") %>%
 #'   get_request()
 #' }
-#'
+
 #' @export
 collections <- function(s, collection_id) {
 
   # check s parameter
-  .check_obj(s, "stac")
-
-  # check mutator
-  .check_mutator(s, c("stac", "collections"))
+  if (!"collections" %in% class(s))
+    .check_obj(s, expected = "stac", exclusive = TRUE)
 
   params <- list()
+  endpoint <- "/collections"
+  if (!missing(collection_id)) {
 
-  if (missing(collection_id)) {
-
-    endpoint <- "/collections"
-
-    # TODO: add these code excerpts bellow in different file
-    expected <- list("get" =
-                       list(responses =
-                              list("200" =
-                                     list("application/json" =
-                                            "stac_catalog"))),
-                     "post" =
-                       list(enctypes = c("application/x-www-form-urlencoded",
-                                         "multipart/form-data"),
-                            responses =
-                              list("200" =
-                                     list("application/json" =
-                                            "stac_catalog"))))
-
-  } else {
     params[["collection_id"]] <- collection_id[[1]]
     endpoint <- paste("/collections", collection_id[[1]], sep = "/")
-
-    # TODO: add these code excerpts bellow in different file
-    expected <- list("get" =
-                       list(responses =
-                              list("200" =
-                                     list("application/json" =
-                                            "stac_collection"))),
-                     "post" =
-                       list(enctypes = c("application/x-www-form-urlencoded",
-                                         "multipart/form-data"),
-                            responses =
-                              list("200" =
-                                     list("application/json" =
-                                            "stac_collection"))))
   }
 
-  content <- structure(list(url = s$url,
-                            endpoint = endpoint,
-                            params = params,
-                            expected_responses = expected,
-                            mutator = "collections"),
-                       class = "stac")
+  content <- build_stac(url = s$url,
+                        endpoint = endpoint,
+                        params = params,
+                        mutator = "collections",
+                        base_stac = s)
+  return(content)
+}
 
-  content <- build_stac(content, s)
+params_get_mutator.collections <- function(s) {
+
+  # ignore 'collection_id' param
+  s$params[["collection_id"]] <- NULL
+
+  # process stac mutator
+  params <- params_get_mutator.stac(s)
+
+  return(params)
+}
+
+params_post_mutator.collections <- function(s, enctype) {
+
+  # ignore 'collection_id' param
+  s$params[["collection_id"]] <- NULL
+
+  # process stac mutator
+  params <- params_post_mutator.stac(s, enctype = enctype)
+
+  return(params)
+}
+
+content_get_response.collections <- function(s, res) {
+
+  # detect expected response object class
+  content_class <- "stac_catalog"
+
+  if (!is.null(s$params[["collection_id"]]))
+    content_class <- "stac_collection"
+
+  content <- structure(
+    .check_response(res, "200", "application/json"),
+    stac = s,
+    request = list(method = "get"),
+    class = content_class)
+
+  return(content)
+}
+
+content_post_response.collections <- function(s, res, enctype) {
+
+  # detect expected response object class
+  content_class <- "stac_catalog"
+
+  if (!is.null(s$params[["collection_id"]]))
+    content_class <- "stac_collection"
+
+  content <- structure(
+    .check_response(res, "200", "application/json"),
+    stac = s,
+    request = list(method = "post", enctype = enctype),
+    class = content_class)
 
   return(content)
 }

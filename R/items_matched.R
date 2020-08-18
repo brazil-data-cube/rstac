@@ -36,11 +36,11 @@ items_matched <- function(items) {
   .check_obj(items, "stac_items")
 
   # v0.8.0 extension
-  matched <- items$`search:metadata`$`matched`
+  matched <- items$`search:metadata`$matched
 
   # try WFS3 spec
   if (is.null(matched))
-    matched <- items$`numberMatched`
+    matched <- items$numberMatched
 
   if (is.null(matched))
     .warning("STAC 'search:metadata' extension not available")

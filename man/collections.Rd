@@ -41,7 +41,6 @@ stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
   collections(collection_id = "MOD13Q1") \%>\%
   get_request()
 }
-
 }
 \seealso{
 \code{\link{get_request}}, \code{\link{post_request}},

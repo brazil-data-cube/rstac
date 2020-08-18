@@ -136,16 +136,18 @@
 
 #' @title helper function
 #'
-#' @param obj      a \code{object} to compare.
+#' @param obj       an \code{object} to compare.
 #'
-#' @param expected an \code{character} with the expected classes.
+#' @param expected  a \code{character} with the expected classes.
+#'
+#' @param exclusive a \code{logical} value indicating if expected classes must
+#' be exclusive.
 #'
 #' @return An error if the provided object class is not in expected parameter.
 #'
 #' @noRd
-.check_obj <- function(obj, expected) {
+.check_obj <- function(obj, expected, exclusive = FALSE) {
 
-  #browser()
   obj_name <- as.character(substitute(obj))
 
   if (missing(obj))
@@ -154,22 +156,12 @@
   if (!inherits(obj, expected))
     .error("Invalid %s value in `%s` param.",
            paste0("`", expected, "`", collapse = " or "), obj_name)
-}
 
-#' @title helper function
-#'
-#' @param obj      a \code{object} to compare.
-#'
-#' @param expected a \code{object} with the expected mutator for comparison
-#'
-#' @return An error if the provided object class is not in expected parameter.
-#'
-#' @noRd
-.check_mutator <- function(obj, expected) {
+  if (exclusive && length(setdiff(class(obj), expected)) > 0) {
+    .error("Invalid %s value in `%s` param.",
+           paste0("`", expected, "`", collapse = " or "), obj_name)
+  }
 
-  if (!any(obj$mutator %in% expected))
-    .error("Expecting values from %s function(s).",
-           paste0("`", expected, "`", collapse = " or "))
 }
 
 #' @title STAC utils
@@ -179,40 +171,41 @@
 #' @description The \code{.check_response} function that checks if the request's
 #' response is in accordance with the \code{expected} parameters.
 #'
-#' @param res  a \code{httr} \code{response} object.
+#' @param res     a \code{httr} \code{response} object.
 #'
-#' @param expected a \code{list} containing the expected parameters values.
+#' @param allowed_status_code a \code{character} vector with successful
+#' status codes.
 #'
-#' @return a \code{character} with document class
+#' @param allowed_content_type a \code{character} vector with all acceptable
+#' responses' content type.
+#'
+#' @return a \code{list} data structure representing the content response
 #'
 #' @noRd
-.check_response <- function(res, expected) {
+.check_response <- function(res, allowed_status_code, allowed_content_type) {
 
-  method <- expected[[tolower(res$request$method)]]
-  if (is.null(method))
-    .error("HTTP method '%s' not defined for this operation.", res$method)
+  status_code <- as.character(httr::status_code(res))
+  content_type <- httr::http_type(res)
 
-  # TODO: validate stac response
-  # .stac_response_type(res, expected)
+  content <- httr::content(res,
+                           simplifyVector = TRUE,
+                           simplifyDataFrame = FALSE,
+                           simplifyMatrix = FALSE)
 
-  status_code <- method$responses[[as.character(res$status_code)]]
-  if (is.null(status_code)) {
-    content <- httr::content(res)
-    if (!is.null(content$code))
-      .error("%s %s", content$code, content$description)
-    .error("HTTP status '%s' not defined for this operation.",
-           res$status_code)
+  if (!status_code %in% allowed_status_code) {
+    message <- ""
+    if (!is.null(content$description))
+      message <- content$description
+
+    .error("HTTP status '%s'. %s", status_code, message)
   }
-  content_type  <- httr::http_type(res)
-  content_class <- status_code[[content_type]]
-  if (is.null(content_class))
+
+  if (!content_type %in% allowed_content_type)
     .error("HTTP content type response '%s' not defined for this operation.",
            content_type)
 
-  if (content_class == "")
-    content_class <- NULL
 
-  return(content_class)
+  return(content)
 }
 
 #' @title STAC utils

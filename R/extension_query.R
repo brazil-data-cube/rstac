@@ -35,7 +35,7 @@
 #' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
 #' or \code{stac_items} functions.
 #'
-#' @param ...         entries with format \code{<field> <operator> <value>}.
+#' @param ...           entries with format \code{<field> <operator> <value>}.
 #'
 #' @seealso \code{\link{stac_search}}, \code{\link{post_request}}
 #'
@@ -46,30 +46,23 @@
 #' \dontrun{
 #'
 #' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'   search(collections = "CB4_64_16D_STK") %>%
+#'   stac_search(collections = "CB4_64_16D_STK") %>%
 #'   extension_query("bdc:tile" == "022024") %>%
 #'   post_request()
-#'
 #' }
 #'
 #' @export
 extension_query <- function(s, ...) {
 
   # check s parameter
-  .check_obj(s, "stac")
+  .check_obj(s, expected = c("search", "ext_query"))
 
-  # check mutator
-  .check_mutator(s, c("search", "ext_query"))
+  params <- list()
 
   dots <- substitute(list(...))[-1]
   tryCatch({
-    ops <- lapply(dots, function(x) op <- as.character(x[[1]]))
-    keys <- lapply(dots, function(x) {
-      res <- eval(x[[2]])
-      if (!is.character(res))
-        .error("Invalid query expression.")
-      return(res)
-    })
+    ops <- lapply(dots, function(x) as.character(x[[1]]))
+    keys <- lapply(dots, function(x) as.character(x[[2]]))
     values <- lapply(dots, function(x) eval(x[[3]]))
   }, error = function(e) {
 
@@ -96,23 +89,44 @@ extension_query <- function(s, ...) {
     names(res) <- ops[keys == k]
     return(res)
   })
+
+  if (length(entries) == 0)
+    return(s)
+
   names(entries) <- uniq_keys
 
-  expected <- list("get" = NA,
-                   "post" =
-                     list(enctypes = c("application/json"),
-                          responses =
-                            list("200" =
-                                   list("application/geo+json" = "stac_items",
-                                        "application/json" = "stac_items"))))
+  params[["query"]] <- entries
 
-  query <- structure(list(params = entries,
-                          expected_responses = expected,
-                          mutator = "ext_query"),
-                     class = "stac")
+  content <- build_stac(url = s$url,
+                        endpoint = "/stac/search",
+                        params = params,
+                        mutator = "ext_query",
+                        base_stac = s)
+
+  return(content)
+}
 
 
-  query <- build_stac(query, s)
+params_get_mutator.ext_query <- function(s) {
 
-  return(query)
+  .error(paste0("STAC API query extension is not supported by HTTP GET method.",
+                "Try use `post_request` method instead."))
+}
+
+params_post_mutator.ext_query <- function(s, enctype) {
+
+  params <- params_post_mutator.search(s, enctype = enctype)
+
+  return(params)
+}
+
+content_post_response.ext_query <- function(s, res, enctype) {
+
+  content <- structure(
+    .check_response(res, "200", c("application/geo+json", "application/json")),
+    stac = s,
+    request = list(method = "post", enctype = enctype),
+    class = "stac_items")
+
+  return(content)
 }

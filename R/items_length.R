@@ -15,7 +15,8 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'     stac_search() %>%
 #'     get_request() %>%
 #'     items_length()
 #' }
