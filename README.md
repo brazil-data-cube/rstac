@@ -23,7 +23,7 @@ install_github("brazil-data-cube/rstac")
 
 ## Usage
 
-In this version, we implemented the following STAC endpoints.
+`rstac` implements the following STAC endpoints:
 
 | STAC endpoints                               | `rstac` functions |
 |----------------------------------------------|-------------------|
@@ -34,15 +34,15 @@ In this version, we implemented the following STAC endpoints.
 | `/collections/{collectionId}/items/{itemId}` | `items()`         |
 | `/stac/search`                               | `stac_search()`   |
 
-The code bellow creates a `stac` object and list the available 
-collections of the STAC API of the 
-[Brazil Data Cube](http://brazildatacube.org/) project of the Brazilian 
-National Space Research Institute (INPE).
+
+These functions can be used to retrieve information from a STAC API service.
+The code bellow creates a `stac` object and list the available collections of 
+the STAC API of the [Brazil Data Cube](http://brazildatacube.org/) project of 
+the Brazilian National Space Research Institute (INPE).
 
 ```R
 s_obj <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
-get_request(s_obj) %>%
-    print()
+get_request(s_obj) %>% print()
 #### STAC Catalog
 #- stac_version: "0.8.0"
 #- id: "bdc"
@@ -84,8 +84,9 @@ extra functions for handling items and to bulk download the assets.
 
 ### Items functions
 
+`rstac` provides some functions to facilitates the interaction with STAC data.
 In the example bellow, we get how many items matched the search criteria, 
-which shows 908:
+which shows `908`:
 
 ```R
 # it_obj variable from the last code example
@@ -93,16 +94,17 @@ it_obj %>% items_matched()
 #[1] 908
 ```
 
-However, if we count how many items there are in `it_obj` variable, we get 10,
-meaning thar more items can be fetched from the STAC service:
+However, if we count how many items there are in `it_obj` variable, we get `10`,
+meaning that more items could be fetched from the STAC service:
 
 ```R
 it_obj %>% items_length()
 #[1] 10
 
-# fetch all items from server (don't store them back in it_obj)
+# fetch all items from server 
+# (but don't stored them back in it_obj)
 it_obj %>% items_fetch() %>%
-  items_length()
+    items_length()
 #[1] 908
 ```
 
@@ -116,8 +118,8 @@ bellow downloads the `thumbnail` assets (.png files) of 10 items stored in
 `it_obj` variable.
 
 ```R
-download_items <- 
-  it_obj %>% assets_download(assets_name = c("thumbnail"))
+download_items <- it_obj %>% 
+    assets_download(assets_name = c("thumbnail"))
 ```
 
 ## How to contribute?
@@ -127,7 +129,7 @@ feel free to contribute by implementing new STAC API
 [extensions](https://github.com/radiantearth/stac-spec/tree/v0.8.1/api-spec/extensions) 
 based on the STAC API specifications.
 
-1. Make a project 
+1. Make a project.
 [fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
 2. Create a file inside the `R/` directory called `ext_{extension_name}.R`.
 3. In the code, you need to specify a subclass name (e.g.`ext_subclass`) for 
