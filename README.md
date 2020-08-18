@@ -114,7 +114,7 @@ All we've got in previous example was metadata to STAC Items, including
 links to geospatial data called `assets`. To download all `assets` in a
 STAC Item Collection we can use `assets_download()` function, that returns
 an update STAC Item Collection refering to the downloaded assets. The code
-bellow downloads the `thumbnail` assets (.png files) of 10 items stored in
+bellow downloads the `thumbnail` assets (.png files) of `10` items stored in
 `it_obj` variable.
 
 ```R
