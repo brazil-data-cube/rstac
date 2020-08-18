@@ -73,8 +73,8 @@ endpoint. The returned document is a STAC Item Collection (a geojson
 containing a feature collection).
 
 ```R
-it_obj <- 
-    stac_search(s_obj, collections = "MOD13Q1",
+it_obj <- s_obj %>% 
+    stac_search(collections = "MOD13Q1",
                 bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
     get_request()
 ```
