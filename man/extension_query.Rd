@@ -18,7 +18,7 @@ A \code{stac} object containing all request parameters to be
 passed to \code{stac_search} function.
 }
 \description{
-The \code{extension_query} function implements query API extension (v0.8.0)
+The \code{extension_query} function implements query API extension (v0.8.1)
 that can be used in \code{/stac/search} endpoint using HTTP POST method
 (\code{\link{post_request}}). It allows that additional fields and
 operators can be passed to \code{\link{stac_search}} function (see examples).
