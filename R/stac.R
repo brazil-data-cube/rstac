@@ -39,7 +39,6 @@ stac <- function(url) {
   return(content)
 }
 
-<<<<<<< HEAD
 #' @title stac object builder function
 #'
 #' @author Rolf Simoes
@@ -111,4 +110,3 @@ content_post_response.stac <- function(s, res, enctype) {
 
   return(content)
 }
-
