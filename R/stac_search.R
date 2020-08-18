@@ -72,13 +72,14 @@
 #' \dontrun{
 #' # GET request
 #' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'   stac_search(collections = "MOD13Q1", limit = 1) %>%
-#'   get_request()
+#'     stac_search(collections = "MOD13Q1", limit = 1) %>%
+#'     get_request()
 #'
 #' # POST request
 #' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'   stac_search(collections = "MOD13Q1") %>%
-#'   post_request()
+#'     stac_search(collections = "MOD13Q1",
+#'         bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+#'     post_request()
 #' }
 #'
 #' @export
@@ -86,10 +87,8 @@ stac_search <- function(s, collections, ids, bbox, datetime, intersects,
                         limit, ...) {
 
   # check s parameter
-  .check_obj(s, "stac")
-
-  # check mutator
-  .check_mutator(s, c("stac", "search"))
+  if (!"search" %in% class(s))
+    .check_obj(s, expected = "stac", exclusive = TRUE)
 
   params <- list()
 
@@ -116,13 +115,6 @@ stac_search <- function(s, collections, ids, bbox, datetime, intersects,
 
     if (!length(bbox) %in% c(4, 6))
       .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
-
-    if (!is.null(s$params[["intersects"]])) {
-      s$params[["intersects"]] <- NULL
-
-      .warning(paste("Parameter `bbox` was informed.",
-                     "The `intersects` parameter will be ignored."))
-    }
     params[["bbox"]] <- bbox
   }
 
@@ -133,47 +125,55 @@ stac_search <- function(s, collections, ids, bbox, datetime, intersects,
   }
 
   if (!missing(limit) && !is.null(limit))
-    params[["limit"]] <- limit
+    params[["limit"]] <- as.integer(limit)
 
   if (!missing(...))
     params <- c(params, list(...))
 
-  # TODO: follow specification strictly
-  if (!is.null(params[["intersects"]]) || !is.null(s$params[["intersects"]])) {
-    if ("bbox" %in% names(params) || "bbox" %in% names(s$params)) {
-      .warning(paste("Parameter `intersects` was informed.",
-                     "The `bbox` parameter will be ignored."))
-
-      params[["bbox"]]   <- NULL
-      s$params[["bbox"]] <- NULL
-    }
-    # TODO: add these code excerpts bellow in different file
-    expected <- list("post" =
-                       list(enctypes = c("application/json"),
-                            responses =
-                              list("200" =
-                                     list("application/geo+json" = "stac_items",
-                                          "application/json" = "stac_items"))))
-  } else {
-    expected <- list("get" =
-                       list(responses =
-                              list("200" =
-                                     list("application/geo+json" = "stac_items",
-                                          "application/json" = "stac_items"))),
-                     "post" =
-                       list(enctypes = c("application/json"),
-                            responses =
-                              list("200" =
-                                     list("application/geo+json" = "stac_items",
-                                          "application/json" = "stac_items"))))
-  }
-
+  # TODO: how to provide support to other versions?
   content <- build_stac(url = s$url,
                         endpoint = "/stac/search",
                         params = params,
-                        expected_responses = expected,
                         mutator = "search",
-                        old_stac = s)
+                        base_stac = s)
 
+  return(content)
+}
+
+
+params_get_mutator.search <- function(s) {
+
+  if (!is.null(s$params[["intersects"]]))
+    .error(paste0("Search param `intersects` is not supported by HTTP GET",
+                  "method. Try use `post_request` method instead."))
+
+  # process stac mutator
+  params <- params_get_mutator.stac(s)
+  return(params)
+}
+
+params_post_mutator.search <- function(s, enctype) {
+
+  # process stac mutator
+  params <- params_post_mutator.stac(s, enctype = enctype)
+  return(params)
+}
+
+content_get_response.search <- function(s, res) {
+
+  content <- structure(
+    .check_response(res, "200", c("application/geo+json", "application/json")),
+    stac = s,
+    request = list(method = "get"),
+    class = "stac_items")
+
+  return(content)
+}
+
+content_post_response.search <- function(s, res, enctype) {
+
+  # the same as GET response
+  content <- content_get_response.search(s, res)
+  content$request <- list(method = "post", enctype = enctype)
   return(content)
 }

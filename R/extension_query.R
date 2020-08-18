@@ -55,10 +55,7 @@
 extension_query <- function(s, ...) {
 
   # check s parameter
-  .check_obj(s, "stac")
-
-  # check mutator
-  .check_mutator(s, c("search", "ext_query"))
+  .check_obj(s, expected = c("search", "ext_query"))
 
   params <- list()
 
@@ -92,24 +89,44 @@ extension_query <- function(s, ...) {
     names(res) <- ops[keys == k]
     return(res)
   })
+
+  if (length(entries) == 0)
+    return(s)
+
   names(entries) <- uniq_keys
 
   params[["query"]] <- entries
 
-  # TODO: add these code excerpts bellow in different file
-  expected <- list("post" =
-                     list(enctypes = c("application/json"),
-                          responses =
-                            list("200" =
-                                   list("application/geo+json" = "stac_items",
-                                        "application/json" = "stac_items"))))
-
   content <- build_stac(url = s$url,
                         endpoint = "/stac/search",
                         params = params,
-                        expected_responses = expected,
                         mutator = "ext_query",
-                        old_stac = s)
+                        base_stac = s)
+
+  return(content)
+}
+
+
+params_get_mutator.ext_query <- function(s) {
+
+  .error(paste0("STAC API query extension is not supported by HTTP GET method.",
+                "Try use `post_request` method instead."))
+}
+
+params_post_mutator.ext_query <- function(s, enctype) {
+
+  params <- params_post_mutator.search(s, enctype = enctype)
+
+  return(params)
+}
+
+content_post_response.ext_query <- function(s, res, enctype) {
+
+  content <- structure(
+    .check_response(res, "200", c("application/geo+json", "application/json")),
+    stac = s,
+    request = list(method = "post", enctype = enctype),
+    class = "stac_items")
 
   return(content)
 }

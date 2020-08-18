@@ -10,7 +10,7 @@ testthat::test_that("stac search object", {
       object  = class(
         rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
           rstac::stac_search(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355))),
-      expected = "stac"
+      expected = c("search", "stac")
     )
 
     # check GET request from stac_search object
@@ -26,7 +26,7 @@ testthat::test_that("stac search object", {
       object   = class(
         rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
           rstac::stac_search(datetime = "2018-01-01/..") %>%
-          rstac::post_request(.)),
+          rstac::post_request()),
       expected = "stac_items"
     )
 
@@ -78,8 +78,8 @@ testthat::test_that("stac search object", {
 
     # expected mutator
     testthat::expect_equal(
-      object   =  stac_search_obj$mutator,
-      expected = "ext_query"
+      object   =  class(stac_search_obj),
+      expected = c("ext_query", "stac")
     )
 
     # expect http method
@@ -126,20 +126,6 @@ testthat::test_that("stac search object", {
         rstac::stac_search(bbox = c(-55.16335, -4.26325, -49.31739))
     )
 
-    # providing the bbox and intersects parameters
-    testthat::expect_warning(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-        rstac::stac_search(
-          bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
-          intersects = jsonlite::toJSON(list(type = "Point",
-                                             "coordinates" = c(-55.16335, -4.26325),
-                                             "bbox" = c(-55.16335,
-                                                        -4.26325,
-                                                        -49.31739,
-                                                        -1.18355)))
-        )
-    )
-
     # Check errors in fixed date time-------------------------------------------
     # check fixed date time
     testthat::expect_error(
@@ -164,7 +150,7 @@ testthat::test_that("stac search object", {
       object     = class(
         rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
           rstac::stac_search(datetime = "2019-02-12T00:00:00Z")),
-      expected   = "stac"
+      expected   = c("search", "stac")
     )
 
     # Check errors in closed date time------------------------------------------
@@ -181,7 +167,7 @@ testthat::test_that("stac search object", {
         rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
           rstac::stac_search(
             datetime = "2018-02-12T00:00:00Z/2018-03-18T12:31:12Z")),
-      expected = "stac"
+      expected = c("search", "stac")
     )
 
     # Check errors in interval date time----------------------------------------
@@ -214,7 +200,7 @@ testthat::test_that("stac search object", {
       object   = class(
         rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
           rstac::stac_search(datetime = "2018-03-20T12:31:12Z/..")),
-      expected = "stac"
+      expected = c("search", "stac")
     )
   })
 })
@@ -230,15 +216,14 @@ testthat::test_that("stac collection object", {
       rstac::collections()
 
     testthat::expect_equal(
-      object   =
-        s_col$expected_responses$post$responses$`200`$`application/json`,
-      expected = "stac_catalog"
+      object   =  s_col$endpoint,
+      expected = "/collections"
     )
 
     # check object class of stac collections
     testthat::expect_equal(
       object   = class(s_col),
-      expected = "stac"
+      expected = c("collections", "stac")
     )
 
     # check object class of stac collections
@@ -247,9 +232,8 @@ testthat::test_that("stac collection object", {
       rstac::collections(collection_id = "MOD13Q1")
 
     testthat::expect_equal(
-      object   =
-        s_colid$expected_responses$post$responses$`200`$`application/json`,
-      expected = "stac_collection"
+      object   = s_colid$endpoint,
+      expected = "/collections/MOD13Q1"
     )
 
     # check print stac object
@@ -346,7 +330,7 @@ testthat::test_that("stac item object", {
             bbox          = c(-55.16335, -4.26325, -49.31739, -1.18355),
             limit         = 10,
             datetime      = "2018-02-01/..")),
-      expected = "stac"
+      expected = c("items", "stac")
     )
 
     # stac_item object
@@ -359,7 +343,7 @@ testthat::test_that("stac item object", {
             limit         = 10,
             datetime      = "2018-02-01/..",
             item_id       = "MOD13Q1.A2019241.h13v09.006.2019262164754")),
-      expected = "stac"
+      expected = c("items", "stac")
     )
 
     # test request for stac_items

@@ -76,13 +76,14 @@ ItemCollection.
 \dontrun{
 # GET request
 stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-  stac_search(collections = "MOD13Q1", limit = 1) \%>\%
-  get_request()
+    stac_search(collections = "MOD13Q1", limit = 1) \%>\%
+    get_request()
 
 # POST request
 stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-  stac_search(collections = "MOD13Q1") \%>\%
-  post_request()
+    stac_search(collections = "MOD13Q1",
+        bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+    post_request()
 }
 
 }

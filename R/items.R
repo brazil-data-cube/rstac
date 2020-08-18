@@ -96,13 +96,9 @@
 items <- function(s, item_id, datetime, bbox, limit, ...) {
 
   # check s parameter
-  .check_obj(s, "stac")
+  .check_obj(s, expected = c("collections", "items"))
 
-  # check mutator
-  .check_mutator(s, c("collections", "items"))
-
-
-  if (is.null(s$params[["collection_id"]]) && s$mutator == "collections")
+  if (is.null(s$params[["collection_id"]]))
     .error("Not informed `collection_id` parameter.")
 
   params <- list()
@@ -126,74 +122,87 @@ items <- function(s, item_id, datetime, bbox, limit, ...) {
   if (!missing(...))
     params <- c(params, list(...))
 
-  if (missing(item_id)) {
+  endpoint <- paste("/collections", s$params[["collection_id"]],
+                    "items", sep = "/")
 
-    # TODO: follow specification strictly
-    endpoint <- s$endpoint
-    if (s$mutator == "collections")
-      endpoint <- paste("/collections", s$params[["collection_id"]], "items",
-                        sep = "/")
+  if (!missing(item_id)) {
 
-    # TODO: add these code excerpts bellow in different file
-    expected <- list("get" =
-                       list(responses =
-                              list("200" =
-                                     list("application/geo+json" = "stac_items",
-                                          "application/json" = "stac_items"))),
-                     "post" =
-                       list(enctypes = c("application/x-www-form-urlencoded",
-                                         "multipart/form-data"),
-                            responses =
-                              list("200" =
-                                     list("application/geo+json" = "stac_items",
-                                          "application/json" = "stac_items"))))
-  } else {
+    params[["item_id"]] <- item_id
 
-    # TODO: follow specification strictly
-    endpoint <- s$endpoint
-    if (s$mutator == "collections")
-      endpoint <- paste("/collections", s$params[["collection_id"]], "items",
-                        item_id, sep = "/")
-
-    # TODO: add these code excerpts bellow in different file
-    # TODO: this could be returned by the STAC service
-    expected <- list("get" =
-                       list(responses =
-                              list("200" =
-                                     list("application/geo+json" = "stac_item",
-                                          "application/json" = "stac_item"))),
-                     "post" =
-                       list(enctypes = c("application/x-www-form-urlencoded",
-                                         "multipart/form-data"),
-                            responses =
-                              list("200" =
-                                     list("application/geo+json" = "stac_item",
-                                          "application/json" = "stac_item"))))
-    params <- list()
+    endpoint <- paste(endpoint, params[["item_id"]], sep = "/")
   }
-
-  s$params[["collection_id"]] <- NULL
 
   content <- build_stac(url = s$url,
                         endpoint = endpoint,
                         params = params,
-                        expected_responses = expected,
                         mutator = "items",
-                        old_stac = s)
+                        base_stac = s)
 
   return(content)
 }
 
-#' @export
-`[[.stac_items` <- function(x, i){
+params_get_mutator.items <- function(s) {
 
-  result <- x$features[[i]]
-  class(result) <- "stac_item"
+  if (!is.null(s$params[["item_id"]]))
+    return(list())
 
-  return(result)
+  # process collections mutator
+  params <- params_get_mutator.collections(s)
+
+  return(params)
 }
 
-#' @export
+params_post_mutator.items <- function(s, enctype) {
+
+  if (!is.null(s$params[["item_id"]]))
+    return(list())
+
+  # process collections mutator
+  params <- params_get_mutator.collections(s)
+
+  return(params)
+}
+
+content_get_response.items <- function(s, res) {
+
+  # detect expected response object class
+  content_class <- "stac_items"
+  if (!is.null(s$params[["item_id"]]))
+    content_class <- "stac_item"
+
+  content <- structure(
+    .check_response(res, "200", c("application/geo+json", "application/json")),
+    stac = s,
+    request = list(method = "get"),
+    class = content_class)
+
+  return(content)
+}
+
+content_post_response.items <- function(s, res, enctype) {
+
+  # detect expected response object class
+  content_class <- "stac_items"
+  if (!is.null(s$params[["item_id"]]))
+    content_class <- "stac_item"
+
+  content <- structure(
+    .check_response(res, "200", c("application/geo+json", "application/json")),
+    stac = s,
+    request = list(method = "post", enctype = enctype),
+    class = content_class)
+
+  return(content)
+}
+
+`[[.stac_items` <- function(x, i){
+
+  x <- x$features[[i]]
+  class(x) <- "stac_item"
+
+  return(x)
+}
+
 `[.stac_items` <- function(x, i){
 
   x$features <- x$features[i]

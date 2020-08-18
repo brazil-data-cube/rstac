@@ -141,7 +141,7 @@ print.stac <- function(x, ...) {
   print_header(x)
 
   # print body
-  print_named(x, n = Inf, align_first = TRUE)
+  print_named(x, n = Inf, align_first = FALSE)
 }
 
 #' @title Printing functions
@@ -165,7 +165,7 @@ print.stac_catalog <- function(x, n = 10, ...) {
 
       if (n < length(links))
         cat(crayon::silver(crayon::bold(sprintf("> \U2026 with %s more links",
-                                        length(links) - n))), fill = TRUE)
+                                                length(links) - n))), fill = TRUE)
     }
   }
 }
@@ -285,19 +285,19 @@ print_data <- function(x, n, pad = 0, is_nested = FALSE, ...) {
     else
       cat(paste(names(x), sapply(x, function(e) crayon::bold(paste0('"', e, '"'))),
                 collapse = ", ", sep = ": "), sep = "", fill = TRUE)
-  } else if (is.numeric(x)) {
-    if (is.null(names(x)))
-      cat(paste0(sapply(x, function(e) crayon::bold(sprintf("%.5f", e))),
-                 collapse = ", "), sep = "", fill = TRUE)
-    else
-      cat(paste(names(x), sapply(x, function(e) crayon::bold(sprintf("%.5f", e))),
-                collapse = ", ", sep = ": "), sep = "", fill = TRUE)
   } else if (is.integer(x)) {
     if (is.null(names(x)))
       cat(paste0(sapply(x, function(e) crayon::bold(e)),
                  collapse = ", "), sep = "", fill = TRUE)
     else
       cat(paste(names(x), sapply(x, function(e) crayon::bold(e)),
+                collapse = ", ", sep = ": "), sep = "", fill = TRUE)
+  } else if (is.numeric(x)) {
+    if (is.null(names(x)))
+      cat(paste0(sapply(x, function(e) crayon::bold(sprintf("%.5f", e))),
+                 collapse = ", "), sep = "", fill = TRUE)
+    else
+      cat(paste(names(x), sapply(x, function(e) crayon::bold(sprintf("%.5f", e))),
                 collapse = ", ", sep = ": "), sep = "", fill = TRUE)
   } else if (is.list(x)) {
     if (length(x) == 0)
