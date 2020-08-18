@@ -11,7 +11,7 @@ stac(url)
 STAC web service.}
 }
 \value{
-A \code{stac} object with subclass \code{mutator} containing all request
+A \code{stac} object with subclass \code{subclass} containing all request
 parameters to be provided to API service.
 }
 \description{

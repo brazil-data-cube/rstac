@@ -43,6 +43,9 @@
 assets_download <- function(items, assets_name, output_dir = ".",
                             progress = TRUE, headers = c()) {
 
+  # TODO: add parameter to cut out the assets if provided - keep_assets
+  # TODO: warning if the value of item_length is different of item_matched
+
   #check the object class
   .check_obj(items, expected = c("stac_items", "stac_item"))
 

@@ -44,22 +44,27 @@ stac <- function(url) {
 #' @author Rolf Simoes
 #'
 #' @description The \code{.build_stac} function builds a stac object based on a
-#'  given \code{stac} object and other parameters.
+#'  given \code{stac} object and others parameters.
 #'
 #' @param url        a \code{character} informing the base url of a
 #'  STAC web service.
 #'
-#' @param endpoint
+#' @param endpoint   a \code{character} a path to be appended in the final
+#' url.
 #'
-#' @param params
+#' @param params     a named \code{list} with all url query parameters to be
+#' appended in the url.
 #'
-#' @param mutator
+#' @param subclass   a \code{character} corresponding to the subclass of the
+#'  object to be created.
 #'
-#' @param base_stac a \code{stac} object expressing a STAC search criteria
+#' @param base_stac  a \code{stac} object expressing a STAC search criteria
 #' provided by \code{stac}, \code{stac_search}, \code{collections},
 #' or \code{items} functions.
 #'
 #' @return
+#' A \code{stac} object with subclass \code{subclass} containing all request
+#'  parameters to be provided to API service.
 .build_stac <- function(url, endpoint, params, subclass, base_stac) {
 
   base_params <- list()
