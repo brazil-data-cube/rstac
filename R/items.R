@@ -135,30 +135,30 @@ items <- function(s, item_id, datetime, bbox, limit, ...) {
   content <- .build_stac(url = s$url,
                         endpoint = endpoint,
                         params = params,
-                        mutator = "items",
+                        subclass = "items",
                         base_stac = s)
 
   return(content)
 }
 
-params_get_mutator.items <- function(s) {
+params_get_request.items <- function(s) {
 
   if (!is.null(s$params[["item_id"]]))
     return(list())
 
-  # process collections mutator
-  params <- params_get_mutator.collections(s)
+  # process collections params
+  params <- params_get_request.collections(s)
 
   return(params)
 }
 
-params_post_mutator.items <- function(s, enctype) {
+params_post_request.items <- function(s, enctype) {
 
   if (!is.null(s$params[["item_id"]]))
     return(list())
 
-  # process collections mutator
-  params <- params_get_mutator.collections(s)
+  # process collections params
+  params <- params_get_request.collections(s)
 
   return(params)
 }

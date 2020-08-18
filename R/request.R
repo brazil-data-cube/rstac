@@ -50,8 +50,8 @@ get_request <- function(s, ..., headers = character()) {
   # check the object class
   .check_obj(s, "stac")
 
-  # mutate and get params
-  params <- params_get_mutator(s)
+  # get params
+  params <- params_get_request(s)
 
   tryCatch({
     res <- httr::GET(url = .make_url(s$url, endpoint = s$endpoint,
@@ -83,9 +83,8 @@ post_request <- function(s, ...,
     .error("Invalid body `enctype` '%s'. Allowed `enctypes` are %s.",
            enctype, paste0("'", httr_encode, "'", collapse = ", "))
 
-  # get/transform provided params from stac object according with
-  # http method and body request content-type (enctype)
-  params <- params_post_mutator(s, enctype = enctype)
+  # get params
+  params <- params_post_request(s, enctype = enctype)
 
   tryCatch({
     res <- httr::POST(url = .make_url(s$url, endpoint = s$endpoint),
@@ -100,24 +99,4 @@ post_request <- function(s, ...,
   content <- content_post_response(s, res, enctype = enctype)
 
   return(content)
-}
-
-params_get_mutator <- function(s) {
-
-  UseMethod("params_get_mutator")
-}
-
-params_post_mutator <- function(s, enctype) {
-
-  UseMethod("params_post_mutator")
-}
-
-content_get_response <- function(s, res) {
-
-  UseMethod("content_get_response")
-}
-
-content_post_response <- function(s, res, enctype) {
-
-  UseMethod("content_post_response")
 }

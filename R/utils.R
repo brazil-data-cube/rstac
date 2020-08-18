@@ -297,12 +297,3 @@
 
   return(params)
 }
-
-
-subs <- function(x, y) {
-
-  if (length(x) > 0)
-    return(x)
-  return(y)
-
-}
