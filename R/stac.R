@@ -32,13 +32,34 @@ stac <- function(url) {
   # check url parameter
   .check_obj(url, "character")
 
-  content <- build_stac(url = url,
+  content <- .build_stac(url = url,
                         endpoint = "/stac",
                         params = list())
 
   return(content)
 }
 
+#' @title stac object builder function
+#'
+#' @author Rolf Simoes
+#'
+#' @description The \code{.build_stac} function builds a stac object based on a
+#'  given \code{stac} object and other parameters.
+#'
+#' @param url        a \code{character} informing the base url of a
+#'  STAC web service.
+#'
+#' @param endpoint
+#'
+#' @param params
+#'
+#' @param mutator
+#'
+#' @param base_stac a \code{stac} object expressing a STAC search criteria
+#' provided by \code{stac}, \code{stac_search}, \code{collections},
+#' or \code{items} functions.
+#'
+#' @return
 build_stac <- function(url, endpoint, params, mutator, base_stac) {
 
   base_params <- list()

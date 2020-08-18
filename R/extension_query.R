@@ -97,7 +97,7 @@ extension_query <- function(s, ...) {
 
   params[["query"]] <- entries
 
-  content <- build_stac(url = s$url,
+  content <- .build_stac(url = s$url,
                         endpoint = "/stac/search",
                         params = params,
                         mutator = "ext_query",

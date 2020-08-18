@@ -59,7 +59,7 @@ collections <- function(s, collection_id) {
     endpoint <- paste("/collections", collection_id[[1]], sep = "/")
   }
 
-  content <- build_stac(url = s$url,
+  content <- .build_stac(url = s$url,
                         endpoint = endpoint,
                         params = params,
                         mutator = "collections",
