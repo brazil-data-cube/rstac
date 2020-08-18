@@ -129,8 +129,8 @@ feel free to contribute by implementing new STAC API
 [extensions](https://github.com/radiantearth/stac-spec/tree/v0.8.1/api-spec/extensions) 
 based on the STAC API specifications.
 
-1. Make a project.
-[fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
+1. Make a project
+[fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo).
 2. Create a file inside the `R/` directory called `ext_{extension_name}.R`.
 3. In the code, you need to specify a subclass name (e.g.`ext_subclass`) for 
 your extension and implement the S3 generics methods, `params_get_request`, 
