@@ -6,7 +6,7 @@
 #'
 #' @description
 #' The \code{collections} function implements the WFS3 \code{/collections}
-#' and \code{/collections/\{collectionId\}} endpoints (v0.8.0).
+#' and \code{/collections/\{collectionId\}} endpoints (v0.8.1).
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{

@@ -3,11 +3,11 @@
 #' @author Rolf Simoes
 #'
 #' @description (This document is based on STAC specification documentation
-#' \url{https://github.com/radiantearth/stac-spec/blob/v0.8.0/api-spec/STAC.yaml}
+#' \url{https://github.com/radiantearth/stac-spec/blob/v0.8.1/api-spec/STAC.yaml}
 #' and reproduces some of its parts)
 #'
 #' The \code{stac_search} function implements \code{/stac/search} API endpoint
-#' (v0.8.0). It prepares query parameters used in search API request, a
+#' (v0.8.1). It prepares query parameters used in search API request, a
 #' \code{stac} object with all filter parameters to be provided to
 #' \code{stac_request}. The GeoJSON content returned by the \code{stac_request}
 #' is a \code{items} object, a regular R \code{list} representing a STAC

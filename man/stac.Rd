@@ -16,7 +16,7 @@ parameters to be provided to API service.
 }
 \description{
 The \code{stac} function implements \code{/stac} API
-endpoint (v0.8.0). It prepares query parameters to be provided to
+endpoint (v0.8.1). It prepares query parameters to be provided to
 \code{stac_request} function. This endpoint should return a STAC
 Catalog containing all data Items searchable in the API.
 }
