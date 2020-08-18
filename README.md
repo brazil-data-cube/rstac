@@ -16,27 +16,30 @@ to support upcoming STAC 1.0.0 version soon.
 To install the development version of `rstac`, run the following commands
 
 ```R
+# load necessary libraries
 library(devtools)
 install_github("brazil-data-cube/rstac")
 ```
 
 ## Usage
 
-In this version, we implemented the following STAC endpoints
-- `'/stac'`
-- `'/collections'`
-- `'/collections/{collectionId}'`
-- `'/collections/{collectionId}/items'`
-- `'/collections/{collectionId}/items/{itemId}'`
-- `'/stac/search'`
+In this version, we implemented the following STAC endpoints.
 
-Let us begin our example by creating a `stac` object and list the available 
+| STAC endpoints                               | `rstac` functions |
+|----------------------------------------------|-------------------|
+| `/stac`                                      | `stac()`          |
+| `/collections`                               | `collections()`   |
+| `/collections/{collectionId}`                | `collections()`   |
+| `/collections/{collectionId}/items`          | `items()`         |
+| `/collections/{collectionId}/items/{itemId}` | `items()`         |
+| `/stac/search`                               | `stac_search()`   |
+
+The code bellow creates a `stac` object and list the available 
 collections of the STAC API of the 
 [Brazil Data Cube](http://brazildatacube.org/) project of the Brazilian 
 National Space Research Institute (INPE).
 
 ```R
-# Create a stac object
 s_obj <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
 get_request(s_obj) %>%
     print()
@@ -58,38 +61,61 @@ get_request(s_obj) %>%
 #> … with 17 more links
 ```
 
-Here, the variable `s_obj` stores informations to connect to the Brazil Data 
+The variable `s_obj` stores information to connect to the Brazil Data 
 Cube STAC web service. The `get_request` method makes a HTTP GET connection
-and retrieves a STAC Catalog with all available collections.
+to it and retrieves a STAC Catalog document from the server. Each `links` 
+entry is an available collection that can be accessed via STAC API.
+
+In the code bellow, we get some STAC items of `MOD13Q1` collection that
+intersects the bounding box passed to the `bbox` parameter. To do this, we
+call the `stac_search` function that implements the STAC `/stac/search` 
+endpoint. The returned document is a STAC Item Collection (a geojson 
+containing a feature collection).
 
 ```R
-# Create a stac_items object and return STAC items
 it_obj <- 
-    stac_search(s_obj,
-                collections = "MOD13Q1",
+    stac_search(s_obj, collections = "MOD13Q1",
                 bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
     get_request()
 ```
 
-You can get a full explanation about each STAC (v0.8.1) endpoint at [STAC spec GitHub](https://github.com/radiantearth/stac-spec/tree/v0.8.1).
-
 In addition to the functions mentioned above, the `rstac` package provides some 
-extra functions for handling items and bulk download the assets.
+extra functions for handling items and to bulk download the assets.
 
 ### Items functions
 
-```R
-# Count how many items matched the search criteria
-it_obj %>% items_matched()
+In the example bellow, we get how many items matched the search criteria, 
+which shows 908:
 
-# Count how many items are in the `stac_items` object
+```R
+# it_obj variable from the last code example
+it_obj %>% items_matched()
+#[1] 908
+```
+
+However, if we count how many items there are in `it_obj` variable, we get 10,
+meaning thar more items can be fetched from the STAC service:
+
+```R
 it_obj %>% items_length()
+#[1] 10
+
+# fetch all items from server (don't store them back in it_obj)
+it_obj %>% items_fetch() %>%
+  items_length()
+#[1] 908
 ```
 
 ### Download assets
 
+All we've got in previous example was metadata to STAC Items, including
+links to geospatial data called `assets`. To download all `assets` in a
+STAC Item Collection we can use `assets_download()` function, that returns
+an update STAC Item Collection refering to the downloaded assets. The code
+bellow downloads the `thumbnail` assets (.png files) of 10 items stored in
+`it_obj` variable.
+
 ```R
-# Downloads the assets provided by the STAC API
 download_items <- 
   it_obj %>% assets_download(assets_name = c("thumbnail"))
 ```
@@ -112,3 +138,10 @@ can define how parameters must be submited to the HTTP request and the types
 of the returned documents responses. See the implemented [ext_query](https://github.com/OldLipe/rstac/blob/master/R/extension_query.R) 
 API extension as an example.  
 4. Make a [Pull Request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) on the branch dev.
+
+## Getting help
+
+You can get a full explanation about each STAC (v0.8.1) endpoint at [STAC spec GitHub](https://github.com/radiantearth/stac-spec/tree/v0.8.1). A detailed
+documentation with examples on how to use each endpoint and other functions
+available in the `rstac` package can be obtained by typing `?rstac` in R 
+console.
