@@ -15,6 +15,19 @@ content_get_response(s, res)
 
 content_post_response(s, res, enctype)
 }
+\arguments{
+\item{s}{a \code{stac} object expressing a STAC search criteria
+provided by \code{stac}, \code{stac_search}, \code{stac_collections},
+or \code{stac_items} functions.}
+
+\item{enctype}{a \code{character} informing the request body
+Content-Type. Accepted types are \code{'json'} (\code{'application/json'}),
+\code{'form'} (\code{'application/x-www-form-urlencoded'}),
+and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
+\code{'json'}.}
+
+\item{res}{a \code{httr} \code{response} object.}
+}
 \description{
 STAC objects implement four generic S3 methods, such methods are
 \code{params} and \code{response}. The \code{params} method defines and

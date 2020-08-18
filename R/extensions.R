@@ -9,6 +9,18 @@
 #' \code{content_get_response} for GET and \code{content_post_response} for
 #' POST.
 #'
+#' @param s       a \code{stac} object expressing a STAC search criteria
+#' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
+#' or \code{stac_items} functions.
+#'
+#' @param enctype a \code{character} informing the request body
+#' Content-Type. Accepted types are \code{'json'} (\code{'application/json'}),
+#' \code{'form'} (\code{'application/x-www-form-urlencoded'}),
+#' and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
+#' \code{'json'}.
+#'
+#' @param res  a \code{httr} \code{response} object.
+#'
 #' @rdname stac_methods
 params_get_request <- function(s) {
 
