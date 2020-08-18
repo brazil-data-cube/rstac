@@ -6,7 +6,7 @@ R Client Library for SpatioTemporal Asset Catalog (rstac)
 STAC is a specification of files and web services used to describe geospatial information assets.
 The specification can be consulted in [https://stacspec.org/].
 
-R client library for STAC (`rstac`) was designed to fully support STAC v0.8.0. 
+R client library for STAC (`rstac`) was designed to fully support STAC v0.8.1. 
 As STAC spec is evolving fast and reaching its maturity, we plan update `rstac` to support upcoming STAC 1.0.0 version soon.
 
 ## Installation
@@ -24,8 +24,7 @@ In this version, we implemented STAC endpoints (`'/stac'`, `'/stac/search'`) as
 well as WFS3 endpoints (`'/collections'`, `'/collections/{collectionId}'`, 
 `'/collections/{collectionId}/items'`, and 
 `'/collections/{collectionId}/items/{itemId}'`). You can get a detailed 
-explanation about each STAC (v0.8.0) endpoint at   
-[STAC spec GitHub](https://github.com/radiantearth/stac-spec/tree/v0.8.0).
+explanation about each STAC (v0.8.0) endpoint at [STAC spec GitHub](https://github.com/radiantearth/stac-spec/tree/v0.8.0).
 
 Let us begin our example by loading some libraries and creating a `stac` object:
 ```R
@@ -43,16 +42,13 @@ National Space Research Institute (INPE).
 Now, `s_obj` variable holds our stac object that is a simple reference to 
 `/stac` endpoint. This endpoint gives us a list of all catalogs available in
 the service. However, `stac()` function does not try any connection to the 
-server, it just store some key information about the service such as the 
-allowed HTTP methods and expected content type responses by the server.
+server, it just store some key information about the service such as the STAC endpoints and parameters for HTTP requests.
 
-To retrieve data from this endpoint, we can call the `get_request()` function 
-to do an HTTP GET connection to the server:
+To retrieve data from this object, we can call the `get_request()` function to do a HTTP GET connection to the server:
 
 ```R
 s_obj %>% get_request()
 ```
-
 
 ```R
 # Create a stac_items object and return STAC items
@@ -66,6 +62,8 @@ col <- collections(s_obj) %>%
        get_request()
 
 ```
+
+In addition to the functions mentioned above, the `rstac` package provides some extra functions, such as the functions on the items returned from STAC and also the option to download the assets. 
 
 ### Items functions
 
@@ -84,3 +82,12 @@ it_obj %>% items_length()
 download_items <- 
   it_obj %>% assets_download(assets_name = c("thumbnail"))
 ```
+
+## How to contribute?
+
+The `rstac` package was implemented based on an extensible architecture, so feel free to contribute by implementing new STAC API [extensions](https://github.com/radiantearth/stac-spec/tree/v0.8.1/api-spec/extensions) based on the STAC API specifications.
+
+1. Make a project [fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
+2. Create a file inside the `R/` directory called `ext_{extension_name}.R`.
+3. In the code, you need to specify a subclass name (e.g.`ext_subclass`) for your extension and implement the S3 generics methods, `params_get_request`, `content_get_response` (for HTTP GET) and/or `params_post_request`, `content_post_response` (for HTTP POST). Using these S3 generics methods you can define how parameters must be submited to the HTTP request and the types of the returned documents responses. See the implemented [ext_query](https://github.com/OldLipe/rstac/blob/master/R/extension_query.R) API extension as an example.  
+4. Make a [Pull Request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) on the branch dev.
