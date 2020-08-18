@@ -1,6 +1,6 @@
 Package: rstac
 Title: R Client Library for SpatioTemporal Asset Catalog
-Version: 0.3.2
+Version: 0.3.3
 Authors@R: 
     c(person("Brazil Data Cube Team", email = "brazildatacube@dpi.inpe.br", 
              role = c("cph", "cre")),
@@ -26,4 +26,6 @@ Suggests:
     covr,
     magrittr,
     testthat,
-    vcr
+    vcr,
+    knitr,
+    rmarkdown
