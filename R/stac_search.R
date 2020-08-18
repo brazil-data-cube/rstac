@@ -131,7 +131,7 @@ stac_search <- function(s, collections, ids, bbox, datetime, intersects,
     params <- c(params, list(...))
 
   # TODO: how to provide support to other versions?
-  content <- build_stac(url = s$url,
+  content <- .build_stac(url = s$url,
                         endpoint = "/stac/search",
                         params = params,
                         subclass = "search",

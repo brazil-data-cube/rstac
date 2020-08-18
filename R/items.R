@@ -132,7 +132,7 @@ items <- function(s, item_id, datetime, bbox, limit, ...) {
     endpoint <- paste(endpoint, params[["item_id"]], sep = "/")
   }
 
-  content <- build_stac(url = s$url,
+  content <- .build_stac(url = s$url,
                         endpoint = endpoint,
                         params = params,
                         subclass = "items",
