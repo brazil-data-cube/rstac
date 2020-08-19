@@ -140,7 +140,6 @@ stac_search <- function(s, collections, ids, bbox, datetime, intersects,
   return(content)
 }
 
-
 params_get_request.search <- function(s) {
 
   if (!is.null(s$params[["intersects"]]))
