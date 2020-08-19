@@ -2,33 +2,54 @@
 % Please edit documentation in R/ext_query.R
 \name{extension_query}
 \alias{extension_query}
+\alias{params_get_request.ext_query}
+\alias{params_post_request.ext_query}
+\alias{content_get_response.ext_query}
+\alias{content_post_response.ext_query}
 \title{Extension functions}
 \usage{
 extension_query(s, ...)
+
+\method{params_get_request}{ext_query}(s)
+
+\method{params_post_request}{ext_query}(s, enctype)
+
+\method{content_get_response}{ext_query}(s, res)
+
+\method{content_post_response}{ext_query}(s, res, enctype)
 }
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-or \code{stac_items} functions.}
+provided by \code{stac_search} function.}
 
 \item{...}{entries with format \code{<field> <operator> <value>}.}
+
+\item{enctype}{a \code{character} informing the request body
+Content-Type. Accepted types are \code{'json'} (\code{'application/json'}),
+\code{'form'} (\code{'application/x-www-form-urlencoded'}),
+and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
+\code{'json'}.}
+
+\item{res}{a \code{httr} \code{response} object.}
 }
 \value{
-A \code{stac} object containing all request parameters to be
-passed to \code{stac_search} function.
+A \code{ext_query} object containing all request parameters to be
+passed to \code{post_request} function.
 }
 \description{
-The \code{extension_query} function implements query API extension (v0.8.1)
-that can be used in \code{/stac/search} endpoint using HTTP POST method
-(\code{\link{post_request}}). It allows that additional fields and
-operators can be passed to \code{\link{stac_search}} function (see examples).
-Each filter entry is an expression formed by
-\code{<field> <operator> <value>} terms, where \code{<field>} refers to
-a valid items' property. Supported \code{<fields>} depends
-on STAC API service implementation. The users must rely on service providers'
-documentation to know which properties can be passed to do the search.
+The \code{extension_query} is the interacting function of the STAC API
+query extension. It can be used after a call to \code{stac_search} function.
+It allows that additional fields and operators be queried to an STAC API
+service to perform a complex filter.
 
-The \code{extension_query} function accepts the following \code{<operators>}
+The function accepts multiple filter criteria. Each filter entry is an
+expression formed by \code{<field> <operator> <value>} terms, where
+\code{<field>} refers to a valid item property. Supported \code{<fields>}
+depends on STAC API service implementation. The users must rely on service
+providers' documentation to know which properties can be passed to do the
+STAC API.
+
+The \code{extension_query} function allows the following \code{<operators>}
 \itemize{
 \item \code{==} corresponds to '\code{eq}'
 \item \code{!=} corresponds to '\code{neq}'
@@ -42,13 +63,28 @@ a string prefix search operator.
 string suffix search operator.
 \item \code{\%contains\%}: corresponds to '\code{contains}' and implements a
 string infix search operator.
-\item \code{\%in\%}: corresponds to '\code{in}' and implements a vector search
-operator.
+\item \code{\%in\%}: corresponds to '\code{in}' and implements a vector
+search operator.
+}
+
+Besides this function, the following S3 generic methods were implemented
+to get things done for this extension:
+\itemize{
+\item \code{params_get_request} for class \code{ext_type}: raises an error
+when \code{get_request} is called after a call to \code{extension_query}
+function.
+\item The \code{params_post_request} for class \code{ext_type}: calls the
+default content request params handling.
+\item The \code{content_get_response} for class \code{ext_query}:
+raises an error when \code{get_request} is called after the
+\code{extension_query} function.
+\item The \code{content_post_response} for class \code{ext_query}: calls
+the default content response handling.
 }
 }
 \examples{
 \dontrun{
-
+# filter items that has 'bdc:tile' property equal to '022024'
 stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
   stac_search(collections = "CB4_64_16D_STK") \%>\%
   extension_query("bdc:tile" == "022024") \%>\%
@@ -57,7 +93,9 @@ stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 
 }
 \seealso{
-\code{\link{stac_search}}, \code{\link{post_request}}
+\code{\link{stac_search}}, \code{\link{post_request}},
+\code{\link{params_get_request}}, \code{\link{params_post_request}},
+\code{\link{content_get_response}}, \code{\link{content_post_response}}
 }
 \author{
 Rolf Simoes

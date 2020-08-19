@@ -209,3 +209,5 @@ content_post_response.items <- function(s, res, enctype) {
 
   return(x)
 }
+
+# TODO: implement head and tail S3 methods for stac_items object
