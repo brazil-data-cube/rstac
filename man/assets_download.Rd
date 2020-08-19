@@ -45,7 +45,7 @@ stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
             limit = 2) \%>\%
  get_request() \%>\%
- assets_download(assets_name = c("thumbnail"), output_dir = "~")
+ assets_download(assets_name = c("thumbnail"), output_dir = ".")
 }
 
 }
