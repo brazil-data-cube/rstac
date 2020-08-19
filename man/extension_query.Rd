@@ -37,17 +37,17 @@ A \code{ext_query} object containing all request parameters to be
 passed to \code{post_request} function.
 }
 \description{
-The \code{extension_query} is the interacting function of the STAC API
+The \code{extension_query} is the \emph{exported function} of the STAC API
 query extension. It can be used after a call to \code{stac_search} function.
-It allows that additional fields and operators be queried to an STAC API
-service to perform a complex filter.
+It allows that additional fields and operators other than those defined in
+\code{stac_search} function be used to make a complex filter.
 
 The function accepts multiple filter criteria. Each filter entry is an
-expression formed by \code{<field> <operator> <value>} terms, where
+expression formed by \code{<field> <operator> <value>}, where
 \code{<field>} refers to a valid item property. Supported \code{<fields>}
 depends on STAC API service implementation. The users must rely on service
-providers' documentation to know which properties can be passed to do the
-STAC API.
+providers' documentation to know which properties can be used by this
+extension.
 
 The \code{extension_query} function allows the following \code{<operators>}
 \itemize{
