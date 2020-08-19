@@ -29,8 +29,8 @@
 #' @return
 #'
 #' If no \code{collection_id} is informed, \code{stac_collections} returns a
-#' list of STAC Collections. Otherwise, it will return a \code{stac_collection} object
-#' representing a specific STAC Collection.
+#' list of STAC Collections. Otherwise, it will return a \code{stac_collection}
+#' object representing a specific STAC Collection.
 #'
 #' @examples
 #' \dontrun{

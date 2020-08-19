@@ -1,4 +1,4 @@
-#' @title STAC utils
+#' @title utils functions
 #'
 #' @author Felipe Carvalho
 #'
@@ -79,7 +79,7 @@
   }
 }
 
-#' @title STAC utils
+#' @title utils functions
 #'
 #' @author Felipe Carvalho
 #'
@@ -134,7 +134,7 @@
   warning(sprintf(msg, ...), call. = FALSE)
 }
 
-#' @title helper function
+#' @title utils functions
 #'
 #' @param obj       an \code{object} to compare.
 #'
@@ -164,7 +164,7 @@
 
 }
 
-#' @title STAC utils
+#' @title utils functions
 #'
 #' @author Rolf Simoes
 #'
@@ -208,7 +208,7 @@
   return(content)
 }
 
-#' @title STAC utils
+#' @title utils functions
 #'
 #' @rdname http_request
 #'
@@ -256,15 +256,13 @@
   return(res)
 }
 
-#' @title STAC utils
+#' @title utils functions
 #'
 #' @author Rolf Simoes
 #'
-#' @description The \code{.query_encode} ...
+#' @param params a \code{list} of parameters received from stac objects.
 #'
-#' @param params ...
-#'
-#' @return ...
+#' @return a \code{character} representing the encode parameters of the query.
 #'
 #' @noRd
 .query_encode <- function(params) {
@@ -276,15 +274,13 @@
   return(paste0(params, collapse = ","))
 }
 
-#' @title STAC utils
+#' @title utils functions
 #'
 #' @author Rolf Simoes
 #'
-#' @description The \code{.query_decode} ...
+#' @param query a \code{character} with the query to be decoded.
 #'
-#' @param query a character with the query to be filtered
-#'
-#' @return ...
+#' @return a \code{list} with the query params.
 #'
 #' @noRd
 .query_decode <- function(query) {

@@ -27,7 +27,7 @@
 #' Only works if the \code{collection_id} is informed. This is equivalent to
 #' the endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.
 #'
-#' @param datetime    either a date-time or an interval.
+#' @param datetime    a \code{character} with a date-time or an interval.
 #' Date and time strings needs to conform RFC 3339. Intervals are
 #' expressed by separating two date-time strings by \code{'/'} character.
 #' Open intervals are expressed by using \code{'..'} in place of date-time.
@@ -43,18 +43,16 @@
 #' Only features that have a \code{datetime} property that intersects
 #' the interval or date-time informed in \code{datetime} are selected.
 #'
-#' @param bbox        only features that have a geometry that intersects the
-#' bounding box are selected. The bounding box is provided as four or six
-#' numbers, depending on whether the coordinate reference system includes a
-#' vertical axis (elevation or depth):
-#' \itemize{
-#'   \item Lower left corner, coordinate axis 1
-#'   \item Lower left corner, coordinate axis 2
-#'   \item Lower left corner, coordinate axis 3 (optional)
-#'   \item Upper right corner, coordinate axis 1
-#'   \item Upper right corner, coordinate axis 2
-#'   \item Upper right corner, coordinate axis 3 (optional)
-#' }
+#' @param bbox        a \code{numeric} vector with only features that have a
+#' geometry that intersects the bounding box are selected. The bounding box is
+#' provided as four or six numbers, depending on whether the coordinate
+#' reference system includes a vertical axis (elevation or depth):
+#' \itemize{ \item Lower left corner, coordinate axis 1
+#'           \item Lower left corner, coordinate axis 2
+#'           \item Lower left corner, coordinate axis 3 (optional)
+#'           \item Upper right corner, coordinate axis 1
+#'           \item Upper right corner, coordinate axis 2
+#'           \item Upper right corner, coordinate axis 3 (optional) }
 #'
 #' The coordinate reference system of the values is WGS84
 #' longitude/latitude (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}).

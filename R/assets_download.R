@@ -7,7 +7,7 @@
 #'
 #' @param items       a \code{stac_items} or \code{stac_item} object
 #'  representing the result of \code{/stac/search},
-#'   \code{/collections/{collectionId}/items} or
+#'  \code{/collections/{collectionId}/items} or
 #'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
 #' @param assets_name a \code{character} with the assets names to be filtered.
@@ -33,7 +33,7 @@
 #'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
 #'             limit = 2) %>%
 #'  get_request() %>%
-#'  assets_download(assets_name = c("thumbnail"), output_dir = ".")
+#'  assets_download(assets_name = c("thumbnail"), output_dir = "~")
 #' }
 #'
 #' @return The same \code{stac_items} or \code{stac_item} object, with the

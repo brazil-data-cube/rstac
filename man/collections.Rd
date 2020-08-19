@@ -15,8 +15,8 @@ or \code{stac_items} functions.}
 }
 \value{
 If no \code{collection_id} is informed, \code{stac_collections} returns a
-list of STAC Collections. Otherwise, it will return a \code{stac_collection} object
-representing a specific STAC Collection.
+list of STAC Collections. Otherwise, it will return a \code{stac_collection}
+object representing a specific STAC Collection.
 }
 \description{
 The \code{collections} function implements the WFS3 \code{/collections}

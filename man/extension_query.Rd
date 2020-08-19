@@ -70,16 +70,16 @@ search operator.
 Besides this function, the following S3 generic methods were implemented
 to get things done for this extension:
 \itemize{
-\item \code{params_get_request} for class \code{ext_type}: raises an error
-when \code{get_request} is called after a call to \code{extension_query}
-function.
-\item The \code{params_post_request} for class \code{ext_type}: calls the
-default content request params handling.
-\item The \code{content_get_response} for class \code{ext_query}:
-raises an error when \code{get_request} is called after the
-\code{extension_query} function.
-\item The \code{content_post_response} for class \code{ext_query}: calls
-the default content response handling.
+ \item \code{params_get_request} for class \code{ext_type}: raises an error
+ when \code{get_request} is called after a call to \code{extension_query}
+ function.
+ \item The \code{params_post_request} for class \code{ext_type}: calls the
+ default content request params handling.
+ \item The \code{content_get_response} for class \code{ext_query}:
+ raises an error when \code{get_request} is called after the
+ \code{extension_query} function.
+ \item The \code{content_post_response} for class \code{ext_query}: calls
+ the default content response handling.
 }
 }
 \examples{
