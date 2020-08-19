@@ -43,16 +43,16 @@ needs to implement the \code{content_get_response}
 (\code{content_post_response}) S3 generic method.
 
 All these implemented methods will work 'behind the scenes' when a
-\code{stac} object representing a user query of the extension are passed
-to either \code{get_request} or \code{post_request} functions. This
-object is returned by the \emph{extension exported function} and it can
-be created by \code{.build_stac} function.
+\code{stac} object representing a user query are passed to either
+\code{get_request} or \code{post_request} functions. This
+object is returned by an \emph{exported function} of the extension and
+are created using \code{.build_stac} function.
 
-An \emph{extension exported function} is typically a function that
-receives as its first parameter an \code{stac} object (with derived
-subclass or not), sets new or changes parameters on it, and returns a new
+An \emph{exported function} of an extension is typically a function that
+receives as its first parameter an \code{stac} object (with subclass
+or not), sets new or changes existing parameters, and returns a new
 derived \code{stac} object with the extension's subclass. This object
-can be either passed to others extensions or to HTTP request functions
+can either be passed to others extensions or to the HTTP request functions
 (\code{get_request} and \code{post_request}). In the last case,
 the S3 generic methods above will be triggered.
 
