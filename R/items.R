@@ -1,7 +1,5 @@
 #' @title Endpoint functions
 #'
-#' @author Rolf Simoes
-#'
 #' @description
 #' The \code{items} function implements WFS3
 #' \code{/collections/\{collectionId\}/items}, and
@@ -27,7 +25,7 @@
 #' Only works if the \code{collection_id} is informed. This is equivalent to
 #' the endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.
 #'
-#' @param datetime    either a date-time or an interval.
+#' @param datetime    a \code{character} with a date-time or an interval.
 #' Date and time strings needs to conform RFC 3339. Intervals are
 #' expressed by separating two date-time strings by \code{'/'} character.
 #' Open intervals are expressed by using \code{'..'} in place of date-time.
@@ -43,18 +41,16 @@
 #' Only features that have a \code{datetime} property that intersects
 #' the interval or date-time informed in \code{datetime} are selected.
 #'
-#' @param bbox        only features that have a geometry that intersects the
-#' bounding box are selected. The bounding box is provided as four or six
-#' numbers, depending on whether the coordinate reference system includes a
-#' vertical axis (elevation or depth):
-#' \itemize{
-#'   \item Lower left corner, coordinate axis 1
-#'   \item Lower left corner, coordinate axis 2
-#'   \item Lower left corner, coordinate axis 3 (optional)
-#'   \item Upper right corner, coordinate axis 1
-#'   \item Upper right corner, coordinate axis 2
-#'   \item Upper right corner, coordinate axis 3 (optional)
-#' }
+#' @param bbox        a \code{numeric} vector with only features that have a
+#' geometry that intersects the bounding box are selected. The bounding box is
+#' provided as four or six numbers, depending on whether the coordinate
+#' reference system includes a vertical axis (elevation or depth):
+#' \itemize{ \item Lower left corner, coordinate axis 1
+#'           \item Lower left corner, coordinate axis 2
+#'           \item Lower left corner, coordinate axis 3 (optional)
+#'           \item Upper right corner, coordinate axis 1
+#'           \item Upper right corner, coordinate axis 2
+#'           \item Upper right corner, coordinate axis 3 (optional) }
 #'
 #' The coordinate reference system of the values is WGS84
 #' longitude/latitude (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}).
@@ -75,8 +71,8 @@
 #'  \code{\link{collections}}
 #'
 #' @return
-#' A \code{stac} object containing all request parameters to be
-#' provided to \code{stac_request}.
+#' A \code{stac} object containing all search field parameters to be provided
+#' to STAC API web service.
 #'
 #' @examples
 #' \dontrun{
@@ -132,33 +128,33 @@ items <- function(s, item_id, datetime, bbox, limit, ...) {
     endpoint <- paste(endpoint, params[["item_id"]], sep = "/")
   }
 
-  content <- build_stac(url = s$url,
+  content <- .build_stac(url = s$url,
                         endpoint = endpoint,
                         params = params,
-                        mutator = "items",
+                        subclass = "items",
                         base_stac = s)
 
   return(content)
 }
 
-params_get_mutator.items <- function(s) {
+params_get_request.items <- function(s) {
 
   if (!is.null(s$params[["item_id"]]))
     return(list())
 
-  # process collections mutator
-  params <- params_get_mutator.collections(s)
+  # process collections params
+  params <- params_get_request.collections(s)
 
   return(params)
 }
 
-params_post_mutator.items <- function(s, enctype) {
+params_post_request.items <- function(s, enctype) {
 
   if (!is.null(s$params[["item_id"]]))
     return(list())
 
-  # process collections mutator
-  params <- params_get_mutator.collections(s)
+  # process collections params
+  params <- params_get_request.collections(s)
 
   return(params)
 }
@@ -209,3 +205,5 @@ content_post_response.items <- function(s, res, enctype) {
 
   return(x)
 }
+
+# TODO: implement head and tail S3 methods for stac_items object

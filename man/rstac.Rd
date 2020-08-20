@@ -10,16 +10,12 @@ R client library for STAC is a R package that interfaces STAC API
     endpoints.
     For more information about the STAC specification, please consult the
     specification page (<http://stacspec.org>).
-    This package supports the version 0.8.0 of the STAC specification.
+    This package supports the version 0.8.1 of the STAC specification.
 }
 \section{The \code{rstac} functions}{
 
 The rstac package provides two categories of functions:
-API endpoints and assets access.
-
-The rstac functions can be divided in two groups, one those functions
-implementing STAC API endpoints and, other, those functions for data
-access (e.g. assets) and metadata organization.
+API endpoints and data access and organization.
 }
 
 \section{STAC API endpoints functions}{
@@ -59,13 +55,15 @@ The package implements the follow S3 classes: \code{stac_items},
  classes are regular lists representing the corresponding JSON STAC objects.
 }
 
-\author{
-\strong{Maintainer}: Brazil Data Cube Team \email{brazildatacube@dpi.inpe.br} [copyright holder]
-
-Authors:
+\seealso{
+Useful links:
 \itemize{
-  \item Rolf Simoes \email{rolf.simoes@inpe.br} (\href{https://orcid.org/0000-0003-0953-4132}{ORCID})
-  \item Felipe Carvalho \email{felipe.carvalho@inpe.br}
+  \item \url{https://github.com/brazil-data-cube/rstac}
+  \item Report bugs at \url{https://github.com/brazil-data-cube/rstac/issues}
 }
+
+}
+\author{
+\strong{Maintainer}: Brazil Data Cube Team \email{brazildatacube@inpe.br} [copyright holder]
 
 }

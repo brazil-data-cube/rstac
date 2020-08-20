@@ -1,6 +1,4 @@
-#' @title STAC utils
-#'
-#' @author Felipe Carvalho
+#' @title utils functions
 #'
 #' @description Auxiliary function to check whether the date time follows
 #' RFC 3339 standard.
@@ -79,9 +77,7 @@
   }
 }
 
-#' @title STAC utils
-#'
-#' @author Felipe Carvalho
+#' @title utils functions
 #'
 #' @description Auxiliary function to check that the provided date time follows
 #' the standards of RFC 3339
@@ -134,7 +130,7 @@
   warning(sprintf(msg, ...), call. = FALSE)
 }
 
-#' @title helper function
+#' @title utils functions
 #'
 #' @param obj       an \code{object} to compare.
 #'
@@ -164,9 +160,7 @@
 
 }
 
-#' @title STAC utils
-#'
-#' @author Rolf Simoes
+#' @title utils functions
 #'
 #' @description The \code{.check_response} function that checks if the request's
 #' response is in accordance with the \code{expected} parameters.
@@ -208,7 +202,7 @@
   return(content)
 }
 
-#' @title STAC utils
+#' @title utils functions
 #'
 #' @rdname http_request
 #'
@@ -256,15 +250,11 @@
   return(res)
 }
 
-#' @title STAC utils
+#' @title utils functions
 #'
-#' @author Rolf Simoes
+#' @param params a \code{list} of parameters received from stac objects.
 #'
-#' @description The \code{.query_encode} ...
-#'
-#' @param params ...
-#'
-#' @return ...
+#' @return a \code{character} representing the encode parameters of the query.
 #'
 #' @noRd
 .query_encode <- function(params) {
@@ -276,15 +266,11 @@
   return(paste0(params, collapse = ","))
 }
 
-#' @title STAC utils
+#' @title utils functions
 #'
-#' @author Rolf Simoes
+#' @param query a \code{character} with the query to be decoded.
 #'
-#' @description The \code{.query_decode} ...
-#'
-#' @param query a character with the query to be filtered
-#'
-#' @return ...
+#' @return a \code{list} with the query params.
 #'
 #' @noRd
 .query_decode <- function(query) {
@@ -296,13 +282,4 @@
   names(params) <- sapply(values, `[[`, 1)
 
   return(params)
-}
-
-
-subs <- function(x, y) {
-
-  if (length(x) > 0)
-    return(x)
-  return(y)
-
 }

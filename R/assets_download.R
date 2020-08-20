@@ -1,13 +1,11 @@
 #' @title assets download
 #'
-#' @author Felipe Carvalho and Rolf Simoes
-#'
 #' @description The \code{assets_download} function downloads the assets
 #' provided by the STAC API.
 #'
 #' @param items       a \code{stac_items} or \code{stac_item} object
 #'  representing the result of \code{/stac/search},
-#'   \code{/collections/{collectionId}/items} or
+#'  \code{/collections/{collectionId}/items} or
 #'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
 #' @param assets_name a \code{character} with the assets names to be filtered.
@@ -41,7 +39,10 @@
 #'
 #' @export
 assets_download <- function(items, assets_name, output_dir = ".",
-                            progress = TRUE, headers = c()) {
+                            progress = TRUE, headers = character()) {
+
+  # TODO: add parameter to cut out the assets if provided - keep_assets
+  # TODO: warning if the value of item_length is different of item_matched
 
   #check the object class
   .check_obj(items, expected = c("stac_items", "stac_item"))
@@ -108,7 +109,8 @@ assets_download <- function(items, assets_name, output_dir = ".",
 #'  pointing to the directory where the assets were saved.
 #'
 #' @noRd
-.item_download <- function(stac_item, assets_name, output_dir, headers = c()) {
+.item_download <- function(stac_item, assets_name, output_dir,
+                           headers = character()) {
 
   feat_id <- stac_item[["id"]]
   assets  <- .select_assets(stac_item[["assets"]], assets_name)
@@ -141,8 +143,6 @@ assets_download <- function(items, assets_name, output_dir = ".",
 
 #' @title Helper function of \code{assets_download} function
 #'
-#' @author Implemented by \code{tools package}
-#'
 #' @description The \code{.file_ext} is function to extract the extension
 #' from a file
 #'
@@ -152,15 +152,13 @@ assets_download <- function(items, assets_name, output_dir = ".",
 #'
 #' @noRd
 .file_ext <- function(asset_url) {
-  pos   <- regexpr("\\.([[:alnum:]]+)$", asset_url)
-  str_t <- ifelse(pos > -1L, substring(asset_url, pos + 1L), "")
 
-  return(str_t)
+  pos <- regexpr("\\.([[:alnum:]]+)$", asset_url[[1]])
+  if (pos < 0) return("")
+  return(substring(asset_url[[1]], pos + 1))
 }
 
 #' @title Helper function of \code{assets_download} function
-#'
-#' @author Felipe Carvalho
 #'
 #' @description The helper function \code{.select_assets} selects the names of
 #' each asset provided by users

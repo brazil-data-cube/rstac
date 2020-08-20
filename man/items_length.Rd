@@ -28,6 +28,3 @@ stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 }
 
 }
-\author{
-Rolf Simoes
-}

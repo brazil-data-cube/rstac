@@ -1,7 +1,5 @@
 #' @title Items function
 #'
-#' @author Rolf Simoes
-#'
 #' @description The \code{items_fetch} function returns the pagination of all
 #'  items of the stac object
 #'

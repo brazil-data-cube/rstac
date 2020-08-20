@@ -2,11 +2,9 @@
 #'
 #' @rdname collections
 #'
-#' @author Rolf Simoes
-#'
 #' @description
 #' The \code{collections} function implements the WFS3 \code{/collections}
-#' and \code{/collections/\{collectionId\}} endpoints (v0.8.0).
+#' and \code{/collections/\{collectionId\}} endpoints (v0.8.1).
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{
@@ -27,10 +25,8 @@
 #'  \code{\link{items}}
 #'
 #' @return
-#'
-#' If no \code{collection_id} is informed, \code{stac_collections} returns a
-#' list of STAC Collections. Otherwise, it will return a \code{stac_collection} object
-#' representing a specific STAC Collection.
+#' A \code{stac} object containing all search field parameters to be provided
+#' to STAC API web service.
 #'
 #' @examples
 #' \dontrun{
@@ -59,32 +55,32 @@ collections <- function(s, collection_id) {
     endpoint <- paste("/collections", collection_id[[1]], sep = "/")
   }
 
-  content <- build_stac(url = s$url,
+  content <- .build_stac(url = s$url,
                         endpoint = endpoint,
                         params = params,
-                        mutator = "collections",
+                        subclass = "collections",
                         base_stac = s)
   return(content)
 }
 
-params_get_mutator.collections <- function(s) {
+params_get_request.collections <- function(s) {
 
   # ignore 'collection_id' param
   s$params[["collection_id"]] <- NULL
 
-  # process stac mutator
-  params <- params_get_mutator.stac(s)
+  # process stac params
+  params <- params_get_request.stac(s)
 
   return(params)
 }
 
-params_post_mutator.collections <- function(s, enctype) {
+params_post_request.collections <- function(s, enctype) {
 
   # ignore 'collection_id' param
   s$params[["collection_id"]] <- NULL
 
-  # process stac mutator
-  params <- params_post_mutator.stac(s, enctype = enctype)
+  # process stac params
+  params <- params_post_request.stac(s, enctype = enctype)
 
   return(params)
 }

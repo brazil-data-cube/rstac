@@ -14,13 +14,12 @@ or \code{stac_items} functions.}
 \item{collection_id}{a \code{character} collection id to be retrieved.}
 }
 \value{
-If no \code{collection_id} is informed, \code{stac_collections} returns a
-list of STAC Collections. Otherwise, it will return a \code{stac_collection} object
-representing a specific STAC Collection.
+A \code{stac} object containing all search field parameters to be provided
+to STAC API web service.
 }
 \description{
 The \code{collections} function implements the WFS3 \code{/collections}
-and \code{/collections/\{collectionId\}} endpoints (v0.8.0).
+and \code{/collections/\{collectionId\}} endpoints (v0.8.1).
 
 Each endpoint retrieves specific STAC objects:
 \itemize{
@@ -45,7 +44,4 @@ stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 \seealso{
 \code{\link{get_request}}, \code{\link{post_request}},
  \code{\link{items}}
-}
-\author{
-Rolf Simoes
 }

@@ -33,7 +33,8 @@ and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
 }
 \value{
 Either a \code{stac_catalog}, \code{stac_collection}, \code{stac_items},
-or \code{stac_item} object depending on the \code{s} parameter.
+or \code{stac_item} object depending on the subclass and search fields
+parameters of \code{s} argument.
 }
 \description{
 The \code{get_request} is function that makes HTTP GET
@@ -56,7 +57,4 @@ stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 \seealso{
 \code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
 \code{\link{items}}
-}
-\author{
-Rolf Simoes and Felipe Carvalho
 }

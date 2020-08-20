@@ -2,11 +2,7 @@
 #'
 #' @section The \code{rstac} functions:
 #' The rstac package provides two categories of functions:
-#' API endpoints and assets access.
-#'
-#' The rstac functions can be divided in two groups, one those functions
-#' implementing STAC API endpoints and, other, those functions for data
-#' access (e.g. assets) and metadata organization.
+#' API endpoints and data access and organization.
 #'
 #' @section STAC API endpoints functions:
 #' \itemize{
@@ -43,8 +39,6 @@
 "_PACKAGE"
 NULL
 
-
-#' @importFrom jsonlite validate fromJSON
 #' @importFrom httr GET POST write_disk add_headers content status_code http_type
 #' @importFrom crayon bold
 NULL

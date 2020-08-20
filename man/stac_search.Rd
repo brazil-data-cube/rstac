@@ -18,14 +18,16 @@ searched.}
 \item{ids}{a \code{character} vector with item IDs. All other filter
 parameters that futher restrict the number of search results are ignored.}
 
-\item{bbox}{only features that have a geometry that intersects the
-bounding box are selected. The bounding box is provided as four or six
-numbers, depending on whether the coordinate reference system includes a
-vertical axis (elevation or depth): \itemize{ \item Lower left corner,
-coordinate axis 1 \item Lower left corner, coordinate axis 2 \item Lower
-left corner, coordinate axis 3 (optional) \item Upper right corner,
-coordinate axis 1 \item Upper right corner, coordinate axis 2 \item Upper
- right corner, coordinate axis 3 (optional) }
+\item{bbox}{a \code{numeric} vector with only features that have a
+geometry that intersects the bounding box are selected. The bounding box is
+provided as four or six numbers, depending on whether the coordinate
+reference system includes a vertical axis (elevation or depth):
+\itemize{ \item Lower left corner, coordinate axis 1
+          \item Lower left corner, coordinate axis 2
+          \item Lower left corner, coordinate axis 3 (optional)
+          \item Upper right corner, coordinate axis 1
+          \item Upper right corner, coordinate axis 2
+          \item Upper right corner, coordinate axis 3 (optional) }
 
 The coordinate reference system of the values is WGS84 longitude/latitude
 (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}). The values are in
@@ -34,15 +36,16 @@ longitude and maximum latitude. However, in cases where the box spans the
 antimeridian the first value (west-most box edge) is larger than the third
 value (east-most box edge).}
 
-\item{datetime}{either a date-time or an interval. Date and time strings
-needs to conform RFC 3339. Intervals are expressed by separating two
-date-time strings by \code{'/'} character. Open intervals are expressed by
-using \code{'..'} in place of date-time.
+\item{datetime}{a \code{character} with a date-time or an interval. Date
+ and time strings needs to conform RFC 3339. Intervals are expressed by
+ separating two date-time strings by \code{'/'} character. Open intervals are
+ expressed by using \code{'..'} in place of date-time.
 
-Examples: \itemize{ \item A date-time: \code{"2018-02-12T23:20:50Z"} \item
-A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"} \item
-Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
-\code{"../2018-03-18T12:31:12Z"} }
+Examples: \itemize{
+ \item A date-time: \code{"2018-02-12T23:20:50Z"}
+ \item A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"}
+ \item Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
+ \code{"../2018-03-18T12:31:12Z"} }
 
 Only features that have a \code{datetime} property that intersects the
 interval or date-time informed in \code{datetime} are selected.}
@@ -57,20 +60,20 @@ to return. If not informed it defaults to the service implementation.}
 \item{...}{any additional non standard filter parameter.}
 }
 \value{
-A \code{stac} object containing all request parameters to be provided
-to \code{stac_request}.
+A \code{stac} object containing all search field parameters to be provided
+to STAC API web service.
 }
 \description{
 (This document is based on STAC specification documentation
-\url{https://github.com/radiantearth/stac-spec/blob/v0.8.0/api-spec/STAC.yaml}
+\url{https://github.com/radiantearth/stac-spec/blob/v0.8.1/api-spec/STAC.yaml}
 and reproduces some of its parts)
 
 The \code{stac_search} function implements \code{/stac/search} API endpoint
-(v0.8.0). It prepares query parameters used in search API request, a
+(v0.8.1). It prepares query parameters used in search API request, a
 \code{stac} object with all filter parameters to be provided to
-\code{stac_request}. The GeoJSON content returned by the \code{stac_request}
-is a \code{items} object, a regular R \code{list} representing a STAC
-ItemCollection.
+\code{get_request} or \code{post_request} functions. The GeoJSON content
+returned by these requests is a \code{stac_items} object, a regular R
+\code{list} representing a STAC Item Collection document.
 }
 \examples{
 \dontrun{
@@ -90,7 +93,4 @@ stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 \seealso{
 \code{\link{stac}}, \code{\link{extension_query}},
 \code{\link{get_request}}, \code{\link{post_request}}
-}
-\author{
-Rolf Simoes
 }

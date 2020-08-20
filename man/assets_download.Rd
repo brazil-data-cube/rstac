@@ -9,13 +9,13 @@ assets_download(
   assets_name,
   output_dir = ".",
   progress = TRUE,
-  headers = c()
+  headers = character()
 )
 }
 \arguments{
 \item{items}{a \code{stac_items} or \code{stac_item} object
 representing the result of \code{/stac/search},
- \code{/collections/{collectionId}/items} or
+\code{/collections/{collectionId}/items} or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
 
 \item{assets_name}{a \code{character} with the assets names to be filtered.}
@@ -52,7 +52,4 @@ stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 \seealso{
 \code{\link{stac_search}}, \code{\link{get_request}},
  \code{\link{post_request}}
-}
-\author{
-Felipe Carvalho and Rolf Simoes
 }
