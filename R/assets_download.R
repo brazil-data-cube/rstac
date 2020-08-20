@@ -1,7 +1,5 @@
 #' @title assets download
 #'
-#' @author Felipe Carvalho and Rolf Simoes
-#'
 #' @description The \code{assets_download} function downloads the assets
 #' provided by the STAC API.
 #'
@@ -145,8 +143,6 @@ assets_download <- function(items, assets_name, output_dir = ".",
 
 #' @title Helper function of \code{assets_download} function
 #'
-#' @author Implemented by \code{tools package}
-#'
 #' @description The \code{.file_ext} is function to extract the extension
 #' from a file
 #'
@@ -156,15 +152,13 @@ assets_download <- function(items, assets_name, output_dir = ".",
 #'
 #' @noRd
 .file_ext <- function(asset_url) {
-  pos   <- regexpr("\\.([[:alnum:]]+)$", asset_url)
-  str_t <- ifelse(pos > -1L, substring(asset_url, pos + 1L), "")
 
-  return(str_t)
+  pos <- regexpr("\\.([[:alnum:]]+)$", asset_url[[1]])
+  if (pos < 0) return("")
+  return(substring(asset_url[[1]], pos + 1))
 }
 
 #' @title Helper function of \code{assets_download} function
-#'
-#' @author Felipe Carvalho
 #'
 #' @description The helper function \code{.select_assets} selects the names of
 #' each asset provided by users

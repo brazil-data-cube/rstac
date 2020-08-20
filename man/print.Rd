@@ -90,6 +90,3 @@ print(obj_stac)
 \code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
 \code{\link{items}}
 }
-\author{
-Felipe Carvalho and Rolf Simoes
-}

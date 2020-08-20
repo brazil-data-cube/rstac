@@ -1,7 +1,5 @@
 #' @title Items functions
 #'
-#' @author Rolf Simoes
-#'
 #' @description The \code{items_matched} returns how many items matched the
 #' search criteria. It implements \code{search:metadata} STAC API
 #' extension (v0.8.0).

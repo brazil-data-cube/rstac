@@ -1,7 +1,5 @@
 #' @title utils functions
 #'
-#' @author Felipe Carvalho
-#'
 #' @description Auxiliary function to check whether the date time follows
 #' RFC 3339 standard.
 #'
@@ -80,8 +78,6 @@
 }
 
 #' @title utils functions
-#'
-#' @author Felipe Carvalho
 #'
 #' @description Auxiliary function to check that the provided date time follows
 #' the standards of RFC 3339
@@ -165,8 +161,6 @@
 }
 
 #' @title utils functions
-#'
-#' @author Rolf Simoes
 #'
 #' @description The \code{.check_response} function that checks if the request's
 #' response is in accordance with the \code{expected} parameters.
@@ -258,8 +252,6 @@
 
 #' @title utils functions
 #'
-#' @author Rolf Simoes
-#'
 #' @param params a \code{list} of parameters received from stac objects.
 #'
 #' @return a \code{character} representing the encode parameters of the query.
@@ -275,8 +267,6 @@
 }
 
 #' @title utils functions
-#'
-#' @author Rolf Simoes
 #'
 #' @param query a \code{character} with the query to be decoded.
 #'

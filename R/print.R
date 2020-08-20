@@ -2,8 +2,6 @@
 #'
 #' @name print
 #'
-#' @author Felipe Carvalho and Rolf Simoes
-#'
 #' @description The print functions cover all objects in the rstac package:
 #' \itemize{
 #'   \item \code{\link{stac}}: Returns a \code{Catalog} document in \code{/stac}

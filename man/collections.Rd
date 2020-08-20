@@ -45,6 +45,3 @@ stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 \code{\link{get_request}}, \code{\link{post_request}},
  \code{\link{items}}
 }
-\author{
-Rolf Simoes
-}

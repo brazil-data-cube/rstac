@@ -43,6 +43,3 @@ The \code{items_fetch} function returns the pagination of all
 \code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
 \code{\link{items}}
 }
-\author{
-Rolf Simoes
-}

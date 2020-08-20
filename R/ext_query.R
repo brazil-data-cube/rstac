@@ -1,7 +1,5 @@
 #' @title Extension functions
 #'
-#' @author Rolf Simoes
-#'
 #' @description
 #' The \code{extension_query} is the \emph{exported function} of the STAC API
 #' query extension. It can be used after a call to \code{stac_search} function.

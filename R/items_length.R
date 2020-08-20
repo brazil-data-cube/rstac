@@ -1,7 +1,5 @@
 #' @title Items functions
 #'
-#' @author Rolf Simoes
-#'
 #' @description The \code{items_length} function returns how many items
 #' there are in the \code{items} object.
 #'

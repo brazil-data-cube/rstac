@@ -1,7 +1,5 @@
 #' @title Endpoint functions
 #'
-#' @author Rolf Simoes
-#'
 #' @description The \code{stac} function implements \code{/stac} API
 #' endpoint (v0.8.1). It prepares search fields parameters to be provided to
 #' a STAC API web service. This endpoint should return a STAC Catalog document
@@ -40,8 +38,6 @@ stac <- function(url) {
 }
 
 #' @title stac object builder function
-#'
-#' @author Rolf Simoes
 #'
 #' @description The \code{.build_stac} function builds a stac object based on a
 #'  given \code{stac} object and others parameters.

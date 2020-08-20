@@ -1,7 +1,5 @@
 #' @title Endpoint functions
 #'
-#' @author Rolf Simoes
-#'
 #' @description (This document is based on STAC specification documentation
 #' \url{https://github.com/radiantearth/stac-spec/blob/v0.8.1/api-spec/STAC.yaml}
 #' and reproduces some of its parts)

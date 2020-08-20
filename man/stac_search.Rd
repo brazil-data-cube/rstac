@@ -94,6 +94,3 @@ stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 \code{\link{stac}}, \code{\link{extension_query}},
 \code{\link{get_request}}, \code{\link{post_request}}
 }
-\author{
-Rolf Simoes
-}

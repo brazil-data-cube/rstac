@@ -2,29 +2,25 @@ Package: rstac
 Title: R Client Library for SpatioTemporal Asset Catalog
 Version: 0.3.3
 Authors@R: 
-    c(person("Brazil Data Cube Team", email = "brazildatacube@dpi.inpe.br", 
-             role = c("cph", "cre")),
-      person("Rolf", "Simoes", email = "rolf.simoes@inpe.br",
-             role = c("aut"),
-             comment = c(ORCID = "0000-0003-0953-4132")),
-      person("Felipe", "Carvalho", email = "felipe.carvalho@inpe.br", role = c("aut")))
+    c(person("Brazil Data Cube Team", email = "brazildatacube@inpe.br", 
+             role = c("cph", "cre", "aut")))
 Description: 
     R client library for STAC is a R package that interfaces STAC API 
     endpoints.
     For more information about the STAC specification, please consult the
     specification page (<http://stacspec.org>).
-    This package supports the version 0.8.0 of the STAC specification.
+    This package supports the version 0.8.1 of the STAC specification.
 License: MIT + file LICENSE
+URL: https://github.com/brazil-data-cube/rstac
+BugReports: https://github.com/brazil-data-cube/rstac/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Depends:
     httr,
     crayon
-Suggests: 
+Suggests:
     covr,
     magrittr,
     testthat,
-    vcr,
-    knitr,
-    rmarkdown
+    vcr

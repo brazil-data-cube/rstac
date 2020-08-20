@@ -43,7 +43,7 @@
 #' @param res     a \code{httr} \code{response} object.
 #'
 #' @seealso \code{\link{extension_query}}, \code{\link{get_request}},
-#' \code{\link{post_request}}, \code{\link{.build_stac}}
+#' \code{\link{post_request}}, \code{.build_stac}
 #'
 #' @name extensions
 NULL

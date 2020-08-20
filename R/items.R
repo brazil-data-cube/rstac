@@ -1,7 +1,5 @@
 #' @title Endpoint functions
 #'
-#' @author Rolf Simoes
-#'
 #' @description
 #' The \code{items} function implements WFS3
 #' \code{/collections/\{collectionId\}/items}, and

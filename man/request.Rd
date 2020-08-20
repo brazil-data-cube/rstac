@@ -58,6 +58,3 @@ stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 \code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
 \code{\link{items}}
 }
-\author{
-Rolf Simoes and Felipe Carvalho
-}

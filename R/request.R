@@ -2,8 +2,6 @@
 #'
 #' @rdname request
 #'
-#' @author Rolf Simoes and Felipe Carvalho
-#'
 #' @description The \code{get_request} is function that makes HTTP GET
 #' requests to STAC web services, retrieves, and parse the data.
 #'

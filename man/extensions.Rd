@@ -61,5 +61,5 @@ source file that implements the STAC API query extension.
 }
 \seealso{
 \code{\link{extension_query}}, \code{\link{get_request}},
-\code{\link{post_request}}, \code{\link{.build_stac}}
+\code{\link{post_request}}, \code{.build_stac}
 }

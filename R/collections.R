@@ -2,8 +2,6 @@
 #'
 #' @rdname collections
 #'
-#' @author Rolf Simoes
-#'
 #' @description
 #' The \code{collections} function implements the WFS3 \code{/collections}
 #' and \code{/collections/\{collectionId\}} endpoints (v0.8.1).
