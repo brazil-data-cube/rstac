@@ -9,9 +9,9 @@
 #' The \code{stac_search} function implements \code{/stac/search} API endpoint
 #' (v0.8.1). It prepares query parameters used in search API request, a
 #' \code{stac} object with all filter parameters to be provided to
-#' \code{stac_request}. The GeoJSON content returned by the \code{stac_request}
-#' is a \code{items} object, a regular R \code{list} representing a STAC
-#' ItemCollection.
+#' \code{get_request} or \code{post_request} functions. The GeoJSON content
+#' returned by these requests is a \code{stac_items} object, a regular R
+#' \code{list} representing a STAC Item Collection document.
 #'
 #' @param s           a \code{stac} object expressing a STAC search criteria
 #' provided by \code{stac}, \code{stac_search}, \code{collections},
@@ -68,8 +68,9 @@
 #' @seealso \code{\link{stac}}, \code{\link{extension_query}},
 #' \code{\link{get_request}}, \code{\link{post_request}}
 #'
-#' @return A \code{stac} object containing all request parameters to be provided
-#' to \code{stac_request}.
+#' @return
+#' A \code{stac} object containing all search field parameters to be provided
+#' to STAC API web service.
 #'
 #' @examples
 #' \dontrun{

@@ -39,8 +39,6 @@
 "_PACKAGE"
 NULL
 
-
-#' @importFrom jsonlite validate fromJSON
 #' @importFrom httr GET POST write_disk add_headers content status_code http_type
 #' @importFrom crayon bold
 NULL

@@ -14,9 +14,8 @@ or \code{stac_items} functions.}
 \item{collection_id}{a \code{character} collection id to be retrieved.}
 }
 \value{
-If no \code{collection_id} is informed, \code{stac_collections} returns a
-list of STAC Collections. Otherwise, it will return a \code{stac_collection}
-object representing a specific STAC Collection.
+A \code{stac} object containing all search field parameters to be provided
+to STAC API web service.
 }
 \description{
 The \code{collections} function implements the WFS3 \code{/collections}

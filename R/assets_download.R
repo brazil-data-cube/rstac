@@ -41,7 +41,7 @@
 #'
 #' @export
 assets_download <- function(items, assets_name, output_dir = ".",
-                            progress = TRUE, headers = c()) {
+                            progress = TRUE, headers = character()) {
 
   # TODO: add parameter to cut out the assets if provided - keep_assets
   # TODO: warning if the value of item_length is different of item_matched
@@ -111,7 +111,8 @@ assets_download <- function(items, assets_name, output_dir = ".",
 #'  pointing to the directory where the assets were saved.
 #'
 #' @noRd
-.item_download <- function(stac_item, assets_name, output_dir, headers = c()) {
+.item_download <- function(stac_item, assets_name, output_dir,
+                           headers = character()) {
 
   feat_id <- stac_item[["id"]]
   assets  <- .select_assets(stac_item[["assets"]], assets_name)

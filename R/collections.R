@@ -27,10 +27,8 @@
 #'  \code{\link{items}}
 #'
 #' @return
-#'
-#' If no \code{collection_id} is informed, \code{stac_collections} returns a
-#' list of STAC Collections. Otherwise, it will return a \code{stac_collection}
-#' object representing a specific STAC Collection.
+#' A \code{stac} object containing all search field parameters to be provided
+#' to STAC API web service.
 #'
 #' @examples
 #' \dontrun{
