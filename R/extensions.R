@@ -1,4 +1,4 @@
-#' @title Extension functions
+#' @title Extension Development
 #'
 #' @description
 #' These functions are intended for those who want to implement new STAC API

@@ -6,7 +6,7 @@
 \alias{params_post_request}
 \alias{content_get_response}
 \alias{content_post_response}
-\title{Extension functions}
+\title{Extension Development}
 \usage{
 params_get_request(s)
 

@@ -65,6 +65,8 @@ stac <- function(url) {
 #' @return
 #' A \code{stac} object with subclass \code{subclass} containing all request
 #'  parameters to be provided to API service.
+#'
+#' @noRd
 .build_stac <- function(url, endpoint, params, subclass, base_stac) {
 
   base_params <- list()

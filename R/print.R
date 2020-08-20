@@ -6,32 +6,43 @@
 #'
 #' @description The print functions cover all objects in the rstac package:
 #' \itemize{
-#'   \item \code{\link{stac}}: implements STAC \code{/stac} endpoint.
-#'   \item \code{\link{collections}}: implements \code{/collections}
-#'     and \code{/collections/\{collectionId\}} WFS3 endpoints.
-#'   \item \code{\link{items}}: implements
-#'     \code{/collections/\{collectionId\}/items} and
+#'   \item \code{\link{stac}}: Returns a \code{Catalog} document in \code{/stac}
+#'    endpoint.
+#'   \item \code{\link{search}}: Returns a \code{ItemCollection} document in
+#'   \code{/stac/search} endpoint with a group of Items matching the provided
+#'   search predicates.
+#'   \item \code{\link{collections}}: Return a \code{Collection} document
+#'    by listing of collections contained in the catalog in \code{/collections}
+#'    endpoint and in \code{/collections/\{collectionId\}} endpoint return a
+#'    single \code{Collection} document.
+#'   \item \code{\link{items}}: Return a \code{ItemCollection} document in
+#'   \code{/collections/\{collectionId\}/items} and a \code{Item} document in
 #'     \code{/collections/\{collectionId\}/items/\{itemId\}} WFS3 endpoints.
 #'  }
 #'
-#' The rstac package objects visualization is based on **Markdown**, a
+#' The rstac package objects visualization is based on \strong{Markdown}, a
 #'  lightweight markup language, so you can paste the output into any
-#'  **Markdown** editor for a better visualization.
+#'  \strong{Markdown} editor for a better visualization.
 #'
-#' For printing use the `print()` function directly, since the package has a
-#'  generic implementation for its objects. For console output control, you have
-#'  the option to determine how many items you want to see through the `n` in
-#'  `print` objects parameters, the following objects have the `n` parameter:
-#'  * \code{\link{items}}
-#'  * \code{\link{collections}}
-#'  * \code{\link{stac}}
+#' For printing use the \code{print()} function directly, since the package has
+#'  a generic implementation for its objects. For console output control, you
+#'  have the option to determine how many items you want to see through the
+#'  \code{n} in \code{print} objects parameters, the following objects have the
+#'  \code{n} parameter:
+#'  \itemize{
+#'   \item \code{\link{items}}
+#'   \item \code{\link{collections}}
+#'   \item \code{\link{stac}}
+#'  }
 #'
 #' @param x object STAC to print.
+#'
 #' @param n number of lines to view on each object. Each object has its own type
 #'  of truncation in lines. In the \code{stac_catalog} object, by default, 10
 #'  links will be shown. In the \code{stac_collection} object, similarly, 10
 #'  links will be shown. In \code{stac_items}, by default, 3 features will be
 #'  shown. If you want to show all lines of a rstac object, use `n = Inf`.
+#'
 #' @param ... other parameters passed in the functions.
 #'
 #' @seealso
