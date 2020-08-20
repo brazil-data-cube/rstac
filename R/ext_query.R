@@ -53,7 +53,6 @@
 #'
 #' @param ...           entries with format \code{<field> <operator> <value>}.
 #'
-#' @inheritParams extensions
 #'
 #' @seealso \code{\link{stac_search}}, \code{\link{post_request}},
 #' \code{\link{params_get_request}}, \code{\link{params_post_request}},
@@ -126,14 +125,13 @@ extension_query <- function(s, ...) {
   return(content)
 }
 
-#' @rdname extension_query
 params_get_request.ext_query <- function(s) {
 
   .error(paste0("STAC API query extension is not supported by HTTP GET method.",
                 "Try use `post_request` method instead."))
 }
 
-#' @rdname extension_query
+
 params_post_request.ext_query <- function(s, enctype) {
 
   # process search params
@@ -142,14 +140,12 @@ params_post_request.ext_query <- function(s, enctype) {
   return(params)
 }
 
-#' @rdname extension_query
 content_get_response.ext_query <- function(s, res) {
 
   .error(paste0("STAC API query extension is not supported by HTTP GET method.",
                 "Try use `post_request` method instead."))
 }
 
-#' @rdname extension_query
 content_post_response.ext_query <- function(s, res, enctype) {
 
   content <- content_post_response.search(s, res = res, enctype = enctype)

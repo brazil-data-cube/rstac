@@ -2,35 +2,15 @@
 % Please edit documentation in R/ext_query.R
 \name{extension_query}
 \alias{extension_query}
-\alias{params_get_request.ext_query}
-\alias{params_post_request.ext_query}
-\alias{content_get_response.ext_query}
-\alias{content_post_response.ext_query}
 \title{Extension functions}
 \usage{
 extension_query(s, ...)
-
-\method{params_get_request}{ext_query}(s)
-
-\method{params_post_request}{ext_query}(s, enctype)
-
-\method{content_get_response}{ext_query}(s, res)
-
-\method{content_post_response}{ext_query}(s, res, enctype)
 }
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria
 provided by \code{stac_search} function.}
 
 \item{...}{entries with format \code{<field> <operator> <value>}.}
-
-\item{enctype}{a \code{character} informing the request body
-Content-Type. Accepted types are \code{'json'} (\code{'application/json'}),
-\code{'form'} (\code{'application/x-www-form-urlencoded'}),
-and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
-\code{'json'}.}
-
-\item{res}{a \code{httr} \code{response} object.}
 }
 \value{
 A \code{ext_query} object containing all request parameters to be

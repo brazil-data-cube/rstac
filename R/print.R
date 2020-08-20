@@ -1,6 +1,6 @@
 #' @title Printing functions
 #'
-#' @name print_functions
+#' @name print
 #'
 #' @author Felipe Carvalho and Rolf Simoes
 #'
@@ -133,7 +133,7 @@ print_header.stac_catalog <- function(x, ...) {
 #### prints ####
 
 #' @title Printing functions
-#' @rdname print_functions
+#' @rdname print
 #' @export
 print.stac <- function(x, ...) {
 
@@ -145,7 +145,7 @@ print.stac <- function(x, ...) {
 }
 
 #' @title Printing functions
-#' @rdname print_functions
+#' @rdname print
 #' @export
 print.stac_catalog <- function(x, n = 10, ...) {
 
@@ -171,7 +171,7 @@ print.stac_catalog <- function(x, n = 10, ...) {
 }
 
 #' @title Printing functions
-#' @rdname print_functions
+#' @rdname print
 #' @export
 print.stac_collection <- function(x, n = 10, ...) {
 
@@ -198,7 +198,7 @@ print.stac_collection <- function(x, n = 10, ...) {
 }
 
 #' @title Printing functions
-#' @rdname print_functions
+#' @rdname print
 #' @export
 print.stac_items <- function(x, n = 5, ...) {
 
@@ -222,7 +222,7 @@ print.stac_items <- function(x, n = 5, ...) {
 }
 
 #' @title Printing functions
-#' @rdname print_functions
+#' @rdname print
 #' @export
 print.stac_item <- function(x, ...){
 

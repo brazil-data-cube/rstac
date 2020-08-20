@@ -46,24 +46,31 @@
 #' \code{\link{post_request}}, \code{\link{.build_stac}}
 #'
 #' @name extensions
+NULL
+
+#' @rdname extensions
+#' @export
 params_get_request <- function(s) {
 
   UseMethod("params_get_request")
 }
 
 #' @rdname extensions
+#' @export
 params_post_request <- function(s, enctype) {
 
   UseMethod("params_post_request")
 }
 
 #' @rdname extensions
+#' @export
 content_get_response <- function(s, res) {
 
   UseMethod("content_get_response")
 }
 
 #' @rdname extensions
+#' @export
 content_post_response <- function(s, res, enctype) {
 
   UseMethod("content_post_response")
