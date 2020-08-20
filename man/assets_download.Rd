@@ -9,7 +9,7 @@ assets_download(
   assets_name,
   output_dir = ".",
   progress = TRUE,
-  headers = c()
+  headers = character()
 )
 }
 \arguments{
