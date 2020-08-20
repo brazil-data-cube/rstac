@@ -3,9 +3,9 @@
 #' @author Rolf Simoes
 #'
 #' @description The \code{stac} function implements \code{/stac} API
-#' endpoint (v0.8.1). It prepares query parameters to be provided to
-#' \code{stac_request} function. This endpoint should return a STAC
-#' Catalog containing all data Items searchable in the API.
+#' endpoint (v0.8.1). It prepares search fields parameters to be provided to
+#' a STAC API web service. This endpoint should return a STAC Catalog document
+#' containing all data Items searchable in the API.
 #'
 #' @param url        a \code{character} informing the base url of a
 #'  STAC web service.

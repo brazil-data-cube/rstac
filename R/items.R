@@ -73,8 +73,8 @@
 #'  \code{\link{collections}}
 #'
 #' @return
-#' A \code{stac} object containing all request parameters to be
-#' provided to \code{stac_request}.
+#' A \code{stac} object containing all search field parameters to be provided
+#' to STAC API web service.
 #'
 #' @examples
 #' \dontrun{
