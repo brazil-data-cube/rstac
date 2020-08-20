@@ -1,6 +1,4 @@
-#' @title STAC utils
-#'
-#' @author Felipe Carvalho
+#' @title utils functions
 #'
 #' @description Auxiliary function to check whether the date time follows
 #' RFC 3339 standard.
@@ -32,16 +30,13 @@
     split_datetime <- split_datetime[[1]][which(unlist(split_datetime) != "")]
 
     # checking if date time is in the RFC standards
-    match_rfc <- .check_rfc(split_datetime)
+    match_rfc <- .check_rfc_3339(split_datetime)
 
-    if (match_rfc) {
-      return(datetime)
-    } else
-      stop(paste0("The interval date time provided is not in RFC format,
-                  please check the RFC 3339 rules."), call. = FALSE)
+    if (!match_rfc)
+      .error(paste("The interval date time provided is not in RFC format,",
+                   "please check the RFC 3339 rules."))
 
     return(datetime)
-
   } else {
 
     # Splits the vector elements with the dates by the backslash
@@ -51,9 +46,9 @@
     # In case the vector has two elements it is a closed date time
     if (length(split_datetime) == 2) {
       # Checks if there is FALSE value in vector
-      if (!all(.check_rfc(split_datetime)))
-        stop(paste0("The date time provided not follow the RFC 3339 format,
-                    please check the RFC 3339 rules."), call. = F)
+      if (!all(.check_rfc_3339(split_datetime)))
+        .error(paste0("The date time provided not follow the RFC 3339 format,",
+                      "please check the RFC 3339 rules."))
 
       # formatting the closed date time according to the RFC
       interval_dt <- as.POSIXct(split_datetime,
@@ -62,27 +57,27 @@
                                                "%Y-%m-%d"))
 
       # Check the interval, if the interval is wrong an error is returned
-      ifelse(interval_dt[1] < interval_dt[2],
-             return(datetime),
-             stop(
-               paste0("The closed date time provided is not in correct interval,
-                  the first date time shold be less than second."), call. = F))
+      if (interval_dt[1] > interval_dt[2]) {
+        .error(paste("The closed date time provided is not in correct",
+                     "interval, the first date time shold be less than",
+                     "second."))
+      }
+
+      return(datetime)
     }
 
     # Check if date time is a fixed interval
     else {
-      if (!all(.check_rfc(split_datetime)) || length(split_datetime) != 1)
-        stop(paste0("The date time provided not follow the RFC 3339 format,
-                    please check the RFC 3339 rules."), call. = F)
+      if (!all(.check_rfc_3339(split_datetime)) || length(split_datetime) != 1)
+        .error(paste("The date time provided not follow the RFC 3339 format,",
+                     "please check the RFC 3339 rules."))
 
       return(datetime)
     }
   }
 }
 
-#' @title STAC utils
-#'
-#' @author Felipe Carvalho
+#' @title utils functions
 #'
 #' @description Auxiliary function to check that the provided date time follows
 #' the standards of RFC 3339
@@ -102,9 +97,9 @@
 #' otherwise not.
 #'
 #' @noRd
-.check_rfc <- function(datetime) {
+.check_rfc_3339 <- function(datetime) {
 
-  # Standard Regex of RFC 3339
+  # Standard regexp of RFC 3339
   pattern_rfc   <- "^\\d{4}-\\d{2}-\\d{2}?(T\\d{2}:\\d{2}:\\d{2}Z)?$"
   check_pattern <- grepl(pattern_rfc, datetime, perl = TRUE)
 
@@ -123,16 +118,31 @@
   stop(sprintf(msg, ...), call. = FALSE)
 }
 
-#' @title helper function
+#' @title utils functions
 #'
-#' @param obj      a \code{object} to compare.
+#' @param msg   a \code{character} string with format warning message.
 #'
-#' @param expected an \code{character} with the expected classes.
+#' @param ...   values to be passed to \code{msg} parameter.
+#'
+#' @noRd
+.warning <- function(msg, ...) {
+
+  warning(sprintf(msg, ...), call. = FALSE)
+}
+
+#' @title utils functions
+#'
+#' @param obj       an \code{object} to compare.
+#'
+#' @param expected  a \code{character} with the expected classes.
+#'
+#' @param exclusive a \code{logical} value indicating if expected classes must
+#' be exclusive.
 #'
 #' @return An error if the provided object class is not in expected parameter.
 #'
 #' @noRd
-.check_obj <- function(obj, expected) {
+.check_obj <- function(obj, expected, exclusive = FALSE) {
 
   obj_name <- as.character(substitute(obj))
 
@@ -142,50 +152,57 @@
   if (!inherits(obj, expected))
     .error("Invalid %s value in `%s` param.",
            paste0("`", expected, "`", collapse = " or "), obj_name)
+
+  if (exclusive && length(setdiff(class(obj), expected)) > 0) {
+    .error("Invalid %s value in `%s` param.",
+           paste0("`", expected, "`", collapse = " or "), obj_name)
+  }
+
 }
 
-#' @title STAC utils
-#'
-#' @author Rolf Simoes
+#' @title utils functions
 #'
 #' @description The \code{.check_response} function that checks if the request's
 #' response is in accordance with the \code{expected} parameters.
 #'
-#' @param res  a \code{httr} \code{response} object.
+#' @param res     a \code{httr} \code{response} object.
 #'
-#' @param expected a \code{list} containing the expected parameters values.
+#' @param allowed_status_code a \code{character} vector with successful
+#' status codes.
 #'
-#' @return a \code{character} with document class
-.check_response <- function(res, expected) {
+#' @param allowed_content_type a \code{character} vector with all acceptable
+#' responses' content type.
+#'
+#' @return a \code{list} data structure representing the content response
+#'
+#' @noRd
+.check_response <- function(res, allowed_status_code, allowed_content_type) {
 
-  method <- expected[[tolower(res$request$method)]]
-  if (is.null(method))
-    .error("HTTP method '%s' not defined for this operation.", res$method)
+  status_code <- as.character(httr::status_code(res))
+  content_type <- httr::http_type(res)
 
-  # TODO: validate stac response
-  # .stac_response_type(res, expected)
+  content <- httr::content(res,
+                           simplifyVector = TRUE,
+                           simplifyDataFrame = FALSE,
+                           simplifyMatrix = FALSE)
 
-  status_code <- method$responses[[as.character(res$status_code)]]
-  if (is.null(status_code)) {
-    content <- httr::content(res)
-    if (!is.null(content$code))
-      .error("%s %s", content$code, content$description)
-    .error("HTTP status '%s' not defined for this operation.",
-           res$status_code)
+  if (!status_code %in% allowed_status_code) {
+    message <- ""
+    if (!is.null(content$description))
+      message <- content$description
+
+    .error("HTTP status '%s'. %s", status_code, message)
   }
-  content_type  <- httr::http_type(res)
-  content_class <- status_code[[content_type]]
-  if (is.null(content_class))
+
+  if (!content_type %in% allowed_content_type)
     .error("HTTP content type response '%s' not defined for this operation.",
            content_type)
 
-  if (content_class == "")
-    content_class <- NULL
 
-  return(content_class)
+  return(content)
 }
 
-#' @title STAC utils
+#' @title utils functions
 #'
 #' @rdname http_request
 #'
@@ -212,6 +229,8 @@
 #'
 #' @return
 #' \code{.make_url} returns an url to access STAC endpoints.
+#'
+#' @noRd
 .make_url <- function(url, endpoint = "", params = list()) {
 
   endpoint <- paste0(endpoint, collapse = "/")
@@ -231,15 +250,13 @@
   return(res)
 }
 
-#' @title STAC utils
+#' @title utils functions
 #'
-#' @author Rolf Simoes
+#' @param params a \code{list} of parameters received from stac objects.
 #'
-#' @description The \code{.query_encode} ...
+#' @return a \code{character} representing the encode parameters of the query.
 #'
-#' @param params ...
-#'
-#' @return ...
+#' @noRd
 .query_encode <- function(params) {
 
   if (!is.null(names(params)))
@@ -249,15 +266,13 @@
   return(paste0(params, collapse = ","))
 }
 
-#' @title STAC utils
+#' @title utils functions
 #'
-#' @author Rolf Simoes
+#' @param query a \code{character} with the query to be decoded.
 #'
-#' @description The \code{.query_decode} ...
+#' @return a \code{list} with the query params.
 #'
-#' @param query ...
-#'
-#' @return ...
+#' @noRd
 .query_decode <- function(query) {
 
   values <- lapply(strsplit(query, split = "&")[[1]],

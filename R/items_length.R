@@ -1,7 +1,5 @@
 #' @title Items functions
 #'
-#' @author Rolf Simoes
-#'
 #' @description The \code{items_length} function returns how many items
 #' there are in the \code{items} object.
 #'
@@ -15,7 +13,8 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac_search("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'     stac_search() %>%
 #'     get_request() %>%
 #'     items_length()
 #' }

@@ -24,5 +24,167 @@ http_interactions:
       file: no
       string: |
         {"description":"","extent":{"spatial":{"bbox":[[-81.2341289508596,-60.0,-30.0,9.99999999999999]]},"temporal":{"interval":[["2000-02-18","2019-11-01"]]}},"id":"MOD13Q1","license":"","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items","rel":"items"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"root"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:bands":{"blue":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"blue","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"evi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"evi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"ndvi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"ndvi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"nir":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"nir","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"red":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"red","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"reliability":{"data_type":"Byte","description":"","fill":255,"max":3.0,"mime_type":"image/tiff","min":0.0,"name":"reliability","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":""},"swir2":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"swir2","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"}},"bdc:crs":null,"bdc:cube":false,"bdc:tiles":["010009","011008","011009","011010","011011","012008","012009","012010","012011","012012","013008","013009","013010","013011","013012","014009","014010","014011","014014"],"bdc:wrs":"STG"},"stac_version":"0.8.0"}
-  recorded_at: 2020-07-25 13:30:42 GMT
+  recorded_at: 2020-08-15 17:12:48 GMT
+  recorded_with: vcr/0.5.4, webmockr/0.6.2
+- request:
+    method: get
+    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Tue, 04 Aug 2020 01:19:04 GMT
+      server: nginx/1.17.3
+      content-type: application/json
+      content-length: '2374'
+      access-control-allow-origin: '*'
+    body:
+      encoding: UTF-8
+      file: no
+      string: |
+        {"description":"","extent":{"spatial":{"bbox":[[-81.2341289508596,-60.0,-30.0,9.99999999999999]]},"temporal":{"interval":[["2000-02-18","2019-11-01"]]}},"id":"MOD13Q1","license":"","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items","rel":"items"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"root"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:bands":{"blue":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"blue","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"evi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"evi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"ndvi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"ndvi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"nir":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"nir","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"red":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"red","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"reliability":{"data_type":"Byte","description":"","fill":255,"max":3.0,"mime_type":"image/tiff","min":0.0,"name":"reliability","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":""},"swir2":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"swir2","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"}},"bdc:crs":null,"bdc:cube":false,"bdc:tiles":["010009","011008","011009","011010","011011","012008","012009","012010","012011","012012","013008","013009","013010","013011","013012","014009","014010","014011","014014"],"bdc:wrs":"STG"},"stac_version":"0.8.0"}
+  recorded_at: 2020-08-15 17:12:48 GMT
+  recorded_with: vcr/0.5.4, webmockr/0.6.2
+- request:
+    method: get
+    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Tue, 04 Aug 2020 01:19:04 GMT
+      server: nginx/1.17.3
+      content-type: application/json
+      content-length: '2374'
+      access-control-allow-origin: '*'
+    body:
+      encoding: UTF-8
+      file: no
+      string: |
+        {"description":"","extent":{"spatial":{"bbox":[[-81.2341289508596,-60.0,-30.0,9.99999999999999]]},"temporal":{"interval":[["2000-02-18","2019-11-01"]]}},"id":"MOD13Q1","license":"","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items","rel":"items"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"root"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:bands":{"blue":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"blue","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"evi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"evi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"ndvi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"ndvi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"nir":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"nir","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"red":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"red","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"reliability":{"data_type":"Byte","description":"","fill":255,"max":3.0,"mime_type":"image/tiff","min":0.0,"name":"reliability","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":""},"swir2":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"swir2","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"}},"bdc:crs":null,"bdc:cube":false,"bdc:tiles":["010009","011008","011009","011010","011011","012008","012009","012010","012011","012012","013008","013009","013010","013011","013012","014009","014010","014011","014014"],"bdc:wrs":"STG"},"stac_version":"0.8.0"}
+  recorded_at: 2020-08-15 17:12:48 GMT
+  recorded_with: vcr/0.5.4, webmockr/0.6.2
+- request:
+    method: get
+    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Tue, 04 Aug 2020 01:19:05 GMT
+      server: nginx/1.17.3
+      content-type: application/json
+      content-length: '2374'
+      access-control-allow-origin: '*'
+    body:
+      encoding: UTF-8
+      file: no
+      string: |
+        {"description":"","extent":{"spatial":{"bbox":[[-81.2341289508596,-60.0,-30.0,9.99999999999999]]},"temporal":{"interval":[["2000-02-18","2019-11-01"]]}},"id":"MOD13Q1","license":"","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items","rel":"items"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"root"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:bands":{"blue":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"blue","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"evi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"evi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"ndvi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"ndvi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"nir":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"nir","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"red":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"red","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"reliability":{"data_type":"Byte","description":"","fill":255,"max":3.0,"mime_type":"image/tiff","min":0.0,"name":"reliability","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":""},"swir2":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"swir2","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"}},"bdc:crs":null,"bdc:cube":false,"bdc:tiles":["010009","011008","011009","011010","011011","012008","012009","012010","012011","012012","013008","013009","013010","013011","013012","014009","014010","014011","014014"],"bdc:wrs":"STG"},"stac_version":"0.8.0"}
+  recorded_at: 2020-08-15 17:12:48 GMT
+  recorded_with: vcr/0.5.4, webmockr/0.6.2
+- request:
+    method: get
+    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1?collection_id=MOD13Q1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Sat, 15 Aug 2020 17:12:47 GMT
+      server: nginx/1.18.0
+      content-type: application/json
+      content-length: '2374'
+      access-control-allow-origin: '*'
+    body:
+      encoding: UTF-8
+      file: no
+      string: |
+        {"description":"","extent":{"spatial":{"bbox":[[-81.2341289508596,-60.0,-30.0,9.99999999999999]]},"temporal":{"interval":[["2000-02-18","2019-11-01"]]}},"id":"MOD13Q1","license":"","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items","rel":"items"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"root"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:bands":{"blue":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"blue","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"evi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"evi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"ndvi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"ndvi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"nir":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"nir","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"red":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"red","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"reliability":{"data_type":"Byte","description":"","fill":255,"max":3.0,"mime_type":"image/tiff","min":0.0,"name":"reliability","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":""},"swir2":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"swir2","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"}},"bdc:crs":null,"bdc:cube":false,"bdc:tiles":["012012","013012","010009","013011","013010","011008","014009","013009","014014","011010","012008","012011","011009","012010","014010","012009","013008","014011","011011"],"bdc:wrs":"STG"},"stac_version":"0.8.0"}
+  recorded_at: 2020-08-15 17:12:48 GMT
+  recorded_with: vcr/0.5.4, webmockr/0.6.2
+- request:
+    method: get
+    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1?collection_id=MOD13Q1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Sat, 15 Aug 2020 17:12:47 GMT
+      server: nginx/1.18.0
+      content-type: application/json
+      content-length: '2374'
+      access-control-allow-origin: '*'
+    body:
+      encoding: UTF-8
+      file: no
+      string: |
+        {"description":"","extent":{"spatial":{"bbox":[[-81.2341289508596,-60.0,-30.0,9.99999999999999]]},"temporal":{"interval":[["2000-02-18","2019-11-01"]]}},"id":"MOD13Q1","license":"","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items","rel":"items"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"root"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:bands":{"blue":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"blue","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"evi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"evi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"ndvi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"ndvi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"nir":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"nir","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"red":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"red","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"reliability":{"data_type":"Byte","description":"","fill":255,"max":3.0,"mime_type":"image/tiff","min":0.0,"name":"reliability","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":""},"swir2":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"swir2","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"}},"bdc:crs":null,"bdc:cube":false,"bdc:tiles":["012012","013012","010009","013011","013010","011008","014009","013009","014014","011010","012008","012011","011009","012010","014010","012009","013008","014011","011011"],"bdc:wrs":"STG"},"stac_version":"0.8.0"}
+  recorded_at: 2020-08-15 17:12:48 GMT
+  recorded_with: vcr/0.5.4, webmockr/0.6.2
+- request:
+    method: get
+    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1?collection_id=MOD13Q1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Sat, 15 Aug 2020 17:12:48 GMT
+      server: nginx/1.18.0
+      content-type: application/json
+      content-length: '2374'
+      access-control-allow-origin: '*'
+    body:
+      encoding: UTF-8
+      file: no
+      string: |
+        {"description":"","extent":{"spatial":{"bbox":[[-81.2341289508596,-60.0,-30.0,9.99999999999999]]},"temporal":{"interval":[["2000-02-18","2019-11-01"]]}},"id":"MOD13Q1","license":"","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items","rel":"items"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections","rel":"root"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:bands":{"blue":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"blue","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"evi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"evi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"ndvi":{"data_type":"Int16","description":"","fill":-3000,"max":10000.0,"mime_type":"image/tiff","min":-2000.0,"name":"ndvi","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"nir":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"nir","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"red":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"red","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"},"reliability":{"data_type":"Byte","description":"","fill":255,"max":3.0,"mime_type":"image/tiff","min":0.0,"name":"reliability","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":""},"swir2":{"data_type":"Int16","description":"","fill":-1000,"max":10000.0,"mime_type":"image/tiff","min":0.0,"name":"swir2","resolution_unit":"m","resolution_x":231.656,"resolution_y":231.656,"scale":"0.0001"}},"bdc:crs":null,"bdc:cube":false,"bdc:tiles":["012012","013012","010009","013011","013010","011008","014009","013009","014014","011010","012008","012011","011009","012010","014010","012009","013008","014011","011011"],"bdc:wrs":"STG"},"stac_version":"0.8.0"}
+  recorded_at: 2020-08-15 17:12:48 GMT
   recorded_with: vcr/0.5.4, webmockr/0.6.2

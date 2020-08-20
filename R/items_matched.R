@@ -1,7 +1,5 @@
 #' @title Items functions
 #'
-#' @author Rolf Simoes
-#'
 #' @description The \code{items_matched} returns how many items matched the
 #' search criteria. It implements \code{search:metadata} STAC API
 #' extension (v0.8.0).
@@ -26,7 +24,7 @@
 items_matched <- function(items) {
 
   # TODO: check stac API version and find properly field
-  # STAC API (<=0.8.0): "search:metadata"
+  # STAC API (<=0.8.1): "search:metadata"
   # STAC API (>=0.9.0): "context"
   # How to check STAC API version:
   # Maybe `stac_version` field.
@@ -35,15 +33,15 @@ items_matched <- function(items) {
   # Check object class
   .check_obj(items, "stac_items")
 
-  # v0.8.0 extension
-  matched <- items[["search:metadata"]][["matched"]]
+  # v0.8.1 extension
+  matched <- items$`search:metadata`$matched
 
   # try WFS3 spec
   if (is.null(matched))
-    matched <- items[["numberMatched"]]
+    matched <- items$numberMatched
 
   if (is.null(matched))
-    warning("STAC 'search:metadata' extension not available", call. = FALSE)
+    .warning("STAC 'search:metadata' extension not available")
 
   return(matched)
 }

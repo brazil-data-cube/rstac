@@ -4,21 +4,24 @@
 \alias{items_fetch}
 \title{Items function}
 \usage{
-items_fetch(items, progress = TRUE, headers = c())
+items_fetch(items, ..., headers = character(), progress = TRUE)
 }
 \arguments{
 \item{items}{a \code{stac_items} object representing the request
 results of \code{/stac/search}, \code{/collections/{collectionId}/items}, or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
 
-\item{progress}{a \code{logical} indicating if a progress bar must be
-shown or not. Defaults to \code{TRUE}.}
+\item{...}{other params to be passed to \link[httr]{GET} or
+\link[httr]{POST} methods}
 
 \item{headers}{a \code{character} of named arguments to be passed as
 HTTP request headers.}
+
+\item{progress}{a \code{logical} indicating if a progress bar must be
+shown or not. Defaults to \code{TRUE}.}
 }
 \value{
-A \code{stac_items} object.
+a \code{stac_items} object.
 }
 \description{
 The \code{items_fetch} function returns the pagination of all
@@ -27,19 +30,16 @@ The \code{items_fetch} function returns the pagination of all
 \examples{
 \dontrun{
 
-stac_search(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0",
-            collections = "MOD13Q1",
-            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
-            limit = 500) \%>\%
-    get_request() \%>\%
-    items_fetch()
+ stac(http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0) \%>\%
+  search(collections = "MOD13Q1",
+         bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
+         limit = 500) \%>\%
+   get_request() \%>\%
+   items_fetch()
 }
 
 }
 \seealso{
-\code{\link{stac}} \code{\link{stac_search}} \code{\link{stac_collections}}
-\code{\link{stac_items}}
-}
-\author{
-Rolf Simoes
+\code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
+\code{\link{items}}
 }
