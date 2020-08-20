@@ -32,7 +32,7 @@
 #'
 #' @return
 #' Either a \code{stac_catalog}, \code{stac_collection}, \code{stac_items},
-#' or \code{stac_item} object depending on the \code{s} parameter.
+#' or \code{stac_item} object depending on the subclass of \code{s} parameter.
 #'
 #' @examples
 #' \dontrun{
