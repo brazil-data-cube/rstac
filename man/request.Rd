@@ -33,7 +33,8 @@ and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
 }
 \value{
 Either a \code{stac_catalog}, \code{stac_collection}, \code{stac_items},
-or \code{stac_item} object depending on the subclass of \code{s} parameter.
+or \code{stac_item} object depending on the subclass and search fields
+parameters of \code{s} argument.
 }
 \description{
 The \code{get_request} is function that makes HTTP GET
