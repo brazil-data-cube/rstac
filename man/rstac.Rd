@@ -64,6 +64,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Brazil Data Cube Team \email{brazildatacube@inpe.br} [copyright holder]
+\strong{Maintainer}: Brazil Data Cube Team \email{brazildatacube@inpe.br}
+
+Other contributors:
+\itemize{
+  \item National Institute for Space Research (INPE) [copyright holder]
+}
 
 }
