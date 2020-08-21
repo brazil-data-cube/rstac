@@ -33,7 +33,7 @@
 #'
 #' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
 #'   collections() %>%
-#'   get_request()
+#'   get_request(httr::verbose())
 #'
 #' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
 #'   collections(collection_id = "MOD13Q1") %>%
@@ -48,11 +48,11 @@ collections <- function(s, collection_id) {
     .check_obj(s, expected = "stac", exclusive = TRUE)
 
   params <- list()
-  endpoint <- "/collections"
+  endpoint <- "collections"
   if (!missing(collection_id)) {
 
     params[["collection_id"]] <- collection_id[[1]]
-    endpoint <- paste("/collections", collection_id[[1]], sep = "/")
+    endpoint <- paste("collections", collection_id[[1]], sep = "/")
   }
 
   content <- .build_stac(url = s$url,

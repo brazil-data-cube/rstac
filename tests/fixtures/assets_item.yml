@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac//stac
     body:
       encoding: ''
       string: ''
@@ -28,7 +28,7 @@ http_interactions:
   recorded_with: vcr/0.5.4, webmockr/0.6.2
 - request:
     method: get
-    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac/search?collections=MOD13Q1&datetime=2019-09-01/2019-11-01&bbox=-55.16335,-4.26325,-49.31739,-1.18355&limit=0
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac//stac/search?collections=MOD13Q1&datetime=2019-09-01/2019-11-01&bbox=-55.16335,-4.26325,-49.31739,-1.18355&limit=0
     body:
       encoding: ''
       string: ''
@@ -55,7 +55,7 @@ http_interactions:
   recorded_with: vcr/0.5.4, webmockr/0.6.2
 - request:
     method: get
-    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac/search?collections=MOD13Q1&datetime=2019-09-01/2019-11-01&bbox=-55.16335,-4.26325,-49.31739,-1.18355&limit=0
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac//stac/search?collections=MOD13Q1&datetime=2019-09-01/2019-11-01&bbox=-55.16335,-4.26325,-49.31739,-1.18355&limit=0
     body:
       encoding: ''
       string: ''
@@ -82,7 +82,7 @@ http_interactions:
   recorded_with: vcr/0.5.4, webmockr/0.6.2
 - request:
     method: get
-    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac/search?collections=MOD13Q1&datetime=2019-09-01/2019-11-01&bbox=-55.16335,-4.26325,-49.31739,-1.18355&limit=1
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac//stac/search?collections=MOD13Q1&datetime=2019-09-01/2019-11-01&bbox=-55.16335,-4.26325,-49.31739,-1.18355&limit=1
     body:
       encoding: ''
       string: ''

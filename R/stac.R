@@ -30,8 +30,11 @@ stac <- function(url) {
   # check url parameter
   .check_obj(url, "character")
 
+  # TODO: implement a version stac verifier
+  # endpoint <- stac_version()
+
   content <- .build_stac(url = url,
-                        endpoint = "/stac",
+                        endpoint = "/",
                         params = list())
 
   return(content)

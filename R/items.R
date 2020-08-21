@@ -118,7 +118,7 @@ items <- function(s, item_id, datetime, bbox, limit, ...) {
   if (!missing(...))
     params <- c(params, list(...))
 
-  endpoint <- paste("/collections", s$params[["collection_id"]],
+  endpoint <- paste("collections", s$params[["collection_id"]],
                     "items", sep = "/")
 
   if (!missing(item_id)) {

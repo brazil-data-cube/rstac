@@ -34,7 +34,12 @@ items_matched <- function(items) {
   .check_obj(items, "stac_items")
 
   # v0.8.1 extension
-  matched <- items$`search:metadata`$matched
+  if ("search:metadata" %in% names(items))
+    matched <- items$`search:metadata`$matched
+  # v0.9.0 extension
+  else if ("context" %in% names(items)) {
+    matched <- items$`context`$matched
+  }
 
   # try WFS3 spec
   if (is.null(matched))

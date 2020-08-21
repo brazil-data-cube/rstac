@@ -1,7 +1,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac//collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754
     body:
       encoding: ''
       string: ''
@@ -24,11 +24,11 @@ http_interactions:
       file: no
       string: |
         {"assets":{"blue":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_blue.tif"},"evi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_evi.tif"},"ndvi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_ndvi.tif"},"nir":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_nir.tif"},"red":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_red.tif"},"reliability":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_reliability.tif"},"swir2":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_swir2.tif"},"thumbnail":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754.png"}},"bbox":[-50.7713305942872,-10.0,-40.0,0.0],"collection":"MOD13Q1","geometry":{"coordinates":[[[[-50,0],[-40,0],[-40.617064475,-10],[-50.771330594,-10],[-50,0]]]],"type":"MultiPolygon"},"id":"MOD13Q1.A2019241.h13v09.006.2019262164754","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"collection"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:tile":"013009","datetime":"2019-08-29"},"stac_version":"0.8.0","type":"Feature"}
-  recorded_at: 2020-08-18 13:37:32 GMT
+  recorded_at: 2020-08-21 15:15:08 GMT
   recorded_with: vcr/0.5.4, webmockr/0.6.2
 - request:
     method: get
-    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac//collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754
     body:
       encoding: ''
       string: ''
@@ -51,11 +51,11 @@ http_interactions:
       file: no
       string: |
         {"assets":{"blue":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_blue.tif"},"evi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_evi.tif"},"ndvi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_ndvi.tif"},"nir":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_nir.tif"},"red":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_red.tif"},"reliability":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_reliability.tif"},"swir2":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_swir2.tif"},"thumbnail":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754.png"}},"bbox":[-50.7713305942872,-10.0,-40.0,0.0],"collection":"MOD13Q1","geometry":{"coordinates":[[[[-50,0],[-40,0],[-40.617064475,-10],[-50.771330594,-10],[-50,0]]]],"type":"MultiPolygon"},"id":"MOD13Q1.A2019241.h13v09.006.2019262164754","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"collection"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:tile":"013009","datetime":"2019-08-29"},"stac_version":"0.8.0","type":"Feature"}
-  recorded_at: 2020-08-18 13:37:32 GMT
+  recorded_at: 2020-08-21 15:15:08 GMT
   recorded_with: vcr/0.5.4, webmockr/0.6.2
 - request:
     method: get
-    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac//collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754
     body:
       encoding: ''
       string: ''
@@ -78,11 +78,11 @@ http_interactions:
       file: no
       string: |
         {"assets":{"blue":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_blue.tif"},"evi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_evi.tif"},"ndvi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_ndvi.tif"},"nir":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_nir.tif"},"red":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_red.tif"},"reliability":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_reliability.tif"},"swir2":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_swir2.tif"},"thumbnail":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754.png"}},"bbox":[-50.7713305942872,-10.0,-40.0,0.0],"collection":"MOD13Q1","geometry":{"coordinates":[[[[-50,0],[-40,0],[-40.617064475,-10],[-50.771330594,-10],[-50,0]]]],"type":"MultiPolygon"},"id":"MOD13Q1.A2019241.h13v09.006.2019262164754","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"collection"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:tile":"013009","datetime":"2019-08-29"},"stac_version":"0.8.0","type":"Feature"}
-  recorded_at: 2020-08-18 13:37:32 GMT
+  recorded_at: 2020-08-21 15:15:08 GMT
   recorded_with: vcr/0.5.4, webmockr/0.6.2
 - request:
     method: get
-    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754?item_id=MOD13Q1.A2019241.h13v09.006.2019262164754
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac//collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754?item_id=MOD13Q1.A2019241.h13v09.006.2019262164754
     body:
       encoding: ''
       string: ''
@@ -105,11 +105,11 @@ http_interactions:
       file: no
       string: |
         {"assets":{"blue":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_blue.tif"},"evi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_evi.tif"},"ndvi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_ndvi.tif"},"nir":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_nir.tif"},"red":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_red.tif"},"reliability":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_reliability.tif"},"swir2":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_swir2.tif"},"thumbnail":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754.png"}},"bbox":[-50.7713305942872,-10.0,-40.0,0.0],"collection":"MOD13Q1","geometry":{"coordinates":[[[[-50,0],[-40,0],[-40.617064475,-10],[-50.771330594,-10],[-50,0]]]],"type":"MultiPolygon"},"id":"MOD13Q1.A2019241.h13v09.006.2019262164754","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"collection"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:tile":"013009","datetime":"2019-08-29"},"stac_version":"0.8.0","type":"Feature"}
-  recorded_at: 2020-08-18 13:37:32 GMT
+  recorded_at: 2020-08-21 15:15:08 GMT
   recorded_with: vcr/0.5.4, webmockr/0.6.2
 - request:
     method: get
-    uri: http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754?item_id=MOD13Q1.A2019241.h13v09.006.2019262164754
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac//collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754?item_id=MOD13Q1.A2019241.h13v09.006.2019262164754
     body:
       encoding: ''
       string: ''
@@ -132,5 +132,88 @@ http_interactions:
       file: no
       string: |
         {"assets":{"blue":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_blue.tif"},"evi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_evi.tif"},"ndvi":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_ndvi.tif"},"nir":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_nir.tif"},"red":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_red.tif"},"reliability":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_reliability.tif"},"swir2":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754_swir2.tif"},"thumbnail":{"href":"http://brazildatacube.dpi.inpe.br/Repository/Archive/MOD13Q1/2019-08/MOD13Q1.A2019241.h13v09.006.2019262164754/MOD13Q1.2019-08-29.h13v09.006.2019262164754.png"}},"bbox":[-50.7713305942872,-10.0,-40.0,0.0],"collection":"MOD13Q1","geometry":{"coordinates":[[[[-50,0],[-40,0],[-40.617064475,-10],[-50.771330594,-10],[-50,0]]]],"type":"MultiPolygon"},"id":"MOD13Q1.A2019241.h13v09.006.2019262164754","links":[{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/MOD13Q1","rel":"collection"},{"href":"http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/stac","rel":"root"}],"properties":{"bdc:tile":"013009","datetime":"2019-08-29"},"stac_version":"0.8.0","type":"Feature"}
-  recorded_at: 2020-08-18 13:37:32 GMT
+  recorded_at: 2020-08-21 15:15:08 GMT
+  recorded_with: vcr/0.5.4, webmockr/0.6.2
+- request:
+    method: get
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac/collections/MOD13Q1/items/MOD13Q1.A2019241.h13v09.006.2019262164754
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 404
+      category: Client error
+      reason: Not Found
+      message: 'Client error: (404) Not Found'
+    headers:
+      date: Fri, 21 Aug 2020 14:58:33 GMT
+      server: nginx/1.18.0
+      content-type: application/json
+      content-length: '150'
+      access-control-allow-origin: '*'
+    body:
+      encoding: UTF-8
+      file: no
+      string: |
+        {"code":404,"description":"The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again."}
+  recorded_at: 2020-08-21 15:15:08 GMT
+  recorded_with: vcr/0.5.4, webmockr/0.6.2
+- request:
+    method: get
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac/collections/CB4_64-1/items/CB4_64_022024_2019-12-31
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Fri, 21 Aug 2020 15:15:08 GMT
+      server: nginx/1.18.0
+      content-type: application/json
+      content-length: '813'
+      access-control-allow-origin: '*'
+      content-encoding: gzip
+    body:
+      encoding: UTF-8
+      file: no
+      string: |
+        {"type":"Feature","id":"CB4_64_022024_2019-12-31","collection":"CB4_64-1","stac_version":"0.9.0","stac_extensions":["eo"],"geometry":{"type":"Polygon","coordinates":[[[-48.190393422,-12.145398827],[-41.859517164,-11.913450402],[-41.634172736,-15.772942865],[-48.082397258,-16.008711957],[-48.190393422,-12.145398827]]]},"bbox":[-48.1903934215266,-16.0087119571024,-41.6341727355957,-11.9134504016037],"properties":{"bdc:tile":"022024","datetime":"2019-12-31T00:00:00","created":"2020-08-12T11:52:18","updated":"2020-08-12T11:52:18","eo:gsd":64.0,"eo:bands":[{"name":"BAND13","common_name":"blue","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"},{"name":"BAND14","common_name":"green","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"},{"name":"BAND15","common_name":"red","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"},{"name":"BAND16","common_name":"nir","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"},{"name":"CMASK","common_name":"quality","min":0.0,"max":4.0,"nodata":255.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"uint8"},{"name":"NDVI","common_name":"ndvi","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"},{"name":"EVI","common_name":"evi","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"}],"eo:cloud_cover":95.0},"assets":{"EVI":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_EVI.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[6]},"NDVI":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_NDVI.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[5]},"CMASK":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_CMASK.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[4]},"BAND13":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_BAND13.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[0]},"BAND14":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_BAND14.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[1]},"BAND15":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_BAND15.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[2]},"BAND16":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_BAND16.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[3]},"thumbnail":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31.png","type":"image/png"}},"links":[{"href":"http://brazildatacube.dpi.inpe.br/dev/bdc-stac/collections/CB4_64-1/items/CB4_64_022024_2019-12-31","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/dev/bdc-stac/collections/CB4_64-1","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/dev/bdc-stac/collections/CB4_64-1","rel":"collection"},{"href":"http://brazildatacube.dpi.inpe.br/dev/bdc-stac/stac","rel":"root"}]}
+  recorded_at: 2020-08-21 15:15:08 GMT
+  recorded_with: vcr/0.5.4, webmockr/0.6.2
+- request:
+    method: get
+    uri: http://brazildatacube.dpi.inpe.br/dev/bdc-stac/collections/CB4_64-1/items/CB4_64_022024_2019-12-31
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Fri, 21 Aug 2020 15:15:08 GMT
+      server: nginx/1.18.0
+      content-type: application/json
+      content-length: '813'
+      access-control-allow-origin: '*'
+      content-encoding: gzip
+    body:
+      encoding: UTF-8
+      file: no
+      string: |
+        {"type":"Feature","id":"CB4_64_022024_2019-12-31","collection":"CB4_64-1","stac_version":"0.9.0","stac_extensions":["eo"],"geometry":{"type":"Polygon","coordinates":[[[-48.190393422,-12.145398827],[-41.859517164,-11.913450402],[-41.634172736,-15.772942865],[-48.082397258,-16.008711957],[-48.190393422,-12.145398827]]]},"bbox":[-48.1903934215266,-16.0087119571024,-41.6341727355957,-11.9134504016037],"properties":{"bdc:tile":"022024","datetime":"2019-12-31T00:00:00","created":"2020-08-12T11:52:18","updated":"2020-08-12T11:52:18","eo:gsd":64.0,"eo:bands":[{"name":"BAND13","common_name":"blue","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"},{"name":"BAND14","common_name":"green","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"},{"name":"BAND15","common_name":"red","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"},{"name":"BAND16","common_name":"nir","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"},{"name":"CMASK","common_name":"quality","min":0.0,"max":4.0,"nodata":255.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"uint8"},{"name":"NDVI","common_name":"ndvi","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"},{"name":"EVI","common_name":"evi","min":0.0,"max":10000.0,"nodata":-9999.0,"center_wavelength":null,"full_width_half_max":null,"data_type":"int16"}],"eo:cloud_cover":95.0},"assets":{"EVI":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_EVI.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[6]},"NDVI":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_NDVI.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[5]},"CMASK":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_CMASK.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[4]},"BAND13":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_BAND13.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[0]},"BAND14":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_BAND14.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[1]},"BAND15":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_BAND15.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[2]},"BAND16":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31_BAND16.tif","type":"image/tiff; application=geotiff; profile=cloud-optimized","eo:bands":[3]},"thumbnail":{"href":"http://brazildatacube.dpi.inpe.br/dev/Repository/Warped/CB4_64/022024/2019-12-31/CB4_64_022024_2019-12-31.png","type":"image/png"}},"links":[{"href":"http://brazildatacube.dpi.inpe.br/dev/bdc-stac/collections/CB4_64-1/items/CB4_64_022024_2019-12-31","rel":"self"},{"href":"http://brazildatacube.dpi.inpe.br/dev/bdc-stac/collections/CB4_64-1","rel":"parent"},{"href":"http://brazildatacube.dpi.inpe.br/dev/bdc-stac/collections/CB4_64-1","rel":"collection"},{"href":"http://brazildatacube.dpi.inpe.br/dev/bdc-stac/stac","rel":"root"}]}
+  recorded_at: 2020-08-21 15:15:08 GMT
   recorded_with: vcr/0.5.4, webmockr/0.6.2
