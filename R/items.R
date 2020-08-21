@@ -21,7 +21,7 @@
 #' provided by \code{stac}, \code{stac_search}, \code{collections},
 #' or \code{items} functions.
 #'
-#' @param item_id     a \code{character} with item id to be fetched.
+#' @param feature_id  a \code{character} with item id to be fetched.
 #' Only works if the \code{collection_id} is informed. This is equivalent to
 #' the endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.
 #'
@@ -89,7 +89,7 @@
 #' }
 #'
 #' @export
-items <- function(s, item_id, datetime, bbox, limit, ...) {
+items <- function(s, feature_id, datetime, bbox, limit, ...) {
 
   # check s parameter
   .check_obj(s, expected = c("collections", "items"))
@@ -118,28 +118,31 @@ items <- function(s, item_id, datetime, bbox, limit, ...) {
   if (!missing(...))
     params <- c(params, list(...))
 
-  endpoint <- paste("collections", s$params[["collection_id"]],
-                    "items", sep = "/")
+  endpoint <- .OAFeat_items_endpoint(collection_id = s$params[["collection_id"]])
 
-  if (!missing(item_id)) {
+  if (!missing(feature_id)) {
 
-    params[["item_id"]] <- item_id
+    if (length(feature_id) != 1)
+      .error("Parameter `feature_id` must be a single value.")
 
-    endpoint <- paste(endpoint, params[["item_id"]], sep = "/")
+    params[["feature_id"]] <- feature_id
+
+    endpoint <- .OAFeat_items_endpoint(collection_id = s$params[["collection_id"]],
+                                       feature_id = params[["feature_id"]])
   }
 
   content <- .build_stac(url = s$url,
-                        endpoint = endpoint,
-                        params = params,
-                        subclass = "items",
-                        base_stac = s)
+                         endpoint = endpoint,
+                         params = params,
+                         subclass = "items",
+                         base_stac = s)
 
   return(content)
 }
 
 params_get_request.items <- function(s) {
 
-  if (!is.null(s$params[["item_id"]]))
+  if (!is.null(s$params[["feature_id"]]))
     return(list())
 
   # process collections params
@@ -150,7 +153,7 @@ params_get_request.items <- function(s) {
 
 params_post_request.items <- function(s, enctype) {
 
-  if (!is.null(s$params[["item_id"]]))
+  if (!is.null(s$params[["feature_id"]]))
     return(list())
 
   # process collections params
@@ -163,7 +166,7 @@ content_get_response.items <- function(s, res) {
 
   # detect expected response object class
   content_class <- "stac_items"
-  if (!is.null(s$params[["item_id"]]))
+  if (!is.null(s$params[["feature_id"]]))
     content_class <- "stac_item"
 
   content <- structure(
@@ -179,7 +182,7 @@ content_post_response.items <- function(s, res, enctype) {
 
   # detect expected response object class
   content_class <- "stac_items"
-  if (!is.null(s$params[["item_id"]]))
+  if (!is.null(s$params[["feature_id"]]))
     content_class <- "stac_item"
 
   content <- structure(

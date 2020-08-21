@@ -48,11 +48,16 @@ collections <- function(s, collection_id) {
     .check_obj(s, expected = "stac", exclusive = TRUE)
 
   params <- list()
-  endpoint <- "collections"
+  endpoint <- .OAFeat_collections_endpoint()
   if (!missing(collection_id)) {
 
-    params[["collection_id"]] <- collection_id[[1]]
-    endpoint <- paste("collections", collection_id[[1]], sep = "/")
+    if (length(collection_id) != 1)
+      .error("Parameter `collection_id` must be a single value.")
+
+    params[["collection_id"]] <- collection_id
+
+    endpoint <- .OAFeat_collections_endpoint(
+      collection_id = params[["collection_id"]])
   }
 
   content <- .build_stac(url = s$url,

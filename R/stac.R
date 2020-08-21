@@ -25,17 +25,34 @@
 #'
 #' @rdname stac
 #' @export
-stac <- function(url) {
+stac <- function(url, ...) {
 
   # check url parameter
   .check_obj(url, "character")
 
-  # TODO: implement a version stac verifier
-  # endpoint <- stac_version()
+  # default STAC API version
+  version <- "0.8.1"
+
+  # TODO: implement token
+  tryCatch({
+    res <- httr::GET(url = url, endpoint = "/", ...)
+
+    content <- .check_response(res, "200", "application/json")
+
+    if (!is.null(content[["stac_version"]]))
+      version <- content[["stac_version"]]
+  },
+  error = function(e) {
+
+    .warning(paste0("The STAC API version could not be determined.",
+                    "Assuming '0.8.1' version."))
+  })
 
   content <- .build_stac(url = url,
-                        endpoint = "/",
-                        params = list())
+                         endpoint = .stac_landpage_endpoint(version = version),
+                         version = version,
+                         headers = list(...),
+                         params = list())
 
   return(content)
 }

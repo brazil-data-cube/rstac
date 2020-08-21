@@ -344,7 +344,7 @@ testthat::test_that("stac item object", {
             bbox          = c(-48.19039, -16.00871, -41.6341, -11.91345),
             limit         = 10,
             datetime      = "2018-02-01/..",
-            item_id       = "MOD13Q1.A2019241.h13v09.006.2019262164754")),
+            feature_id    = "MOD13Q1.A2019241.h13v09.006.2019262164754")),
       expected = c("items", "stac")
     )
 
@@ -357,7 +357,7 @@ testthat::test_that("stac item object", {
             bbox          = c(-48.19039, -16.00871, -41.6341, -11.91345),
             limit         = 10,
             datetime      = "2018-02-01/..",
-            item_id       = "CB4_64_022024_2019-12-31") %>%
+            feature_id    = "CB4_64_022024_2019-12-31") %>%
           get_request()),
       expected = "stac_item"
     )
@@ -371,7 +371,7 @@ testthat::test_that("stac item object", {
             bbox          = c(-48.19039, -16.00871, -41.6341, -11.91345),
             limit         = 10,
             datetime      = "2018-02-01/..",
-            item_id       = "CB4_64_022024_2019-12-31") %>%
+            feature_id    = "CB4_64_022024_2019-12-31") %>%
           get_request()),
       regexp   = "### STAC Item"
     )
