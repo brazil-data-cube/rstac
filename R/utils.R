@@ -182,6 +182,7 @@
   content_type <- httr::http_type(res)
 
   content <- httr::content(res,
+                           encoding = "UTF-8",
                            simplifyVector = TRUE,
                            simplifyDataFrame = FALSE,
                            simplifyMatrix = FALSE)

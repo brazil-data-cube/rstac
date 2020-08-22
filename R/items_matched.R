@@ -29,16 +29,20 @@ items_matched <- function(items) {
   # How to check STAC API version:
   # Maybe `stac_version` field.
   # .stac_version <- function()
+  # TODO: create a hook extension
 
   # Check object class
   .check_obj(items, "stac_items")
 
+
   # v0.8.1 extension
-  if ("search:metadata" %in% names(items))
+  if (!is.null(items$`search:metadata`$matched))
     matched <- items$`search:metadata`$matched
   # v0.9.0 extension
-  else if ("context" %in% names(items)) {
+  else if (!is.null(items$`context`$matched)) {
     matched <- items$`context`$matched
+  } else {
+    matched <- NULL
   }
 
   # try WFS3 spec

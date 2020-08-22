@@ -34,7 +34,7 @@ Each endpoint retrieves specific STAC objects:
 
 stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
   collections() \%>\%
-  get_request(httr::verbose())
+  get_request()
 
 stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
   collections(collection_id = "MOD13Q1") \%>\%

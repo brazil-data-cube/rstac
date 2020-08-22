@@ -77,7 +77,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#' stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/") %>%
 #'   collections("MOD13Q1") %>%
 #'   items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
 #'   get_request()

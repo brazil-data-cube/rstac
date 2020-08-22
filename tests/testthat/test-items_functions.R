@@ -5,7 +5,8 @@ testthat::test_that("items functions", {
     # skip cran check test
     testthat::skip_on_cran()
 
-    res <- rstac::stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/") %>%
+    res <- rstac::stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/",
+                       force_version = "0.9.0") %>%
       stac_search(
         collections = "CB4_64_16D_STK-1",
         bbox  = c(-48.19039, -16.00871, -41.6341, -11.91345),

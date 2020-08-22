@@ -33,7 +33,7 @@
 #'
 #' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
 #'   collections() %>%
-#'   get_request(httr::verbose())
+#'   get_request()
 #'
 #' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
 #'   collections(collection_id = "MOD13Q1") %>%
@@ -61,10 +61,10 @@ collections <- function(s, collection_id) {
   }
 
   content <- .build_stac(url = s$url,
-                        endpoint = endpoint,
-                        params = params,
-                        subclass = "collections",
-                        base_stac = s)
+                         endpoint = endpoint,
+                         params = params,
+                         subclass = "collections",
+                         base_stac = s)
   return(content)
 }
 
@@ -93,7 +93,7 @@ params_post_request.collections <- function(s, enctype) {
 content_get_response.collections <- function(s, res) {
 
   # detect expected response object class
-  content_class <- "stac_catalog"
+  content_class <- "stac_list_collection"
 
   if (!is.null(s$params[["collection_id"]]))
     content_class <- "stac_collection"
@@ -110,7 +110,7 @@ content_get_response.collections <- function(s, res) {
 content_post_response.collections <- function(s, res, enctype) {
 
   # detect expected response object class
-  content_class <- "stac_catalog"
+  content_class <- "stac_list_catalog"
 
   if (!is.null(s$params[["collection_id"]]))
     content_class <- "stac_collection"

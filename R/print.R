@@ -139,6 +139,11 @@ print_header.stac_catalog <- function(x, ...) {
         fill = TRUE)
 }
 
+print_header.stac_list_collection <- function(x, ...) {
+
+  cat(crayon::bold("### STAC List Collection"), fill = TRUE)
+}
+
 #### prints ####
 
 #' @title Printing functions
@@ -152,6 +157,29 @@ print.stac <- function(x, ...) {
   # print body
   print_named(x, n = Inf, align_first = FALSE)
 }
+
+# TODO: show IDS items and searching links by self
+
+#' @export
+print.stac_list_collection <- function(x, n = 10, ...) {
+
+  # print header
+  print_header(x)
+
+  titles <- sapply(x$collections, function(x){
+    x$id
+  })
+
+  hrefs <- sapply(x$collections, function(x){
+    links <- Filter(function(e) e$rel == "self", x$links)
+
+    if (length(links) > 0)
+      return(links[[1]]$href)
+    return(NA)
+  })
+  print_link_highlight(titles, hrefs, pad = 0)
+}
+
 
 #' @title Printing functions
 #' @rdname print

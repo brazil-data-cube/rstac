@@ -4,14 +4,14 @@
 \alias{items}
 \title{Endpoint functions}
 \usage{
-items(s, item_id, datetime, bbox, limit, ...)
+items(s, feature_id, datetime, bbox, limit, ...)
 }
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria
 provided by \code{stac}, \code{stac_search}, \code{collections},
 or \code{items} functions.}
 
-\item{item_id}{a \code{character} with item id to be fetched.
+\item{feature_id}{a \code{character} with item id to be fetched.
 Only works if the \code{collection_id} is informed. This is equivalent to
 the endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.}
 
@@ -80,7 +80,7 @@ filters parameters of \code{\link{stac_search}} function.
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
+stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/") \%>\%
   collections("MOD13Q1") \%>\%
   items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
   get_request()
