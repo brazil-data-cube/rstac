@@ -49,6 +49,6 @@ testthat::test_that("assets download", {
          assets_download(assets_name = c("thumbnail"), output_dir = ".")
        class(x)
      },
-     expected = "stac_items")
+     expected = "stac_item_collection")
   })
 })

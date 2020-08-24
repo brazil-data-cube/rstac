@@ -21,14 +21,16 @@ API endpoints and data access and organization.
 \section{STAC API endpoints functions}{
 
 \itemize{
-  \item \code{\link{stac}}: implements STAC \code{/stac} endpoint.
+  \item \code{\link{stac}}: implements STAC \code{/stac} endpoint for version
+   0.8.1 or below, and \code{/} for versions 0.9.0 or higher.
   \item \code{\link{collections}}: implements \code{/collections}
     and \code{/collections/\{collectionId\}} WFS3 endpoints.
   \item \code{\link{items}}: implements
     \code{/collections/\{collectionId\}/items} and
-    \code{/collections/\{collectionId\}/items/\{itemId\}} WFS3 endpoints.
+    \code{/collections/\{collectionId\}/items/\{featureId\}} WFS3 endpoints.
   \item \code{\link{stac_search}}: implements STAC \code{/stac/search}
-    endpoint.
+  endpoint for version 0.8.1 or below, and \code{/search} endpoint for
+  versions 0.9.0 or higher.
 }
 }
 
@@ -50,9 +52,10 @@ API endpoints and data access and organization.
 
 \section{Data types}{
 
-The package implements the follow S3 classes: \code{stac_items},
- \code{stac_item}, \code{stac_catalog} and \code{stac_collection}. These
- classes are regular lists representing the corresponding JSON STAC objects.
+The package implements the follow S3 classes: \code{stac_item_collection},
+ \code{stac_item}, \code{stac_catalog}, \code{stac_collection_list} and
+ \code{stac_collection}. These classes are regular lists representing the
+ corresponding JSON STAC objects.
 }
 
 \seealso{

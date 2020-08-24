@@ -23,7 +23,7 @@ testthat::test_that("stac search object", {
           rstac::stac_search(bbox = c(-48.19039, -16.00871,
                                       -41.6341, -11.91345)) %>%
           get_request()),
-      expected = "stac_items"
+      expected = "stac_item_collection"
     )
 
     testthat::expect_equal(
@@ -32,7 +32,7 @@ testthat::test_that("stac search object", {
                     force_version = "0.9.0") %>%
           rstac::stac_search(datetime = "2018-01-01/..") %>%
           rstac::post_request()),
-      expected = "stac_items"
+      expected = "stac_item_collection"
     )
 
     # Check extensions ---------------------------------------------------------
@@ -99,7 +99,7 @@ testthat::test_that("stac search object", {
     # expect class
     testthat::expect_equal(
       object = class(stac_search_obj %>% post_request()),
-      expect = "stac_items"
+      expect = "stac_item_collection"
     )
 
     # Check print function------------------------------------------------------
@@ -354,7 +354,7 @@ testthat::test_that("stac item object", {
           collection_id = "CB4_64-1")
     )
 
-    # stac_items object
+    # stac_collection_list object
     testthat::expect_equal(
       object = class(
         rstac::stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/",
@@ -381,7 +381,7 @@ testthat::test_that("stac item object", {
       expected = c("items", "stac")
     )
 
-    # test request for stac_items
+    # test request for stac_collection_list
     testthat::expect_equal(
       object = class(
         rstac::stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac",

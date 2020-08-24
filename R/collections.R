@@ -16,7 +16,7 @@
 #'
 #' @param s             a \code{stac} object expressing a STAC search criteria
 #' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-#' or \code{stac_items} functions.
+#' or \code{stac_collection_list} functions.
 #'
 #' @param collection_id a \code{character} collection id to be retrieved.
 #'
@@ -31,13 +31,15 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'   collections() %>%
-#'   get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'     force_version = "0.8.1") %>%
+#'  collections() %>%
+#'  get_request()
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'   collections(collection_id = "MOD13Q1") %>%
-#'   get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'       force_version = "0.8.1") %>%
+#' collections(collection_id = "MOD13Q1") %>%
+#' get_request()
 #' }
 
 #' @export
@@ -93,7 +95,7 @@ params_post_request.collections <- function(s, enctype) {
 content_get_response.collections <- function(s, res) {
 
   # detect expected response object class
-  content_class <- "stac_list_collection"
+  content_class <- "stac_collection_list"
 
   if (!is.null(s$params[["collection_id"]]))
     content_class <- "stac_collection"

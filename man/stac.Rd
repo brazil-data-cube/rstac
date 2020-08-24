@@ -31,8 +31,9 @@ containing all data Items searchable in the API.
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-    get_request()
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+     force_version = "0.8.1") \%>\%
+ get_request()
 }
 
 }

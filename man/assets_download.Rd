@@ -9,11 +9,12 @@ assets_download(
   assets_name,
   output_dir = ".",
   progress = TRUE,
+  ...,
   headers = character()
 )
 }
 \arguments{
-\item{items}{a \code{stac_items} or \code{stac_item} object
+\item{items}{a \code{stac_item_collection} or \code{stac_item} object
 representing the result of \code{/stac/search},
 \code{/collections/{collectionId}/items} or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
@@ -26,11 +27,14 @@ saved.}
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
+\item{...}{other params to be passed to \link[httr]{GET} or
+\link[httr]{POST} methods}
+
 \item{headers}{a \code{character} of named arguments to be passed as
 HTTP request headers.}
 }
 \value{
-The same \code{stac_items} or \code{stac_item} object, with the
+The same \code{stac_item_collection} or \code{stac_item} object, with the
 link of the item pointing to the directory where the assets were saved.
 }
 \description{

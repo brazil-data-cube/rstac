@@ -9,7 +9,7 @@ collections(s, collection_id)
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria
 provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-or \code{stac_items} functions.}
+or \code{stac_collection_list} functions.}
 
 \item{collection_id}{a \code{character} collection id to be retrieved.}
 }
@@ -32,13 +32,15 @@ Each endpoint retrieves specific STAC objects:
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-  collections() \%>\%
-  get_request()
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+    force_version = "0.8.1") \%>\%
+ collections() \%>\%
+ get_request()
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-  collections(collection_id = "MOD13Q1") \%>\%
-  get_request()
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+      force_version = "0.8.1") \%>\%
+collections(collection_id = "MOD13Q1") \%>\%
+get_request()
 }
 }
 \seealso{

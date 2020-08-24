@@ -17,10 +17,10 @@ testthat::test_that("items functions", {
     # error - given another object
     testthat::expect_error(items_fetch(list(res)))
 
-   # ok - stac_items object
+   # ok - stac_collection_list object
     testthat::expect_equal(
       object   = class(items_fetch(res)),
-      expected = "stac_items")
+      expected = "stac_item_collection")
 
     # items_length--------------------------------------------------------------
     # error - given another object

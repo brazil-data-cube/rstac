@@ -8,7 +8,7 @@
 #' (v0.8.1). It prepares query parameters used in search API request, a
 #' \code{stac} object with all filter parameters to be provided to
 #' \code{get_request} or \code{post_request} functions. The GeoJSON content
-#' returned by these requests is a \code{stac_items} object, a regular R
+#' returned by these requests is a \code{stac_item_collection} object, a regular R
 #' \code{list} representing a STAC Item Collection document.
 #'
 #' @param s           a \code{stac} object expressing a STAC search criteria
@@ -73,15 +73,17 @@
 #' @examples
 #' \dontrun{
 #' # GET request
-#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'     stac_search(collections = "MOD13Q1", limit = 1) %>%
-#'     get_request()
+#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'      force_version = "0.8.1") %>%
+#'  stac_search(collections = "MOD13Q1", limit = 1) %>%
+#'  get_request()
 #'
 #' # POST request
-#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'     stac_search(collections = "MOD13Q1",
+#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'      force_version = "0.8.1") %>%
+#'  stac_search(collections = "MOD13Q1",
 #'         bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-#'     post_request()
+#'  post_request()
 #' }
 #'
 #' @export
@@ -166,7 +168,7 @@ content_get_response.search <- function(s, res) {
     .check_response(res, "200", c("application/geo+json", "application/json")),
     stac = s,
     request = list(method = "get"),
-    class = "stac_items")
+    class = "stac_item_collection")
 
   return(content)
 }

@@ -77,12 +77,14 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/") %>%
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'      force_version = "0.8.1") %>%
 #'   collections("MOD13Q1") %>%
 #'   items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
 #'   get_request()
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'      force_version = "0.8.1") %>%
 #'   collections("MOD13Q1") %>%
 #'   items("MOD13Q1.A2019241.h13v09.006.2019262164754") %>%
 #'   get_request()
@@ -165,7 +167,7 @@ params_post_request.items <- function(s, enctype) {
 content_get_response.items <- function(s, res) {
 
   # detect expected response object class
-  content_class <- "stac_items"
+  content_class <- "stac_item_collection"
   if (!is.null(s$params[["feature_id"]]))
     content_class <- "stac_item"
 
@@ -181,7 +183,7 @@ content_get_response.items <- function(s, res) {
 content_post_response.items <- function(s, res, enctype) {
 
   # detect expected response object class
-  content_class <- "stac_items"
+  content_class <- "stac_item_collection"
   if (!is.null(s$params[["feature_id"]]))
     content_class <- "stac_item"
 
@@ -194,7 +196,7 @@ content_post_response.items <- function(s, res, enctype) {
   return(content)
 }
 
-`[[.stac_items` <- function(x, i){
+`[[.stac_item_collection` <- function(x, i){
 
   x <- x$features[[i]]
   class(x) <- "stac_item"
@@ -202,11 +204,11 @@ content_post_response.items <- function(s, res, enctype) {
   return(x)
 }
 
-`[.stac_items` <- function(x, i){
+`[.stac_item_collection` <- function(x, i){
 
   x$features <- x$features[i]
 
   return(x)
 }
 
-# TODO: implement head and tail S3 methods for stac_items object
+# TODO: implement head and tail S3 methods for stac_collection_list object
