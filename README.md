@@ -79,6 +79,18 @@ it_obj <- s_obj %>%
     get_request()
 ```
 
+The `rstac` uses the [httr](https://github.com/r-lib/httr) package to manage 
+HTTP requests, allowing the use of tokens from the authorization protocols OAuth
+1.0 or 2.0 as well as other configuration options. In the code below, we present
+an example of how to pass a parameter token on a HTTP request.
+
+```R
+it_obj <- s_obj %>% 
+    stac_search(collections = "MOD13Q1",
+                bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+    get_request(config = (token = "MY-TOKEN"))
+```
+
 In addition to the functions mentioned above, the `rstac` package provides some 
 extra functions for handling items and to bulk download the assets.
 
