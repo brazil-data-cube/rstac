@@ -88,7 +88,7 @@ an example of how to pass a parameter token on a HTTP request.
 it_obj <- s_obj %>% 
     stac_search(collections = "MOD13Q1",
                 bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-    get_request(config = (token = "MY-TOKEN"))
+    get_request(... = config(token = "MY-TOKEN"))
 ```
 
 In addition to the functions mentioned above, the `rstac` package provides some 
