@@ -7,7 +7,7 @@ STAC is a specification of files and web services used to describe geospatial
 information assets. The specification can be consulted in 
 [https://stacspec.org/].
 
-R client library for STAC (`rstac`) was designed to fully support STAC v0.8.1. 
+R client library for STAC (`rstac`) was designed to fully support STAC v0.8.1 and v0.9.0. 
 As STAC spec is evolving fast and reaching its maturity, we plan update `rstac` 
 to support upcoming STAC 1.0.0 version soon.
 
@@ -41,24 +41,35 @@ the STAC API of the [Brazil Data Cube](http://brazildatacube.org/) project of
 the Brazilian National Space Research Institute (INPE).
 
 ```R
-s_obj <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+s_obj <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1")
 get_request(s_obj) %>% print()
 #### STAC Catalog
-#- stac_version: "0.8.0"
-#- id: "bdc"
-#- description: "Brazil Data Cube Catalog"
-#- links:
-#  - CB4_64 (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/CB4_64)
-#  - CB4_64_16D_STK (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/CB4_64_16D_STK)
-#  - CB4_64_16D_STK_v1 (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/CB4_64_16D_STK_v1)
-#  - CB4_64_v1 (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/CB4_64_v1)
-#  - CB4A_55 (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/CB4A_55)
-#  - CB4A_55_1M_STK (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/CB4A_55_1M_STK)
-#  - CB4MOSBR_64 (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/CB4MOSBR_64)
-#  - CB4MOSBR_64_1M_STK (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/CB4MOSBR_64_1M_STK)
-#  - CB4MOSBR_64_3M_MED (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/CB4MOSBR_64_3M_MED)
-#  - CB4MOSBR_64_3M_STK (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0/collections/CB4MOSBR_64_3M_STK)
-#> … with 17 more links
+# - stac_version: "0.8.1"
+# - id: "bdc"
+# - description: 
+# "Brazil Data Cubes Catalog"
+# - links:
+#   - CB4_64 
+# (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/collections/CB4_64)
+#   - CB4_64_16D_STK 
+# (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/collections/CB4_64_16D_STK)
+#   - CB4_64_16D_STK_v1 
+# (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/collections/CB4_64_16D_STK_v1)
+#   - CB4_64_v1 
+# (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/collections/CB4_64_v1)
+#   - HLS.L30 
+# (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/collections/HLS.L30)
+#   - HLS.S30 
+# (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/collections/HLS.S30)
+#   - L5DN 
+# (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/collections/L5DN)
+#   - L5SR 
+# (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/collections/L5SR)
+#   - L7DN 
+# (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/collections/L7DN)
+#   - L7SR 
+# (http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1/collections/L7SR)
+# > … with 11 more links
 ```
 
 The variable `s_obj` stores information to connect to the Brazil Data 
@@ -138,7 +149,7 @@ download_items <- it_obj %>%
 
 The `rstac` package was implemented based on an extensible architecture, so 
 feel free to contribute by implementing new STAC API 
-[extensions](https://github.com/radiantearth/stac-spec/tree/v0.8.1/api-spec/extensions) 
+[extensions](https://github.com/radiantearth/stac-spec/tree/v0.9.0/api-spec/extensions) 
 based on the STAC API specifications.
 
 1. Make a project
@@ -155,7 +166,7 @@ API extension as an example.
 
 ## Getting help
 
-You can get a full explanation about each STAC (v0.8.1) endpoint at [STAC spec GitHub](https://github.com/radiantearth/stac-spec/tree/v0.8.1). A detailed
+You can get a full explanation about each STAC (v0.9.0) endpoint at [STAC spec GitHub](https://github.com/radiantearth/stac-spec/tree/v0.9.0). A detailed
 documentation with examples on how to use each endpoint and other functions
 available in the `rstac` package can be obtained by typing `?rstac` in R 
 console.
