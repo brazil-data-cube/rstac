@@ -8,8 +8,7 @@ stac_search(s, collections, ids, bbox, datetime, intersects, limit, ...)
 }
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac}, \code{stac_search}, \code{collections},
-or \code{items} functions.}
+provided by \code{stac}, \code{stac_search} functions.}
 
 \item{collections}{a \code{character} vector of collection IDs to include in
 the search for items. Only items in one of the provided collections will be
@@ -65,11 +64,12 @@ to STAC API web service.
 }
 \description{
 (This document is based on STAC specification documentation
-\url{https://github.com/radiantearth/stac-spec/blob/v0.8.1/api-spec/STAC.yaml}
+\url{https://github.com/radiantearth/stac-spec/}
 and reproduces some of its parts)
 
 The \code{stac_search} function implements \code{/stac/search} API endpoint
-(v0.8.1). It prepares query parameters used in search API request, a
+(v0.8.1) and \code{/search} (v0.9.0).
+It prepares query parameters used in search API request, a
 \code{stac} object with all filter parameters to be provided to
 \code{get_request} or \code{post_request} functions. The GeoJSON content
 returned by these requests is a \code{stac_item_collection} object, a regular R

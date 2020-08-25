@@ -37,12 +37,14 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'      get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'       force_version = "0.8.1") %>%
+#'  get_request()
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'      stac_search(collections = "MOD13Q1") %>%
-#'      post_request()
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'      force_version = "0.8.1") %>%
+#'  stac_search(collections = "MOD13Q1") %>%
+#'  post_request()
 #' }
 #' @export
 get_request <- function(s, ..., headers = character()) {

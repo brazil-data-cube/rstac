@@ -21,14 +21,13 @@ representing the result of \code{/stac/search},
 
 \item{assets_name}{a \code{character} with the assets names to be filtered.}
 
-\item{output_dir}{a \code{character} directory in which the images will be
+\item{output_dir}{a \code{character} directory in which the assets will be
 saved.}
 
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
-\item{...}{other params to be passed to \link[httr]{GET} or
-\link[httr]{POST} methods}
+\item{...}{other params to be passed to \link[httr]{GET} method.}
 
 \item{headers}{a \code{character} of named arguments to be passed as
 HTTP request headers.}
@@ -44,7 +43,8 @@ provided by the STAC API.
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+     force_version = "0.8.1") \%>\%
  stac_search(collections = "MOD13Q1",
             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
             limit = 2) \%>\%
@@ -54,6 +54,5 @@ stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
 
 }
 \seealso{
-\code{\link{stac_search}}, \code{\link{get_request}},
- \code{\link{post_request}}
+\code{\link{stac_search}}, \code{\link{items}}, \code{\link{get_request}}
 }

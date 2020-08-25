@@ -18,8 +18,8 @@ extension, returns \code{NULL}.
 }
 \description{
 The \code{items_matched} returns how many items matched the
-search criteria. It implements \code{search:metadata} STAC API
-extension (v0.8.0).
+ search criteria. It implements \code{search:metadata} (v0.8.0) and
+ \code{context} (v0.9.0) STAC API extensions.
 }
 \examples{
 \dontrun{

@@ -51,22 +51,28 @@
 #' \dontrun{
 #'
 #' # stac_item_collection object
-#' stac_item_collection <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'  search(collections = "MOD13Q1",
-#'         bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
-#'         limit = 15) %>% get_request()
+#' stac_item_collection <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'                              force_version = "0.8.1") %>%
+#'                         search(collections = "MOD13Q1",
+#'                                bbox = c(-55.16335,
+#'                                         -4.26325,
+#'                                         -49.31739,
+#'                                         -1.18355),
+#'                                limit = 15) %>%
+#'                         get_request()
 #'
 #' print(stac_item_collection, n = 10)
 #'
 #' # stac_catalog object
-#' stac_catalog <-  stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'  collections() %>%
-#'  get_request()
+#' stac_catalog <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'                      force_version = "0.8.1") %>%
+#'                 get_request()
 #'
 #' print(stac_catalog, n = 5)
 #'
 #' # stac object
-#' obj_stac <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+#' obj_stac <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'                  force_version = "0.8.1")
 #'
 #' print(obj_stac)
 #' }

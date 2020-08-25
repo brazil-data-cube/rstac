@@ -17,7 +17,8 @@
 #'  version you are using.
 #'
 #' @seealso
-#' \code{\link{stac_search}}, \code{\link{get_request}},
+#' \code{\link{stac_search}}, \code{\link{collections}},
+#' \code{\link{items}}, \code{\link{get_request}},
 #' \code{\link{post_request}}
 #'
 #' @return
@@ -68,6 +69,8 @@ stac <- function(url, ..., force_version) {
 #'
 #' @return a \code{character}  with the STAC version found or an error if it is
 #'  not possible to obtain it.
+#'
+#' @noRd
 .detect_version <- function(url, ...) {
   # TODO: implement token
 

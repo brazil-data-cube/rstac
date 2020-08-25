@@ -10,7 +10,7 @@ R client library for STAC is a R package that interfaces STAC API
     endpoints.
     For more information about the STAC specification, please consult the
     specification page (<http://stacspec.org>).
-    This package supports the version 0.8.1 of the STAC specification.
+    This package supports the version 0.8.1 or higher of the STAC specification.
 }
 \section{The \code{rstac} functions}{
 

@@ -1,8 +1,8 @@
 #' @title Items functions
 #'
 #' @description The \code{items_matched} returns how many items matched the
-#' search criteria. It implements \code{search:metadata} STAC API
-#' extension (v0.8.0).
+#'  search criteria. It implements \code{search:metadata} (v0.8.0) and
+#'  \code{context} (v0.9.0) STAC API extensions.
 #'
 #' @param items      a \code{stac_item_collection} object representing the
 #'  request results of \code{/stac/search},

@@ -4,7 +4,8 @@
 #'
 #' @description
 #' The \code{collections} function implements the WFS3 \code{/collections}
-#' and \code{/collections/\{collectionId\}} endpoints (v0.8.1).
+#'  and \code{/collections/\{collectionId\}} endpoints
+#'  (v0.8.0, v0.8.1 and v0.9.0).
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{
@@ -15,8 +16,7 @@
 #' }
 #'
 #' @param s             a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-#' or \code{stac_collection_list} functions.
+#' provided by \code{stac} or \code{collections} functions.
 #'
 #' @param collection_id a \code{character} collection id to be retrieved.
 #'

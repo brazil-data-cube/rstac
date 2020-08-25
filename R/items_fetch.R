@@ -26,7 +26,8 @@
 #' @examples
 #' \dontrun{
 #'
-#'  stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#'  stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'       force_version = "0.8.1") %>%
 #'   stac_search(collections = "MOD13Q1",
 #'          bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
 #'          limit = 500) %>%

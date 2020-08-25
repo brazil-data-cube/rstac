@@ -66,6 +66,17 @@ testthat::test_that("examples rstac", {
         get_request(),
       class = "stac_catalog")
 
+    #### tests in extensions ####
+
+    # test extension query
+    testthat::expect_s3_class(
+      object = stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+                    force_version = "0.8.1") %>%
+              stac_search(collections = "CB4_64_16D_STK") %>%
+              extension_query("bdc:tile" == "022024") %>%
+              post_request(),
+      class = "stac_item_collection")
+
     #### tests in items ####
 
     # test items_fetch

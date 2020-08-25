@@ -10,26 +10,25 @@
 #'
 #' @param assets_name a \code{character} with the assets names to be filtered.
 #'
-#' @param output_dir  a \code{character} directory in which the images will be
+#' @param output_dir  a \code{character} directory in which the assets will be
 #'  saved.
 #'
 #' @param progress    a \code{logical} indicating if a progress bar must be
 #'  shown or not. Defaults to \code{TRUE}.
 #'
-#' @param ...        other params to be passed to \link[httr]{GET} or
-#' \link[httr]{POST} methods
+#' @param ...        other params to be passed to \link[httr]{GET} method.
 #'
 #' @param headers    a \code{character} of named arguments to be passed as
 #' HTTP request headers.
 #'
 #' @seealso
-#' \code{\link{stac_search}}, \code{\link{get_request}},
-#'  \code{\link{post_request}}
+#' \code{\link{stac_search}}, \code{\link{items}}, \code{\link{get_request}}
 #'
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'      force_version = "0.8.1") %>%
 #'  stac_search(collections = "MOD13Q1",
 #'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
 #'             limit = 2) %>%
