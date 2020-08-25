@@ -149,9 +149,9 @@ your extension and implement the S3 generics methods, `params_get_request`,
 `content_get_response` (for HTTP GET) and/or `params_post_request`, 
 `content_post_response` (for HTTP POST). Using these S3 generics methods you 
 can define how parameters must be submited to the HTTP request and the types 
-of the returned documents responses. See the implemented [ext_query](https://github.com/OldLipe/rstac/blob/master/R/extension_query.R) 
+of the returned documents responses. See the implemented [ext_query](https://github.com/brazil-data-cube/rstac/blob/master/R/ext_query.R) 
 API extension as an example.  
-4. Make a [Pull Request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) on the branch dev.
+4. Make a [Pull Request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) on the branch [dev](https://github.com/OldLipe/rstac/tree/dev).
 
 ## Getting help
 
