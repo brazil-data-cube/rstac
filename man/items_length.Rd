@@ -7,7 +7,7 @@
 items_length(items)
 }
 \arguments{
-\item{items}{a \code{stac_items} object representing the request
+\item{items}{a \code{stac_item_collection} object representing the request
 results of \code{/stac/search}, \code{/collections/{collectionId}/items}, or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
 }
@@ -21,10 +21,14 @@ there are in the \code{items} object.
 \examples{
 \dontrun{
 
-stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-    stac_search() \%>\%
-    get_request() \%>\%
-    items_length()
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+     force_version = "0.8.1") \%>\%
+ stac_search(collections = "MOD13Q1",
+         bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
+         limit = 500) \%>\%
+ get_request() \%>\%
+ items_length()
+
 }
 
 }

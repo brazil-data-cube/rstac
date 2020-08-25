@@ -3,8 +3,9 @@
 #' @description The \code{items_fetch} function returns the pagination of all
 #'  items of the stac object
 #'
-#' @param items      a \code{stac_items} object representing the request
-#'  results of \code{/stac/search}, \code{/collections/{collectionId}/items}, or
+#' @param items      a \code{stac_item_collection} object representing the
+#'  request results of \code{/stac/search},
+#'  \code{/collections/{collectionId}/items}, or
 #'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
 #' @param ...        other params to be passed to \link[httr]{GET} or
@@ -20,13 +21,14 @@
 #' \code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
 #' \code{\link{items}}
 #'
-#' @return a \code{stac_items} object.
+#' @return a \code{stac_item_collection} object.
 #'
 #' @examples
 #' \dontrun{
 #'
-#'  stac(http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0) %>%
-#'   search(collections = "MOD13Q1",
+#'  stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'       force_version = "0.8.1") %>%
+#'   stac_search(collections = "MOD13Q1",
 #'          bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
 #'          limit = 500) %>%
 #'    get_request() %>%
@@ -37,7 +39,7 @@
 items_fetch <- function(items, ..., headers = character(), progress = TRUE) {
 
   # Check object class
-  .check_obj(items, "stac_items")
+  .check_obj(items, "stac_item_collection")
 
   matched <- items_matched(items)
 
@@ -89,7 +91,7 @@ items_fetch <- function(items, ..., headers = character(), progress = TRUE) {
     }
 
     # check content response
-    .check_obj(content, "stac_items")
+    .check_obj(content, "stac_item_collection")
 
     # merge features result into resulting content
     content$features <- c(items$features, content$features)

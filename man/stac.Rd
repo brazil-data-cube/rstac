@@ -4,11 +4,19 @@
 \alias{stac}
 \title{Endpoint functions}
 \usage{
-stac(url)
+stac(url, ..., force_version)
 }
 \arguments{
 \item{url}{a \code{character} informing the base url of a
 STAC web service.}
+
+\item{...}{other params to be passed to \link[httr]{GET} or
+\link[httr]{POST} methods}
+
+\item{force_version}{a \code{character} providing the version of the stac
+used. If not provided, the rstac package will make requests to try to find
+the version of STAC used. It is highly recommended that you inform the STAC
+version you are using.}
 }
 \value{
 A \code{stac} object with subclass \code{subclass} containing all request
@@ -23,12 +31,14 @@ containing all data Items searchable in the API.
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-    get_request()
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+     force_version = "0.8.1") \%>\%
+ get_request()
 }
 
 }
 \seealso{
-\code{\link{stac_search}}, \code{\link{get_request}},
+\code{\link{stac_search}}, \code{\link{collections}},
+\code{\link{items}}, \code{\link{get_request}},
 \code{\link{post_request}}
 }

@@ -5,10 +5,11 @@ testthat::test_that("items functions", {
     # skip cran check test
     testthat::skip_on_cran()
 
-    res <- rstac::stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+    res <- rstac::stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/",
+                       force_version = "0.9.0") %>%
       stac_search(
-        collections = "MOD13Q1",
-        bbox  = c(-55.16335, -4.26325, -49.31739, -1.18355),
+        collections = "CB4_64_16D_STK-1",
+        bbox  = c(-48.19039, -16.00871, -41.6341, -11.91345),
         limit = 500) %>%
       get_request(.)
 
@@ -16,10 +17,10 @@ testthat::test_that("items functions", {
     # error - given another object
     testthat::expect_error(items_fetch(list(res)))
 
-   # ok - stac_items object
+   # ok - stac_collection_list object
     testthat::expect_equal(
       object   = class(items_fetch(res)),
-      expected = "stac_items")
+      expected = "stac_item_collection")
 
     # items_length--------------------------------------------------------------
     # error - given another object

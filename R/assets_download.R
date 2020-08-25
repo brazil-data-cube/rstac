@@ -3,30 +3,32 @@
 #' @description The \code{assets_download} function downloads the assets
 #' provided by the STAC API.
 #'
-#' @param items       a \code{stac_items} or \code{stac_item} object
+#' @param items       a \code{stac_item_collection} or \code{stac_item} object
 #'  representing the result of \code{/stac/search},
 #'  \code{/collections/{collectionId}/items} or
 #'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
 #' @param assets_name a \code{character} with the assets names to be filtered.
 #'
-#' @param output_dir  a \code{character} directory in which the images will be
+#' @param output_dir  a \code{character} directory in which the assets will be
 #'  saved.
 #'
 #' @param progress    a \code{logical} indicating if a progress bar must be
 #'  shown or not. Defaults to \code{TRUE}.
 #'
+#' @param ...        other params to be passed to \link[httr]{GET} method.
+#'
 #' @param headers    a \code{character} of named arguments to be passed as
 #' HTTP request headers.
 #'
 #' @seealso
-#' \code{\link{stac_search}}, \code{\link{get_request}},
-#'  \code{\link{post_request}}
+#' \code{\link{stac_search}}, \code{\link{items}}, \code{\link{get_request}}
 #'
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'      force_version = "0.8.1") %>%
 #'  stac_search(collections = "MOD13Q1",
 #'             bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
 #'             limit = 2) %>%
@@ -34,18 +36,18 @@
 #'  assets_download(assets_name = c("thumbnail"), output_dir = ".")
 #' }
 #'
-#' @return The same \code{stac_items} or \code{stac_item} object, with the
+#' @return The same \code{stac_item_collection} or \code{stac_item} object, with the
 #' link of the item pointing to the directory where the assets were saved.
 #'
 #' @export
 assets_download <- function(items, assets_name, output_dir = ".",
-                            progress = TRUE, headers = character()) {
+                            progress = TRUE, ..., headers = character()) {
 
   # TODO: add parameter to cut out the assets if provided - keep_assets
   # TODO: warning if the value of item_length is different of item_matched
 
   #check the object class
-  .check_obj(items, expected = c("stac_items", "stac_item"))
+  .check_obj(items, expected = c("stac_item_collection", "stac_item"))
 
   # check output dir
   if (!dir.exists(output_dir))
@@ -55,7 +57,8 @@ assets_download <- function(items, assets_name, output_dir = ".",
   if (inherits(items, "stac_item")) {
     items <- .item_download(stac_item   = items,
                             assets_name = assets_name,
-                            output_dir  = output_dir)
+                            output_dir  = output_dir,
+                            ..., headers = headers)
 
     return(items)
   }
@@ -78,7 +81,8 @@ assets_download <- function(items, assets_name, output_dir = ".",
       utils::setTxtProgressBar(pb, i)
 
     items$features[[i]] <- .item_download(items$features[[i]],
-                                          assets_name, output_dir)
+                                          assets_name, output_dir,
+                                          ..., headers = headers)
   }
   # close progress bar
   if (progress)
@@ -102,6 +106,9 @@ assets_download <- function(items, assets_name, output_dir = ".",
 #' @param output_dir  a \code{character} directory in which the images will be
 #'  saved.
 #'
+#' @param ...        other params to be passed to \link[httr]{GET} or
+#' \link[httr]{POST} methods
+#'
 #' @param headers    a \code{character} of named arguments to be passed as
 #' HTTP request headers.
 #'
@@ -109,7 +116,7 @@ assets_download <- function(items, assets_name, output_dir = ".",
 #'  pointing to the directory where the assets were saved.
 #'
 #' @noRd
-.item_download <- function(stac_item, assets_name, output_dir,
+.item_download <- function(stac_item, assets_name, output_dir, ...,
                            headers = character()) {
 
   feat_id <- stac_item[["id"]]
@@ -128,7 +135,7 @@ assets_download <- function(items, assets_name, output_dir = ".",
     tryCatch({
       httr::GET(url = asset_href,
                 httr::write_disk(path = dest_file),
-                httr::add_headers(headers))
+                httr::add_headers(headers), ...)
 
     }, error = function(error){
       warning(paste("\n", error, "in ", asset_href))

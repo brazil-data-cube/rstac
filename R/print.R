@@ -38,7 +38,7 @@
 #' @param n number of lines to view on each object. Each object has its own type
 #'  of truncation in lines. In the \code{stac_catalog} object, by default, 10
 #'  links will be shown. In the \code{stac_collection} object, similarly, 10
-#'  links will be shown. In \code{stac_items}, by default, 3 features will be
+#'  links will be shown. In \code{stac_item_collection}, by default, 3 features will be
 #'  shown. If you want to show all lines of a rstac object, use `n = Inf`.
 #'
 #' @param ... other parameters passed in the functions.
@@ -50,23 +50,29 @@
 #' @examples
 #' \dontrun{
 #'
-#' # stac_items object
-#' stac_items <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'  search(collections = "MOD13Q1",
-#'         bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
-#'         limit = 15) %>% get_request()
+#' # stac_item_collection object
+#' stac_item_collection <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'                              force_version = "0.8.1") %>%
+#'                         search(collections = "MOD13Q1",
+#'                                bbox = c(-55.16335,
+#'                                         -4.26325,
+#'                                         -49.31739,
+#'                                         -1.18355),
+#'                                limit = 15) %>%
+#'                         get_request()
 #'
-#' print(stac_items, n = 10)
+#' print(stac_item_collection, n = 10)
 #'
 #' # stac_catalog object
-#' stac_catalog <-  stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'  collections() %>%
-#'  get_request()
+#' stac_catalog <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'                      force_version = "0.8.1") %>%
+#'                 get_request()
 #'
 #' print(stac_catalog, n = 5)
 #'
 #' # stac object
-#' obj_stac <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+#' obj_stac <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'                  force_version = "0.8.1")
 #'
 #' print(obj_stac)
 #' }
@@ -96,9 +102,9 @@ print_header.stac_item <- function(x, ...) {
   }
 }
 
-print_header.stac_items <- function(x, ...) {
+print_header.stac_item_collection <- function(x, ...) {
 
-  cat(crayon::bold("### STAC Items"), fill = TRUE)
+  cat(crayon::bold("### STAC Item Collection"), fill = TRUE)
 
   if (!is.null(x$type))
     cat("- type:", crayon::bold(paste0('"', x$type, '"')), fill = TRUE)
@@ -139,6 +145,11 @@ print_header.stac_catalog <- function(x, ...) {
         fill = TRUE)
 }
 
+print_header.stac_collection_list <- function(x, ...) {
+
+  cat(crayon::bold("### STAC List Collection"), fill = TRUE)
+}
+
 #### prints ####
 
 #' @title Printing functions
@@ -152,6 +163,29 @@ print.stac <- function(x, ...) {
   # print body
   print_named(x, n = Inf, align_first = FALSE)
 }
+
+# TODO: show IDS items and searching links by self
+
+#' @export
+print.stac_collection_list <- function(x, n = 10, ...) {
+
+  # print header
+  print_header(x)
+
+  titles <- sapply(x$collections, function(x){
+    x$id
+  })
+
+  hrefs <- sapply(x$collections, function(x){
+    links <- Filter(function(e) e$rel == "self", x$links)
+
+    if (length(links) > 0)
+      return(links[[1]]$href)
+    return(NA)
+  })
+  print_link_highlight(titles, hrefs, pad = 0)
+}
+
 
 #' @title Printing functions
 #' @rdname print
@@ -209,7 +243,7 @@ print.stac_collection <- function(x, n = 10, ...) {
 #' @title Printing functions
 #' @rdname print
 #' @export
-print.stac_items <- function(x, n = 5, ...) {
+print.stac_item_collection <- function(x, n = 5, ...) {
 
   # print headers
   print_header(x)

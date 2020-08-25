@@ -32,9 +32,10 @@ and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
 \code{'json'}.}
 }
 \value{
-Either a \code{stac_catalog}, \code{stac_collection}, \code{stac_items},
-or \code{stac_item} object depending on the subclass and search fields
-parameters of \code{s} argument.
+Either a \code{stac_catalog}, \code{stac_collection},
+ \code{stac_collection_list}, \code{stac_item_collection} or \code{stac_item}
+ object depending on the subclass and search fields parameters of \code{s}
+ argument.
 }
 \description{
 The \code{get_request} is function that makes HTTP GET
@@ -46,12 +47,14 @@ requests to STAC web services, retrieves, and parse the data.
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-     get_request()
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+      force_version = "0.8.1") \%>\%
+ get_request()
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-     stac_search(collections = "MOD13Q1") \%>\%
-     post_request()
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+     force_version = "0.8.1") \%>\%
+ stac_search(collections = "MOD13Q1") \%>\%
+ post_request()
 }
 }
 \seealso{

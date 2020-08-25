@@ -4,16 +4,15 @@
 \alias{items}
 \title{Endpoint functions}
 \usage{
-items(s, item_id, datetime, bbox, limit, ...)
+items(s, feature_id, datetime, bbox, limit, ...)
 }
 \arguments{
 \item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac}, \code{stac_search}, \code{collections},
-or \code{items} functions.}
+provided by \code{stac}, \code{collections}, \code{items} functions.}
 
-\item{item_id}{a \code{character} with item id to be fetched.
+\item{feature_id}{a \code{character} with item id to be fetched.
 Only works if the \code{collection_id} is informed. This is equivalent to
-the endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.}
+the endpoint \code{/collections/\{collectionId\}/items/\{featureId\}}.}
 
 \item{datetime}{a \code{character} with a date-time or an interval.
 Date and time strings needs to conform RFC 3339. Intervals are
@@ -63,8 +62,8 @@ to STAC API web service.
 \description{
 The \code{items} function implements WFS3
 \code{/collections/\{collectionId\}/items}, and
-\code{/collections/\{collectionId\}/items/\{itemId\}}
-endpoints (v0.8.0).
+\code{/collections/\{collectionId\}/items/\{featureId\}}
+endpoints (v0.8.0, v0.8.1 and v0.9.0).
 
 Each endpoint retrieves specific STAC objects:
 \itemize{
@@ -80,15 +79,17 @@ filters parameters of \code{\link{stac_search}} function.
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-  collections("MOD13Q1") \%>\%
-  items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
-  get_request()
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+     force_version = "0.8.1") \%>\%
+ collections("MOD13Q1") \%>\%
+ items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+ get_request()
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
-  collections("MOD13Q1") \%>\%
-  items("MOD13Q1.A2019241.h13v09.006.2019262164754") \%>\%
-  get_request()
+stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+     force_version = "0.8.1") \%>\%
+ collections("MOD13Q1") \%>\%
+ items("MOD13Q1.A2019241.h13v09.006.2019262164754") \%>\%
+ get_request()
 }
 
 }

@@ -5,7 +5,7 @@
 \alias{print.stac}
 \alias{print.stac_catalog}
 \alias{print.stac_collection}
-\alias{print.stac_items}
+\alias{print.stac_item_collection}
 \alias{print.stac_item}
 \title{Printing functions}
 \usage{
@@ -15,7 +15,7 @@
 
 \method{print}{stac_collection}(x, n = 10, ...)
 
-\method{print}{stac_items}(x, n = 5, ...)
+\method{print}{stac_item_collection}(x, n = 5, ...)
 
 \method{print}{stac_item}(x, ...)
 }
@@ -27,7 +27,7 @@
 \item{n}{number of lines to view on each object. Each object has its own type
 of truncation in lines. In the \code{stac_catalog} object, by default, 10
 links will be shown. In the \code{stac_collection} object, similarly, 10
-links will be shown. In \code{stac_items}, by default, 3 features will be
+links will be shown. In \code{stac_item_collection}, by default, 3 features will be
 shown. If you want to show all lines of a rstac object, use `n = Inf`.}
 }
 \description{
@@ -65,23 +65,29 @@ For printing use the \code{print()} function directly, since the package has
 \examples{
 \dontrun{
 
-# stac_items object
-stac_items <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
- search(collections = "MOD13Q1",
-        bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
-        limit = 15) \%>\% get_request()
+# stac_item_collection object
+stac_item_collection <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+                             force_version = "0.8.1") \%>\%
+                        search(collections = "MOD13Q1",
+                               bbox = c(-55.16335,
+                                        -4.26325,
+                                        -49.31739,
+                                        -1.18355),
+                               limit = 15) \%>\%
+                        get_request()
 
-print(stac_items, n = 10)
+print(stac_item_collection, n = 10)
 
 # stac_catalog object
-stac_catalog <-  stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") \%>\%
- collections() \%>\%
- get_request()
+stac_catalog <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+                     force_version = "0.8.1") \%>\%
+                get_request()
 
 print(stac_catalog, n = 5)
 
 # stac object
-obj_stac <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0")
+obj_stac <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+                 force_version = "0.8.1")
 
 print(obj_stac)
 }

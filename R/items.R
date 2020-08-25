@@ -3,8 +3,8 @@
 #' @description
 #' The \code{items} function implements WFS3
 #' \code{/collections/\{collectionId\}/items}, and
-#' \code{/collections/\{collectionId\}/items/\{itemId\}}
-#' endpoints (v0.8.0).
+#' \code{/collections/\{collectionId\}/items/\{featureId\}}
+#' endpoints (v0.8.0, v0.8.1 and v0.9.0).
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{
@@ -18,12 +18,11 @@
 #' filters parameters of \code{\link{stac_search}} function.
 #'
 #' @param s           a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac}, \code{stac_search}, \code{collections},
-#' or \code{items} functions.
+#' provided by \code{stac}, \code{collections}, \code{items} functions.
 #'
-#' @param item_id     a \code{character} with item id to be fetched.
+#' @param feature_id  a \code{character} with item id to be fetched.
 #' Only works if the \code{collection_id} is informed. This is equivalent to
-#' the endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.
+#' the endpoint \code{/collections/\{collectionId\}/items/\{featureId\}}.
 #'
 #' @param datetime    a \code{character} with a date-time or an interval.
 #' Date and time strings needs to conform RFC 3339. Intervals are
@@ -77,19 +76,21 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'   collections("MOD13Q1") %>%
-#'   items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-#'   get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'      force_version = "0.8.1") %>%
+#'  collections("MOD13Q1") %>%
+#'  items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+#'  get_request()
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'   collections("MOD13Q1") %>%
-#'   items("MOD13Q1.A2019241.h13v09.006.2019262164754") %>%
-#'   get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'      force_version = "0.8.1") %>%
+#'  collections("MOD13Q1") %>%
+#'  items("MOD13Q1.A2019241.h13v09.006.2019262164754") %>%
+#'  get_request()
 #' }
 #'
 #' @export
-items <- function(s, item_id, datetime, bbox, limit, ...) {
+items <- function(s, feature_id, datetime, bbox, limit, ...) {
 
   # check s parameter
   .check_obj(s, expected = c("collections", "items"))
@@ -118,28 +119,31 @@ items <- function(s, item_id, datetime, bbox, limit, ...) {
   if (!missing(...))
     params <- c(params, list(...))
 
-  endpoint <- paste("/collections", s$params[["collection_id"]],
-                    "items", sep = "/")
+  endpoint <- .OAFeat_items_endpoint(collection_id = s$params[["collection_id"]])
 
-  if (!missing(item_id)) {
+  if (!missing(feature_id)) {
 
-    params[["item_id"]] <- item_id
+    if (length(feature_id) != 1)
+      .error("Parameter `feature_id` must be a single value.")
 
-    endpoint <- paste(endpoint, params[["item_id"]], sep = "/")
+    params[["feature_id"]] <- feature_id
+
+    endpoint <- .OAFeat_items_endpoint(collection_id = s$params[["collection_id"]],
+                                       feature_id = params[["feature_id"]])
   }
 
   content <- .build_stac(url = s$url,
-                        endpoint = endpoint,
-                        params = params,
-                        subclass = "items",
-                        base_stac = s)
+                         endpoint = endpoint,
+                         params = params,
+                         subclass = "items",
+                         base_stac = s)
 
   return(content)
 }
 
 params_get_request.items <- function(s) {
 
-  if (!is.null(s$params[["item_id"]]))
+  if (!is.null(s$params[["feature_id"]]))
     return(list())
 
   # process collections params
@@ -150,7 +154,7 @@ params_get_request.items <- function(s) {
 
 params_post_request.items <- function(s, enctype) {
 
-  if (!is.null(s$params[["item_id"]]))
+  if (!is.null(s$params[["feature_id"]]))
     return(list())
 
   # process collections params
@@ -162,8 +166,8 @@ params_post_request.items <- function(s, enctype) {
 content_get_response.items <- function(s, res) {
 
   # detect expected response object class
-  content_class <- "stac_items"
-  if (!is.null(s$params[["item_id"]]))
+  content_class <- "stac_item_collection"
+  if (!is.null(s$params[["feature_id"]]))
     content_class <- "stac_item"
 
   content <- structure(
@@ -178,8 +182,8 @@ content_get_response.items <- function(s, res) {
 content_post_response.items <- function(s, res, enctype) {
 
   # detect expected response object class
-  content_class <- "stac_items"
-  if (!is.null(s$params[["item_id"]]))
+  content_class <- "stac_item_collection"
+  if (!is.null(s$params[["feature_id"]]))
     content_class <- "stac_item"
 
   content <- structure(
@@ -191,7 +195,7 @@ content_post_response.items <- function(s, res, enctype) {
   return(content)
 }
 
-`[[.stac_items` <- function(x, i){
+`[[.stac_item_collection` <- function(x, i){
 
   x <- x$features[[i]]
   class(x) <- "stac_item"
@@ -199,11 +203,11 @@ content_post_response.items <- function(s, res, enctype) {
   return(x)
 }
 
-`[.stac_items` <- function(x, i){
+`[.stac_item_collection` <- function(x, i){
 
   x$features <- x$features[i]
 
   return(x)
 }
 
-# TODO: implement head and tail S3 methods for stac_items object
+# TODO: implement head and tail S3 methods for stac_collection_list object

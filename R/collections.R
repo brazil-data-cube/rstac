@@ -4,7 +4,8 @@
 #'
 #' @description
 #' The \code{collections} function implements the WFS3 \code{/collections}
-#' and \code{/collections/\{collectionId\}} endpoints (v0.8.1).
+#'  and \code{/collections/\{collectionId\}} endpoints
+#'  (v0.8.0, v0.8.1 and v0.9.0).
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{
@@ -15,8 +16,7 @@
 #' }
 #'
 #' @param s             a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac}, \code{stac_search}, \code{stac_collections},
-#' or \code{stac_items} functions.
+#' provided by \code{stac} or \code{collections} functions.
 #'
 #' @param collection_id a \code{character} collection id to be retrieved.
 #'
@@ -31,13 +31,15 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'   collections() %>%
-#'   get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'     force_version = "0.8.1") %>%
+#'  collections() %>%
+#'  get_request()
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.0") %>%
-#'   collections(collection_id = "MOD13Q1") %>%
-#'   get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
+#'       force_version = "0.8.1") %>%
+#' collections(collection_id = "MOD13Q1") %>%
+#' get_request()
 #' }
 
 #' @export
@@ -48,18 +50,23 @@ collections <- function(s, collection_id) {
     .check_obj(s, expected = "stac", exclusive = TRUE)
 
   params <- list()
-  endpoint <- "/collections"
+  endpoint <- .OAFeat_collections_endpoint()
   if (!missing(collection_id)) {
 
-    params[["collection_id"]] <- collection_id[[1]]
-    endpoint <- paste("/collections", collection_id[[1]], sep = "/")
+    if (length(collection_id) != 1)
+      .error("Parameter `collection_id` must be a single value.")
+
+    params[["collection_id"]] <- collection_id
+
+    endpoint <- .OAFeat_collections_endpoint(
+      collection_id = params[["collection_id"]])
   }
 
   content <- .build_stac(url = s$url,
-                        endpoint = endpoint,
-                        params = params,
-                        subclass = "collections",
-                        base_stac = s)
+                         endpoint = endpoint,
+                         params = params,
+                         subclass = "collections",
+                         base_stac = s)
   return(content)
 }
 
@@ -88,7 +95,7 @@ params_post_request.collections <- function(s, enctype) {
 content_get_response.collections <- function(s, res) {
 
   # detect expected response object class
-  content_class <- "stac_catalog"
+  content_class <- "stac_collection_list"
 
   if (!is.null(s$params[["collection_id"]]))
     content_class <- "stac_collection"
@@ -105,7 +112,7 @@ content_get_response.collections <- function(s, res) {
 content_post_response.collections <- function(s, res, enctype) {
 
   # detect expected response object class
-  content_class <- "stac_catalog"
+  content_class <- "stac_list_catalog"
 
   if (!is.null(s$params[["collection_id"]]))
     content_class <- "stac_collection"
