@@ -13,7 +13,7 @@ testthat::test_that("examples rstac", {
                            force_version = "0.8.1") %>%
         rstac::collections() %>%
         rstac::get_request(),
-      class = "stac_collection_list")
+      class = "stac_catalog")
 
     # test collections items - /collections/{collection_id}
     testthat::expect_s3_class(

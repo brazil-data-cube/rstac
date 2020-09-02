@@ -45,7 +45,7 @@ The \code{post_request} is function that makes HTTP POST
 requests to STAC web services, retrieves, and parse the data.
 }
 \examples{
-\dontrun{
+\donttest{
 
 stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
       force_version = "0.8.1") \%>\%

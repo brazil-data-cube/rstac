@@ -29,7 +29,7 @@ a STAC API web service. This endpoint should return a STAC Catalog document
 containing all data Items searchable in the API.
 }
 \examples{
-\dontrun{
+\donttest{
 
 stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
      force_version = "0.8.1") \%>\%

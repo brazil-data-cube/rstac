@@ -30,7 +30,7 @@ Each endpoint retrieves specific STAC objects:
 }
 }
 \examples{
-\dontrun{
+\donttest{
 
 stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
     force_version = "0.8.1") \%>\%

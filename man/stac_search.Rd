@@ -76,7 +76,7 @@ returned by these requests is a \code{stac_item_collection} object, a regular R
 \code{list} representing a STAC Item Collection document.
 }
 \examples{
-\dontrun{
+\donttest{
 # GET request
 stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
      force_version = "0.8.1") \%>\%

@@ -29,7 +29,7 @@ The \code{items_fetch} function returns the pagination of all
  items of the stac object
 }
 \examples{
-\dontrun{
+\donttest{
 
  stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
       force_version = "0.8.1") \%>\%

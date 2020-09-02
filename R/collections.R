@@ -29,7 +29,7 @@
 #' to STAC API web service.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
 #'     force_version = "0.8.1") %>%
@@ -95,7 +95,10 @@ params_post_request.collections <- function(s, enctype) {
 content_get_response.collections <- function(s, res) {
 
   # detect expected response object class
-  content_class <- "stac_collection_list"
+  if (s$version < "0.9.0")
+    content_class <- "stac_catalog"
+  else
+    content_class <- "stac_collection_list"
 
   if (!is.null(s$params[["collection_id"]]))
     content_class <- "stac_collection"
