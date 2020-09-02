@@ -25,7 +25,7 @@
 #' \code{\link{stac_search}}, \code{\link{items}}, \code{\link{get_request}}
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'
 #' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
 #'      force_version = "0.8.1") %>%
