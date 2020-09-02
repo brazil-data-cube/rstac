@@ -71,7 +71,7 @@
 #' to STAC API web service.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # GET request
 #' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
 #'      force_version = "0.8.1") %>%

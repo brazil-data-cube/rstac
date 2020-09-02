@@ -1,5 +1,5 @@
 Package: rstac
-Title: R Client Library for SpatioTemporal Asset Catalog
+Title: Client Library for SpatioTemporal Asset Catalog
 Version: 0.9.0
 Authors@R: 
     c(person("Brazil Data Cube Team", 
@@ -7,12 +7,9 @@ Authors@R:
             role = c("cre", "aut")),
     person(given = "National Institute for Space Research (INPE)", 
             role = c("cph")))
-Description: 
-    R client library for STAC is a R package that interfaces STAC API 
-    endpoints.
-    For more information about the STAC specification, please consult the
-    specification page (<http://stacspec.org>).
-    This package supports the version 0.8.1 or higher of the STAC specification.
+Description: Provides functions to access, search and download spacetime earth 
+    observation data via SpatioTemporal Asset Catalog (STAC). This package 
+    supports the version 0.8.1 or higher of the STAC specification.
 License: MIT + file LICENSE
 URL: https://github.com/brazil-data-cube/rstac
 BugReports: https://github.com/brazil-data-cube/rstac/issues

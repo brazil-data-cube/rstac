@@ -48,7 +48,7 @@
 #' \code{\link{items}}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' # stac_item_collection object
 #' stac_item_collection <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",

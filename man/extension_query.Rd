@@ -63,7 +63,7 @@ to get things done for this extension:
 }
 }
 \examples{
-\dontrun{
+\donttest{
 # filter items that has 'bdc:tile' property equal to '022024'
 stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
      force_version = "0.8.1") \%>\%
