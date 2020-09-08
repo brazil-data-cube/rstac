@@ -181,7 +181,11 @@
   status_code <- as.character(httr::status_code(res))
   content_type <- httr::http_type(res)
 
+  if (grepl("application/.*json", content_type))
+    content_type <- "application/json"
+
   content <- httr::content(res,
+                           type = content_type,
                            encoding = "UTF-8",
                            simplifyVector = TRUE,
                            simplifyDataFrame = FALSE,
@@ -189,15 +193,17 @@
 
   if (!status_code %in% allowed_status_code) {
     message <- ""
-    if (!is.null(content$description))
-      message <- content$description
+    if (is.atomic(content))
+      message <- content
+    else if (!is.null(content[["description"]]))
+      message <- content[["description"]]
 
     .error("HTTP status '%s'. %s", status_code, message)
   }
 
   if (!content_type %in% allowed_content_type)
     .error("HTTP content type response '%s' not defined for this operation.",
-           content_type)
+           httr::http_type(res))
 
 
   return(content)
