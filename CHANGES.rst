@@ -16,6 +16,7 @@ Version 0.9.0-0
 
 Released 2020-09-18
 
+- Fix isssue from CRAN.
 - Preparing package to send to CRAN.
 - Update documentation.
 - Add function for extensions creating.
