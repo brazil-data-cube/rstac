@@ -43,13 +43,12 @@ provided by the STAC API.
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-     force_version = "0.8.1") \%>\%
- stac_search(collections = "MOD13Q1",
-            bbox = c(-55.16335, -4.26325, -49.31739, -1.18355),
-            limit = 2) \%>\%
- get_request() \%>\%
- assets_download(assets_name = c("thumbnail"), output_dir = ".")
+stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+  stac_search(collections = "MOD13Q1") \%>\%
+  stac_search(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+  stac_search(limit = 2) \%>\%
+  get_request() \%>\%
+  assets_download(assets_name = "thumbnail", output_dir = ".")
 }
 
 }

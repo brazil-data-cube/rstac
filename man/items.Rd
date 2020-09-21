@@ -4,11 +4,11 @@
 \alias{items}
 \title{Endpoint functions}
 \usage{
-items(s, feature_id, datetime, bbox, limit, ...)
+items(s, feature_id, datetime, bbox, limit)
 }
 \arguments{
-\item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac}, \code{collections}, \code{items} functions.}
+\item{s}{a \code{RSTACQuery} object expressing a STAC query
+criteria.}
 
 \item{feature_id}{a \code{character} with item id to be fetched.
 Only works if the \code{collection_id} is informed. This is equivalent to
@@ -51,9 +51,6 @@ in cases where the box spans the antimeridian the first value
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed it defaults to the service implementation.}
-
-\item{...}{filter parameters. Accept the same filter parameters
-of \code{\link{stac_search}} function.}
 }
 \value{
 A \code{stac} object containing all search field parameters to be provided
@@ -79,17 +76,15 @@ filters parameters of \code{\link{stac_search}} function.
 \examples{
 \donttest{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-     force_version = "0.8.1") \%>\%
- collections("MOD13Q1") \%>\%
- items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
- get_request()
+stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+  collections("MOD13Q1") \%>\%
+  items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+  get_request()
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-     force_version = "0.8.1") \%>\%
- collections("MOD13Q1") \%>\%
- items("MOD13Q1.A2019241.h13v09.006.2019262164754") \%>\%
- get_request()
+stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+  collections("MOD13Q1") \%>\%
+  items("MOD13Q1.A2019241.h13v09.006.2019262164754") \%>\%
+  get_request()
 }
 
 }

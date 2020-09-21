@@ -1,10 +1,10 @@
 #' @title Extension functions
 #'
 #' @description
-#' The \code{extension_query} is the \emph{exported function} of the STAC API
-#' query extension. It can be used after a call to \code{stac_search} function.
+#' The \code{ext_query()} is the \emph{exported function} of the STAC API
+#' query extension. It can be used after a call to \code{stac_search()} function.
 #' It allows that additional fields and operators other than those defined in
-#' \code{stac_search} function be used to make a complex filter.
+#' \code{stac_search()} function be used to make a complex filter.
 #'
 #' The function accepts multiple filter criteria. Each filter entry is an
 #' expression formed by \code{<field> <operator> <value>}, where
@@ -13,7 +13,7 @@
 #' providers' documentation to know which properties can be used by this
 #' extension.
 #'
-#' The \code{extension_query} function allows the following \code{<operators>}
+#' The \code{ext_query()} function allows the following \code{<operators>}
 #' \itemize{
 #' \item \code{==} corresponds to '\code{eq}'
 #' \item \code{!=} corresponds to '\code{neq}'
@@ -34,43 +34,37 @@
 #' Besides this function, the following S3 generic methods were implemented
 #' to get things done for this extension:
 #' \itemize{
-#'  \item \code{params_get_request} for class \code{ext_type}: raises an error
-#'  when \code{get_request} is called after a call to \code{extension_query}
-#'  function.
-#'  \item The \code{params_post_request} for class \code{ext_type}: calls the
-#'  default content request params handling.
-#'  \item The \code{content_get_response} for class \code{ext_query}:
-#'  raises an error when \code{get_request} is called after the
-#'  \code{extension_query} function.
-#'  \item The \code{content_post_response} for class \code{ext_query}: calls
-#'  the default content response handling.
+#' \item The \code{get_endpoint()} for subclass \code{ext_query}
+#' \item The \code{before_request()} for subclass \code{ext_query}
+#' \item The \code{after_response()} for subclass \code{ext_query}
 #' }
+#' See source file \code{ext_query.R} for an example on how implement new
+#' extensions.
 #'
-#' @param s             a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac_search} function.
+#' @param s        a \code{RSTACQuery} object expressing a STAC query
+#' criteria.
 #'
-#' @param ...           entries with format \code{<field> <operator> <value>}.
-#'
+#' @param ...      entries with format \code{<field> <operator> <value>}.
 #'
 #' @seealso \code{\link{stac_search}}, \code{\link{post_request}},
 #' \code{\link{params_get_request}}, \code{\link{params_post_request}},
 #' \code{\link{content_get_response}}, \code{\link{content_post_response}}
 #'
-#' @return A \code{ext_query} object containing all request parameters to be
-#' passed to \code{post_request} function.
+#' @return
+#' An \code{ext_query} object containing all request parameters to be
+#' passed to \code{post_request()} function.
 #'
 #' @examples
 #' \donttest{
 #' # filter items that has 'bdc:tile' property equal to '022024'
-#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-#'      force_version = "0.8.1") %>%
+#' stac(url = "http://brazildatacube.dpi.inpe.br/stac") %>%
 #'   stac_search(collections = "CB4_64_16D_STK") %>%
-#'   extension_query("bdc:tile" == "022024") %>%
+#'   ext_query("bdc:tile" == "022024") %>%
 #'   post_request()
 #' }
 #'
 #' @export
-extension_query <- function(s, ...) {
+ext_query <- function(s, ...) {
 
   # check s parameter
   .check_obj(s, expected = c("search", "ext_query"))
@@ -116,10 +110,10 @@ extension_query <- function(s, ...) {
   params[["query"]] <- entries
 
   content <- .build_stac(url = s$url,
-                        endpoint = "/stac/search",
-                        params = params,
-                        subclass = "ext_query",
-                        base_stac = s)
+                         endpoint = "/stac/search",
+                         params = params,
+                         subclass = "ext_query",
+                         base_stac = s)
 
   return(content)
 }

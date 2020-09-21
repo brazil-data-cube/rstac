@@ -4,11 +4,11 @@
 \alias{stac_search}
 \title{Endpoint functions}
 \usage{
-stac_search(s, collections, ids, bbox, datetime, intersects, limit, ...)
+stac_search(s, collections, ids, bbox, datetime, intersects, limit)
 }
 \arguments{
-\item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac}, \code{stac_search} functions.}
+\item{s}{a \code{RSTACQuery} object expressing a STAC query
+criteria.}
 
 \item{collections}{a \code{character} vector of collection IDs to include in
 the search for items. Only items in one of the provided collections will be
@@ -55,8 +55,6 @@ the provided polygon.}
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed it defaults to the service implementation.}
-
-\item{...}{any additional non standard filter parameter.}
 }
 \value{
 A \code{stac} object containing all search field parameters to be provided
@@ -78,14 +76,12 @@ returned by these requests is a \code{stac_item_collection} object, a regular R
 \examples{
 \donttest{
 # GET request
-stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-     force_version = "0.8.1") \%>\%
+stac(url = "http://brazildatacube.dpi.inpe.br/stac") \%>\%
  stac_search(collections = "MOD13Q1", limit = 1) \%>\%
  get_request()
 
 # POST request
-stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-     force_version = "0.8.1") \%>\%
+stac(url = "http://brazildatacube.dpi.inpe.br/stac") \%>\%
  stac_search(collections = "MOD13Q1",
         bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
  post_request()

@@ -1,3 +1,57 @@
+
+.parse_bbox <- function(bbox) {
+
+  if (!length(bbox) %in% c(4, 6))
+    .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
+
+  return(bbox)
+}
+
+.parse_limit <- function(limit) {
+
+  if (length(limit) != 1)
+    .error("Parameter `limit` must be a single value.")
+
+  limit <- as.character(limit)
+
+  limit_int <- suppressWarnings(as.integer(limit))
+
+  if (any(is.na(as.integer(limit))) || as.character(limit_int) != limit)
+    .error("Param `limit` must be an integer.")
+
+  return(limit)
+}
+
+.parse_feature_id <- function(feature_id) {
+
+  if (length(feature_id) != 1)
+    .error("Parameter `feature_id` must be a single value.")
+
+  return(feature_id)
+}
+
+.parse_collections <- function(collections) {
+
+  if (length(collections) == 1 && !is.list(collections))
+    collections <- list(collections)
+
+  return(collections)
+}
+
+.parse_ids <- function(ids) {
+
+  if (length(ids) == 1 && !is.list(ids))
+    ids <- list(ids)
+
+  return(ids)
+}
+
+.parse_geometry <- function(geom) {
+
+  # TODO: validate polygon
+}
+
+
 #' @title utils functions
 #'
 #' @description Auxiliary function to check whether the date time follows
@@ -136,13 +190,8 @@
 #'
 #' @param expected  a \code{character} with the expected classes.
 #'
-#' @param exclusive a \code{logical} value indicating if expected classes must
-#' be exclusive.
-#'
-#' @return An error if the provided object class is not in expected parameter.
-#'
 #' @noRd
-.check_obj <- function(obj, expected, exclusive = FALSE) {
+.check_obj <- function(obj, expected) {
 
   obj_name <- as.character(substitute(obj))
 
@@ -152,62 +201,8 @@
   if (!inherits(obj, expected))
     .error("Invalid %s value in `%s` param.",
            paste0("`", expected, "`", collapse = " or "), obj_name)
-
-  if (exclusive && length(setdiff(class(obj), expected)) > 0) {
-    .error("Invalid %s value in `%s` param.",
-           paste0("`", expected, "`", collapse = " or "), obj_name)
-  }
-
 }
 
-#' @title utils functions
-#'
-#' @description The \code{.check_response} function that checks if the request's
-#' response is in accordance with the \code{expected} parameters.
-#'
-#' @param res     a \code{httr} \code{response} object.
-#'
-#' @param allowed_status_code a \code{character} vector with successful
-#' status codes.
-#'
-#' @param allowed_content_type a \code{character} vector with all acceptable
-#' responses' content type.
-#'
-#' @return a \code{list} data structure representing the content response
-#'
-#' @noRd
-.check_response <- function(res, allowed_status_code, allowed_content_type) {
-
-  status_code <- as.character(httr::status_code(res))
-  content_type <- httr::http_type(res)
-
-  if (grepl("application/.*json", content_type))
-    content_type <- "application/json"
-
-  content <- httr::content(res,
-                           type = content_type,
-                           encoding = "UTF-8",
-                           simplifyVector = TRUE,
-                           simplifyDataFrame = FALSE,
-                           simplifyMatrix = FALSE)
-
-  if (!status_code %in% allowed_status_code) {
-    message <- ""
-    if (is.atomic(content))
-      message <- content
-    else if (!is.null(content[["description"]]))
-      message <- content[["description"]]
-
-    .error("HTTP status '%s'. %s", status_code, message)
-  }
-
-  if (!content_type %in% allowed_content_type)
-    .error("HTTP content type response '%s' not defined for this operation.",
-           httr::http_type(res))
-
-
-  return(content)
-}
 
 #' @title utils functions
 #'
@@ -239,6 +234,10 @@
 #'
 #' @noRd
 .make_url <- function(url, endpoint = "", params = list()) {
+
+  # remove trailing '/' char
+  if (substring(url, nchar(url)) == "/")
+    url <- substring(url, 1, nchar(url) - 1)
 
   endpoint <- paste0(endpoint, collapse = "/")
 
@@ -289,4 +288,41 @@
   names(params) <- sapply(values, `[[`, 1)
 
   return(params)
+}
+
+#' @title Utility functions
+#'
+#' @description
+#' These function retrieves information about either \code{rstac} queries
+#' (\code{RSTACQuery} objects) or \code{rstac} documents
+#' (\code{RSTACDocument} objects).
+#'
+#' @param x        either a \code{RSTACQuery} object expressing a STAC query
+#' criteria or any \code{RSTACDocument}.
+#'
+#' @param ...      config parameters to be passed to \link[httr]{GET}
+#' method, such as \link[httr]{add_headers} or \link[httr]{set_cookies}.
+#'
+#' @return
+#' The \code{stac_version()} function returns a \code{character} STAC API
+#' version.
+#'
+#' @name utilities
+#'
+#' @export
+stac_version <- function(x, ...) {
+
+  UseMethod("stac_version")
+}
+
+#' @rdname utilities
+#'
+#' @return
+#' The \code{subclass()} function returns a \code{character} representing the
+#' subclass name of either \code{RSTACQuery} or \code{RSTACDocument} S3 classes.
+#'
+#' @export
+subclass <- function(x) {
+
+  UseMethod("subclass")
 }

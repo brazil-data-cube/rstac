@@ -7,8 +7,8 @@
 collections(s, collection_id)
 }
 \arguments{
-\item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac} or \code{collections} functions.}
+\item{s}{a \code{RSTACQuery} object expressing a STAC query
+criteria.}
 
 \item{collection_id}{a \code{character} collection id to be retrieved.}
 }
@@ -32,15 +32,13 @@ Each endpoint retrieves specific STAC objects:
 \examples{
 \donttest{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-    force_version = "0.8.1") \%>\%
- collections() \%>\%
- get_request()
+stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+  collections() \%>\%
+  get_request()
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-      force_version = "0.8.1") \%>\%
-collections(collection_id = "MOD13Q1") \%>\%
-get_request()
+stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+  collections(collection_id = "MOD13Q1") \%>\%
+  get_request()
 }
 }
 \seealso{

@@ -12,8 +12,8 @@
 #' returned by these requests is a \code{stac_item_collection} object, a regular R
 #' \code{list} representing a STAC Item Collection document.
 #'
-#' @param s           a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac}, \code{stac_search} functions.
+#' @param s           a \code{RSTACQuery} object expressing a STAC query
+#' criteria.
 #'
 #' @param collections a \code{character} vector of collection IDs to include in
 #' the search for items. Only items in one of the provided collections will be
@@ -61,8 +61,6 @@
 #' @param limit       an \code{integer} defining the maximum number of results
 #' to return. If not informed it defaults to the service implementation.
 #'
-#' @param ...         any additional non standard filter parameter.
-#'
 #' @seealso \code{\link{stac}}, \code{\link{extension_query}},
 #' \code{\link{get_request}}, \code{\link{post_request}}
 #'
@@ -73,110 +71,72 @@
 #' @examples
 #' \donttest{
 #' # GET request
-#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-#'      force_version = "0.8.1") %>%
+#' stac(url = "http://brazildatacube.dpi.inpe.br/stac") %>%
 #'  stac_search(collections = "MOD13Q1", limit = 1) %>%
 #'  get_request()
 #'
 #' # POST request
-#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-#'      force_version = "0.8.1") %>%
+#' stac(url = "http://brazildatacube.dpi.inpe.br/stac") %>%
 #'  stac_search(collections = "MOD13Q1",
 #'         bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
 #'  post_request()
 #' }
 #'
 #' @export
-stac_search <- function(s, collections, ids, bbox, datetime, intersects,
-                        limit, ...) {
+stac_search <- function(s, collections, ids, bbox, datetime,
+                        intersects, limit) {
 
   # check s parameter
-  if (!"search" %in% class(s))
-    .check_obj(s, expected = "stac", exclusive = TRUE)
+  check_query_subclass(s, c("stac", "search"))
 
   params <- list()
 
-  if (!missing(collections)) {
+  if (!missing(collections))
+    params[["collections"]] <- .parse_collections(collections)
 
-    if (length(collections) == 1 && !is.list(collections))
-      collections <- list(collections)
-    params[["collections"]] <- collections
-  }
+  if (!missing(ids))
+    params[["ids"]] <- .parse_ids(ids)
 
-  if (!missing(ids)) {
+  if (!missing(datetime))
+    params[["datetime"]] <- .verify_datetime(datetime)
 
-    if (length(ids) == 1 && !is.list(ids)) ids <- list(ids)
-    params[["ids"]] <- ids
-  }
+  if (!missing(bbox))
+    params[["bbox"]] <- .parse_bbox(bbox)
 
-  if (!missing(datetime)) {
-
-    .verify_datetime(datetime)
-    params[["datetime"]] <- datetime
-  }
-
-  if (!missing(bbox)) {
-
-    if (!length(bbox) %in% c(4, 6))
-      .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
-    params[["bbox"]] <- bbox
-  }
-
-  # TODO: validate polygon
-  if (!missing(intersects)) {
-
-    params[["intersects"]] <- intersects
-  }
+  if (!missing(intersects))
+    params[["intersects"]] <- .parse_geometry(intersects)
 
   if (!missing(limit) && !is.null(limit))
-    params[["limit"]] <- as.integer(limit)
+    params[["limit"]] <- .parse_limit(limit)
 
-  if (!missing(...))
-    params <- c(params, list(...))
-
-  # TODO: how to provide support to other versions?
-  content <- .build_stac(url = s$url,
-                         endpoint = .stac_search_endpoint(s$version),
-                         params = params,
-                         subclass = "search",
-                         base_stac = s)
-
-  return(content)
+  RSTACQuery(version = s$version,
+             url = s$url,
+             params = utils::modifyList(s$params, params),
+             subclass = "search")
 }
 
-params_get_request.search <- function(s) {
+get_endpoint.search <- function(s) {
 
-  if (!is.null(s$params[["intersects"]]))
+  if (s$version < "0.9.0")
+    return("/stac/search")
+  return("/search")
+}
+
+before_request.search <- function(s) {
+
+  check_query_verb(s, verbs = c("GET", "POST"))
+
+  if (!is.null(s$params[["intersects"]]) && s$verb == "GET")
     .error(paste0("Search param `intersects` is not supported by HTTP GET",
                   "method. Try use `post_request` method instead."))
 
-  # process stac params
-  params <- params_get_request.stac(s)
-  return(params)
+  return(s)
 }
 
-params_post_request.search <- function(s, enctype) {
+after_response.search <- function(s, res) {
 
-  # process stac params
-  params <- params_post_request.stac(s, enctype = enctype)
-  return(params)
-}
+  content <- content_response(res, "200", c("application/geo+json",
+                                            "application/json"))
 
-content_get_response.search <- function(s, res) {
-
-  content <- structure(
-    .check_response(res, "200", c("application/geo+json", "application/json")),
-    stac = s,
-    request = list(method = "get"),
-    class = "stac_item_collection")
-
-  return(content)
-}
-
-content_post_response.search <- function(s, res, enctype) {
-
-  # the same as GET response
-  content <- content_get_response.search(s, res)
-  content$request <- list(method = "post", enctype = enctype)
-  return(content)
+  RSTACDocument(content = content, s = s, subclass = "STACItemCollection")
 }

@@ -15,8 +15,8 @@
 #'     Collection object
 #' }
 #'
-#' @param s             a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac} or \code{collections} functions.
+#' @param s             a \code{RSTACQuery} object expressing a STAC query
+#' criteria.
 #'
 #' @param collection_id a \code{character} collection id to be retrieved.
 #'
@@ -31,26 +31,24 @@
 #' @examples
 #' \donttest{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-#'     force_version = "0.8.1") %>%
-#'  collections() %>%
-#'  get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/stac") %>%
+#'   collections() %>%
+#'   get_request()
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-#'       force_version = "0.8.1") %>%
-#' collections(collection_id = "MOD13Q1") %>%
-#' get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/stac") %>%
+#'   collections(collection_id = "MOD13Q1") %>%
+#'   get_request()
 #' }
 
 #' @export
 collections <- function(s, collection_id) {
 
   # check s parameter
-  if (!"collections" %in% class(s))
-    .check_obj(s, expected = "stac", exclusive = TRUE)
+  check_query_subclass(s, "stac")
 
   params <- list()
-  endpoint <- .OAFeat_collections_endpoint()
+
+  subclass <- "collections"
   if (!missing(collection_id)) {
 
     if (length(collection_id) != 1)
@@ -58,73 +56,54 @@ collections <- function(s, collection_id) {
 
     params[["collection_id"]] <- collection_id
 
-    endpoint <- .OAFeat_collections_endpoint(
-      collection_id = params[["collection_id"]])
+    subclass <- "collection_id"
   }
 
-  content <- .build_stac(url = s$url,
-                         endpoint = endpoint,
-                         params = params,
-                         subclass = "collections",
-                         base_stac = s)
-  return(content)
+  RSTACQuery(version = s$version,
+             url = s$url,
+             params = utils::modifyList(s$params, params),
+             subclass = subclass)
 }
 
-params_get_request.collections <- function(s) {
+get_endpoint.collections <- function(s) {
 
-  # ignore 'collection_id' param
+  return("/collections")
+}
+
+before_request.collections <- function(s) {
+
+  check_query_verb(s, verbs = c("GET", "POST"))
+
+  return(s)
+}
+
+after_response.collections <- function(s, res) {
+
+  content <- content_response(res, "200", "application/json")
+
+  RSTACDocument(content = content, s = s,
+                subclass = "STACCollectionList")
+}
+
+get_endpoint.collection_id <- function(s) {
+
+  return(paste("/collections", s$params[["collection_id"]], sep = "/"))
+}
+
+before_request.collection_id <- function(s) {
+
+  check_query_verb(s, verbs = c("GET", "POST"))
+
+  # ignore 'collection_id'
   s$params[["collection_id"]] <- NULL
 
-  # process stac params
-  params <- params_get_request.stac(s)
-
-  return(params)
+  return(s)
 }
 
-params_post_request.collections <- function(s, enctype) {
+after_response.collection_id <- function(s, res) {
 
-  # ignore 'collection_id' param
-  s$params[["collection_id"]] <- NULL
+  content <- content_response(res, "200", "application/json")
 
-  # process stac params
-  params <- params_post_request.stac(s, enctype = enctype)
-
-  return(params)
-}
-
-content_get_response.collections <- function(s, res) {
-
-  # detect expected response object class
-  if (s$version < "0.9.0")
-    content_class <- "stac_catalog"
-  else
-    content_class <- "stac_collection_list"
-
-  if (!is.null(s$params[["collection_id"]]))
-    content_class <- "stac_collection"
-
-  content <- structure(
-    .check_response(res, "200", "application/json"),
-    stac = s,
-    request = list(method = "get"),
-    class = content_class)
-
-  return(content)
-}
-
-content_post_response.collections <- function(s, res, enctype) {
-
-  # detect expected response object class
-  content_class <- "stac_list_catalog"
-
-  if (!is.null(s$params[["collection_id"]]))
-    content_class <- "stac_collection"
-
-  content <- structure(
-    .check_response(res, "200", "application/json"),
-    stac = s,
-    request = list(method = "post", enctype = enctype),
-    class = content_class)
-
-  return(content)
+  RSTACDocument(content = content, s = s,
+                subclass = c("STACCollection", "STACCatalog"))
 }
