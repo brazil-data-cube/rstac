@@ -10,5 +10,9 @@ addons:
     packages:
       - libxml2-dev
 
+script:
+  - R CMD build .
+  - R CMD check *tar.gz
+
 after_success:
   - Rscript -e 'library(covr); codecov()'
