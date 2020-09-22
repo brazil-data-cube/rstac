@@ -72,7 +72,7 @@
 #' section bellow that can help the extension development.
 #'
 #'
-#' @param s       a \code{RSTACQuery} object expressing a STAC query
+#' @param q       a \code{RSTACQuery} object expressing a STAC query
 #' criteria.
 #'
 #' @param res     a \code{httr} \code{response} object.
@@ -85,115 +85,21 @@
 #' @seealso \code{\link{extension_query}}
 #'
 #' @name extensions
-#'
-#' @export
-get_endpoint <- function(s) {
+get_endpoint <- function(q) {
 
   UseMethod("get_endpoint")
 }
 
 #' @rdname extensions
-#'
-#' @export
-before_request <- function(s) {
+before_request <- function(q) {
 
   UseMethod("before_request")
 }
 
 #' @rdname extensions
-#'
-#' @export
-after_response <- function(s, res) {
+after_response <- function(q, res) {
 
   UseMethod("after_response")
-}
-
-#' @describeIn extensions
-#' The \code{RSTACQuery()} function is a constructor of \code{RSTACQuery} objects.
-#' Every extension must implement a subclass of \code{RSTACQuery} to represent
-#' its queries. This is done by informing to the \code{subclass} parameter
-#' the extension's subclass name.
-#'
-#' The \code{params} parameter is a named \code{list} where user parameters
-#' must be stored. It is important to know if previous query parameters needs
-#' to be keeped in the new query. If so, it is recommended do use
-#' \code{\link[utils]{modifyList}()} function to merge the old and new
-#' query parameters.
-#'
-#' If the \code{version} parameter is \code{NULL}, \code{rstac} will detect
-#' STAC API version automatically.
-#'
-#' In general, if you are implementing a new subclass, the parameters
-#' \code{version} and \code{url} will be the same as the previous query. The
-#' \code{params} parameter will be merged with previous query. And subclass
-#' is the extension's subclass name.
-#'
-#' @param version    a \code{character} with the STAC version.
-#'
-#' @param url        a \code{character} informing the base URL of a
-#' STAC web service.
-#'
-#' @param params     a named \code{list} with all URL query parameters to be
-#' appended in the URL.
-#'
-#' @param subclass   a \code{character} corresponding to the subclass of the
-#' object to be created.
-#'
-#' @return
-#' The \code{RSTACQuery()} function returns a \code{STACQuery} object with
-#' subclass defined by \code{subclass} parameter.
-#'
-#' @export
-RSTACQuery <- function(version = NULL, url, params = list(), subclass) {
-
-  structure(
-    list(version = version,
-         url = url,
-         endpoint = NULL,
-         params = params,
-         verb = "GET",
-         encode = NULL
-    ), class = c(subclass, "RSTACQuery"))
-}
-
-#' @describeIn extensions
-#' The \code{RSTACDocument()} function is a constructor of
-#' STAC documents. Currently, there are five STAC documents defined:
-#' \itemize{
-#' \item \code{STACCatalog}
-#' \item \code{STACCollection}
-#' \item \code{STACCollectionList}
-#' \item \code{STACItem}
-#' \item \code{STACItemCollection}
-#' }
-#'
-#' Each document class is associated with STAC API endpoints.
-#' As soon as new STAC documents are proposed in the specification, new
-#' classes can be created in the \code{rstac} package.
-#'
-#' Let \code{version} parameter \code{NULL} to detect version automatically.
-#'
-#' @param content    a \code{list} data structure representing the JSON file
-#' received in HTTP response (see \code{\link{content_response}()} function)
-#'
-#' @param s          a \code{RSTACQuery} object expressing the STAC query used
-#' to retrieve the document.
-#'
-#' @param subclass   a \code{character} corresponding to the subclass of the
-#' document to be created.
-#'
-#' @return
-#' The \code{RSTACDocument()} function returns a \code{RSTACDocument} object
-#' with subclass defined by \code{subclass} parameter.
-#'
-#' @export
-RSTACDocument <- function(content, s, subclass) {
-
-  structure(
-    content,
-    stac = s,
-    class = c(subclass, "RSTACDocument")
-  )
 }
 
 #' @describeIn extensions
@@ -257,34 +163,34 @@ content_response <- function(res, status_codes, content_types) {
 #' @param verbs   a \code{character} vector with allowed HTTP request methods
 #'
 #' @export
-check_query_verb <- function(s, verbs) {
+check_query_verb <- function(q, verbs) {
 
-  if (!s$verb %in% verbs)
-    .error("HTTP verb '%s' not defined for this query operation.", s$verb)
+  if (!q$verb %in% verbs)
+    .error("HTTP verb '%s' not defined for this query operation.", q$verb)
 }
 
 #' @describeIn extensions
-#' The \code{check_query_subclass()} function specifies which type of query
-#' objects (\code{RSTACQuery}) are expected in the function extension.
+#' The \code{check_subclass()} function specifies which type of query
+#' objects (\code{RSTACQuery}) or document objects (\code{RSTACDocument})
+#' are expected in the function extension.
+#'
+#' @param x            either a \code{RSTACQuery} object expressing a STAC query
+#' criteria or any \code{RSTACDocument}.
 #'
 #' @param subclasses   a \code{character} vector with all allowed S3 subclasses
 #'
 #' @export
-check_query_subclass <- function(s, subclasses) {
+check_subclass <- function(x, subclasses) {
 
-  if (!subclass(s) %in% subclasses)
-    .error("Expecting %s query.",
-           paste0("`", subclasses, "`", collapse = " or "))
+  UseMethod("check_subclass")
 }
 
 #' @describeIn extensions
-#' The \code{check_doc_subclass()} function specifies which type of query
-#' objects (\code{RSTACDocument}) are expected in the function extension.
+#' The \code{subclass()} function returns a \code{character} representing the
+#' subclass name of either \code{RSTACQuery} or \code{RSTACDocument} S3 classes.
 #'
 #' @export
-check_doc_subclass <- function(s, subclasses) {
+subclass <- function(x) {
 
-  if (!subclass(s) %in% subclasses)
-    .error("Expecting %s document(s).",
-           paste0("`", subclasses, "`", collapse = " or "))
+  UseMethod("subclass")
 }

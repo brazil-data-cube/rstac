@@ -8,7 +8,7 @@
 #' The \code{post_request} is function that makes HTTP POST
 #' requests to STAC web services, retrieves, and parse the data.
 #'
-#' @param s         a \code{RSTACQuery} object expressing a STAC query
+#' @param q         a \code{RSTACQuery} object expressing a STAC query
 #' criteria.
 #'
 #' @param encode    a \code{character} informing the request body
@@ -42,28 +42,32 @@
 #'  post_request()
 #' }
 #' @export
-get_request <- function(s, ...) {
+get_request <- function(q, ...) {
 
   # check the object class
-  .check_obj(s, "RSTACQuery")
+  .check_obj(q, "RSTACQuery")
 
   # stamp verb
-  s$verb <- "GET"
-  s$encode <- NULL
+  q$verb <- "GET"
+  q$encode <- NULL
 
-  # check version
-  s$version <- stac_version(s, ...)
+  if (is.null(q$url)) {
 
-  # set endpoint
-  s$endpoint <- get_endpoint(s)
+    # check version
+    q$version <- stac_version(q, ...)
 
-  # process STAC object
-  s <- before_request(s)
+    # set endpoint
+    q$endpoint <- get_endpoint(q)
+
+    # process STAC object
+    q <- before_request(q)
+
+    # build url
+    q$url <- .make_url(q$base_url, endpoint = q$endpoint, params = q$params)
+  }
 
   tryCatch({
-    res <- httr::GET(url = .make_url(s$url, endpoint = s$endpoint,
-                                     params = s$params),
-                     httr::add_headers(s$headers), ...)
+    res <- httr::GET(url = q$url, ...)
   },
   error = function(e) {
 
@@ -71,17 +75,17 @@ get_request <- function(s, ...) {
   })
 
   # process content according to status-code and content-type
-  content <- after_response(s, res = res)
+  content <- after_response(q, res = res)
 
   return(content)
 }
 
 #' @rdname request
 #' @export
-post_request <- function(s, ..., encode = c("json", "multipart", "form")) {
+post_request <- function(q, ..., encode = c("json", "multipart", "form")) {
 
   # check the object class
-  .check_obj(s, "RSTACQuery")
+  .check_obj(q, "RSTACQuery")
 
   # check request settings
   httr_encode <- c("json", "multipart", "form")
@@ -91,29 +95,34 @@ post_request <- function(s, ..., encode = c("json", "multipart", "form")) {
            encode, paste0("'", httr_encode, "'", collapse = ", "))
 
   # stamp verb
-  s$verb <- "POST"
-  s$encode <- encode
+  q$verb <- "POST"
+  q$encode <- encode
 
-  # detect version
-  s$version <- stac_version(s, ...)
+  if (is.null(q$url)) {
 
-  # set endpoint
-  s$endpoint <- get_endpoint(s)
+    # detect version
+    q$version <- stac_version(q, ...)
 
-  # process STAC object
-  s <- before_request(s)
+    # set endpoint
+    q$endpoint <- get_endpoint(q)
+
+    # process STAC object
+    q <- before_request(q)
+
+    # build url
+    q$url <- .make_url(q$base_url, endpoint = q$endpoint)
+  }
 
   tryCatch({
-    res <- httr::POST(url = .make_url(s$url, endpoint = s$endpoint),
-                      config = s$config, ..., body = s$params,
-                      encode = s$encode)
+    res <- httr::POST(url = q$url, ..., body = q$params,
+                      encode = q$encode)
   },
   error = function(e) {
     .error("Request error. %s", e$message)
   })
 
   # process content according to status-code and content-type
-  content <- after_response(s, res = res)
+  content <- after_response(q, res = res)
 
   return(content)
 }

@@ -31,10 +31,10 @@
 #'
 #' @rdname stac
 #' @export
-stac <- function(url, force_version = NULL) {
+stac <- function(base_url, force_version = NULL) {
 
   # check url parameter
-  .check_obj(url, "character")
+  .check_obj(base_url, "character")
 
   # check version
   force_version <- force_version[[1]]
@@ -44,28 +44,31 @@ stac <- function(url, force_version = NULL) {
 
   # create a new STAC
   RSTACQuery(version = force_version,
-             url = url,
+             base_url = base_url,
              params = list(),
              subclass = "stac")
 }
 
-get_endpoint.stac <- function(s) {
+#' @export
+get_endpoint.stac <- function(q) {
 
-  if (s$version < "0.9.0")
+  if (q$version < "0.9.0")
     return("/stac")
   return("/")
 }
 
-before_request.stac <- function(s) {
+#' @export
+before_request.stac <- function(q) {
 
-  check_query_verb(s, verbs = c("GET", "POST"))
+  check_query_verb(q, verbs = c("GET", "POST"))
 
-  return(s)
+  return(q)
 }
 
-after_response.stac <- function(s, res) {
+#' @export
+after_response.stac <- function(q, res) {
 
   content <- content_response(res, "200", "application/json")
 
-  RSTACDocument(content = content, s = s, subclass = "STACCatalog")
+  RSTACDocument(content = content, q = q, subclass = "STACCatalog")
 }

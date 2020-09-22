@@ -17,7 +17,7 @@
 #' The endpoint \code{/collections/\{collectionId\}/items} accepts the same
 #' filters parameters of \code{\link{stac_search}} function.
 #'
-#' @param s           a \code{RSTACQuery} object expressing a STAC query
+#' @param q           a \code{RSTACQuery} object expressing a STAC query
 #' criteria.
 #'
 #' @param feature_id  a \code{character} with item id to be fetched.
@@ -85,10 +85,10 @@
 #' }
 #'
 #' @export
-items <- function(s, feature_id, datetime, bbox, limit) {
+items <- function(q, feature_id, datetime, bbox, limit) {
 
-  # check s parameter
-  check_query_subclass(s, c("collection_id", "items"))
+  # check q parameter
+  check_subclass(q, c("collection_id", "items"))
 
   params <- list()
 
@@ -110,56 +110,62 @@ items <- function(s, feature_id, datetime, bbox, limit) {
     subclass <- "item_id"
   }
 
-  RSTACQuery(version = s$version,
-             url = s$url,
-             params = utils::modifyList(s$params, params),
+  RSTACQuery(version = q$version,
+             base_url = q$base_url,
+             params = utils::modifyList(q$params, params),
              subclass = subclass)
 }
 
-get_endpoint.items <- function(s) {
+#' @export
+get_endpoint.items <- function(q) {
 
-  return(paste("/collections", s$params[["collection_id"]], "items", sep = "/"))
+  return(paste("/collections", q$params[["collection_id"]], "items", sep = "/"))
 }
 
-before_request.items <- function(s) {
+#' @export
+before_request.items <- function(q) {
 
-  check_query_verb(s, verbs = c("GET", "POST"))
+  check_query_verb(q, verbs = c("GET", "POST"))
 
   # ignore 'collection_id'
-  s$params[["collection_id"]] <- NULL
+  q$params[["collection_id"]] <- NULL
 
-  return(s)
+  return(q)
 }
 
-after_response.items <- function(s, res) {
+#' @export
+after_response.items <- function(q, res) {
 
   content <- content_response(res, "200", c("application/geo+json",
                                             "application/json"))
 
-  RSTACDocument(content = content, s = s, subclass = "STACItemCollection")
+  RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
 }
 
-get_endpoint.item_id <- function(s) {
+#' @export
+get_endpoint.item_id <- function(q) {
 
-  return(paste("/collections", s$params[["collection_id"]], "items",
-               s$params[["feature_id"]], sep = "/"))
+  return(paste("/collections", q$params[["collection_id"]], "items",
+               q$params[["feature_id"]], sep = "/"))
 }
 
-before_request.item_id <- function(s) {
+#' @export
+before_request.item_id <- function(q) {
 
-  check_query_verb(s, verbs = c("GET", "POST"))
+  check_query_verb(q, verbs = c("GET", "POST"))
 
   # ignore 'feature_id' and 'collection_id'
-  s$params[["collection_id"]] <- NULL
-  s$params[["feature_id"]] <- NULL
+  q$params[["collection_id"]] <- NULL
+  q$params[["feature_id"]] <- NULL
 
-  return(s)
+  return(q)
 }
 
-after_response.item_id <- function(s, res) {
+#' @export
+after_response.item_id <- function(q, res) {
 
   content <- content_response(res, "200", c("application/geo+json",
                                             "application/json"))
 
-  RSTACDocument(content = content, s = s, subclass = "STACItem")
+  RSTACDocument(content = content, q = q, subclass = "STACItem")
 }

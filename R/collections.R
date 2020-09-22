@@ -15,7 +15,7 @@
 #'     Collection object
 #' }
 #'
-#' @param s             a \code{RSTACQuery} object expressing a STAC query
+#' @param q             a \code{RSTACQuery} object expressing a STAC query
 #' criteria.
 #'
 #' @param collection_id a \code{character} collection id to be retrieved.
@@ -41,10 +41,10 @@
 #' }
 
 #' @export
-collections <- function(s, collection_id) {
+collections <- function(q, collection_id) {
 
-  # check s parameter
-  check_query_subclass(s, "stac")
+  # check q parameter
+  check_subclass(q, "stac")
 
   params <- list()
 
@@ -59,51 +59,56 @@ collections <- function(s, collection_id) {
     subclass <- "collection_id"
   }
 
-  RSTACQuery(version = s$version,
-             url = s$url,
-             params = utils::modifyList(s$params, params),
+  RSTACQuery(version = q$version,
+             base_url = q$base_url,
+             params = utils::modifyList(q$params, params),
              subclass = subclass)
 }
 
-get_endpoint.collections <- function(s) {
+#' @export
+get_endpoint.collections <- function(q) {
 
   return("/collections")
 }
 
-before_request.collections <- function(s) {
+#' @export
+before_request.collections <- function(q) {
 
-  check_query_verb(s, verbs = c("GET", "POST"))
+  check_query_verb(q, verbs = c("GET", "POST"))
 
-  return(s)
+  return(q)
 }
 
-after_response.collections <- function(s, res) {
+#' @export
+after_response.collections <- function(q, res) {
 
   content <- content_response(res, "200", "application/json")
 
-  RSTACDocument(content = content, s = s,
-                subclass = "STACCollectionList")
+  RSTACDocument(content = content, q = q, subclass = "STACCollectionList")
 }
 
-get_endpoint.collection_id <- function(s) {
+#' @export
+get_endpoint.collection_id <- function(q) {
 
-  return(paste("/collections", s$params[["collection_id"]], sep = "/"))
+  return(paste("/collections", q$params[["collection_id"]], sep = "/"))
 }
 
-before_request.collection_id <- function(s) {
+#' @export
+before_request.collection_id <- function(q) {
 
-  check_query_verb(s, verbs = c("GET", "POST"))
+  check_query_verb(q, verbs = c("GET", "POST"))
 
   # ignore 'collection_id'
-  s$params[["collection_id"]] <- NULL
+  q$params[["collection_id"]] <- NULL
 
-  return(s)
+  return(q)
 }
 
-after_response.collection_id <- function(s, res) {
+#' @export
+after_response.collection_id <- function(q, res) {
 
   content <- content_response(res, "200", "application/json")
 
-  RSTACDocument(content = content, s = s,
+  RSTACDocument(content = content, q = q,
                 subclass = c("STACCollection", "STACCatalog"))
 }

@@ -1,4 +1,44 @@
 
+#' @describeIn extensions
+#' The \code{RSTACDocument()} function is a constructor of
+#' STAC documents. Currently, there are five STAC documents defined:
+#' \itemize{
+#' \item \code{STACCatalog}
+#' \item \code{STACCollection}
+#' \item \code{STACCollectionList}
+#' \item \code{STACItem}
+#' \item \code{STACItemCollection}
+#' }
+#'
+#' Each document class is associated with STAC API endpoints.
+#' As soon as new STAC documents are proposed in the specification, new
+#' classes can be created in the \code{rstac} package.
+#'
+#' Let \code{version} parameter \code{NULL} to detect version automatically.
+#'
+#' @param content    a \code{list} data structure representing the JSON file
+#' received in HTTP response (see \code{\link{content_response}()} function)
+#'
+#' @param s          a \code{RSTACQuery} object expressing the STAC query used
+#' to retrieve the document.
+#'
+#' @param subclass   a \code{character} corresponding to the subclass of the
+#' document to be created.
+#'
+#' @return
+#' The \code{RSTACDocument()} function returns a \code{RSTACDocument} object
+#' with subclass defined by \code{subclass} parameter.
+#'
+#' @export
+RSTACDocument <- function(content, q, subclass) {
+
+  structure(
+    content,
+    query = q,
+    class = c(subclass, "RSTACDocument")
+  )
+}
+
 #' @export
 subclass.RSTACDocument <- function(x) {
 
@@ -6,9 +46,9 @@ subclass.RSTACDocument <- function(x) {
 }
 
 #' @export
-check_doc_subclass <- function(d, subclasses) {
+check_subclass.RSTACDocument <- function(x, subclasses) {
 
-  if (!subclass(d) %in% subclasses)
+  if (!subclass(x) %in% subclasses)
     .error("Expecting %s document(s).",
            paste0("`", subclasses, "`", collapse = " or "))
 }
@@ -18,7 +58,7 @@ get_doc_query <- function(d) {
 
   .check_obj(d, "RSTACDocument")
 
-  attr(d, "stac")
+  attr(d, "query")
 }
 
 #' @export
@@ -69,9 +109,9 @@ repr_html.STACCollection <- function(obj, ...) {
 #' @export
 stac_version.STACCollectionList <- function(x, ...) {
 
-  s <- get_doc_query(x)
-  if (!is.null(s))
-    return(stac_version(s))
+  q <- get_doc_query(x)
+  if (!is.null(q))
+    return(stac_version(q))
   if (length(x$collections) > 0)
     return(x$collections[[1]]$stac_version)
 }
@@ -164,7 +204,7 @@ repr_html.STACItem <- function(obj, ...) {
 items_length <- function(items) {
 
   # Check object class
-  check_doc_subclass(items, c("STACItemCollection"))
+  check_subclass(items, c("STACItemCollection"))
 
   return(length(items$features))
 }
@@ -180,7 +220,7 @@ items_matched <- function(items) {
   # STAC API (>=0.9.0): "context"
 
   # Check object class
-  check_doc_subclass(items, "STACItemCollection")
+  check_subclass(items, "STACItemCollection")
 
   if (items$stac_version < "0.9.0")
     # STAC API < 0.9.0 extensions
@@ -212,7 +252,7 @@ items_matched <- function(items) {
 items_fetch <- function(items, ..., progress = TRUE) {
 
   # Check object class
-  check_doc_subclass(items, "STACItemCollection")
+  check_subclass(items, "STACItemCollection")
 
   matched <- items_matched(items)
 
@@ -229,35 +269,39 @@ items_fetch <- function(items, ..., progress = TRUE) {
       .error(paste("Length of returned items (%s) is different",
                    "from matched items (%s)."), items_length(items), matched)
 
-    s <- get_doc_query(items)
-    if (is.null(s)) break
+    q <- get_doc_query(items)
+    if (is.null(q)) break
 
     # get url of the next page
     next_url <- Filter(function(x) x$rel == "next", items$links)
     if (length(next_url) == 0) break
 
     # create a new stac object with params from the next url
-    base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url[[1]]$href)
-    query <- substring(gsub("^([^?]+)(\\?.*)?$", "\\2", next_url[[1]]$href), 2)
-    next_stac <- RSTACQuery(version = s$version,
-                            url = base_url,
-                            params = .query_decode(query),
-                            subclass = "items_fetch")
+    # TODO: This is not the specified behavior in spec:
+    # https://github.com/radiantearth/stac-spec/blob/v0.9.0/api-spec/api-spec.md
+    #base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url[[1]]$href)
+    params <- .querystring_decode(substring(
+      gsub("^([^?]+)(\\?.*)?$", "\\2", next_url[[1]]$href), 2))
+
+    next_stac <- RSTACQuery(version = q$version,
+                            base_url = q$base_url,
+                            params = params,
+                            subclass = subclass(q))
 
     # call request
-    if (s$verb == "GET") {
+    if (q$verb == "GET") {
 
       content <- get_request(next_stac, ...)
-    } else if (s$verb == "POST") {
+    } else if (q$verb == "POST") {
 
-      content <- post_request(next_stac, ..., encode = s$encode)
+      content <- post_request(next_stac, ..., encode = q$encode)
     } else {
 
       .error("Invalid HTTP method.")
     }
 
     # check content response
-    check_doc_subclass(content, "STACItemCollection")
+    check_subclass(content, "STACItemCollection")
 
     # merge features result into resulting content
     content$features <- c(items$features, content$features)
@@ -278,24 +322,6 @@ items_fetch <- function(items, ..., progress = TRUE) {
 
   return(items)
 }
-
-get_endpoint.items_fetch <- function(s) {
-  ""
-}
-
-before_request.items_fetch <- function(s) {
-  check_query_verb(s, c("GET", "POST"))
-
-  return(s)
-}
-
-after_response.items_fetch <- function(s, res) {
-  content <- content_response(res, "200", c("application/json",
-                                            "application/geo+json"))
-
-  RSTACDocument(content = content, s = s, subclass = "STACItemCollection")
-}
-
 
 #' @export
 print.STACItemCollection <- function(x, n = 10, ...) {

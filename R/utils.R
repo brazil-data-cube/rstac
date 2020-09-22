@@ -249,7 +249,7 @@
 
     if (is.null(names(params)))
       stop("URL query values must be named.", call. = FALSE)
-    params <- .query_encode(params)
+    params <- .querystring_encode(params)
     res <- paste(res, params, sep = "?")
   }
 
@@ -263,7 +263,7 @@
 #' @return a \code{character} representing the encode parameters of the query.
 #'
 #' @noRd
-.query_encode <- function(params) {
+.querystring_encode <- function(params) {
 
   if (!is.null(names(params)))
     return(paste(names(params),
@@ -274,14 +274,14 @@
 
 #' @title utils functions
 #'
-#' @param query a \code{character} with the query to be decoded.
+#' @param querystring a \code{character} with the query to be decoded.
 #'
 #' @return a \code{list} with the query params.
 #'
 #' @noRd
-.query_decode <- function(query) {
+.querystring_decode <- function(querystring) {
 
-  values <- lapply(strsplit(query, split = "&")[[1]],
+  values <- lapply(strsplit(querystring, split = "&")[[1]],
                    function(x) strsplit(x, split = "=")[[1]])
 
   params <- lapply(values, `[[`, 2)
@@ -315,14 +315,7 @@ stac_version <- function(x, ...) {
   UseMethod("stac_version")
 }
 
-#' @rdname utilities
-#'
-#' @return
-#' The \code{subclass()} function returns a \code{character} representing the
-#' subclass name of either \code{RSTACQuery} or \code{RSTACDocument} S3 classes.
-#'
-#' @export
-subclass <- function(x) {
+query_url <- function(x, ...) {
 
-  UseMethod("subclass")
+  UseMethod("query_url")
 }

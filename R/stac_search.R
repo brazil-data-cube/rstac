@@ -12,7 +12,7 @@
 #' returned by these requests is a \code{stac_item_collection} object, a regular R
 #' \code{list} representing a STAC Item Collection document.
 #'
-#' @param s           a \code{RSTACQuery} object expressing a STAC query
+#' @param q           a \code{RSTACQuery} object expressing a STAC query
 #' criteria.
 #'
 #' @param collections a \code{character} vector of collection IDs to include in
@@ -83,11 +83,11 @@
 #' }
 #'
 #' @export
-stac_search <- function(s, collections, ids, bbox, datetime,
+stac_search <- function(q, collections, ids, bbox, datetime,
                         intersects, limit) {
 
-  # check s parameter
-  check_query_subclass(s, c("stac", "search"))
+  # check q parameter
+  check_subclass(q, c("stac", "search"))
 
   params <- list()
 
@@ -109,34 +109,34 @@ stac_search <- function(s, collections, ids, bbox, datetime,
   if (!missing(limit) && !is.null(limit))
     params[["limit"]] <- .parse_limit(limit)
 
-  RSTACQuery(version = s$version,
-             url = s$url,
-             params = utils::modifyList(s$params, params),
+  RSTACQuery(version = q$version,
+             base_url = q$base_url,
+             params = utils::modifyList(q$params, params),
              subclass = "search")
 }
 
-get_endpoint.search <- function(s) {
+get_endpoint.search <- function(q) {
 
-  if (s$version < "0.9.0")
+  if (q$version < "0.9.0")
     return("/stac/search")
   return("/search")
 }
 
-before_request.search <- function(s) {
+before_request.search <- function(q) {
 
-  check_query_verb(s, verbs = c("GET", "POST"))
+  check_query_verb(q, verbs = c("GET", "POST"))
 
-  if (!is.null(s$params[["intersects"]]) && s$verb == "GET")
+  if (!is.null(q$params[["intersects"]]) && q$verb == "GET")
     .error(paste0("Search param `intersects` is not supported by HTTP GET",
                   "method. Try use `post_request` method instead."))
 
-  return(s)
+  return(q)
 }
 
-after_response.search <- function(s, res) {
+after_response.search <- function(q, res) {
 
   content <- content_response(res, "200", c("application/geo+json",
                                             "application/json"))
 
-  RSTACDocument(content = content, s = s, subclass = "STACItemCollection")
+  RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
 }

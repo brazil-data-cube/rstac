@@ -4,16 +4,16 @@
 \alias{stac}
 \title{Endpoint functions}
 \usage{
-stac(url, force_version = NULL)
+stac(base_url, force_version = NULL)
 }
 \arguments{
-\item{url}{a \code{character} informing the base url of a
-STAC web service.}
-
 \item{force_version}{a \code{character} providing the version of the stac
 used. If not provided, the rstac package will make requests to try to find
 the version of STAC used. It is highly recommended that you inform the STAC
 version you are using.}
+
+\item{url}{a \code{character} informing the base url of a
+STAC web service.}
 }
 \value{
 A \code{stac} object with subclass \code{subclass} containing all request

@@ -3,12 +3,9 @@
 \name{utilities}
 \alias{utilities}
 \alias{stac_version}
-\alias{subclass}
 \title{Utility functions}
 \usage{
 stac_version(x, ...)
-
-subclass(x)
 }
 \arguments{
 \item{x}{either a \code{RSTACQuery} object expressing a STAC query
@@ -20,9 +17,6 @@ method, such as \link[httr]{add_headers} or \link[httr]{set_cookies}.}
 \value{
 The \code{stac_version()} function returns a \code{character} STAC API
 version.
-
-The \code{subclass()} function returns a \code{character} representing the
-subclass name of either \code{RSTACQuery} or \code{RSTACDocument} S3 classes.
 }
 \description{
 These function retrieves information about either \code{rstac} queries
