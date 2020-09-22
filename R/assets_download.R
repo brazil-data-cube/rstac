@@ -57,12 +57,13 @@ assets_download <- function(items, assets_name, output_dir = ".",
     .error(paste("The directory provided does not exist.",
                  "Please specify a valid directory."))
 
+  # check overwrite param
   if (overwrite)
     .message(paste0("The overwrite parameter has been set to TRUE.",
                     " Be careful, your existing assets will be replaced."))
 
-
-  if (inherits(items, "STACItem")) {
+  # if the docume
+  if (subclass(items) == "STACItem") {
     items <- .item_download(stac_item   = items,
                             assets_name = assets_name,
                             output_dir  = output_dir,
@@ -71,8 +72,7 @@ assets_download <- function(items, assets_name, output_dir = ".",
     return(items)
   }
 
-
-
+  # check if items length corresponds with items matched
   if (!missing(items_max)) {
     if (items_max > items_length(items)) {
       .warning(paste("The number of specified items is greater than the number",
