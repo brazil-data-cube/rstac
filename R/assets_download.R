@@ -22,7 +22,9 @@
 #' @param progress    a \code{logical} indicating if a progress bar must be
 #'  shown or not. Defaults to \code{TRUE}.
 #'
-#' @param ...        other params to be passed to \link[httr]{GET} method.
+#' @param ...       config parameters to be passed to \link[httr]{GET} or
+#' \link[httr]{POST} methods, such as \link[httr]{add_headers} or
+#' \link[httr]{set_cookies}.
 #'
 #' @param headers    a \code{character} of named arguments to be passed as
 #' HTTP request headers.
@@ -46,8 +48,7 @@
 #'
 #' @export
 assets_download <- function(items, assets_name, output_dir = ".",
-                            overwrite = FALSE, items_max = Inf, progress = TRUE,
-                            ..., headers = character()) {
+                            overwrite = FALSE, items_max = Inf, progress = TRUE, ...) {
 
   #check the object subclass
   check_doc_subclass(items, subclasses = c("STACItemCollection", "STACItem"))
@@ -67,8 +68,7 @@ assets_download <- function(items, assets_name, output_dir = ".",
     items <- .item_download(stac_item   = items,
                             assets_name = assets_name,
                             output_dir  = output_dir,
-                            overwrite   = overwrite,
-                            ..., headers = headers)
+                            overwrite   = overwrite, ...)
     return(items)
   }
 
@@ -103,8 +103,7 @@ assets_download <- function(items, assets_name, output_dir = ".",
 
     items$features[[i]] <- .item_download(items$features[[i]],
                                           assets_name, output_dir,
-                                          overwrite,...,
-                                          headers = headers)
+                                          overwrite,...)
   }
   # close progress bar
   if (progress)
@@ -131,8 +130,9 @@ assets_download <- function(items, assets_name, output_dir = ".",
 #' @param overwrite  a \code{logical} if TRUE will replaced the existing file,
 #'  if FALSE a warning message is shown.
 #'
-#' @param ...        other params to be passed to \link[httr]{GET} or
-#' \link[httr]{POST} methods
+#' @param ...       config parameters to be passed to \link[httr]{GET} or
+#' \link[httr]{POST} methods, such as \link[httr]{add_headers} or
+#' \link[httr]{set_cookies}.
 #'
 #' @param headers    a \code{character} of named arguments to be passed as
 #' HTTP request headers.
@@ -141,8 +141,7 @@ assets_download <- function(items, assets_name, output_dir = ".",
 #'  pointing to the directory where the assets were saved.
 #'
 #' @noRd
-.item_download <- function(stac_item, assets_name, output_dir, overwrite, ...,
-                           headers = character()) {
+.item_download <- function(stac_item, assets_name, output_dir, overwrite, ...) {
 
   feat_id <- stac_item[["id"]]
   assets  <- .select_assets(stac_item[["assets"]], assets_name)
@@ -159,8 +158,7 @@ assets_download <- function(items, assets_name, output_dir = ".",
 
     tryCatch({
       httr::GET(url = asset_href,
-                httr::write_disk(path = dest_file, overwrite = overwrite),
-                httr::add_headers(headers), ...)
+                httr::write_disk(path = dest_file, overwrite = overwrite), ...)
 
     }, error = function(error){
       .warning(paste("\n", error, "in ", asset_href))
