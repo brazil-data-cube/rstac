@@ -278,6 +278,20 @@ items_fetch <- function(items, ..., progress = TRUE) {
   return(items)
 }
 
+#' TODO: document
+get_assets_name <- function(items) {
+
+  #check the object subclass
+  check_doc_subclass(items, subclasses = c("STACItemCollection", "STACItem"))
+
+  if (subclass(items) == "STACItem")
+    assets_names <- names(items$assets)
+  else
+    assets_names <- names(items$features[[1]]$assets)
+
+  return(assets_names)
+}
+
 get_endpoint.items_fetch <- function(s) {
   ""
 }
