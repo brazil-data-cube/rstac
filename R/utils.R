@@ -174,6 +174,18 @@
 
 #' @title utils functions
 #'
+#' @param msg   a \code{character} string with format text message.
+#'
+#' @param ...   values to be passed to \code{msg} parameter.
+#'
+#' @noRd
+.message <- function(msg, ...) {
+
+  message(sprintf(msg, ...))
+}
+
+#' @title utils functions
+#'
 #' @param msg   a \code{character} string with format warning message.
 #'
 #' @param ...   values to be passed to \code{msg} parameter.

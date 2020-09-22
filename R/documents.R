@@ -154,7 +154,6 @@ repr_html.STACItem <- function(obj, ...) {
 #' x %>% items_length()
 #' x %>% items_matched()
 #' x %>% items_fetch()
-#' x %>% items_length()
 #'
 #' }
 #'
@@ -179,10 +178,10 @@ items_matched <- function(items) {
   # STAC API (<0.9.0): "search:metadata"
   # STAC API (>=0.9.0): "context"
 
-  # Check object class
+  # Check object subclass
   check_doc_subclass(items, "STACItemCollection")
 
-  if (items$stac_version < "0.9.0")
+  if (attributes(items)$stac$version < "0.9.0")
     # STAC API < 0.9.0 extensions
     matched <- items$`search:metadata`$matched
   else
