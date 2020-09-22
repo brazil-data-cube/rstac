@@ -52,7 +52,6 @@ x <-
 x \%>\% items_length()
 x \%>\% items_matched()
 x \%>\% items_fetch()
-x \%>\% items_length()
 
 }
 

@@ -8,6 +8,8 @@ assets_download(
   items,
   assets_name,
   output_dir = ".",
+  overwrite = FALSE,
+  items_max = Inf,
   progress = TRUE,
   ...,
   headers = character()
@@ -24,6 +26,9 @@ representing the result of \code{/stac/search},
 \item{output_dir}{a \code{character} directory in which the assets will be
 saved.}
 
+\item{overwrite}{a \code{logical} if TRUE will replaced the existing file,
+if FALSE a warning message is shown.}
+
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
@@ -31,6 +36,9 @@ shown or not. Defaults to \code{TRUE}.}
 
 \item{headers}{a \code{character} of named arguments to be passed as
 HTTP request headers.}
+
+\item{items_size}{a \code{numeric} corresponding how many items will be
+downloaded.}
 }
 \value{
 The same \code{stac_item_collection} or \code{stac_item} object, with the
@@ -44,11 +52,11 @@ provided by the STAC API.
 \dontrun{
 
 stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
-  stac_search(collections = "MOD13Q1") \%>\%
-  stac_search(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1") \%>\%
   stac_search(limit = 2) \%>\%
   get_request() \%>\%
-  assets_download(assets_name = "thumbnail", output_dir = ".")
+  assets_download(assets_name = "thumbnail", output_dir = "/home/felipe/",
+  overwrite = FALSE)
 }
 
 }
