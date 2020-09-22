@@ -131,6 +131,8 @@ repr_html.STACItem <- function(obj, ...) {
 #' \code{context} (v0.9.0) STAC API extensions.
 #' The \code{items_fetch()} function request all STAC Items through
 #' pagination.
+#' The \code{get_assets_name()} function returns the assets name from
+#'  \code{STACItemCollection} and \code{STACItem} object.
 #'
 #' @param items      a \code{STACItemCollection} object.
 #'
@@ -278,7 +280,14 @@ items_fetch <- function(items, ..., progress = TRUE) {
   return(items)
 }
 
-#' TODO: document
+#' @param items       a \code{stac_item_collection} or \code{stac_item} object
+#'  representing the result of \code{/stac/search},
+#'  \code{/collections/{collectionId}/items} or
+#'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
+#'
+#' @rdname items_functions
+#'
+#' @export
 get_assets_name <- function(items) {
 
   #check the object subclass
