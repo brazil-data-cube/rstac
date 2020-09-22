@@ -25,7 +25,7 @@ RSTACDocument(content, s, subclass)
 
 content_response(res, status_codes, content_types)
 
-check_query_verb(s, verbs)
+check_query_verb(s, verbs, msg = NULL)
 
 check_query_subclass(s, subclasses)
 

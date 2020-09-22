@@ -5,7 +5,6 @@
 \alias{items_length}
 \alias{items_matched}
 \alias{items_fetch}
-\alias{get_assets_name}
 \title{STACItemCollection functions}
 \usage{
 items_length(items)
@@ -13,14 +12,9 @@ items_length(items)
 items_matched(items)
 
 items_fetch(items, ..., progress = TRUE)
-
-get_assets_name(items)
 }
 \arguments{
-\item{items}{a \code{stac_item_collection} or \code{stac_item} object
-representing the result of \code{/stac/search},
-\code{/collections/{collectionId}/items} or
-\code{/collections/{collectionId}/items/{itemId}} endpoints.}
+\item{items}{a \code{STACItemCollection} object.}
 
 \item{...}{config parameters to be passed to \link[httr]{GET} or
 \link[httr]{POST} methods, such as \link[httr]{add_headers} or

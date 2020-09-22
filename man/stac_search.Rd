@@ -77,7 +77,7 @@ returned by these requests is a \code{stac_item_collection} object, a regular R
 \donttest{
 # GET request
 stac(url = "http://brazildatacube.dpi.inpe.br/stac") \%>\%
- stac_search(collections = "CB4_64_16D_STK-1", limit = 1) \%>\%
+ stac_search(collections = "CB4_64_16D_STK-1", limit = 1, datetime = "2018-01-01/..") \%>\%
  get_request()
 
 # POST request

@@ -125,13 +125,10 @@ get_endpoint.ext_query <- function(s) {
 
 before_request.ext_query <- function(s) {
 
-  if (s$verb == "GET")
-    .error(paste0("Query extension param is not supported by HTTP GET",
-                  "method. Try use `post_request()` method instead."))
+  msg <- paste0("Query extension param is not supported by HTTP GET",
+                "method. Try use `post_request()` method instead.")
 
-
-  check_query_verb(s, verbs = c("POST"))
-
+  check_query_verb(s, verbs = c("POST"), msg = msg)
 
   return(s)
 }
