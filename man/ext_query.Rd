@@ -61,8 +61,8 @@ extensions.
 \donttest{
 # filter items that has 'bdc:tile' property equal to '022024'
 stac(url = "http://brazildatacube.dpi.inpe.br/stac") \%>\%
-  stac_search(collections = "CB4_64_16D_STK") \%>\%
-  ext_query("bdc:tile" == "022024") \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1") \%>\%
+  ext_query("bdc:tile" == "021027") \%>\%
   post_request()
 }
 

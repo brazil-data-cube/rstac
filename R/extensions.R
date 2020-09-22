@@ -1,4 +1,3 @@
-
 #' @title Extension development functions
 #'
 #' @description
@@ -162,11 +161,17 @@ content_response <- function(res, status_codes, content_types) {
 #'
 #' @param verbs   a \code{character} vector with allowed HTTP request methods
 #'
+#' @param msg     a \code{character} with a personalized error message
+#'
 #' @export
-check_query_verb <- function(q, verbs) {
+check_query_verb <- function(s, verbs, msg = NULL) {
 
-  if (!q$verb %in% verbs)
-    .error("HTTP verb '%s' not defined for this query operation.", q$verb)
+  if (!s$verb %in% verbs) {
+    if (is.null(msg))
+      msg <- sprintf("HTTP verb '%s' not defined for this query '%s' operation.",
+                   s$verb, subclass(s))
+    .error(msg)
+  }
 }
 
 #' @describeIn extensions

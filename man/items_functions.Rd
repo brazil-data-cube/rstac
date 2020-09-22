@@ -38,6 +38,8 @@ search criteria. It support \code{search:metadata} (v0.8.0) and
 \code{context} (v0.9.0) STAC API extensions.
 The \code{items_fetch()} function request all STAC Items through
 pagination.
+The \code{get_assets_name()} function returns the assets name from
+ \code{STACItemCollection} and \code{STACItem} object.
 }
 \examples{
 \donttest{
@@ -52,7 +54,6 @@ x <-
 x \%>\% items_length()
 x \%>\% items_matched()
 x \%>\% items_fetch()
-x \%>\% items_length()
 
 }
 

@@ -51,6 +51,15 @@
   # TODO: validate polygon
 }
 
+.parse_items_size <- function(items) {
+  if (items_length(items) != items_matched(items))
+    .message(paste("The length of items in your object, does not correspond",
+    "with the total of matched items, consider using the function",
+    "items_fetch(). By default, items_max = %d"), items_length(items))
+
+  return(items_length(items))
+}
+
 
 #' @title utils functions
 #'
@@ -72,7 +81,7 @@
 #'  date time provided as \code{character}.
 #'
 #' @noRd
-.verify_datetime <- function(datetime) {
+.parse_datetime <- function(datetime) {
 
   # check if the date time provided is an open interval
   check_interval <-
@@ -170,6 +179,18 @@
 .error <- function(msg, ...) {
 
   stop(sprintf(msg, ...), call. = FALSE)
+}
+
+#' @title utils functions
+#'
+#' @param msg   a \code{character} string with format text message.
+#'
+#' @param ...   values to be passed to \code{msg} parameter.
+#'
+#' @noRd
+.message <- function(msg, ...) {
+
+  message(sprintf(msg, ...))
 }
 
 #' @title utils functions

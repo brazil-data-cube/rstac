@@ -58,8 +58,8 @@
 #' \donttest{
 #' # filter items that has 'bdc:tile' property equal to '022024'
 #' stac(url = "http://brazildatacube.dpi.inpe.br/stac") %>%
-#'   stac_search(collections = "CB4_64_16D_STK") %>%
-#'   ext_query("bdc:tile" == "022024") %>%
+#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
+#'   ext_query("bdc:tile" == "021027") %>%
 #'   post_request()
 #' }
 #'
@@ -67,7 +67,7 @@
 ext_query <- function(s, ...) {
 
   # check s parameter
-  .check_obj(s, expected = c("search", "ext_query"))
+  check_query_subclass(s, c("search", "ext_query"))
 
   params <- list()
 
@@ -109,39 +109,34 @@ ext_query <- function(s, ...) {
 
   params[["query"]] <- entries
 
-  content <- .build_stac(url = s$url,
-                         endpoint = "/stac/search",
-                         params = params,
-                         subclass = "ext_query",
-                         base_stac = s)
 
-  return(content)
-}
-
-params_get_request.ext_query <- function(s) {
-
-  .error(paste0("STAC API query extension is not supported by HTTP GET method.",
-                "Try use `post_request` method instead."))
+  RSTACQuery(version = s$version,
+             url = s$url,
+             params = utils::modifyList(s$params, params),
+             subclass = "ext_query")
 }
 
 
-params_post_request.ext_query <- function(s, enctype) {
+get_endpoint.ext_query <- function(s) {
 
-  # process search params
-  params <- params_post_request.search(s, enctype = enctype)
-
-  return(params)
+  # using endpoint from search document
+  get_endpoint.search(s)
 }
 
-content_get_response.ext_query <- function(s, res) {
+before_request.ext_query <- function(s) {
 
-  .error(paste0("STAC API query extension is not supported by HTTP GET method.",
-                "Try use `post_request` method instead."))
+  msg <- paste0("Query extension param is not supported by HTTP GET",
+                "method. Try use `post_request()` method instead.")
+
+  check_query_verb(s, verbs = c("POST"), msg = msg)
+
+  return(s)
 }
 
-content_post_response.ext_query <- function(s, res, enctype) {
+after_response.ext_query <- function(s, res) {
 
-  content <- content_post_response.search(s, res = res, enctype = enctype)
+  content <- content_response(res, "200", c("application/geo+json",
+                                            "application/json"))
 
-  return(content)
+  RSTACDocument(content = content, s = s, subclass = "STACItemCollection")
 }

@@ -23,7 +23,7 @@ after_response(s, res)
 
 content_response(res, status_codes, content_types)
 
-check_query_verb(s, verbs)
+check_query_verb(s, verbs, msg = NULL)
 
 check_subclass(x, subclasses)
 

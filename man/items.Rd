@@ -77,13 +77,13 @@ filters parameters of \code{\link{stac_search}} function.
 \donttest{
 
 stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
-  collections("MOD13Q1") \%>\%
-  items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+  collections("CB4_64_16D_STK-1") \%>\%
+  items(bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) \%>\%
   get_request()
 
 stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
-  collections("MOD13Q1") \%>\%
-  items("MOD13Q1.A2019241.h13v09.006.2019262164754") \%>\%
+  collections("CB4_64_16D_STK-1") \%>\%
+  items("CB4_64_16D_STK_v001_022023_2020-07-11_2020-07-26") \%>\%
   get_request()
 }
 

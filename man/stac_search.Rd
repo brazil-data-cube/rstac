@@ -77,13 +77,13 @@ returned by these requests is a \code{stac_item_collection} object, a regular R
 \donttest{
 # GET request
 stac(url = "http://brazildatacube.dpi.inpe.br/stac") \%>\%
- stac_search(collections = "MOD13Q1", limit = 1) \%>\%
+ stac_search(collections = "CB4_64_16D_STK-1", limit = 1, datetime = "2018-01-01/..") \%>\%
  get_request()
 
 # POST request
 stac(url = "http://brazildatacube.dpi.inpe.br/stac") \%>\%
- stac_search(collections = "MOD13Q1",
-        bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+ stac_search(collections = "CB4_64_16D_STK-1",
+        bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) \%>\%
  post_request()
 }
 

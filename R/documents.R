@@ -171,6 +171,8 @@ repr_html.STACItem <- function(obj, ...) {
 #' \code{context} (v0.9.0) STAC API extensions.
 #' The \code{items_fetch()} function request all STAC Items through
 #' pagination.
+#' The \code{get_assets_name()} function returns the assets name from
+#'  \code{STACItemCollection} and \code{STACItem} object.
 #'
 #' @param items      a \code{STACItemCollection} object.
 #'
@@ -194,7 +196,6 @@ repr_html.STACItem <- function(obj, ...) {
 #' x %>% items_length()
 #' x %>% items_matched()
 #' x %>% items_fetch()
-#' x %>% items_length()
 #'
 #' }
 #'
@@ -208,7 +209,6 @@ items_length <- function(items) {
 
   return(length(items$features))
 }
-
 
 #'
 #' @rdname items_functions
