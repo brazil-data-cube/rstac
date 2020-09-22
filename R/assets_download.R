@@ -58,12 +58,7 @@ assets_download <- function(items, assets_name, output_dir = ".",
     .error(paste("The directory provided does not exist.",
                  "Please specify a valid directory."))
 
-  # check overwrite param
-  if (overwrite)
-    .message(paste0("The overwrite parameter has been set to TRUE.",
-                    " Be careful, your existing assets will be replaced."))
-
-  # if the docume
+  # if the document
   if (subclass(items) == "STACItem") {
     items <- .item_download(stac_item   = items,
                             assets_name = assets_name,

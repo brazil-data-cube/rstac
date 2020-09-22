@@ -256,10 +256,14 @@ content_response <- function(res, status_codes, content_types) {
 #' @param verbs   a \code{character} vector with allowed HTTP request methods
 #'
 #' @export
-check_query_verb <- function(s, verbs) {
+check_query_verb <- function(s, verbs, msg = NULL) {
 
-  if (!s$verb %in% verbs)
-    .error("HTTP verb '%s' not defined for this query operation.", s$verb)
+  if (!s$verb %in% verbs) {
+    if (is.null(msg))
+      msg <- sprintf("HTTP verb '%s' not defined for this query '%s' operation.",
+                   s$verb, subclass(s))
+    .error(msg)
+  }
 }
 
 #' @describeIn extensions

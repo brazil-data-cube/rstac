@@ -170,7 +170,6 @@ items_length <- function(items) {
   return(length(items$features))
 }
 
-
 #'
 #' @rdname items_functions
 #'
@@ -183,7 +182,7 @@ items_matched <- function(items) {
   # Check object subclass
   check_doc_subclass(items, "STACItemCollection")
 
-  if (attributes(items)$stac$version < "0.9.0")
+  if (items$stac_version < "0.9.0")
     # STAC API < 0.9.0 extensions
     matched <- items$`search:metadata`$matched
   else
@@ -278,27 +277,6 @@ items_fetch <- function(items, ..., progress = TRUE) {
   }
 
   return(items)
-}
-
-#' @param items       a \code{stac_item_collection} or \code{stac_item} object
-#'  representing the result of \code{/stac/search},
-#'  \code{/collections/{collectionId}/items} or
-#'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
-#'
-#' @rdname items_functions
-#'
-#' @export
-get_assets_name <- function(items) {
-
-  #check the object subclass
-  check_doc_subclass(items, subclasses = c("STACItemCollection", "STACItem"))
-
-  if (subclass(items) == "STACItem")
-    assets_names <- names(items$assets)
-  else
-    assets_names <- names(items$features[[1]]$assets)
-
-  return(assets_names)
 }
 
 get_endpoint.items_fetch <- function(s) {
