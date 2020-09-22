@@ -1,4 +1,3 @@
-
 #' @title Extension development functions
 #'
 #' @description

@@ -72,7 +72,7 @@
 #'  date time provided as \code{character}.
 #'
 #' @noRd
-.verify_datetime <- function(datetime) {
+.parse_datetime <- function(datetime) {
 
   # check if the date time provided is an open interval
   check_interval <-

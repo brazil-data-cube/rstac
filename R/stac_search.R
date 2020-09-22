@@ -98,7 +98,7 @@ stac_search <- function(s, collections, ids, bbox, datetime,
     params[["ids"]] <- .parse_ids(ids)
 
   if (!missing(datetime))
-    params[["datetime"]] <- .verify_datetime(datetime)
+    params[["datetime"]] <- .parse_datetime(datetime)
 
   if (!missing(bbox))
     params[["bbox"]] <- .parse_bbox(bbox)

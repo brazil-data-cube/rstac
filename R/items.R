@@ -93,7 +93,7 @@ items <- function(s, feature_id, datetime, bbox, limit) {
   params <- list()
 
   if (!missing(datetime))
-    params[["datetime"]] <- .verify_datetime(datetime)
+    params[["datetime"]] <- .parse_datetime(datetime)
 
   if (!missing(bbox))
     params[["bbox"]] <- .parse_bbox(bbox)
