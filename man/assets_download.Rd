@@ -11,8 +11,7 @@ assets_download(
   overwrite = FALSE,
   items_max = Inf,
   progress = TRUE,
-  ...,
-  headers = character()
+  ...
 )
 }
 \arguments{
@@ -32,13 +31,15 @@ if FALSE a warning message is shown.}
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
-\item{...}{other params to be passed to \link[httr]{GET} method.}
-
-\item{headers}{a \code{character} of named arguments to be passed as
-HTTP request headers.}
+\item{...}{config parameters to be passed to \link[httr]{GET} or
+\link[httr]{POST} methods, such as \link[httr]{add_headers} or
+\link[httr]{set_cookies}.}
 
 \item{items_size}{a \code{numeric} corresponding how many items will be
 downloaded.}
+
+\item{headers}{a \code{character} of named arguments to be passed as
+HTTP request headers.}
 }
 \value{
 The same \code{stac_item_collection} or \code{stac_item} object, with the
