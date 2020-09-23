@@ -4,10 +4,10 @@
 \alias{stac_search}
 \title{Endpoint functions}
 \usage{
-stac_search(s, collections, ids, bbox, datetime, intersects, limit)
+stac_search(q, collections, ids, bbox, datetime, intersects, limit)
 }
 \arguments{
-\item{s}{a \code{RSTACQuery} object expressing a STAC query
+\item{q}{a \code{RSTACQuery} object expressing a STAC query
 criteria.}
 
 \item{collections}{a \code{character} vector of collection IDs to include in

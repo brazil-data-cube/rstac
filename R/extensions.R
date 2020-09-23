@@ -168,8 +168,8 @@ check_query_verb <- function(s, verbs, msg = NULL) {
 
   if (!s$verb %in% verbs) {
     if (is.null(msg))
-      msg <- sprintf("HTTP verb '%s' not defined for this query '%s' operation.",
-                   s$verb, subclass(s))
+      msg <- sprintf("HTTP verb '%s' is not defined for the query '%s'.",
+                     s$verb, subclass(s))
     .error(msg)
   }
 }
@@ -199,3 +199,11 @@ subclass <- function(x) {
 
   UseMethod("subclass")
 }
+
+omit_query_params <- function(q, names) {
+
+  .check_obj(names, "character")
+  q$omitted <- unname(names)
+  q
+}
+

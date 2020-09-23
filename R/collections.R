@@ -98,8 +98,8 @@ before_request.collection_id <- function(q) {
 
   check_query_verb(q, verbs = c("GET", "POST"))
 
-  # ignore 'collection_id'
-  q$params[["collection_id"]] <- NULL
+  # don't send 'collection_id' in url's query string or content body
+  q <- omit_query_params(q, names = "collection_id")
 
   return(q)
 }

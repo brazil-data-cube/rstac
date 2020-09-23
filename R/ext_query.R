@@ -111,7 +111,7 @@ ext_query <- function(q, ...) {
 
 
   RSTACQuery(version = q$version,
-             url = q$url,
+             base_url = q$base_url,
              params = utils::modifyList(q$params, params),
              subclass = "ext_query")
 }
@@ -133,10 +133,10 @@ before_request.ext_query <- function(s) {
   return(s)
 }
 
-after_response.ext_query <- function(s, res) {
+after_response.ext_query <- function(q, res) {
 
   content <- content_response(res, "200", c("application/geo+json",
                                             "application/json"))
 
-  RSTACDocument(content = content, s = s, subclass = "STACItemCollection")
+  RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
 }

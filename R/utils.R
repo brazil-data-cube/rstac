@@ -340,3 +340,52 @@ query_url <- function(x, ...) {
 
   UseMethod("query_url")
 }
+
+#' @export
+subfields <- function(x) {
+
+  if (length(x) == 0) return(invisible(NULL))
+  names(x[[1]])
+}
+
+#' @export
+get_subfields <- function(x, ..., fields = NULL, merge = TRUE) {
+
+  if (length(x) == 0) return(invisible(NULL))
+  dots <- substitute(list(...))[-1]
+  if (!is.character(dots)) dots <- as.character(dots)
+  fields <- c(fields, dots)
+  if (length(fields) == 0) fields <- names(x[[1]])
+  x <- lapply(x, function(y) {
+    y <- y[fields]
+    names(y) <- fields
+    y
+  })
+  x <- lapply(x, `names<-`, fields)
+  if (merge)
+    x <- do.call(mapply,
+                 c(list(FUN = function(...) {
+                   # equivalent to `c` but convert NULL --> NA
+                   dots <- list(...)
+                   if (length(dots) == 0)
+                     return(NULL)
+                   sapply(dots, function(x) {
+                     if (is.null(x)) return(NA); x
+                   }, simplify = is.atomic(dots[[1]]) && length(dots[[1]]) == 1)
+                 },
+                 SIMPLIFY = FALSE),
+                 unname(x)))
+  x
+}
+
+
+.format_bbox <- function(bbox) {
+
+  if (!is.null(bbox) & length(bbox) == 4)
+    return(paste(c("xmin:", "ymin:", "xmax:", "ymax:"),
+                 sprintf("%.5f", bbox), collapse = ", "))
+
+  if (!is.null(bbox) & length(bbox) == 6)
+    return(paste(c("xmin:", "ymin:", "zmin:", "xmax:", "ymax:", "zmax:"),
+                 sprintf("%.5f", bbox), collapse = ", "))
+}

@@ -4,10 +4,10 @@
 \alias{items}
 \title{Endpoint functions}
 \usage{
-items(s, feature_id, datetime, bbox, limit)
+items(q, feature_id, datetime, bbox, limit)
 }
 \arguments{
-\item{s}{a \code{RSTACQuery} object expressing a STAC query
+\item{q}{a \code{RSTACQuery} object expressing a STAC query
 criteria.}
 
 \item{feature_id}{a \code{character} with item id to be fetched.

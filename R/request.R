@@ -51,28 +51,30 @@ get_request <- function(q, ...) {
   q$verb <- "GET"
   q$encode <- NULL
 
-  if (is.null(q$url)) {
+  # check version
+  q$version <- stac_version(q, ...)
 
-    # check version
-    q$version <- stac_version(q, ...)
+  # set endpoint
+  q$endpoint <- get_endpoint(q)
 
-    # set endpoint
-    q$endpoint <- get_endpoint(q)
+  # process STAC object
+  q <- before_request(q)
 
-    # process STAC object
-    q <- before_request(q)
-
-    # build url
-    q$url <- .make_url(q$base_url, endpoint = q$endpoint, params = q$params)
-  }
+  # process omitted params
+  q <- .do_omit_query_params(q)
 
   tryCatch({
-    res <- httr::GET(url = q$url, ...)
+    res <- httr::GET(url = .make_url(q$base_url,
+                                     endpoint = q$endpoint,
+                                     params = q$params), ...)
   },
   error = function(e) {
 
     .error("Request error. %s", e$message)
   })
+
+  # restore omitted params
+  q <- .undo_omit_query_params(q)
 
   # process content according to status-code and content-type
   content <- after_response(q, res = res)
@@ -98,31 +100,53 @@ post_request <- function(q, ..., encode = c("json", "multipart", "form")) {
   q$verb <- "POST"
   q$encode <- encode
 
-  if (is.null(q$url)) {
+  # detect version
+  q$version <- stac_version(q, ...)
 
-    # detect version
-    q$version <- stac_version(q, ...)
+  # set endpoint
+  q$endpoint <- get_endpoint(q)
 
-    # set endpoint
-    q$endpoint <- get_endpoint(q)
+  # process STAC object
+  q <- before_request(q)
 
-    # process STAC object
-    q <- before_request(q)
-
-    # build url
-    q$url <- .make_url(q$base_url, endpoint = q$endpoint)
-  }
+  # process omitted params
+  q <- .do_omit_query_params(q)
 
   tryCatch({
-    res <- httr::POST(url = q$url, ..., body = q$params,
-                      encode = q$encode)
+    res <- httr::POST(url = .make_url(q$base_url, endpoint = q$endpoint), ...,
+                      body = q$params, encode = q$encode)
   },
   error = function(e) {
     .error("Request error. %s", e$message)
   })
 
+  # restore omitted params
+  q <- .undo_omit_query_params(q)
+
   # process content according to status-code and content-type
   content <- after_response(q, res = res)
 
   return(content)
+}
+
+
+.do_omit_query_params <- function(q) {
+
+  if (is.character(q$omitted)) {
+
+    to_omit <- names(q$param) %in% q$omitted
+    if (length(to_omit) > 0) {
+      q$omitted <- q$params[to_omit]
+      q$params[to_omit] <- NULL
+    }
+  }
+  q
+}
+
+.undo_omit_query_params <- function(q) {
+
+  if (is.list(q$omitted))
+    q$params <- utils::modifyList(q$params, q$omitted)
+  q$omitted <- NULL
+  q
 }

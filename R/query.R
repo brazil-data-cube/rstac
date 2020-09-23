@@ -34,8 +34,7 @@
 #' subclass defined by \code{subclass} parameter.
 #'
 #' @export
-RSTACQuery <- function(version = NULL, base_url,
-                       params = list(), subclass) {
+RSTACQuery <- function(version = NULL, base_url, params = list(), subclass) {
 
   structure(
     list(version = version,
@@ -43,9 +42,8 @@ RSTACQuery <- function(version = NULL, base_url,
          endpoint = NULL,
          params = params,
          verb = "GET",
-         encode = NULL,
-         url = NULL
-    ), class = c(subclass, "RSTACQuery"))
+         encode = NULL),
+    class = c(subclass, "RSTACQuery"))
 }
 
 #' @export
@@ -92,13 +90,14 @@ check_subclass.RSTACQuery <- function(x, subclasses) {
 #' @export
 print.RSTACQuery <- function(x, ...) {
 
-  cat("###RSTACQuery", fill = TRUE)
-  cat("- url:", x$url, fill = TRUE)
-  cat("- params:", fill = TRUE)
+  cat(crayon::bold("###RSTACQuery"), fill = TRUE)
+  cat("-", crayon::bold("url:"), x$base_url, fill = TRUE)
+  cat("-", crayon::bold("params:"), fill = TRUE)
   for (n in names(x$params)) {
     cat(paste0("  - ", n, ":"), fill = TRUE)
   }
-  cat("- attributes:", paste0(names(x), collapse = ", "), fill = TRUE)
+  cat("-", crayon::bold("field(s):"),
+      paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
 }
 
