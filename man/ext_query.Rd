@@ -69,6 +69,6 @@ stac(url = "http://brazildatacube.dpi.inpe.br/stac") \%>\%
 }
 \seealso{
 \code{\link{stac_search}}, \code{\link{post_request}},
-\code{\link{params_get_request}}, \code{\link{params_post_request}},
-\code{\link{content_get_response}}, \code{\link{content_post_response}}
+\code{\link{get_endpoint}}, \code{\link{before_request}},
+\code{\link{after_response}}, \code{\link{content_response}}
 }
