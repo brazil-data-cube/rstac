@@ -7,30 +7,27 @@ testthat::test_that("assets download", {
 
     # error - zero items
      testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/",
-                  force_version = "0.9.0") %>%
+      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(
-          collections = "MOD13Q1",
+          collections = "CB4_64_16D_STK-1",
           datetime    = "2019-09-01/2019-11-01",
-          bbox        = c(-55.16335, -4.26325, -49.31739, -1.18355),
+          bbox        = c(-47.02148, -12.98314, -42.53906, -17.35063),
           limit       = 0) %>%
         get_request() %>%
         assets_download(assets_name = c("blue", "evi")))
 
     # error - given another object
      testthat::expect_error(
-       stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/",
-            force_version = "0.9.0") %>%
+       stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
          get_request(.) %>%
          assets_download(., assets_name = c("blue", "evi")))
 
    # error - wrong path
    testthat::expect_error(
-     stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/",
-          force_version = "0.9.0") %>%
+     stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
        stac_search(
-         collections = "CB4_64-1",
-         datetime    = "2019-09-01/..",
+         collections = "CB4_64_16D_STK-1",
+         datetime    = "2019-09-01/2019-11-01",
          limit       = 1) %>%
        get_request() %>%
        assets_download(assets_name = c("thumbnail"),
@@ -39,16 +36,15 @@ testthat::test_that("assets download", {
    # verify output object
    testthat::expect_equal(
      object = {
-       x <- stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/",
-                 force_version = "0.9.0") %>%
+       x <- stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/") %>%
          stac_search(
-           collections = "CB4_64-1",
-           datetime    = "2019-09-01/..",
+           collections = "CB4_64_16D_STK-1",
+           datetime    = "2019-09-01/2019-11-01",
            limit       = 1) %>%
          get_request() %>%
          assets_download(assets_name = c("thumbnail"), output_dir = ".")
-       class(x)
+       subclass(x)
      },
-     expected = "stac_item_collection")
+     expected = "STACItemCollection")
   })
 })
