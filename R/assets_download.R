@@ -51,7 +51,7 @@ assets_download <- function(items, assets_name, output_dir = ".",
                             overwrite = FALSE, items_max = Inf, progress = TRUE, ...) {
 
   #check the object subclass
-  check_doc_subclass(items, subclasses = c("STACItemCollection", "STACItem"))
+  check_subclass(items, subclasses = c("STACItemCollection", "STACItem"))
 
   # check output dir
   if (!dir.exists(output_dir))
@@ -205,8 +205,8 @@ assets_download <- function(items, assets_name, output_dir = ".",
   }
 
   if (!all(assets_names %in% names(assets))) {
-    .error(paste("The provided assets names do not match with the API",
-                 "assets names. By default, all assets will be used"))
+    .error(paste("The provided assets names do not match with the",
+                 "assets names in the document."))
   }
   assets <- assets[names(assets) %in% assets_names]
 
