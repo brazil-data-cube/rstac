@@ -51,7 +51,7 @@ assets_download <- function(items, assets_name, output_dir = ".",
                             overwrite = FALSE, items_max = Inf, progress = TRUE, ...) {
 
   #check the object subclass
-  check_doc_subclass(items, subclasses = c("STACItemCollection", "STACItem"))
+  check_subclass(items, subclasses = c("STACItemCollection", "STACItem"))
 
   # check output dir
   if (!dir.exists(output_dir))
