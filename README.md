@@ -43,9 +43,9 @@ the Brazilian National Space Research Institute [INPE](http://www.inpe.br/).
 s_obj <- stac("http://brazildatacube.dpi.inpe.br/stac/")
 get_request(s_obj) %>% print()
 ###STACCatalog
-- id: bdc
-- description: Brazil Data Cube Catalog
-- field(s): description, id, stac_version, links
+# - id: bdc
+# - description: Brazil Data Cube Catalog
+# - field(s): description, id, stac_version, links
 ```
 
 The variable `s_obj` stores information to connect to the Brazil Data 
