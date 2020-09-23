@@ -13,13 +13,13 @@
 \alias{RSTACQuery}
 \title{Extension development functions}
 \usage{
-RSTACDocument(content, s, subclass)
+RSTACDocument(content, q, subclass)
 
-get_endpoint(s)
+get_endpoint(q)
 
-before_request(s)
+before_request(q)
 
-after_response(s, res)
+after_response(q, res)
 
 content_response(res, status_codes, content_types)
 
@@ -35,7 +35,7 @@ RSTACQuery(version = NULL, base_url, params = list(), subclass)
 \item{content}{a \code{list} data structure representing the JSON file
 received in HTTP response (see \code{\link{content_response}()} function)}
 
-\item{s}{a \code{RSTACQuery} object expressing a STAC query
+\item{q}{a \code{RSTACQuery} object expressing a STAC query
 criteria.}
 
 \item{subclass}{a \code{character} corresponding to the subclass of the
@@ -49,7 +49,12 @@ status codes.}
 \item{content_types}{a \code{character} vector with all acceptable
 responses' content type.}
 
+\item{s}{a \code{RSTACQuery} object expressing the STAC query used
+to retrieve the document.}
+
 \item{verbs}{a \code{character} vector with allowed HTTP request methods}
+
+\item{msg}{a \code{character} with a personalized error message}
 
 \item{x}{either a \code{RSTACQuery} object expressing a STAC query
 criteria or any \code{RSTACDocument}.}

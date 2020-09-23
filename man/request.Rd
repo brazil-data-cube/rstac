@@ -5,12 +5,12 @@
 \alias{post_request}
 \title{STAC API request functions}
 \usage{
-get_request(s, ...)
+get_request(q, ...)
 
-post_request(s, ..., encode = c("json", "multipart", "form"))
+post_request(q, ..., encode = c("json", "multipart", "form"))
 }
 \arguments{
-\item{s}{a \code{RSTACQuery} object expressing a STAC query
+\item{q}{a \code{RSTACQuery} object expressing a STAC query
 criteria.}
 
 \item{...}{config parameters to be passed to \link[httr]{GET} or

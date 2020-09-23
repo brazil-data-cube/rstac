@@ -41,7 +41,7 @@
 #' See source file \code{ext_query.R} for an example on how implement new
 #' extensions.
 #'
-#' @param s        a \code{RSTACQuery} object expressing a STAC query
+#' @param q        a \code{RSTACQuery} object expressing a STAC query
 #' criteria.
 #'
 #' @param ...      entries with format \code{<field> <operator> <value>}.
@@ -64,10 +64,10 @@
 #' }
 #'
 #' @export
-ext_query <- function(s, ...) {
+ext_query <- function(q, ...) {
 
   # check s parameter
-  check_query_subclass(s, c("search", "ext_query"))
+  check_subclass(q, c("search", "ext_query"))
 
   params <- list()
 
@@ -103,16 +103,16 @@ ext_query <- function(s, ...) {
   })
 
   if (length(entries) == 0)
-    return(s)
+    return(q)
 
   names(entries) <- uniq_keys
 
   params[["query"]] <- entries
 
 
-  RSTACQuery(version = s$version,
-             url = s$url,
-             params = utils::modifyList(s$params, params),
+  RSTACQuery(version = q$version,
+             base_url = q$base_url,
+             params = utils::modifyList(q$params, params),
              subclass = "ext_query")
 }
 
@@ -128,15 +128,15 @@ before_request.ext_query <- function(s) {
   msg <- paste0("Query extension param is not supported by HTTP GET",
                 "method. Try use `post_request()` method instead.")
 
-  check_query_verb(s, verbs = c("POST"), msg = msg)
+  check_query_verb(s, verbs = "POST", msg = msg)
 
   return(s)
 }
 
-after_response.ext_query <- function(s, res) {
+after_response.ext_query <- function(q, res) {
 
   content <- content_response(res, "200", c("application/geo+json",
                                             "application/json"))
 
-  RSTACDocument(content = content, s = s, subclass = "STACItemCollection")
+  RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
 }

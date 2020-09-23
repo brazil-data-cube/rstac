@@ -64,6 +64,8 @@ get_doc_query <- function(d) {
 #' @export
 stac_version.RSTACDocument <- function(x, ...) {
 
+  if (is.null(x$stac_version))
+    return(stac_version(get_doc_query(x)))
   x$stac_version
 }
 
@@ -72,8 +74,12 @@ stac_version.RSTACDocument <- function(x, ...) {
 #' @export
 print.STACCatalog <- function(x, ...) {
 
-  cat("###STACCatalog", fill = TRUE)
-  cat("attributes:", paste0(names(x), collapse = ", "), fill = TRUE)
+  cat(crayon::bold("###STACCatalog"), fill = TRUE)
+  cat("-", crayon::bold("id:"), x$id, fill = TRUE)
+  if (!is.null(x$description) && x$description != "")
+    cat("-", crayon::bold("description:"), x$description, fill = TRUE)
+  cat("-", crayon::bold("field(s):"),
+      paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
 }
 
@@ -88,13 +94,14 @@ repr_html.STACCatalog <- function(obj, ...) {
 #' @export
 print.STACCollection <- function(x, ...) {
 
-  cat("###STACCollection", fill = TRUE)
-  cat("- id:", x$id, fill = TRUE)
+  cat(crayon::bold("###STACCollection"), fill = TRUE)
+  cat("-", crayon::bold("id:"), x$id, fill = TRUE)
   if (!is.null(x$title) && x$title != "")
-    cat("- title:", x$title, fill = TRUE)
+    cat("-", crayon::bold("title:"), x$title, fill = TRUE)
   if (!is.null(x$description) && x$description != "")
-    cat("- description:", x$description, fill = TRUE)
-  cat("- attributes:", paste0(names(x), collapse = ", "), fill = TRUE)
+    cat("-", crayon::bold("description:"), x$description, fill = TRUE)
+  cat("-", crayon::bold("field(s):"),
+      paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
 }
 
@@ -119,9 +126,9 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' @export
 print.STACCollectionList <- function(x, n = 10, ...) {
 
-  cat("###STACCollectionList", fill = TRUE)
-  cat("- collections", sprintf("(%s item(s)):", length(x$collections)),
-      fill = TRUE)
+  cat(crayon::bold("###STACCollectionList"), fill = TRUE)
+  cat("-", crayon::bold("collections"),
+      sprintf("(%s item(s)):", length(x$collections)), fill = TRUE)
   # if (length(x$collections) > 0) cat(fill = TRUE)
   if (missing(n) && length(x$collections) < 2 * n)
     n <- length(x$collections)
@@ -133,7 +140,8 @@ print.STACCollectionList <- function(x, n = 10, ...) {
   if (n != length(x$collections))
     cat(sprintf("  - ... with %s more collection(s).",
                 length(x$collections) - n), fill = TRUE)
-  cat("- attributes:", paste0(names(x), collapse = ", "), fill = TRUE)
+  cat("-", crayon::bold("field(s):"),
+      paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
 }
 
@@ -148,8 +156,15 @@ repr_html.STACCollectionList <- function(obj, ...) {
 #' @export
 print.STACItem <- function(x, ...) {
 
-  cat("###STACItem", fill = TRUE)
-  cat("attributes:", names(x), fill = TRUE)
+  cat(crayon::bold("###STACItem"), fill = TRUE)
+  cat("-", crayon::bold("id:"), x$id, fill = TRUE)
+  cat("-", crayon::bold("collection:"), x$collection, fill = TRUE)
+  cat("-", crayon::bold("bbox:"), .format_bbox(x$bbox), fill = TRUE)
+  cat("-", crayon::bold("datetime:"), x$properties$datetime, fill = TRUE)
+  cat("-", crayon::bold("assets:"),
+      paste0("'", names(x$assets), "'", collapse = ", "), fill = TRUE)
+  cat("-", crayon::bold("field(s):"), paste0(names(x), collapse = ", "),
+      fill = TRUE)
   invisible(x)
 }
 
@@ -205,7 +220,7 @@ repr_html.STACItem <- function(obj, ...) {
 items_length <- function(items) {
 
   # Check object class
-  check_subclass(items, c("STACItemCollection"))
+  check_subclass(items, "STACItemCollection")
 
   return(length(items$features))
 }
@@ -222,7 +237,7 @@ items_matched <- function(items) {
   # Check object class
   check_subclass(items, "STACItemCollection")
 
-  if (items$stac_version < "0.9.0")
+  if (stac_version(items) < "0.9.0")
     # STAC API < 0.9.0 extensions
     matched <- items$`search:metadata`$matched
   else
@@ -285,7 +300,7 @@ items_fetch <- function(items, ..., progress = TRUE) {
 
     next_stac <- RSTACQuery(version = q$version,
                             base_url = q$base_url,
-                            params = params,
+                            params = utils::modifyList(q$params, params),
                             subclass = subclass(q))
 
     # call request
@@ -326,12 +341,12 @@ items_fetch <- function(items, ..., progress = TRUE) {
 #' @export
 print.STACItemCollection <- function(x, n = 10, ...) {
 
-  cat("###STACItemCollection", fill = TRUE)
+  cat(crayon::bold("###STACItemCollection"), fill = TRUE)
   matched <- suppressWarnings(items_matched(x))
   if (!is.null(matched))
-    cat("- matched features:", matched, fill = TRUE)
-  cat("- features", sprintf("(%s item(s)):", length(x$features)),
-      fill = TRUE)
+    cat("-", crayon::bold("matched feature(s):"), matched, fill = TRUE)
+  cat("-", crayon::bold("features"),
+      sprintf("(%s item(s)):", length(x$features)), fill = TRUE)
   # if (length(x$collections) > 0) cat(fill = TRUE)
   if (missing(n) && length(x$features) < 2 * n)
     n <- length(x$features)
@@ -343,7 +358,8 @@ print.STACItemCollection <- function(x, n = 10, ...) {
   if (n != length(x$features))
     cat(sprintf("  - ... with %s more feature(s).",
                 length(x$features) - n), fill = TRUE)
-  cat("- attributes:", paste0(names(x), collapse = ", "), fill = TRUE)
+  cat("-", crayon::bold("field(s):"),
+      paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
 }
 

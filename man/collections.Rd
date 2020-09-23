@@ -4,10 +4,10 @@
 \alias{collections}
 \title{Endpoint functions}
 \usage{
-collections(s, collection_id)
+collections(q, collection_id)
 }
 \arguments{
-\item{s}{a \code{RSTACQuery} object expressing a STAC query
+\item{q}{a \code{RSTACQuery} object expressing a STAC query
 criteria.}
 
 \item{collection_id}{a \code{character} collection id to be retrieved.}

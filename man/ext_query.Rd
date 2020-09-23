@@ -4,10 +4,10 @@
 \alias{ext_query}
 \title{Extension functions}
 \usage{
-ext_query(s, ...)
+ext_query(q, ...)
 }
 \arguments{
-\item{s}{a \code{RSTACQuery} object expressing a STAC query
+\item{q}{a \code{RSTACQuery} object expressing a STAC query
 criteria.}
 
 \item{...}{entries with format \code{<field> <operator> <value>}.}

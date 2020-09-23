@@ -127,8 +127,8 @@ before_request.items <- function(q) {
 
   check_query_verb(q, verbs = c("GET", "POST"))
 
-  # ignore 'collection_id'
-  q$params[["collection_id"]] <- NULL
+  # don't send 'collection_id' in url's query string or content body
+  q <- omit_query_params(q, names = "collection_id")
 
   return(q)
 }
@@ -154,9 +154,9 @@ before_request.item_id <- function(q) {
 
   check_query_verb(q, verbs = c("GET", "POST"))
 
-  # ignore 'feature_id' and 'collection_id'
-  q$params[["collection_id"]] <- NULL
-  q$params[["feature_id"]] <- NULL
+  # don't send 'collection_id' and 'feature_id' in
+  # url's query string or content body
+  q <- omit_query_params(q, names = c("collection_id", "feature_id"))
 
   return(q)
 }
