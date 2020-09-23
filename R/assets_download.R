@@ -205,8 +205,8 @@ assets_download <- function(items, assets_name, output_dir = ".",
   }
 
   if (!all(assets_names %in% names(assets))) {
-    .error(paste("The provided assets names do not match with the API",
-                 "assets names. By default, all assets will be used"))
+    .error(paste("The provided assets names do not match with the",
+                 "assets names in the document."))
   }
   assets <- assets[names(assets) %in% assets_names]
 

@@ -52,10 +52,12 @@
 }
 
 .parse_items_size <- function(items) {
+
   if (items_length(items) != items_matched(items))
     .message(paste("The length of items in your object, does not correspond",
-    "with the total of matched items, consider using the function",
-    "items_fetch(). By default, items_max = %d"), items_length(items))
+                   "with the total of matched items. Consider using the",
+                   "function `items_fetch()`. By default, items_max = %d"),
+             items_length(items))
 
   return(items_length(items))
 }
@@ -334,11 +336,6 @@
 stac_version <- function(x, ...) {
 
   UseMethod("stac_version")
-}
-
-query_url <- function(x, ...) {
-
-  UseMethod("query_url")
 }
 
 #' @export
