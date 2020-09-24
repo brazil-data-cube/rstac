@@ -40,8 +40,10 @@ library(devtools)
 install_github("brazil-data-cube/rstac")
 ```
 
-    #> Loading required package: httr
-    #> Loading required package: crayon
+``` r
+library(rstac)
+library(magrittr) # for pipe (%>%) in examples
+```
 
 ## Usage
 
