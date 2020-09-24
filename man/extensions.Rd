@@ -10,6 +10,7 @@
 \alias{check_query_verb}
 \alias{check_subclass}
 \alias{subclass}
+\alias{omit_query_params}
 \alias{RSTACQuery}
 \title{Document development functions}
 \usage{
@@ -28,6 +29,8 @@ check_query_verb(q, verbs, msg = NULL)
 check_subclass(x, subclasses)
 
 subclass(x)
+
+omit_query_params(q, names)
 
 RSTACQuery(version = NULL, base_url, params = list(), subclass)
 }
@@ -56,6 +59,8 @@ responses' content type.}
 criteria or any \code{RSTACDocument}.}
 
 \item{subclasses}{a \code{character} vector with all allowed S3 subclasses}
+
+\item{names}{a \code{character} vector with the names do omit.}
 
 \item{version}{a \code{character} with the STAC version.}
 
@@ -180,6 +185,11 @@ are expected in the function extension.
 
 \item \code{subclass}: The \code{subclass()} function returns a \code{character} representing the
 subclass name of either \code{RSTACQuery} or \code{RSTACDocument} S3 classes.
+
+\item \code{omit_query_params}: The \code{omit_query_params()} function was created to omit the paths that
+are defined as query parameters to simplify the creation of a query.
+Therefore, use this method only in endpoints that specify a parameter in
+their paths.
 
 \item \code{RSTACQuery}: The \code{RSTACQuery()} function is a constructor of \code{RSTACQuery} objects.
 Every extension must implement a subclass of \code{RSTACQuery} to represent

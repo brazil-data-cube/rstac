@@ -34,10 +34,10 @@
 #' @examples
 #' \donttest{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/stac") %>%
+#' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  get_request()
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/stac") %>%
+#' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1") %>%
 #'  post_request()
 #' }
@@ -129,7 +129,13 @@ post_request <- function(q, ..., encode = c("json", "multipart", "form")) {
   return(content)
 }
 
-
+#' @describeIn extensions
+#' The \code{.do_omit_query_params()} Function to make the omission of the
+#'  parameters that were omitted in function \code{omit_query_params()}.
+#'
+#' @param q       a \code{RSTACQuery} object.
+#'
+#' @noRd
 .do_omit_query_params <- function(q) {
 
   if (is.character(q$omitted)) {
@@ -143,6 +149,13 @@ post_request <- function(q, ..., encode = c("json", "multipart", "form")) {
   q
 }
 
+#' @describeIn extensions
+#' The \code{.undo_omit_query_params()} function to undo the omission of
+#'  parameters that were omitted in function \code{omit_query_params()}.
+#'
+#' @param q       a \code{RSTACQuery} object.
+#'
+#' @noRd
 .undo_omit_query_params <- function(q) {
 
   if (is.list(q$omitted))

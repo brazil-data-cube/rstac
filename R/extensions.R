@@ -202,10 +202,20 @@ subclass <- function(x) {
   UseMethod("subclass")
 }
 
+#' @describeIn extensions
+#' The \code{omit_query_params()} function was created to omit the paths that
+#'  are defined as query parameters to simplify the creation of a query.
+#'  Therefore, use this method only in endpoints that specify a parameter in
+#'  their paths.
+#'
+#' @param q       a \code{RSTACQuery} object.
+#'
+#' @param names   a \code{character} vector with the names do omit.
+#'
+#' @export
 omit_query_params <- function(q, names) {
 
   .check_obj(names, "character")
   q$omitted <- unname(names)
   q
 }
-

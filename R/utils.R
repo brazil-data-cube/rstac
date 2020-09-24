@@ -1,4 +1,21 @@
-
+#' @title Utility functions
+#'
+#' @param bbox        a \code{numeric} vector with only features that have a
+#' geometry that intersects the bounding box are selected. The bounding box is
+#' provided as four or six numbers, depending on whether the coordinate
+#' reference system includes a vertical axis (elevation or depth):
+#' \itemize{ \item Lower left corner, coordinate axis 1
+#'           \item Lower left corner, coordinate axis 2
+#'           \item Lower left corner, coordinate axis 3 (optional)
+#'           \item Upper right corner, coordinate axis 1
+#'           \item Upper right corner, coordinate axis 2
+#'           \item Upper right corner, coordinate axis 3 (optional) }
+#'
+#'
+#' @return A \code{numeric} with the bbox provided,or an error if the supplied
+#'   \code{bbox} does not meet the specifications.
+#'
+#' @noRd
 .parse_bbox <- function(bbox) {
 
   if (!length(bbox) %in% c(4, 6))
@@ -7,6 +24,15 @@
   return(bbox)
 }
 
+#' @title Utility functions
+#'
+#' @param limit       an \code{integer} defining the maximum number of results
+#' to return. If not informed it defaults to the service implementation.
+#'
+#' @return A \code{integer} with the limit provided,or an error if the supplied
+#'  \code{limit} has a length different from 1.
+#'
+#' @noRd
 .parse_limit <- function(limit) {
 
   if (length(limit) != 1)
@@ -22,6 +48,16 @@
   return(limit)
 }
 
+#' @title Utility functions
+#'
+#' @param feature_id  a \code{character} with item id to be fetched.
+#' Only works if the \code{collection_id} is informed. This is equivalent to
+#' the endpoint \code{/collections/\{collectionId\}/items/\{featureId\}}.
+#'
+#' @return A \code{character} with the parameter provided,or an error if the
+#'  supplied \code{feature_id} has a length different from 1.
+#'
+#' @noRd
 .parse_feature_id <- function(feature_id) {
 
   if (length(feature_id) != 1)
@@ -30,6 +66,15 @@
   return(feature_id)
 }
 
+#' @title Utility functions
+#'
+#' @param collections a \code{character} vector of collection IDs to include in
+#' the search for items. Only items in one of the provided collections will be
+#' searched.
+#'
+#' @return A \code{list} of collections.
+#'
+#' @noRd
 .parse_collections <- function(collections) {
 
   if (length(collections) == 1 && !is.list(collections))
@@ -38,6 +83,14 @@
   return(collections)
 }
 
+#' @title Utility functions
+#'
+#' @param ids         a \code{character} vector with item IDs. All other filter
+#' parameters that further restrict the number of search results are ignored.
+#'
+#' @return A \code{list} with the ids.
+#'
+#' @noRd
 .parse_ids <- function(ids) {
 
   if (length(ids) == 1 && !is.list(ids))
@@ -46,11 +99,30 @@
   return(ids)
 }
 
+#' @title Utility functions
+#'
+#' @param intersects  a \code{character} value expressing GeoJSON geometries
+#' objects as specified in RFC 7946. Only returns items that intersect with
+#' the provided polygon.
+#'
+#' @return A \code{character} with the validate polygon.
+#'
+#' @noRd
 .parse_geometry <- function(geom) {
 
   # TODO: validate polygon
+  geom
 }
 
+#' @title Utility functions
+#'
+#' @param items       \code{STACItemCollection} object representing the result of
+#'  \code{/stac/search} or \code{/collections/{collectionId}/items}.
+#'
+#' @return A \code{numeric} with the length of a \code{STACItemCollection}
+#'  object.
+#'
+#' @noRd
 .parse_items_size <- function(items) {
 
   if (items_length(items) != items_matched(items))
@@ -63,7 +135,7 @@
 }
 
 
-#' @title utils functions
+#' @title Utility functions
 #'
 #' @description Auxiliary function to check whether the date time follows
 #' RFC 3339 standard.
@@ -142,7 +214,7 @@
   }
 }
 
-#' @title utils functions
+#' @title Utility functions
 #'
 #' @description Auxiliary function to check that the provided date time follows
 #' the standards of RFC 3339
@@ -171,7 +243,7 @@
   return(check_pattern)
 }
 
-#' @title utils functions
+#' @title Utility functions
 #'
 #' @param msg   a \code{character} string with format error message.
 #'
@@ -183,7 +255,7 @@
   stop(sprintf(msg, ...), call. = FALSE)
 }
 
-#' @title utils functions
+#' @title Utility functions
 #'
 #' @param msg   a \code{character} string with format text message.
 #'
@@ -195,7 +267,7 @@
   message(sprintf(msg, ...))
 }
 
-#' @title utils functions
+#' @title Utility functions
 #'
 #' @param msg   a \code{character} string with format warning message.
 #'
@@ -207,7 +279,7 @@
   warning(sprintf(msg, ...), call. = FALSE)
 }
 
-#' @title utils functions
+#' @title Utility functions
 #'
 #' @param obj       an \code{object} to compare.
 #'
@@ -227,7 +299,7 @@
 }
 
 
-#' @title utils functions
+#' @title uUtility functions
 #'
 #' @rdname http_request
 #'
@@ -279,7 +351,7 @@
   return(res)
 }
 
-#' @title utils functions
+#' @title Utility functions
 #'
 #' @param params a \code{list} of parameters received from stac objects.
 #'
@@ -295,7 +367,7 @@
   return(paste0(params, collapse = ","))
 }
 
-#' @title utils functions
+#' @title Utility functions
 #'
 #' @param querystring a \code{character} with the query to be decoded.
 #'
@@ -407,7 +479,23 @@ get_subfields <- function(x, ..., fields = NULL, merge = TRUE) {
   x
 }
 
-
+#' @title Utility functions
+#'
+#' @param bbox        a \code{numeric} vector with only features that have a
+#' geometry that intersects the bounding box are selected. The bounding box is
+#' provided as four or six numbers, depending on whether the coordinate
+#' reference system includes a vertical axis (elevation or depth):
+#' \itemize{ \item Lower left corner, coordinate axis 1
+#'           \item Lower left corner, coordinate axis 2
+#'           \item Lower left corner, coordinate axis 3 (optional)
+#'           \item Upper right corner, coordinate axis 1
+#'           \item Upper right corner, coordinate axis 2
+#'           \item Upper right corner, coordinate axis 3 (optional) }.
+#'
+#' @return a \code{character} with \code{bbox} formatted based on min and max
+#'  values.
+#'
+#' @noRd
 .format_bbox <- function(bbox) {
 
   if (!is.null(bbox) & length(bbox) == 4)

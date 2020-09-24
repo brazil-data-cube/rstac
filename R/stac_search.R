@@ -115,6 +115,7 @@ stac_search <- function(q, collections, ids, bbox, datetime,
              subclass = "search")
 }
 
+#' @export
 get_endpoint.search <- function(q) {
 
   if (q$version < "0.9.0")
@@ -122,6 +123,7 @@ get_endpoint.search <- function(q) {
   return("/search")
 }
 
+#' @export
 before_request.search <- function(q) {
 
   check_query_verb(q, verbs = c("GET", "POST"))
@@ -133,6 +135,7 @@ before_request.search <- function(q) {
   return(q)
 }
 
+#' @export
 after_response.search <- function(q, res) {
 
   content <- content_response(res, "200", c("application/geo+json",

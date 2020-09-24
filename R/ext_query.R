@@ -57,7 +57,7 @@
 #' @examples
 #' \donttest{
 #' # filter items that has 'bdc:tile' property equal to '022024'
-#' stac(url = "http://brazildatacube.dpi.inpe.br/stac") %>%
+#' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
 #'   ext_query("bdc:tile" == "021027") %>%
 #'   post_request()
@@ -116,13 +116,14 @@ ext_query <- function(q, ...) {
              subclass = "ext_query")
 }
 
-
+#' @export
 get_endpoint.ext_query <- function(s) {
 
   # using endpoint from search document
   get_endpoint.search(s)
 }
 
+#' @export
 before_request.ext_query <- function(s) {
 
   msg <- paste0("Query extension param is not supported by HTTP GET",
@@ -133,6 +134,7 @@ before_request.ext_query <- function(s) {
   return(s)
 }
 
+#' @export
 after_response.ext_query <- function(q, res) {
 
   content <- content_response(res, "200", c("application/geo+json",
