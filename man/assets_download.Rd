@@ -15,7 +15,7 @@ assets_download(
 )
 }
 \arguments{
-\item{items}{a \code{stac_item_collection} or \code{stac_item} object
+\item{items}{a \code{STACItem} or \code{STACItemCollection} object
 representing the result of \code{/stac/search},
 \code{/collections/{collectionId}/items} or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}

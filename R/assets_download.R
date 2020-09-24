@@ -3,7 +3,7 @@
 #' @description The \code{assets_download} function downloads the assets
 #' provided by the STAC API.
 #'
-#' @param items       a \code{stac_item_collection} or \code{stac_item} object
+#' @param items       a \code{STACItem} or \code{STACItemCollection} object
 #'  representing the result of \code{/stac/search},
 #'  \code{/collections/{collectionId}/items} or
 #'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
