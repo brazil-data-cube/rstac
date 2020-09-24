@@ -11,7 +11,7 @@
 \alias{check_subclass}
 \alias{subclass}
 \alias{RSTACQuery}
-\title{Extension development functions}
+\title{Document development functions}
 \usage{
 RSTACDocument(content, q, subclass)
 
@@ -23,7 +23,7 @@ after_response(q, res)
 
 content_response(res, status_codes, content_types)
 
-check_query_verb(s, verbs, msg = NULL)
+check_query_verb(q, verbs, msg = NULL)
 
 check_subclass(x, subclasses)
 
@@ -35,8 +35,7 @@ RSTACQuery(version = NULL, base_url, params = list(), subclass)
 \item{content}{a \code{list} data structure representing the JSON file
 received in HTTP response (see \code{\link{content_response}()} function)}
 
-\item{q}{a \code{RSTACQuery} object expressing a STAC query
-criteria.}
+\item{q}{a \code{RSTACQuery} object.}
 
 \item{subclass}{a \code{character} corresponding to the subclass of the
 object to be created.}
@@ -49,9 +48,6 @@ status codes.}
 \item{content_types}{a \code{character} vector with all acceptable
 responses' content type.}
 
-\item{s}{a \code{RSTACQuery} object expressing the STAC query used
-to retrieve the document.}
-
 \item{verbs}{a \code{character} vector with allowed HTTP request methods}
 
 \item{msg}{a \code{character} with a personalized error message}
@@ -63,11 +59,11 @@ criteria or any \code{RSTACDocument}.}
 
 \item{version}{a \code{character} with the STAC version.}
 
+\item{base_url}{a \code{character} informing the base URL of a
+STAC web service.}
+
 \item{params}{a named \code{list} with all URL query parameters to be
 appended in the URL.}
-
-\item{url}{a \code{character} informing the base URL of a
-STAC web service.}
 }
 \value{
 The \code{RSTACDocument()} function returns a \code{RSTACDocument} object
@@ -101,9 +97,9 @@ can be implemented in three environments:
 \enumerate{
 \item In \code{rstac} package by including new functions make a
 GitHub pull request on \code{rstac} repository
-(\url{https://github.com/nrazil-data-cube/rstac})
+(\url{https://github.com/brazil-data-cube/rstac})
 \item In a new package by using \code{rstac} as dependent package
-\item In a script that loads \code{rstac} into the enviornment
+\item In a script that loads \code{rstac} into the environment
 }
 All these places may impose specific requirements, however the core
 logic to implement an extension is the same.
@@ -206,5 +202,5 @@ is the extension's subclass name.
 }}
 
 \seealso{
-\code{\link{extension_query}}
+\code{\link{ext_query}}
 }

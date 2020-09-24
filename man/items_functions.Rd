@@ -42,19 +42,26 @@ The \code{get_assets_name()} function returns the assets name from
  \code{STACItemCollection} and \code{STACItem} object.
 }
 \examples{
-\donttest{
+\dontrun{
 
 x <-
   stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
-  stac_search(collections = "MOD13Q1") \%>\%
-  stac_search(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1") \%>\%
   stac_search(limit = 500) \%>\%
   get_request()
 
 x \%>\% items_length()
 x \%>\% items_matched()
-x \%>\% items_fetch()
+}
 
+\dontrun{
+x <-
+  stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1") \%>\%
+  stac_search(limit = 500) \%>\%
+  get_request()
+
+x \%>\% items_fetch()
 }
 
 }

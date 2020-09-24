@@ -61,7 +61,7 @@
 #' @param limit       an \code{integer} defining the maximum number of results
 #' to return. If not informed it defaults to the service implementation.
 #'
-#' @seealso \code{\link{stac}}, \code{\link{extension_query}},
+#' @seealso \code{\link{stac}}, \code{\link{ext_query}},
 #' \code{\link{get_request}}, \code{\link{post_request}}
 #'
 #' @return
@@ -72,7 +72,7 @@
 #' \donttest{
 #' # GET request
 #' stac("http://brazildatacube.dpi.inpe.br/stac") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 1, datetime = "2018-01-01/..") %>%
+#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 1) %>%
 #'  get_request()
 #'
 #' # POST request

@@ -5,7 +5,7 @@
 #' a STAC API web service. This endpoint should return a STAC Catalog document
 #' containing all published data catalogs.
 #'
-#' @param url           a \code{character} informing the base url of a
+#' @param base_url      a \code{character} informing the base url of a
 #'  STAC web service.
 #'
 #' @param force_version a \code{character} providing the version of the stac

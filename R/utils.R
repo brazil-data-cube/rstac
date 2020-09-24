@@ -338,6 +338,17 @@ stac_version <- function(x, ...) {
   UseMethod("stac_version")
 }
 
+#' @title Utility functions
+#'
+#' @description
+#' These function retrieves the names of subfields in \code{RSTACDocument}
+#'  object.
+#'
+#' @param x a \code{list} that represents the subfields of a field of
+#'  the \code{RSTACDocument} object.
+#'
+#' @return a \code{character} with the names of the subfields.
+#'
 #' @export
 subfields <- function(x) {
 
@@ -345,6 +356,27 @@ subfields <- function(x) {
   names(x[[1]])
 }
 
+#' @title Utility functions
+#'
+#' @description
+#' These function retrieves the vvalues of subfields in \code{RSTACDocument}
+#'  object.
+#'
+#' @param x      a \code{list} that represents the subfields of a field of
+#'  the \code{RSTACDocument} object.
+#'
+#' @param ...    a named way to provide fields names to get the subfields values
+#'  from the \code{RSTACDocument} objects.
+#'
+#' @param fields a \code{character} with the names of the fields to get the
+#'  subfields values from the \code{RSTACDocument} objects.
+#'
+#' @param merge  a \code{logical} corresponds to the join of the subfields. If
+#'  true, the subfields are joined in a named list. If not, the subfields appear
+#'  in their respective index of the original list.
+#'
+#' @return a \code{list} with the values of the selected subfields.
+#'
 #' @export
 get_subfields <- function(x, ..., fields = NULL, merge = TRUE) {
 

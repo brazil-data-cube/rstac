@@ -1,4 +1,5 @@
-
+#' @title Document development functions
+#'
 #' @describeIn extensions
 #' The \code{RSTACDocument()} function is a constructor of
 #' STAC documents. Currently, there are five STAC documents defined:
@@ -19,7 +20,7 @@
 #' @param content    a \code{list} data structure representing the JSON file
 #' received in HTTP response (see \code{\link{content_response}()} function)
 #'
-#' @param s          a \code{RSTACQuery} object expressing the STAC query used
+#' @param q          a \code{RSTACQuery} object expressing the STAC query used
 #' to retrieve the document.
 #'
 #' @param subclass   a \code{character} corresponding to the subclass of the
@@ -53,6 +54,13 @@ check_subclass.RSTACDocument <- function(x, subclasses) {
            paste0("`", subclasses, "`", collapse = " or "))
 }
 
+#' @title Document utils functions
+#'
+#' @param d \code{RSTACDocument} object
+#'
+#' @return a \code{RSTACQuery} object with the predecessor subclass with the
+#'  fields used in the request.
+#'
 #' @export
 get_doc_query <- function(d) {
 
@@ -83,12 +91,6 @@ print.STACCatalog <- function(x, ...) {
   invisible(x)
 }
 
-#' @export
-repr_html.STACCatalog <- function(obj, ...) {
-
-  #TODO: HTML representation
-}
-
 ####STACCollection####
 
 #' @export
@@ -103,12 +105,6 @@ print.STACCollection <- function(x, ...) {
   cat("-", crayon::bold("field(s):"),
       paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
-}
-
-#' @export
-repr_html.STACCollection <- function(obj, ...) {
-
-  #TODO: HTML representation
 }
 
 ####STACCollectionList####
@@ -145,11 +141,6 @@ print.STACCollectionList <- function(x, n = 10, ...) {
   invisible(x)
 }
 
-#' @export
-repr_html.STACCollectionList <- function(obj, ...) {
-
-  #TODO: HTML representation
-}
 
 ####STACItem####
 
@@ -168,11 +159,6 @@ print.STACItem <- function(x, ...) {
   invisible(x)
 }
 
-#' @export
-repr_html.STACItem <- function(obj, ...) {
-
-  #TODO: HTML representation
-}
 
 ####STACItemCollection####
 
@@ -199,19 +185,16 @@ repr_html.STACItem <- function(obj, ...) {
 #' matched items.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'
 #' x <-
 #'   stac("http://brazildatacube.dpi.inpe.br/stac") %>%
-#'   stac_search(collections = "MOD13Q1") %>%
-#'   stac_search(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
+#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
 #'   stac_search(limit = 500) %>%
 #'   get_request()
 #'
 #' x %>% items_length()
 #' x %>% items_matched()
-#' x %>% items_fetch()
-#'
 #' }
 #'
 #' @name items_functions
@@ -260,6 +243,17 @@ items_matched <- function(items) {
 #' @param ...        config parameters to be passed to \link[httr]{GET} or
 #' \link[httr]{POST} methods, such as \link[httr]{add_headers} or
 #' \link[httr]{set_cookies}.
+#'
+#' @examples
+#' \dontrun{
+#' x <-
+#'   stac("http://brazildatacube.dpi.inpe.br/stac") %>%
+#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
+#'   stac_search(limit = 500) %>%
+#'   get_request()
+#'
+#' x %>% items_fetch()
+#' }
 #'
 #' @rdname items_functions
 #'
@@ -361,12 +355,6 @@ print.STACItemCollection <- function(x, n = 10, ...) {
   cat("-", crayon::bold("field(s):"),
       paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
-}
-
-#' @export
-repr_html.STACItemCollection <- function(obj, ...) {
-
-  #TODO: HTML representation
 }
 
 #' @export

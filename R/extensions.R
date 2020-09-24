@@ -19,9 +19,9 @@
 #' \enumerate{
 #' \item In \code{rstac} package by including new functions make a
 #' GitHub pull request on \code{rstac} repository
-#' (\url{https://github.com/nrazil-data-cube/rstac})
+#' (\url{https://github.com/brazil-data-cube/rstac})
 #' \item In a new package by using \code{rstac} as dependent package
-#' \item In a script that loads \code{rstac} into the enviornment
+#' \item In a script that loads \code{rstac} into the environment
 #' }
 #' All these places may impose specific requirements, however the core
 #' logic to implement an extension is the same.
@@ -81,7 +81,7 @@
 #' A \code{RSTACQuery} object for \code{before_request()} and
 #' \code{after_response()} functions.
 #'
-#' @seealso \code{\link{extension_query}}
+#' @seealso \code{\link{ext_query}}
 #'
 #' @name extensions
 get_endpoint <- function(q) {
@@ -159,17 +159,19 @@ content_response <- function(res, status_codes, content_types) {
 #' verbs are allowed. It is useful for establishing which verbs will be
 #' supported by an extension.
 #'
+#' @param q       a \code{RSTACQuery} object.
+#'
 #' @param verbs   a \code{character} vector with allowed HTTP request methods
 #'
 #' @param msg     a \code{character} with a personalized error message
 #'
 #' @export
-check_query_verb <- function(s, verbs, msg = NULL) {
+check_query_verb <- function(q, verbs, msg = NULL) {
 
-  if (!s$verb %in% verbs) {
+  if (!q$verb %in% verbs) {
     if (is.null(msg))
       msg <- sprintf("HTTP verb '%s' is not defined for the query '%s'.",
-                     s$verb, subclass(s))
+                     q$verb, subclass(q))
     .error(msg)
   }
 }

@@ -16,7 +16,7 @@
 #' @param overwrite  a \code{logical} if TRUE will replaced the existing file,
 #'  if FALSE a warning message is shown.
 #'
-#' @param items_size a \code{numeric} corresponding how many items will be
+#' @param items_max a \code{numeric} corresponding how many items will be
 #'  downloaded.
 #'
 #' @param progress    a \code{logical} indicating if a progress bar must be
@@ -25,9 +25,6 @@
 #' @param ...       config parameters to be passed to \link[httr]{GET} or
 #' \link[httr]{POST} methods, such as \link[httr]{add_headers} or
 #' \link[httr]{set_cookies}.
-#'
-#' @param headers    a \code{character} of named arguments to be passed as
-#' HTTP request headers.
 #'
 #' @seealso
 #' \code{\link{stac_search}}, \code{\link{items}}, \code{\link{get_request}}
@@ -128,9 +125,6 @@ assets_download <- function(items, assets_name, output_dir = ".",
 #' @param ...       config parameters to be passed to \link[httr]{GET} or
 #' \link[httr]{POST} methods, such as \link[httr]{add_headers} or
 #' \link[httr]{set_cookies}.
-#'
-#' @param headers    a \code{character} of named arguments to be passed as
-#' HTTP request headers.
 #'
 #' @return The same \code{stac_item} object, but with the link of the item
 #'  pointing to the directory where the assets were saved.

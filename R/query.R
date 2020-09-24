@@ -1,3 +1,5 @@
+#' @title Query development functions
+#'
 #' @describeIn extensions
 #' The \code{RSTACQuery()} function is a constructor of \code{RSTACQuery} objects.
 #' Every extension must implement a subclass of \code{RSTACQuery} to represent
@@ -20,7 +22,7 @@
 #'
 #' @param version    a \code{character} with the STAC version.
 #'
-#' @param url        a \code{character} informing the base URL of a
+#' @param base_url   a \code{character} informing the base URL of a
 #' STAC web service.
 #'
 #' @param params     a named \code{list} with all URL query parameters to be
@@ -99,12 +101,6 @@ print.RSTACQuery <- function(x, ...) {
   cat("-", crayon::bold("field(s):"),
       paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
-}
-
-#' @export
-repr_html.RSTACQuery <- function(obj, ...) {
-
-  #TODO: HTML representation
 }
 
 #' @export
