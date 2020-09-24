@@ -44,6 +44,8 @@ library(devtools)
 install_github("brazil-data-cube/rstac")
 ```
 
+Importing `rstac` package:
+
 ```{r echo=TRUE, warning=FALSE, message=FALSE}
 library(rstac)
 library(magrittr) # for pipe (%>%) in examples
@@ -61,7 +63,7 @@ tribble(
   ~"**STAC** endpoints", ~"`rstac` functions",
   "`/stac`", "`stac()`",
   "`/collections`", "`collections()`",
-  "`/collections/{collectionId}`", "`collections(id)`",
+  "`/collections/{collectionId}`", "`collections(collection_id)`",
   "`/collections/{collectionId}/items`", "`items()`",
   "`/collections/{collectionId}/items/{itemId}`", "`items(feature_id)`",
   "`/stac/search`", "`stac_search()`"

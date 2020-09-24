@@ -40,6 +40,8 @@ library(devtools)
 install_github("brazil-data-cube/rstac")
 ```
 
+Importing `rstac` package:
+
 ``` r
 library(rstac)
 library(magrittr) # for pipe (%>%) in examples
@@ -49,14 +51,14 @@ library(magrittr) # for pipe (%>%) in examples
 
 `rstac` implements the following STAC endpoints:
 
-| **STAC** endpoints                           | `rstac` functions   |
-| :------------------------------------------- | :------------------ |
-| `/stac`                                      | `stac()`            |
-| `/collections`                               | `collections()`     |
-| `/collections/{collectionId}`                | `collections(id)`   |
-| `/collections/{collectionId}/items`          | `items()`           |
-| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)` |
-| `/stac/search`                               | `stac_search()`     |
+| **STAC** endpoints                           | `rstac` functions            |
+| :------------------------------------------- | :--------------------------- |
+| `/stac`                                      | `stac()`                     |
+| `/collections`                               | `collections()`              |
+| `/collections/{collectionId}`                | `collections(collection_id)` |
+| `/collections/{collectionId}/items`          | `items()`                    |
+| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          |
+| `/stac/search`                               | `stac_search()`              |
 
 These functions can be used to retrieve information from a STAC API
 service. The code bellow creates a `stac` object and list the available
