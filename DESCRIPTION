@@ -18,7 +18,8 @@ LazyData: true
 RoxygenNote: 7.1.1
 Depends:
     httr,
-    crayon
+    crayon,
+    utils
 Suggests:
     covr,
     magrittr,
