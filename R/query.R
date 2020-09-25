@@ -90,20 +90,6 @@ check_subclass.RSTACQuery <- function(x, subclasses) {
 }
 
 #' @export
-print.RSTACQuery <- function(x, ...) {
-
-  cat(crayon::bold("###RSTACQuery"), fill = TRUE)
-  cat("-", crayon::bold("url:"), x$base_url, fill = TRUE)
-  cat("-", crayon::bold("params:"), fill = TRUE)
-  for (n in names(x$params)) {
-    cat(paste0("  - ", n, ":"), fill = TRUE)
-  }
-  cat("-", crayon::bold("field(s):"),
-      paste0(names(x), collapse = ", "), fill = TRUE)
-  invisible(x)
-}
-
-#' @export
 get_endpoint.RSTACQuery <- function(q) {
 
   .error("No endpoint was defined for the extension `%s`.", subclass(q))

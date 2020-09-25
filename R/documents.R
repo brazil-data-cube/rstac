@@ -77,36 +77,6 @@ stac_version.RSTACDocument <- function(x, ...) {
   x$stac_version
 }
 
-####STACCatalog####
-
-#' @export
-print.STACCatalog <- function(x, ...) {
-
-  cat(crayon::bold("###STACCatalog"), fill = TRUE)
-  cat("-", crayon::bold("id:"), x$id, fill = TRUE)
-  if (!is.null(x$description) && x$description != "")
-    cat("-", crayon::bold("description:"), x$description, fill = TRUE)
-  cat("-", crayon::bold("field(s):"),
-      paste0(names(x), collapse = ", "), fill = TRUE)
-  invisible(x)
-}
-
-####STACCollection####
-
-#' @export
-print.STACCollection <- function(x, ...) {
-
-  cat(crayon::bold("###STACCollection"), fill = TRUE)
-  cat("-", crayon::bold("id:"), x$id, fill = TRUE)
-  if (!is.null(x$title) && x$title != "")
-    cat("-", crayon::bold("title:"), x$title, fill = TRUE)
-  if (!is.null(x$description) && x$description != "")
-    cat("-", crayon::bold("description:"), x$description, fill = TRUE)
-  cat("-", crayon::bold("field(s):"),
-      paste0(names(x), collapse = ", "), fill = TRUE)
-  invisible(x)
-}
-
 ####STACCollectionList####
 
 #' @export
@@ -118,49 +88,6 @@ stac_version.STACCollectionList <- function(x, ...) {
   if (length(x$collections) > 0)
     return(x$collections[[1]]$stac_version)
 }
-
-#' @export
-print.STACCollectionList <- function(x, n = 10, ...) {
-
-  cat(crayon::bold("###STACCollectionList"), fill = TRUE)
-  cat("-", crayon::bold("collections"),
-      sprintf("(%s item(s)):", length(x$collections)), fill = TRUE)
-  # if (length(x$collections) > 0) cat(fill = TRUE)
-  if (missing(n) && length(x$collections) < 2 * n)
-    n <- length(x$collections)
-  n <- min(n, length(x$collections))
-  for (i in seq_len(n)) {
-    e <- x$collections[[i]]
-    cat(paste0("  - ", e$id), fill = TRUE)
-  }
-  if (n != length(x$collections))
-    cat(sprintf("  - ... with %s more collection(s).",
-                length(x$collections) - n), fill = TRUE)
-  cat("-", crayon::bold("field(s):"),
-      paste0(names(x), collapse = ", "), fill = TRUE)
-  invisible(x)
-}
-
-
-####STACItem####
-
-#' @export
-print.STACItem <- function(x, ...) {
-
-  cat(crayon::bold("###STACItem"), fill = TRUE)
-  cat("-", crayon::bold("id:"), x$id, fill = TRUE)
-  cat("-", crayon::bold("collection:"), x$collection, fill = TRUE)
-  cat("-", crayon::bold("bbox:"), .format_bbox(x$bbox), fill = TRUE)
-  cat("-", crayon::bold("datetime:"), x$properties$datetime, fill = TRUE)
-  cat("-", crayon::bold("assets:"),
-      paste0("'", names(x$assets), "'", collapse = ", "), fill = TRUE)
-  cat("-", crayon::bold("field(s):"), paste0(names(x), collapse = ", "),
-      fill = TRUE)
-  invisible(x)
-}
-
-
-####STACItemCollection####
 
 #' @title STACItemCollection functions
 #'
@@ -208,7 +135,6 @@ items_length <- function(items) {
   return(length(items$features))
 }
 
-#'
 #' @rdname items_functions
 #'
 #' @export
@@ -330,41 +256,4 @@ items_fetch <- function(items, ..., progress = TRUE) {
   }
 
   return(items)
-}
-
-#' @export
-print.STACItemCollection <- function(x, n = 10, ...) {
-
-  cat(crayon::bold("###STACItemCollection"), fill = TRUE)
-  matched <- suppressWarnings(items_matched(x))
-  if (!is.null(matched))
-    cat("-", crayon::bold("matched feature(s):"), matched, fill = TRUE)
-  cat("-", crayon::bold("features"),
-      sprintf("(%s item(s)):", length(x$features)), fill = TRUE)
-  # if (length(x$collections) > 0) cat(fill = TRUE)
-  if (missing(n) && length(x$features) < 2 * n)
-    n <- length(x$features)
-  n <- min(n, length(x$features))
-  for (i in seq_len(n)) {
-    e <- x$features[[i]]
-    cat(paste0("  - ", e$id), fill = TRUE)
-  }
-  if (n != length(x$features))
-    cat(sprintf("  - ... with %s more feature(s).",
-                length(x$features) - n), fill = TRUE)
-  cat("-", crayon::bold("field(s):"),
-      paste0(names(x), collapse = ", "), fill = TRUE)
-  invisible(x)
-}
-
-#' @export
-head.STACItemCollection <- function(x, n, ...) {
-
-  # TODO: implement head
-}
-
-#' @export
-tail.STACItemCollection <- function(x, n, ...) {
-
-  # TODO: implement tail
 }

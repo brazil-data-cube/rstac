@@ -76,12 +76,12 @@ returned by these requests is a \code{stac_item_collection} object, a regular R
 \examples{
 \donttest{
 # GET request
-stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
- stac_search(collections = "CB4_64_16D_STK-1", limit = 1) \%>\%
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+ stac_search(collections = "CB4_64_16D_STK-1", limit = 10) \%>\%
  get_request()
 
 # POST request
-stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
  stac_search(collections = "CB4_64_16D_STK-1",
         bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) \%>\%
  post_request()
