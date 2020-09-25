@@ -19,8 +19,8 @@
 #' \code{\link{post_request}}
 #'
 #' @return
-#' A \code{stac} object with subclass \code{subclass} containing all request
-#' parameters to be provided to API service.
+#' A \code{RSTACQuery} object with the subclass \code{stac} containing all
+#' request parameters to be provided to API service.
 #'
 #' @examples
 #' \donttest{

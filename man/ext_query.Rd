@@ -13,8 +13,8 @@ criteria.}
 \item{...}{entries with format \code{<field> <operator> <value>}.}
 }
 \value{
-An \code{ext_query} object containing all request parameters to be
-passed to \code{post_request()} function.
+A \code{RSTACQuery} object  with the subclass \code{ext_query} containing
+ all request parameters to be passed to \code{post_request()} function.
 }
 \description{
 The \code{ext_query()} is the \emph{exported function} of the STAC API

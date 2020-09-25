@@ -1,7 +1,6 @@
 #' @title Extension development functions
 #'
 #' @description
-#'
 #' Basically, there are two types of extensions in STAC specification:
 #' \enumerate{
 #' \item STAC documents extensions: these extensions can be defined in
@@ -84,18 +83,27 @@
 #' @seealso \code{\link{ext_query}}
 #'
 #' @name extensions
+NULL
+
+#' @title Extension development functions
+#' @rdname extensions
+#' @export
 get_endpoint <- function(q) {
 
   UseMethod("get_endpoint")
 }
 
+#' @title Extension development functions
 #' @rdname extensions
+#' @export
 before_request <- function(q) {
 
   UseMethod("before_request")
 }
 
+#' @title Extension development functions
 #' @rdname extensions
+#' @export
 after_response <- function(q, res) {
 
   UseMethod("after_response")

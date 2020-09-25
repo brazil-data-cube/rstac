@@ -413,7 +413,7 @@ stac_version <- function(x, ...) {
 #' @title Utility functions
 #'
 #' @description
-#' These function retrieves the names of subfields in \code{RSTACDocument}
+#' This function retrieves the names of subfields in \code{RSTACDocument}
 #'  object.
 #'
 #' @param x a \code{list} that represents the subfields of a field of
@@ -431,7 +431,7 @@ subfields <- function(x) {
 #' @title Utility functions
 #'
 #' @description
-#' These function retrieves the vvalues of subfields in \code{RSTACDocument}
+#' This function retrieves the values of subfields in \code{RSTACDocument}
 #'  object.
 #'
 #' @param x      a \code{list} that represents the subfields of a field of

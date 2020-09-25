@@ -24,6 +24,6 @@ in their respective index of the original list.}
 a \code{list} with the values of the selected subfields.
 }
 \description{
-These function retrieves the vvalues of subfields in \code{RSTACDocument}
+This function retrieves the values of subfields in \code{RSTACDocument}
  object.
 }

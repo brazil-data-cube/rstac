@@ -2,7 +2,7 @@
 #'
 #' @name print
 #'
-#' @description The print functions cover all objects in the rstac package:
+#' @description The print function covers all objects in the rstac package:
 #' \itemize{
 #'   \item \code{\link{stac}}: Returns a \code{STACCatalog} document in
 #'    \code{/stac} (V0.8.0 or below) or \code{/} (V0.9.0 or above) endpoint.

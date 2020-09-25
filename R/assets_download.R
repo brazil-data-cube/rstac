@@ -1,4 +1,4 @@
-#' @title assets download
+#' @title Downloads assets via STAC API
 #'
 #' @description The \code{assets_download} function downloads the assets
 #' provided by the STAC API.
@@ -32,7 +32,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/stac") %>%
+#' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
 #'   stac_search(limit = 2) %>%
 #'   get_request() %>%
@@ -40,7 +40,7 @@
 #'   overwrite = FALSE)
 #' }
 #'
-#' @return The same \code{stac_item_collection} or \code{stac_item} object, with the
+#' @return The same \code{STACItemCollection} or \code{STACItem} object, with the
 #' link of the item pointing to the directory where the assets were saved.
 #'
 #' @export

@@ -2,7 +2,7 @@
 % Please edit documentation in R/assets_download.R
 \name{assets_download}
 \alias{assets_download}
-\title{assets download}
+\title{Downloads assets via STAC API}
 \usage{
 assets_download(
   items,
@@ -39,7 +39,7 @@ shown or not. Defaults to \code{TRUE}.}
 \link[httr]{set_cookies}.}
 }
 \value{
-The same \code{stac_item_collection} or \code{stac_item} object, with the
+The same \code{STACItemCollection} or \code{STACItem} object, with the
 link of the item pointing to the directory where the assets were saved.
 }
 \description{
@@ -49,7 +49,7 @@ provided by the STAC API.
 \examples{
 \dontrun{
 
-stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1") \%>\%
   stac_search(limit = 2) \%>\%
   get_request() \%>\%

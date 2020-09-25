@@ -67,8 +67,12 @@
 #'  \code{\link{collections}}
 #'
 #' @return
-#' A \code{stac} object containing all search field parameters to be provided
-#' to STAC API web service.
+#' A \code{RSTACQuery} object with the subclass \code{items} for
+#'  \code{/collections/{collection_id}/items} endpoint, or a
+#'  \code{item_id} subclass for
+#'  \code{/collections/{collection_id}/items/{feature_id}} endpoint,
+#'  containing all search field parameters to be provided to STAC API web
+#'  service.
 #'
 #' @examples
 #' \donttest{

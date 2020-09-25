@@ -24,9 +24,9 @@ and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
 \code{'json'}.}
 }
 \value{
-Either a \code{stac_catalog}, \code{stac_collection},
-\code{stac_collection_list}, \code{stac_item_collection} or \code{stac_item}
-object depending on the subclass and search fields parameters of \code{s}
+Either a \code{STACCatalog}, \code{STACCollection},
+\code{STACCollectionList}, \code{STACItemCollection} or \code{STACItem}
+object depending on the subclass and search fields parameters of \code{q}
 argument.
 }
 \description{

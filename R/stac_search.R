@@ -65,8 +65,8 @@
 #' \code{\link{get_request}}, \code{\link{post_request}}
 #'
 #' @return
-#' A \code{stac} object containing all search field parameters to be provided
-#' to STAC API web service.
+#' A \code{RSTACQuery} object with the subclass \code{search} containing all
+#' search field parameters to be provided to STAC API web service.
 #'
 #' @examples
 #' \donttest{

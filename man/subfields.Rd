@@ -14,6 +14,6 @@ the \code{RSTACDocument} object.}
 a \code{character} with the names of the subfields.
 }
 \description{
-These function retrieves the names of subfields in \code{RSTACDocument}
+This function retrieves the names of subfields in \code{RSTACDocument}
  object.
 }

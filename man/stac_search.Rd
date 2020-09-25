@@ -57,8 +57,8 @@ the provided polygon.}
 to return. If not informed it defaults to the service implementation.}
 }
 \value{
-A \code{stac} object containing all search field parameters to be provided
-to STAC API web service.
+A \code{RSTACQuery} object with the subclass \code{search} containing all
+search field parameters to be provided to STAC API web service.
 }
 \description{
 (This document is based on STAC specification documentation

@@ -13,8 +13,10 @@ criteria.}
 \item{collection_id}{a \code{character} collection id to be retrieved.}
 }
 \value{
-A \code{stac} object containing all search field parameters to be provided
-to STAC API web service.
+A \code{RSTACQuery} object with the subclass \code{collections} for
+ \code{/collections/} endpoint, or a \code{collection_id} subclass for
+ \code{/collections/{collection_id}} endpoint, containing all search field
+ parameters to be provided to STAC API web service.
 }
 \description{
 The \code{collections} function implements the WFS3 \code{/collections}
@@ -32,11 +34,11 @@ Each endpoint retrieves specific STAC objects:
 \examples{
 \donttest{
 
-stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
   collections() \%>\%
   get_request()
 
-stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
   collections(collection_id = "CB4_64_16D_STK-1") \%>\%
   get_request()
 }

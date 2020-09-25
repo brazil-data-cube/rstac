@@ -51,8 +51,8 @@
 #' \code{\link{after_response}}, \code{\link{content_response}}
 #'
 #' @return
-#' An \code{ext_query} object containing all request parameters to be
-#' passed to \code{post_request()} function.
+#' A \code{RSTACQuery} object  with the subclass \code{ext_query} containing
+#'  all request parameters to be passed to \code{post_request()} function.
 #'
 #' @examples
 #' \donttest{
