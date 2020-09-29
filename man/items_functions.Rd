@@ -5,6 +5,8 @@
 \alias{items_length}
 \alias{items_matched}
 \alias{items_fetch}
+\alias{items_datetime}
+\alias{items_bbox}
 \title{STACItemCollection functions}
 \usage{
 items_length(items)
@@ -12,6 +14,10 @@ items_length(items)
 items_matched(items)
 
 items_fetch(items, ..., progress = TRUE)
+
+items_datetime(items)
+
+items_bbox(items)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object.}
@@ -29,6 +35,9 @@ The \code{items_matched()} returns an \code{integer} value.
 If STAC web server does not support this extension, returns \code{NULL}.
 The \code{items_fetch()} returns an \code{STACItemCollection} with all
 matched items.
+The \code{items_datetime()} returns a \code{list} of all items' datetime.
+The \code{items_bbox()} returns a \code{list} with all items'
+bounding boxes.
 }
 \description{
 The \code{items_length()} function shows how many items there are in
@@ -38,20 +47,26 @@ search criteria. It support \code{search:metadata} (v0.8.0) and
 \code{context} (v0.9.0) STAC API extensions.
 The \code{items_fetch()} function request all STAC Items through
 pagination.
+The \code{items_datetime()} function retrieves a the \code{datetime}
+field in \code{properties} from \code{STACItemCollection} and
+\code{STACItem} objects.
+The \code{items_bbox()} function retrieves a the \code{bbox}
+field of a \code{STACItemCollection} or an \code{STACItem} object.
 The \code{get_assets_name()} function returns the assets name from
- \code{STACItemCollection} and \code{STACItem} object.
+\code{STACItemCollection} and \code{STACItem} objects.
 }
 \examples{
 \dontrun{
 
-x <-
-  stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+x <- stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1") \%>\%
-  stac_search(limit = 500) \%>\%
+  stac_search() \%>\%
   get_request()
 
 x \%>\% items_length()
 x \%>\% items_matched()
+x \%>\% items_datetime()
+x \%>\% items_bbox()
 }
 
 \dontrun{
