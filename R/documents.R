@@ -36,7 +36,7 @@ RSTACDocument <- function(content, q, subclass) {
   structure(
     content,
     query = q,
-    class = c(subclass, "RSTACDocument")
+    class = c(subclass, "RSTACDocument", "list")
   )
 }
 
@@ -99,8 +99,13 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' \code{context} (v0.9.0) STAC API extensions.
 #' The \code{items_fetch()} function request all STAC Items through
 #' pagination.
+#' The \code{items_datetime()} function retrieves a the \code{datetime}
+#' field in \code{properties} from \code{STACItemCollection} and
+#' \code{STACItem} objects.
+#' The \code{items_bbox()} function retrieves a the \code{bbox}
+#' field of a \code{STACItemCollection} or an \code{STACItem} object.
 #' The \code{get_assets_name()} function returns the assets name from
-#'  \code{STACItemCollection} and \code{STACItem} object.
+#' \code{STACItemCollection} and \code{STACItem} objects.
 #'
 #' @param items      a \code{STACItemCollection} object.
 #'
@@ -110,18 +115,22 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' If STAC web server does not support this extension, returns \code{NULL}.
 #' The \code{items_fetch()} returns an \code{STACItemCollection} with all
 #' matched items.
+#' The \code{items_datetime()} returns a \code{list} of all items' datetime.
+#' The \code{items_bbox()} returns a \code{list} with all items'
+#' bounding boxes.
 #'
 #' @examples
 #' \dontrun{
 #'
-#' x <-
-#'   stac("http://brazildatacube.dpi.inpe.br/stac") %>%
+#' x <- stac("http://brazildatacube.dpi.inpe.br/stac") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   stac_search(limit = 500) %>%
+#'   stac_search() %>%
 #'   get_request()
 #'
 #' x %>% items_length()
 #' x %>% items_matched()
+#' x %>% items_datetime()
+#' x %>% items_bbox()
 #' }
 #'
 #' @name items_functions
@@ -256,4 +265,26 @@ items_fetch <- function(items, ..., progress = TRUE) {
   }
 
   return(items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_datetime <- function(items) {
+
+  # Check object class
+  check_subclass(items, c("STACItemCollection", "STACItem"))
+
+  lapply(items$features, `[[`, c("properties", "datetime"))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_bbox <- function(items) {
+
+  # Check object class
+  check_subclass(items, c("STACItemCollection", "STACItem"))
+
+  lapply(items$features, `[[`, c("bbox"))
 }
