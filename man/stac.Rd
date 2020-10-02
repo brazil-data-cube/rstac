@@ -28,7 +28,7 @@ containing all published data catalogs.
 \examples{
 \donttest{
 
-stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
   get_request()
 }
 

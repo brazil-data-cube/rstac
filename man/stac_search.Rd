@@ -70,7 +70,7 @@ The \code{stac_search} function implements \code{/stac/search} API endpoint
 It prepares query parameters used in search API request, a
 \code{stac} object with all filter parameters to be provided to
 \code{get_request} or \code{post_request} functions. The GeoJSON content
-returned by these requests is a \code{stac_item_collection} object, a regular R
+returned by these requests is a \code{STACItemCollection} object, a regular R
 \code{list} representing a STAC Item Collection document.
 }
 \examples{
