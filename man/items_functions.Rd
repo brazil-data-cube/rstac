@@ -7,6 +7,7 @@
 \alias{items_fetch}
 \alias{items_datetime}
 \alias{items_bbox}
+\alias{items_bands}
 \title{STACItemCollection functions}
 \usage{
 items_length(items)
@@ -18,6 +19,8 @@ items_fetch(items, ..., progress = TRUE)
 items_datetime(items)
 
 items_bbox(items)
+
+items_bands(items)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object.}

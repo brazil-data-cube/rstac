@@ -275,6 +275,9 @@ items_datetime <- function(items) {
   # Check object class
   check_subclass(items, c("STACItemCollection", "STACItem"))
 
+  if (subclass(items) == "STACItem")
+    return(items$properties[["datetime"]])
+
   lapply(items$features, `[[`, c("properties", "datetime"))
 }
 
@@ -286,5 +289,22 @@ items_bbox <- function(items) {
   # Check object class
   check_subclass(items, c("STACItemCollection", "STACItem"))
 
+  if (subclass(items) == "STACItem")
+    return(items[["bbox"]])
+
   lapply(items$features, `[[`, c("bbox"))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_bands <- function(items) {
+
+  # Check object class
+  check_subclass(items, c("STACItemCollection", "STACItem"))
+
+  if (subclass(items) == "STACItem")
+    return(names(items[["assets"]]))
+
+  lapply(lapply(items$features, `[[`, c("assets")), names)
 }
