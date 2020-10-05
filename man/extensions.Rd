@@ -3,7 +3,7 @@
 \name{RSTACDocument}
 \alias{RSTACDocument}
 \alias{extensions}
-\alias{get_endpoint}
+\alias{endpoint}
 \alias{before_request}
 \alias{after_response}
 \alias{content_response}
@@ -16,7 +16,7 @@
 \usage{
 RSTACDocument(content, q, subclass)
 
-get_endpoint(q)
+endpoint(q)
 
 before_request(q)
 
@@ -74,7 +74,7 @@ appended in the URL.}
 The \code{RSTACDocument()} function returns a \code{RSTACDocument} object
 with subclass defined by \code{subclass} parameter.
 
-A \code{character} endpoint value for \code{get_endpoint()} function.
+A \code{character} endpoint value for \code{endpoint()} function.
 A \code{RSTACQuery} object for \code{before_request()} and
 \code{after_response()} functions.
 
@@ -113,7 +113,7 @@ These functions are intended for those who want to implement new STAC API
 extensions. An extension must define a subclass name and implement all the
 following S3 generic methods for that subclass:
 \itemize{
-\item \code{get_endpoint()}: returns the endpoint value of the extension.
+\item \code{endpoint()}: returns the endpoint value of the extension.
 Endpoints that vary between STAC API versions can be properly returned by
 checking the \code{version} field of \code{RSTACQuery} object.
 \item \code{before_request()}: allows handling query parameters before
@@ -128,7 +128,7 @@ representing a user query are passed to a request function
 \enumerate{
 \item begin of \code{get_request()} or \code{post_request()}
 \item if STAC API version is not defined, try detect it
-\item call \code{get_endpoint()}
+\item call \code{endpoint()}
 \item call \code{before_request()}
 \item send HTTP request
 \item receive HTTP response

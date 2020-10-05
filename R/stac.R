@@ -50,7 +50,7 @@ stac <- function(base_url, force_version = NULL) {
 }
 
 #' @export
-get_endpoint.stac <- function(q) {
+endpoint.stac <- function(q) {
 
   if (q$version < "0.9.0")
     return("/stac")

@@ -62,7 +62,7 @@ check_subclass.RSTACDocument <- function(x, subclasses) {
 #'  fields used in the request.
 #'
 #' @export
-get_doc_query <- function(d) {
+doc_query <- function(d) {
 
   .check_obj(d, "RSTACDocument")
 
@@ -73,7 +73,7 @@ get_doc_query <- function(d) {
 stac_version.RSTACDocument <- function(x, ...) {
 
   if (is.null(x$stac_version))
-    return(stac_version(get_doc_query(x)))
+    return(stac_version(doc_query(x)))
   x$stac_version
 }
 
@@ -82,7 +82,7 @@ stac_version.RSTACDocument <- function(x, ...) {
 #' @export
 stac_version.STACCollectionList <- function(x, ...) {
 
-  q <- get_doc_query(x)
+  q <- doc_query(x)
   if (!is.null(q))
     return(stac_version(q))
   if (length(x$collections) > 0)
@@ -213,7 +213,7 @@ items_fetch <- function(items, ..., progress = TRUE) {
       .error(paste("Length of returned items (%s) is different",
                    "from matched items (%s)."), items_length(items), matched)
 
-    q <- get_doc_query(items)
+    q <- doc_query(items)
     if (is.null(q)) break
 
     # get url of the next page

@@ -34,7 +34,7 @@
 #' Besides this function, the following S3 generic methods were implemented
 #' to get things done for this extension:
 #' \itemize{
-#' \item The \code{get_endpoint()} for subclass \code{ext_query}
+#' \item The \code{endpoint()} for subclass \code{ext_query}
 #' \item The \code{before_request()} for subclass \code{ext_query}
 #' \item The \code{after_response()} for subclass \code{ext_query}
 #' }
@@ -47,7 +47,7 @@
 #' @param ...      entries with format \code{<field> <operator> <value>}.
 #'
 #' @seealso \code{\link{stac_search}}, \code{\link{post_request}},
-#' \code{\link{get_endpoint}}, \code{\link{before_request}},
+#' \code{\link{endpoint}}, \code{\link{before_request}},
 #' \code{\link{after_response}}, \code{\link{content_response}}
 #'
 #' @return
@@ -117,10 +117,10 @@ ext_query <- function(q, ...) {
 }
 
 #' @export
-get_endpoint.ext_query <- function(s) {
+endpoint.ext_query <- function(s) {
 
   # using endpoint from search document
-  get_endpoint.search(s)
+  endpoint.search(s)
 }
 
 #' @export

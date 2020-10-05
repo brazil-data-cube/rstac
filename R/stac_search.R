@@ -116,7 +116,7 @@ stac_search <- function(q, collections, ids, bbox, datetime,
 }
 
 #' @export
-get_endpoint.search <- function(q) {
+endpoint.search <- function(q) {
 
   if (q$version < "0.9.0")
     return("/stac/search")
