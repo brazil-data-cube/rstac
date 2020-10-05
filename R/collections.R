@@ -68,7 +68,7 @@ collections <- function(q, collection_id) {
 }
 
 #' @export
-get_endpoint.collections <- function(q) {
+endpoint.collections <- function(q) {
 
   return("/collections")
 }
@@ -90,7 +90,7 @@ after_response.collections <- function(q, res) {
 }
 
 #' @export
-get_endpoint.collection_id <- function(q) {
+endpoint.collection_id <- function(q) {
 
   return(paste("/collections", q$params[["collection_id"]], sep = "/"))
 }

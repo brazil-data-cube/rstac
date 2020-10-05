@@ -90,7 +90,7 @@ check_subclass.RSTACQuery <- function(x, subclasses) {
 }
 
 #' @export
-get_endpoint.RSTACQuery <- function(q) {
+endpoint.RSTACQuery <- function(q) {
 
   .error("No endpoint was defined for the extension `%s`.", subclass(q))
 }

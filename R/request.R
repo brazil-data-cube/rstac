@@ -55,7 +55,7 @@ get_request <- function(q, ...) {
   q$version <- stac_version(q, ...)
 
   # set endpoint
-  q$endpoint <- get_endpoint(q)
+  q$endpoint <- endpoint(q)
 
   # process STAC object
   q <- before_request(q)
@@ -104,7 +104,7 @@ post_request <- function(q, ..., encode = c("json", "multipart", "form")) {
   q$version <- stac_version(q, ...)
 
   # set endpoint
-  q$endpoint <- get_endpoint(q)
+  q$endpoint <- endpoint(q)
 
   # process STAC object
   q <- before_request(q)

@@ -29,7 +29,7 @@
 #' extensions. An extension must define a subclass name and implement all the
 #' following S3 generic methods for that subclass:
 #' \itemize{
-#' \item \code{get_endpoint()}: returns the endpoint value of the extension.
+#' \item \code{endpoint()}: returns the endpoint value of the extension.
 #' Endpoints that vary between STAC API versions can be properly returned by
 #' checking the \code{version} field of \code{RSTACQuery} object.
 #' \item \code{before_request()}: allows handling query parameters before
@@ -44,7 +44,7 @@
 #' \enumerate{
 #' \item begin of \code{get_request()} or \code{post_request()}
 #' \item if STAC API version is not defined, try detect it
-#' \item call \code{get_endpoint()}
+#' \item call \code{endpoint()}
 #' \item call \code{before_request()}
 #' \item send HTTP request
 #' \item receive HTTP response
@@ -76,7 +76,7 @@
 #' @param res     a \code{httr} \code{response} object.
 #'
 #' @return
-#' A \code{character} endpoint value for \code{get_endpoint()} function.
+#' A \code{character} endpoint value for \code{endpoint()} function.
 #' A \code{RSTACQuery} object for \code{before_request()} and
 #' \code{after_response()} functions.
 #'
@@ -88,9 +88,9 @@ NULL
 #' @title Extension development functions
 #' @rdname extensions
 #' @export
-get_endpoint <- function(q) {
+endpoint <- function(q) {
 
-  UseMethod("get_endpoint")
+  UseMethod("endpoint")
 }
 
 #' @title Extension development functions

@@ -121,7 +121,7 @@ items <- function(q, feature_id, datetime, bbox, limit) {
 }
 
 #' @export
-get_endpoint.items <- function(q) {
+endpoint.items <- function(q) {
 
   return(paste("/collections", q$params[["collection_id"]], "items", sep = "/"))
 }
@@ -147,7 +147,7 @@ after_response.items <- function(q, res) {
 }
 
 #' @export
-get_endpoint.item_id <- function(q) {
+endpoint.item_id <- function(q) {
 
   return(paste("/collections", q$params[["collection_id"]], "items",
                q$params[["feature_id"]], sep = "/"))
