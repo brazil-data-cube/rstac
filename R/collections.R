@@ -51,7 +51,7 @@ collections <- function(q, collection_id) {
   params <- list()
 
   subclass <- "collections"
-  if (!missing(collection_id)) {
+  if (!is.null(collection_id)) {
 
     if (length(collection_id) != 1)
       .error("Parameter `collection_id` must be a single value.")

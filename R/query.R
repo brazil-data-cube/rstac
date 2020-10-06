@@ -102,7 +102,7 @@ before_request.RSTACQuery <- function(q) {
 }
 
 #' @export
-after_response.RSTACQuery <- function(q) {
+after_response.RSTACQuery <- function(q, res) {
 
   check_query_verb(q, "")
 }

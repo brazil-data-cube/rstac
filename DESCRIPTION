@@ -23,6 +23,5 @@ Depends:
     magrittr
 Suggests:
     covr,
-    magrittr,
     testthat,
     vcr

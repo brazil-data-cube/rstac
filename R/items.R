@@ -96,18 +96,18 @@ items <- function(q, feature_id, datetime, bbox, limit) {
 
   params <- list()
 
-  if (!missing(datetime))
+  if (!is.null(datetime))
     params[["datetime"]] <- .parse_datetime(datetime)
 
-  if (!missing(bbox))
+  if (!is.null(bbox))
     params[["bbox"]] <- .parse_bbox(bbox)
 
-  if (!missing(limit) && !is.null(limit))
+  if (!is.null(limit) && !is.null(limit))
     params[["limit"]] <- .parse_limit(limit)
 
   # set subclass
   subclass <- "items"
-  if (!missing(feature_id)) {
+  if (!is.null(feature_id)) {
 
     params[["feature_id"]] <- .parse_feature_id(feature_id)
 

@@ -117,21 +117,21 @@ ext_query <- function(q, ...) {
 }
 
 #' @export
-endpoint.ext_query <- function(s) {
+endpoint.ext_query <- function(q) {
 
   # using endpoint from search document
-  endpoint.search(s)
+  endpoint.search(q)
 }
 
 #' @export
-before_request.ext_query <- function(s) {
+before_request.ext_query <- function(q) {
 
   msg <- paste0("Query extension param is not supported by HTTP GET",
                 "method. Try use `post_request()` method instead.")
 
-  check_query_verb(s, verbs = "POST", msg = msg)
+  check_query_verb(q, verbs = "POST", msg = msg)
 
-  return(s)
+  return(q)
 }
 
 #' @export

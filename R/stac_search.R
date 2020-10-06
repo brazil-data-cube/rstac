@@ -91,22 +91,22 @@ stac_search <- function(q, collections, ids, bbox, datetime,
 
   params <- list()
 
-  if (!missing(collections))
+  if (!is.null(collections))
     params[["collections"]] <- .parse_collections(collections)
 
-  if (!missing(ids))
+  if (!is.null(ids))
     params[["ids"]] <- .parse_ids(ids)
 
-  if (!missing(datetime))
+  if (!is.null(datetime))
     params[["datetime"]] <- .parse_datetime(datetime)
 
-  if (!missing(bbox))
+  if (!is.null(bbox))
     params[["bbox"]] <- .parse_bbox(bbox)
 
-  if (!missing(intersects))
+  if (!is.null(intersects))
     params[["intersects"]] <- .parse_geometry(intersects)
 
-  if (!missing(limit) && !is.null(limit))
+  if (!is.null(limit) && !is.null(limit))
     params[["limit"]] <- .parse_limit(limit)
 
   RSTACQuery(version = q$version,
