@@ -43,7 +43,7 @@
 #' }
 
 #' @export
-collections <- function(q, collection_id) {
+collections <- function(q, collection_id = NULL) {
 
   # check q parameter
   check_subclass(q, "stac")

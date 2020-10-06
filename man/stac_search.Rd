@@ -4,7 +4,15 @@
 \alias{stac_search}
 \title{Endpoint functions}
 \usage{
-stac_search(q, collections, ids, bbox, datetime, intersects, limit)
+stac_search(
+  q,
+  collections = NULL,
+  ids = NULL,
+  bbox = NULL,
+  datetime = NULL,
+  intersects = NULL,
+  limit = NULL
+)
 }
 \arguments{
 \item{q}{a \code{RSTACQuery} object expressing a STAC query

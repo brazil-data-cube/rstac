@@ -89,7 +89,10 @@
 #' }
 #'
 #' @export
-items <- function(q, feature_id, datetime, bbox, limit) {
+items <- function(q, feature_id = NULL,
+                  datetime = NULL,
+                  bbox = NULL,
+                  limit = NULL) {
 
   # check q parameter
   check_subclass(q, c("collection_id", "items"))

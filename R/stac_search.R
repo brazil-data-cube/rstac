@@ -83,8 +83,13 @@
 #' }
 #'
 #' @export
-stac_search <- function(q, collections, ids, bbox, datetime,
-                        intersects, limit) {
+stac_search <- function(q,
+                        collections = NULL,
+                        ids = NULL,
+                        bbox = NULL,
+                        datetime = NULL,
+                        intersects = NULL,
+                        limit = NULL) {
 
   # check q parameter
   check_subclass(q, c("stac", "search"))

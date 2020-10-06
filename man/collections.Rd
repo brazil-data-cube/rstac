@@ -4,7 +4,7 @@
 \alias{collections}
 \title{Endpoint functions}
 \usage{
-collections(q, collection_id)
+collections(q, collection_id = NULL)
 }
 \arguments{
 \item{q}{a \code{RSTACQuery} object expressing a STAC query

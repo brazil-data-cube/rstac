@@ -4,7 +4,7 @@
 \alias{items}
 \title{Endpoint functions}
 \usage{
-items(q, feature_id, datetime, bbox, limit)
+items(q, feature_id = NULL, datetime = NULL, bbox = NULL, limit = NULL)
 }
 \arguments{
 \item{q}{a \code{RSTACQuery} object expressing a STAC query
