@@ -55,7 +55,7 @@ assets_download <- function(items, assets_name, output_dir = ".",
     .error(paste("The directory provided does not exist.",
                  "Please specify a valid directory."))
 
-  # if the document
+  # if the object is a STACItem
   if (subclass(items) == "STACItem") {
     items <- .item_download(stac_item   = items,
                             assets_name = assets_name,
