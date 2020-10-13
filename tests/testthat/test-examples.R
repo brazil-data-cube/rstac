@@ -99,5 +99,49 @@ testthat::test_that("examples rstac", {
         get_request() %>%
         items_matched(),
       expected = 1785)
+
+    # test items_group
+    testthat::expect_equal(
+      object = typeof(
+        stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+        stac_search(collections = "CB4_64_16D_STK-1",
+                    limit = 10,
+                    datetime = "2017-08-01/2018-03-01") %>%
+        get_request() %>%
+        items_group(fields = c("properties", "bdc:tile"))),
+      expected = "list")
+
+    # test items_reap
+    testthat::expect_equal(
+      object = typeof(
+        stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+          stac_search(collections = "CB4_64_16D_STK-1",
+                      limit = 10,
+                      datetime = "2017-08-01/2018-03-01") %>%
+          get_request() %>%
+          items_reap(fields = c("properties", "datetime"))),
+      expected = "character")
+
+    # test items_fields
+    testthat::expect_equal(
+      object = typeof(
+        stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+          stac_search(collections = "CB4_64_16D_STK-1",
+                      limit = 10,
+                      datetime = "2017-08-01/2018-03-01") %>%
+          get_request() %>%
+          items_fields(fields = c("properties"))),
+      expected = "character")
+
+    # test assets_list
+    testthat::expect_equal(
+      object = typeof(
+        stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+          stac_search(collections = "CB4_64_16D_STK-1",
+                      limit = 10,
+                      datetime = "2017-08-01/2018-03-01") %>%
+          get_request() %>%
+          assets_list(assets_names = c("EVI", "NDVI"))),
+      expected = "list")
   })
 })
