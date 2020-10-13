@@ -41,10 +41,16 @@
 #' See source file \code{ext_query.R} for an example on how implement new
 #' extensions.
 #'
-#' @param q        a \code{RSTACQuery} object expressing a STAC query
+#' @param q      a \code{RSTACQuery} object expressing a STAC query
 #' criteria.
 #'
-#' @param ...      entries with format \code{<field> <operator> <value>}.
+#' @param ...    entries with format \code{<field> <operator> <value>}.
+#'
+#' @param keys   a \code{character} with the \code{<field>} information.
+#'
+#' @param ops    a \code{character} with the \code{<opetator>} information.
+#'
+#' @param values a \code{character} with the \code{<value>} information.
 #'
 #' @seealso \code{\link{stac_search}}, \code{\link{post_request}},
 #' \code{\link{endpoint}}, \code{\link{before_request}},
@@ -59,27 +65,35 @@
 #' # filter items that has 'bdc:tile' property equal to '022024'
 #' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   ext_query("bdc:tile" == "021027") %>%
+#'   ext_query("bdc:tile" == "022024") %>%
 #'   post_request()
 #' }
 #'
 #' @export
-ext_query <- function(q, ...) {
+ext_query <- function(q, ..., keys = NULL, ops = NULL, values = NULL) {
 
   # check s parameter
   check_subclass(q, c("search", "ext_query"))
 
+  if (!is.null(values)) {
+    values <- list(values)
+  }
+
   params <- list()
+  if (!is.null(substitute(list(...))[-1])) {
+    dots <- substitute(list(...))[-1]
+    tryCatch({
+      ops <- lapply(dots, function(x) as.character(x[[1]]))
+      keys <- lapply(dots, function(x) as.character(x[[2]]))
+      values <- lapply(dots, function(x) eval(x[[3]]))
+    }, error = function(e) {
 
-  dots <- substitute(list(...))[-1]
-  tryCatch({
-    ops <- lapply(dots, function(x) as.character(x[[1]]))
-    keys <- lapply(dots, function(x) as.character(x[[2]]))
-    values <- lapply(dots, function(x) eval(x[[3]]))
-  }, error = function(e) {
+      .error("Invalid query expression.")
+    })
+  }
 
-    .error("Invalid query expression.")
-  })
+  if (sapply(values, length) == 1 && ops == "%in%")
+    values <- list(values)
 
   ops <- lapply(ops, function(op) {
     if (op == "==") return("eq")
@@ -97,6 +111,7 @@ ext_query <- function(q, ...) {
 
   uniq_keys <- unique(keys)
   entries <- lapply(uniq_keys, function(k) {
+
     res <- lapply(values[keys == k], c)
     names(res) <- ops[keys == k]
     return(res)
@@ -106,9 +121,7 @@ ext_query <- function(q, ...) {
     return(q)
 
   names(entries) <- uniq_keys
-
   params[["query"]] <- entries
-
 
   RSTACQuery(version = q$version,
              base_url = q$base_url,
@@ -141,4 +154,11 @@ after_response.ext_query <- function(q, res) {
                                             "application/json"))
 
   RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
+}
+
+
+m <- function(k){
+  stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+    stac_search(collections = "CB4_64_16D_STK-1") %>%
+    ext_query("bdc:tile" %in% c("ola", "tudi"))
 }

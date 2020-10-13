@@ -4,13 +4,19 @@
 \alias{ext_query}
 \title{Extension functions}
 \usage{
-ext_query(q, ...)
+ext_query(q, ..., keys = NULL, ops = NULL, values = NULL)
 }
 \arguments{
 \item{q}{a \code{RSTACQuery} object expressing a STAC query
 criteria.}
 
 \item{...}{entries with format \code{<field> <operator> <value>}.}
+
+\item{keys}{a \code{character} with the \code{<field>} information.}
+
+\item{ops}{a \code{character} with the \code{<opetator>} information.}
+
+\item{values}{a \code{character} with the \code{<value>} information.}
 }
 \value{
 A \code{RSTACQuery} object  with the subclass \code{ext_query} containing
@@ -62,7 +68,7 @@ extensions.
 # filter items that has 'bdc:tile' property equal to '022024'
 stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1") \%>\%
-  ext_query("bdc:tile" == "021027") \%>\%
+  ext_query("bdc:tile" == "022024") \%>\%
   post_request()
 }
 
