@@ -33,9 +33,9 @@
 #' }
 #'
 #' @section Data types:
-#' The package implements the follow S3 classes: \code{stac_item_collection},
-#'  \code{stac_item}, \code{stac_catalog}, \code{stac_collection_list} and
-#'  \code{stac_collection}. These classes are regular lists representing the
+#' The package implements the follow S3 classes: \code{STACItemCollection},
+#'  \code{STACItem}, \code{STACCatalog}, \code{STACCollectionList} and
+#'  \code{STACCollection}. These classes are regular lists representing the
 #'  corresponding JSON STAC objects.
 #'
 #' @name rstac
@@ -44,4 +44,6 @@ NULL
 
 #' @importFrom httr GET POST write_disk add_headers content status_code http_type
 #' @importFrom crayon bold
+#' @importFrom utils modifyList
+#' @importFrom magrittr %>%
 NULL

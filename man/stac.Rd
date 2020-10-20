@@ -4,14 +4,11 @@
 \alias{stac}
 \title{Endpoint functions}
 \usage{
-stac(url, ..., force_version)
+stac(base_url, force_version = NULL)
 }
 \arguments{
-\item{url}{a \code{character} informing the base url of a
+\item{base_url}{a \code{character} informing the base url of a
 STAC web service.}
-
-\item{...}{other params to be passed to \link[httr]{GET} or
-\link[httr]{POST} methods}
 
 \item{force_version}{a \code{character} providing the version of the stac
 used. If not provided, the rstac package will make requests to try to find
@@ -19,21 +16,20 @@ the version of STAC used. It is highly recommended that you inform the STAC
 version you are using.}
 }
 \value{
-A \code{stac} object with subclass \code{subclass} containing all request
-parameters to be provided to API service.
+A \code{RSTACQuery} object with the subclass \code{stac} containing all
+request parameters to be provided to API service.
 }
 \description{
 The \code{stac} function implements \code{/stac} API
-endpoint (v0.8.1). It prepares search fields parameters to be provided to
+endpoint (>=0.8.0). It prepares search fields parameters to be provided to
 a STAC API web service. This endpoint should return a STAC Catalog document
-containing all data Items searchable in the API.
+containing all published data catalogs.
 }
 \examples{
 \donttest{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-     force_version = "0.8.1") \%>\%
- get_request()
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+  get_request()
 }
 
 }

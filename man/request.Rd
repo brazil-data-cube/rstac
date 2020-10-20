@@ -5,37 +5,29 @@
 \alias{post_request}
 \title{STAC API request functions}
 \usage{
-get_request(s, ..., headers = character())
+get_request(q, ...)
 
-post_request(
-  s,
-  ...,
-  enctype = c("json", "multipart", "form"),
-  headers = character()
-)
+post_request(q, ..., encode = c("json", "multipart", "form"))
 }
 \arguments{
-\item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac}, \code{stac_search}, \code{collections},
-or \code{items} functions.}
+\item{q}{a \code{RSTACQuery} object expressing a STAC query
+criteria.}
 
-\item{...}{other params to be passed to \link[httr]{GET} or
-\link[httr]{POST} methods}
+\item{...}{config parameters to be passed to \link[httr]{GET} or
+\link[httr]{POST} methods, such as \link[httr]{add_headers} or
+\link[httr]{set_cookies}.}
 
-\item{headers}{a \code{character} of named arguments to be passed as
-HTTP request headers.}
-
-\item{enctype}{a \code{character} informing the request body
+\item{encode}{a \code{character} informing the request body
 Content-Type. Accepted types are \code{'json'} (\code{'application/json'}),
 \code{'form'} (\code{'application/x-www-form-urlencoded'}),
 and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
 \code{'json'}.}
 }
 \value{
-Either a \code{stac_catalog}, \code{stac_collection},
- \code{stac_collection_list}, \code{stac_item_collection} or \code{stac_item}
- object depending on the subclass and search fields parameters of \code{s}
- argument.
+Either a \code{STACCatalog}, \code{STACCollection},
+\code{STACCollectionList}, \code{STACItemCollection} or \code{STACItem}
+object depending on the subclass and search fields parameters of \code{q}
+argument.
 }
 \description{
 The \code{get_request} is function that makes HTTP GET
@@ -47,13 +39,11 @@ requests to STAC web services, retrieves, and parse the data.
 \examples{
 \donttest{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-      force_version = "0.8.1") \%>\%
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
  get_request()
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-     force_version = "0.8.1") \%>\%
- stac_search(collections = "MOD13Q1") \%>\%
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+ stac_search(collections = "CB4_64_16D_STK-1") \%>\%
  post_request()
 }
 }

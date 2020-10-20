@@ -15,8 +15,8 @@
 #'     Collection object
 #' }
 #'
-#' @param s             a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac} or \code{collections} functions.
+#' @param q             a \code{RSTACQuery} object expressing a STAC query
+#' criteria.
 #'
 #' @param collection_id a \code{character} collection id to be retrieved.
 #'
@@ -25,106 +25,92 @@
 #'  \code{\link{items}}
 #'
 #' @return
-#' A \code{stac} object containing all search field parameters to be provided
-#' to STAC API web service.
+#' A \code{RSTACQuery} object with the subclass \code{collections} for
+#'  \code{/collections/} endpoint, or a \code{collection_id} subclass for
+#'  \code{/collections/{collection_id}} endpoint, containing all search field
+#'  parameters to be provided to STAC API web service.
 #'
 #' @examples
 #' \donttest{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-#'     force_version = "0.8.1") %>%
-#'  collections() %>%
-#'  get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+#'   collections() %>%
+#'   get_request()
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-#'       force_version = "0.8.1") %>%
-#' collections(collection_id = "MOD13Q1") %>%
-#' get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+#'   collections(collection_id = "CB4_64_16D_STK-1") %>%
+#'   get_request()
 #' }
 
 #' @export
-collections <- function(s, collection_id) {
+collections <- function(q, collection_id = NULL) {
 
-  # check s parameter
-  if (!"collections" %in% class(s))
-    .check_obj(s, expected = "stac", exclusive = TRUE)
+  # check q parameter
+  check_subclass(q, "stac")
 
   params <- list()
-  endpoint <- .OAFeat_collections_endpoint()
-  if (!missing(collection_id)) {
+
+  subclass <- "collections"
+  if (!is.null(collection_id)) {
 
     if (length(collection_id) != 1)
       .error("Parameter `collection_id` must be a single value.")
 
     params[["collection_id"]] <- collection_id
 
-    endpoint <- .OAFeat_collections_endpoint(
-      collection_id = params[["collection_id"]])
+    subclass <- "collection_id"
   }
 
-  content <- .build_stac(url = s$url,
-                         endpoint = endpoint,
-                         params = params,
-                         subclass = "collections",
-                         base_stac = s)
-  return(content)
+  RSTACQuery(version = q$version,
+             base_url = q$base_url,
+             params = utils::modifyList(q$params, params),
+             subclass = subclass)
 }
 
-params_get_request.collections <- function(s) {
+#' @export
+endpoint.collections <- function(q) {
 
-  # ignore 'collection_id' param
-  s$params[["collection_id"]] <- NULL
-
-  # process stac params
-  params <- params_get_request.stac(s)
-
-  return(params)
+  return("/collections")
 }
 
-params_post_request.collections <- function(s, enctype) {
+#' @export
+before_request.collections <- function(q) {
 
-  # ignore 'collection_id' param
-  s$params[["collection_id"]] <- NULL
+  check_query_verb(q, verbs = c("GET", "POST"))
 
-  # process stac params
-  params <- params_post_request.stac(s, enctype = enctype)
-
-  return(params)
+  return(q)
 }
 
-content_get_response.collections <- function(s, res) {
+#' @export
+after_response.collections <- function(q, res) {
 
-  # detect expected response object class
-  if (s$version < "0.9.0")
-    content_class <- "stac_catalog"
-  else
-    content_class <- "stac_collection_list"
+  content <- content_response(res, "200", "application/json")
 
-  if (!is.null(s$params[["collection_id"]]))
-    content_class <- "stac_collection"
-
-  content <- structure(
-    .check_response(res, "200", "application/json"),
-    stac = s,
-    request = list(method = "get"),
-    class = content_class)
-
-  return(content)
+  RSTACDocument(content = content, q = q, subclass = "STACCollectionList")
 }
 
-content_post_response.collections <- function(s, res, enctype) {
+#' @export
+endpoint.collection_id <- function(q) {
 
-  # detect expected response object class
-  content_class <- "stac_list_catalog"
+  return(paste("/collections", q$params[["collection_id"]], sep = "/"))
+}
 
-  if (!is.null(s$params[["collection_id"]]))
-    content_class <- "stac_collection"
+#' @export
+before_request.collection_id <- function(q) {
 
-  content <- structure(
-    .check_response(res, "200", "application/json"),
-    stac = s,
-    request = list(method = "post", enctype = enctype),
-    class = content_class)
+  check_query_verb(q, verbs = c("GET", "POST"))
 
-  return(content)
+  # don't send 'collection_id' in url's query string or content body
+  q <- omit_query_params(q, names = "collection_id")
+
+  return(q)
+}
+
+#' @export
+after_response.collection_id <- function(q, res) {
+
+  content <- content_response(res, "200", "application/json")
+
+  RSTACDocument(content = content, q = q,
+                subclass = c("STACCollection", "STACCatalog"))
 }

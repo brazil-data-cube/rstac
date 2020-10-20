@@ -1,10 +1,10 @@
 #' @title Extension functions
 #'
 #' @description
-#' The \code{extension_query} is the \emph{exported function} of the STAC API
-#' query extension. It can be used after a call to \code{stac_search} function.
+#' The \code{ext_query()} is the \emph{exported function} of the STAC API
+#' query extension. It can be used after a call to \code{stac_search()} function.
 #' It allows that additional fields and operators other than those defined in
-#' \code{stac_search} function be used to make a complex filter.
+#' \code{stac_search()} function be used to make a complex filter.
 #'
 #' The function accepts multiple filter criteria. Each filter entry is an
 #' expression formed by \code{<field> <operator> <value>}, where
@@ -13,7 +13,7 @@
 #' providers' documentation to know which properties can be used by this
 #' extension.
 #'
-#' The \code{extension_query} function allows the following \code{<operators>}
+#' The \code{ext_query()} function allows the following \code{<operators>}
 #' \itemize{
 #' \item \code{==} corresponds to '\code{eq}'
 #' \item \code{!=} corresponds to '\code{neq}'
@@ -34,58 +34,66 @@
 #' Besides this function, the following S3 generic methods were implemented
 #' to get things done for this extension:
 #' \itemize{
-#'  \item \code{params_get_request} for class \code{ext_type}: raises an error
-#'  when \code{get_request} is called after a call to \code{extension_query}
-#'  function.
-#'  \item The \code{params_post_request} for class \code{ext_type}: calls the
-#'  default content request params handling.
-#'  \item The \code{content_get_response} for class \code{ext_query}:
-#'  raises an error when \code{get_request} is called after the
-#'  \code{extension_query} function.
-#'  \item The \code{content_post_response} for class \code{ext_query}: calls
-#'  the default content response handling.
+#' \item The \code{endpoint()} for subclass \code{ext_query}
+#' \item The \code{before_request()} for subclass \code{ext_query}
+#' \item The \code{after_response()} for subclass \code{ext_query}
 #' }
+#' See source file \code{ext_query.R} for an example on how implement new
+#' extensions.
 #'
-#' @param s             a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac_search} function.
+#' @param q      a \code{RSTACQuery} object expressing a STAC query
+#' criteria.
 #'
-#' @param ...           entries with format \code{<field> <operator> <value>}.
+#' @param ...    entries with format \code{<field> <operator> <value>}.
 #'
+#' @param keys   a \code{character} with the \code{<field>} information.
+#'
+#' @param ops    a \code{character} with the \code{<opetator>} information.
+#'
+#' @param values a \code{character} with the \code{<value>} information.
 #'
 #' @seealso \code{\link{stac_search}}, \code{\link{post_request}},
-#' \code{\link{params_get_request}}, \code{\link{params_post_request}},
-#' \code{\link{content_get_response}}, \code{\link{content_post_response}}
+#' \code{\link{endpoint}}, \code{\link{before_request}},
+#' \code{\link{after_response}}, \code{\link{content_response}}
 #'
-#' @return A \code{ext_query} object containing all request parameters to be
-#' passed to \code{post_request} function.
+#' @return
+#' A \code{RSTACQuery} object  with the subclass \code{ext_query} containing
+#'  all request parameters to be passed to \code{post_request()} function.
 #'
 #' @examples
 #' \donttest{
 #' # filter items that has 'bdc:tile' property equal to '022024'
-#' stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-#'      force_version = "0.8.1") %>%
-#'   stac_search(collections = "CB4_64_16D_STK") %>%
-#'   extension_query("bdc:tile" == "022024") %>%
+#' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
+#'   ext_query("bdc:tile" == "022024") %>%
 #'   post_request()
 #' }
 #'
 #' @export
-extension_query <- function(s, ...) {
+ext_query <- function(q, ..., keys = NULL, ops = NULL, values = NULL) {
 
   # check s parameter
-  .check_obj(s, expected = c("search", "ext_query"))
+  check_subclass(q, c("search", "ext_query"))
+
+  if (!is.null(values)) {
+    values <- list(values)
+  }
 
   params <- list()
+  if (!is.null(substitute(list(...))[-1])) {
+    dots <- substitute(list(...))[-1]
+    tryCatch({
+      ops <- lapply(dots, function(x) as.character(x[[1]]))
+      keys <- lapply(dots, function(x) as.character(x[[2]]))
+      values <- lapply(dots, function(x) eval(x[[3]]))
+    }, error = function(e) {
 
-  dots <- substitute(list(...))[-1]
-  tryCatch({
-    ops <- lapply(dots, function(x) as.character(x[[1]]))
-    keys <- lapply(dots, function(x) as.character(x[[2]]))
-    values <- lapply(dots, function(x) eval(x[[3]]))
-  }, error = function(e) {
+      .error("Invalid query expression.")
+    })
+  }
 
-    .error("Invalid query expression.")
-  })
+  if (sapply(values, length) == 1 && ops == "%in%")
+    values <- list(values)
 
   ops <- lapply(ops, function(op) {
     if (op == "==") return("eq")
@@ -103,51 +111,54 @@ extension_query <- function(s, ...) {
 
   uniq_keys <- unique(keys)
   entries <- lapply(uniq_keys, function(k) {
+
     res <- lapply(values[keys == k], c)
     names(res) <- ops[keys == k]
     return(res)
   })
 
   if (length(entries) == 0)
-    return(s)
+    return(q)
 
   names(entries) <- uniq_keys
-
   params[["query"]] <- entries
 
-  content <- .build_stac(url = s$url,
-                        endpoint = "/stac/search",
-                        params = params,
-                        subclass = "ext_query",
-                        base_stac = s)
-
-  return(content)
+  RSTACQuery(version = q$version,
+             base_url = q$base_url,
+             params = utils::modifyList(q$params, params),
+             subclass = "ext_query")
 }
 
-params_get_request.ext_query <- function(s) {
+#' @export
+endpoint.ext_query <- function(q) {
 
-  .error(paste0("STAC API query extension is not supported by HTTP GET method.",
-                "Try use `post_request` method instead."))
+  # using endpoint from search document
+  endpoint.search(q)
+}
+
+#' @export
+before_request.ext_query <- function(q) {
+
+  msg <- paste0("Query extension param is not supported by HTTP GET",
+                "method. Try use `post_request()` method instead.")
+
+  check_query_verb(q, verbs = "POST", msg = msg)
+
+  return(q)
+}
+
+#' @export
+after_response.ext_query <- function(q, res) {
+
+  content <- content_response(res, "200", c("application/geo+json",
+                                            "application/json"))
+
+  RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
 }
 
 
-params_post_request.ext_query <- function(s, enctype) {
-
-  # process search params
-  params <- params_post_request.search(s, enctype = enctype)
-
-  return(params)
-}
-
-content_get_response.ext_query <- function(s, res) {
-
-  .error(paste0("STAC API query extension is not supported by HTTP GET method.",
-                "Try use `post_request` method instead."))
-}
-
-content_post_response.ext_query <- function(s, res, enctype) {
-
-  content <- content_post_response.search(s, res = res, enctype = enctype)
-
-  return(content)
+m <- function(k){
+  stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+    stac_search(collections = "CB4_64_16D_STK-1") %>%
+    ext_query("bdc:tile" %in% c("ola", "tudi"))
 }

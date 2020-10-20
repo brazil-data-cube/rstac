@@ -4,11 +4,19 @@
 \alias{stac_search}
 \title{Endpoint functions}
 \usage{
-stac_search(s, collections, ids, bbox, datetime, intersects, limit, ...)
+stac_search(
+  q,
+  collections = NULL,
+  ids = NULL,
+  bbox = NULL,
+  datetime = NULL,
+  intersects = NULL,
+  limit = NULL
+)
 }
 \arguments{
-\item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac}, \code{stac_search} functions.}
+\item{q}{a \code{RSTACQuery} object expressing a STAC query
+criteria.}
 
 \item{collections}{a \code{character} vector of collection IDs to include in
 the search for items. Only items in one of the provided collections will be
@@ -55,12 +63,10 @@ the provided polygon.}
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed it defaults to the service implementation.}
-
-\item{...}{any additional non standard filter parameter.}
 }
 \value{
-A \code{stac} object containing all search field parameters to be provided
-to STAC API web service.
+A \code{RSTACQuery} object with the subclass \code{search} containing all
+search field parameters to be provided to STAC API web service.
 }
 \description{
 (This document is based on STAC specification documentation
@@ -72,27 +78,26 @@ The \code{stac_search} function implements \code{/stac/search} API endpoint
 It prepares query parameters used in search API request, a
 \code{stac} object with all filter parameters to be provided to
 \code{get_request} or \code{post_request} functions. The GeoJSON content
-returned by these requests is a \code{stac_item_collection} object, a regular R
+returned by these requests is a \code{STACItemCollection} object, a regular R
 \code{list} representing a STAC Item Collection document.
 }
 \examples{
 \donttest{
 # GET request
-stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-     force_version = "0.8.1") \%>\%
- stac_search(collections = "MOD13Q1", limit = 1) \%>\%
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+ stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
+        datetime = "2017-08-01/2018-03-01") \%>\%
  get_request()
 
 # POST request
-stac(url = "http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-     force_version = "0.8.1") \%>\%
- stac_search(collections = "MOD13Q1",
-        bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+ stac_search(collections = "CB4_64_16D_STK-1",
+        bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) \%>\%
  post_request()
 }
 
 }
 \seealso{
-\code{\link{stac}}, \code{\link{extension_query}},
+\code{\link{stac}}, \code{\link{ext_query}},
 \code{\link{get_request}}, \code{\link{post_request}}
 }
