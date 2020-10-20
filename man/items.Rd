@@ -4,11 +4,11 @@
 \alias{items}
 \title{Endpoint functions}
 \usage{
-items(s, feature_id, datetime, bbox, limit, ...)
+items(q, feature_id = NULL, datetime = NULL, bbox = NULL, limit = NULL)
 }
 \arguments{
-\item{s}{a \code{stac} object expressing a STAC search criteria
-provided by \code{stac}, \code{collections}, \code{items} functions.}
+\item{q}{a \code{RSTACQuery} object expressing a STAC query
+criteria.}
 
 \item{feature_id}{a \code{character} with item id to be fetched.
 Only works if the \code{collection_id} is informed. This is equivalent to
@@ -51,13 +51,14 @@ in cases where the box spans the antimeridian the first value
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed it defaults to the service implementation.}
-
-\item{...}{filter parameters. Accept the same filter parameters
-of \code{\link{stac_search}} function.}
 }
 \value{
-A \code{stac} object containing all search field parameters to be provided
-to STAC API web service.
+A \code{RSTACQuery} object with the subclass \code{items} for
+ \code{/collections/{collection_id}/items} endpoint, or a
+ \code{item_id} subclass for
+ \code{/collections/{collection_id}/items/{feature_id}} endpoint,
+ containing all search field parameters to be provided to STAC API web
+ service.
 }
 \description{
 The \code{items} function implements WFS3
@@ -79,17 +80,15 @@ filters parameters of \code{\link{stac_search}} function.
 \examples{
 \donttest{
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-     force_version = "0.8.1") \%>\%
- collections("MOD13Q1") \%>\%
- items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) \%>\%
- get_request()
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+  collections("CB4_64_16D_STK-1") \%>\%
+  items(bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) \%>\%
+  get_request()
 
-stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-     force_version = "0.8.1") \%>\%
- collections("MOD13Q1") \%>\%
- items("MOD13Q1.A2019241.h13v09.006.2019262164754") \%>\%
- get_request()
+stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+  collections("CB4_64_16D_STK-1") \%>\%
+  items("CB4_64_16D_STK_v001_022023_2020-07-11_2020-07-26") \%>\%
+  get_request()
 }
 
 }

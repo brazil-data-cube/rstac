@@ -2,49 +2,57 @@
 % Please edit documentation in R/print.R
 \name{print}
 \alias{print}
-\alias{print.stac}
-\alias{print.stac_catalog}
-\alias{print.stac_collection}
-\alias{print.stac_item_collection}
-\alias{print.stac_item}
+\alias{print.RSTACQuery}
+\alias{print.STACCatalog}
+\alias{print.STACCollectionList}
+\alias{print.STACCollection}
+\alias{print.STACItemCollection}
+\alias{print.STACItem}
 \title{Printing functions}
 \usage{
-\method{print}{stac}(x, ...)
+\method{print}{RSTACQuery}(x, ...)
 
-\method{print}{stac_catalog}(x, n = 10, ...)
+\method{print}{STACCatalog}(x, ...)
 
-\method{print}{stac_collection}(x, n = 10, ...)
+\method{print}{STACCollectionList}(x, n = 10, ...)
 
-\method{print}{stac_item_collection}(x, n = 5, ...)
+\method{print}{STACCollection}(x, ...)
 
-\method{print}{stac_item}(x, ...)
+\method{print}{STACItemCollection}(x, n = 10, ..., tail = FALSE)
+
+\method{print}{STACItem}(x, ...)
 }
 \arguments{
-\item{x}{object STAC to print.}
+\item{x}{either a \code{RSTACQuery} object expressing a STAC query
+criteria or any \code{RSTACDocument}.}
 
 \item{...}{other parameters passed in the functions.}
 
 \item{n}{number of lines to view on each object. Each object has its own type
-of truncation in lines. In the \code{stac_catalog} object, by default, 10
-links will be shown. In the \code{stac_collection} object, similarly, 10
-links will be shown. In \code{stac_item_collection}, by default, 3 features will be
-shown. If you want to show all lines of a rstac object, use `n = Inf`.}
+of truncation in lines. In the \code{stac_collection} object, by default, 10
+links will be shown, but if the object has less than 20 collections, all
+the collections will be displayed. In \code{STACItemCollection}, by default,
+10 features will be shown. If you want to show all lines of a rstac object,
+use `n = Inf`.}
+
+\item{tail}{To show the last lines of an object.}
 }
 \description{
-The print functions cover all objects in the rstac package:
+The print function covers all objects in the rstac package:
 \itemize{
-  \item \code{\link{stac}}: Returns a \code{Catalog} document in \code{/stac}
-   endpoint.
-  \item \code{\link{search}}: Returns a \code{ItemCollection} document in
-  \code{/stac/search} endpoint with a group of Items matching the provided
-  search predicates.
-  \item \code{\link{collections}}: Return a \code{Collection} document
-   by listing of collections contained in the catalog in \code{/collections}
-   endpoint and in \code{/collections/\{collectionId\}} endpoint return a
-   single \code{Collection} document.
-  \item \code{\link{items}}: Return a \code{ItemCollection} document in
-  \code{/collections/\{collectionId\}/items} and a \code{Item} document in
-    \code{/collections/\{collectionId\}/items/\{itemId\}} WFS3 endpoints.
+  \item \code{\link{stac}}: Returns a \code{STACCatalog} document in
+   \code{/stac} (V0.8.0 or below) or \code{/} (V0.9.0 or above) endpoint.
+  \item \code{\link{stac_search}}: Returns a \code{STACItemCollection}
+   document in \code{/stac/search} (V0.8.0 or below) or
+   \code{/search} (V0.9.0 or above)  endpoint with a group of Items matching
+   the provided search predicates.
+  \item \code{\link{collections}}: Return a \code{STACCollectionList}
+  document by listing of collections contained in the catalog in
+  \code{/collections} endpoint and in \code{/collections/\{collectionId\}}
+  endpoint return a single \code{STACCollection} document.
+  \item \code{\link{items}}: Return a \code{STACItemCollection} document in
+  \code{/collections/\{collectionId\}/items} and a \code{STACItem} document
+  in \code{/collections/\{collectionId\}/items/\{itemId\}} WFS3 endpoints.
  }
 
 The rstac package objects visualization is based on \strong{Markdown}, a
@@ -65,31 +73,28 @@ For printing use the \code{print()} function directly, since the package has
 \examples{
 \donttest{
 
-# stac_item_collection object
-stac_item_collection <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-                             force_version = "0.8.1") \%>\%
-                        search(collections = "MOD13Q1",
-                               bbox = c(-55.16335,
-                                        -4.26325,
-                                        -49.31739,
-                                        -1.18355),
-                               limit = 15) \%>\%
-                        get_request()
+# STACItemCollection object
+stac_item_collection <-
+  stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1",
+         bbox = c(-47.02148, -12.98314, -42.53906, -17.35063),
+         limit = 15) \%>\%
+  get_request()
 
 print(stac_item_collection, n = 10)
 
-# stac_catalog object
-stac_catalog <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-                     force_version = "0.8.1") \%>\%
-                get_request()
+# STACCollectionList object
+stac_collection <-
+    stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+    collections() \%>\%
+    get_request()
 
-print(stac_catalog, n = 5)
+print(stac_collection, n = 5)
 
-# stac object
-obj_stac <- stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-                 force_version = "0.8.1")
+# RSTACQuery object
+obj_rstac <- stac("http://brazildatacube.dpi.inpe.br/stac/")
 
-print(obj_stac)
+print(obj_rstac)
 }
 }
 \seealso{

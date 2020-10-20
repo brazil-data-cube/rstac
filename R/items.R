@@ -17,8 +17,8 @@
 #' The endpoint \code{/collections/\{collectionId\}/items} accepts the same
 #' filters parameters of \code{\link{stac_search}} function.
 #'
-#' @param s           a \code{stac} object expressing a STAC search criteria
-#' provided by \code{stac}, \code{collections}, \code{items} functions.
+#' @param q           a \code{RSTACQuery} object expressing a STAC query
+#' criteria.
 #'
 #' @param feature_id  a \code{character} with item id to be fetched.
 #' Only works if the \code{collection_id} is informed. This is equivalent to
@@ -62,152 +62,117 @@
 #' @param limit       an \code{integer} defining the maximum number of results
 #' to return. If not informed it defaults to the service implementation.
 #'
-#' @param ...         filter parameters. Accept the same filter parameters
-#' of \code{\link{stac_search}} function.
-#'
 #' @seealso
 #' \code{\link{get_request}},  \code{\link{post_request}},
 #'  \code{\link{collections}}
 #'
 #' @return
-#' A \code{stac} object containing all search field parameters to be provided
-#' to STAC API web service.
+#' A \code{RSTACQuery} object with the subclass \code{items} for
+#'  \code{/collections/{collection_id}/items} endpoint, or a
+#'  \code{item_id} subclass for
+#'  \code{/collections/{collection_id}/items/{feature_id}} endpoint,
+#'  containing all search field parameters to be provided to STAC API web
+#'  service.
 #'
 #' @examples
 #' \donttest{
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-#'      force_version = "0.8.1") %>%
-#'  collections("MOD13Q1") %>%
-#'  items(bbox = c(-55.16335, -4.26325, -49.31739, -1.18355)) %>%
-#'  get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+#'   collections("CB4_64_16D_STK-1") %>%
+#'   items(bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) %>%
+#'   get_request()
 #'
-#' stac("http://brazildatacube.dpi.inpe.br/bdc-stac/0.8.1",
-#'      force_version = "0.8.1") %>%
-#'  collections("MOD13Q1") %>%
-#'  items("MOD13Q1.A2019241.h13v09.006.2019262164754") %>%
-#'  get_request()
+#' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+#'   collections("CB4_64_16D_STK-1") %>%
+#'   items("CB4_64_16D_STK_v001_022023_2020-07-11_2020-07-26") %>%
+#'   get_request()
 #' }
 #'
 #' @export
-items <- function(s, feature_id, datetime, bbox, limit, ...) {
+items <- function(q, feature_id = NULL,
+                  datetime = NULL,
+                  bbox = NULL,
+                  limit = NULL) {
 
-  # check s parameter
-  .check_obj(s, expected = c("collections", "items"))
-
-  if (is.null(s$params[["collection_id"]]))
-    .error("Not informed `collection_id` parameter.")
+  # check q parameter
+  check_subclass(q, c("collection_id", "items"))
 
   params <- list()
 
-  if (!missing(datetime)) {
+  if (!is.null(datetime))
+    params[["datetime"]] <- .parse_datetime(datetime)
 
-    .verify_datetime(datetime)
-    params[["datetime"]] <- datetime
+  if (!is.null(bbox))
+    params[["bbox"]] <- .parse_bbox(bbox)
+
+  if (!is.null(limit) && !is.null(limit))
+    params[["limit"]] <- .parse_limit(limit)
+
+  # set subclass
+  subclass <- "items"
+  if (!is.null(feature_id)) {
+
+    params[["feature_id"]] <- .parse_feature_id(feature_id)
+
+    subclass <- "item_id"
   }
 
-  if (!missing(bbox)) {
-
-    if (!length(bbox) %in% c(4, 6))
-      .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
-    params[["bbox"]] <- bbox
-  }
-
-  if (!missing(limit) && !is.null(limit))
-    params[["limit"]] <- limit
-
-  if (!missing(...))
-    params <- c(params, list(...))
-
-  endpoint <- .OAFeat_items_endpoint(collection_id = s$params[["collection_id"]])
-
-  if (!missing(feature_id)) {
-
-    if (length(feature_id) != 1)
-      .error("Parameter `feature_id` must be a single value.")
-
-    params[["feature_id"]] <- feature_id
-
-    endpoint <- .OAFeat_items_endpoint(collection_id = s$params[["collection_id"]],
-                                       feature_id = params[["feature_id"]])
-  }
-
-  content <- .build_stac(url = s$url,
-                         endpoint = endpoint,
-                         params = params,
-                         subclass = "items",
-                         base_stac = s)
-
-  return(content)
+  RSTACQuery(version = q$version,
+             base_url = q$base_url,
+             params = utils::modifyList(q$params, params),
+             subclass = subclass)
 }
 
-params_get_request.items <- function(s) {
+#' @export
+endpoint.items <- function(q) {
 
-  if (!is.null(s$params[["feature_id"]]))
-    return(list())
-
-  # process collections params
-  params <- params_get_request.collections(s)
-
-  return(params)
+  return(paste("/collections", q$params[["collection_id"]], "items", sep = "/"))
 }
 
-params_post_request.items <- function(s, enctype) {
+#' @export
+before_request.items <- function(q) {
 
-  if (!is.null(s$params[["feature_id"]]))
-    return(list())
+  check_query_verb(q, verbs = c("GET", "POST"))
 
-  # process collections params
-  params <- params_get_request.collections(s)
+  # don't send 'collection_id' in url's query string or content body
+  q <- omit_query_params(q, names = "collection_id")
 
-  return(params)
+  return(q)
 }
 
-content_get_response.items <- function(s, res) {
+#' @export
+after_response.items <- function(q, res) {
 
-  # detect expected response object class
-  content_class <- "stac_item_collection"
-  if (!is.null(s$params[["feature_id"]]))
-    content_class <- "stac_item"
+  content <- content_response(res, "200", c("application/geo+json",
+                                            "application/json"))
 
-  content <- structure(
-    .check_response(res, "200", c("application/geo+json", "application/json")),
-    stac = s,
-    request = list(method = "get"),
-    class = content_class)
-
-  return(content)
+  RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
 }
 
-content_post_response.items <- function(s, res, enctype) {
+#' @export
+endpoint.item_id <- function(q) {
 
-  # detect expected response object class
-  content_class <- "stac_item_collection"
-  if (!is.null(s$params[["feature_id"]]))
-    content_class <- "stac_item"
-
-  content <- structure(
-    .check_response(res, "200", c("application/geo+json", "application/json")),
-    stac = s,
-    request = list(method = "post", enctype = enctype),
-    class = content_class)
-
-  return(content)
+  return(paste("/collections", q$params[["collection_id"]], "items",
+               q$params[["feature_id"]], sep = "/"))
 }
 
-`[[.stac_item_collection` <- function(x, i){
+#' @export
+before_request.item_id <- function(q) {
 
-  x <- x$features[[i]]
-  class(x) <- "stac_item"
+  check_query_verb(q, verbs = c("GET", "POST"))
 
-  return(x)
+  # don't send 'collection_id' and 'feature_id' in
+  # url's query string or content body
+  q <- omit_query_params(q, names = c("collection_id", "feature_id"))
+
+  return(q)
 }
 
-`[.stac_item_collection` <- function(x, i){
+#' @export
+after_response.item_id <- function(q, res) {
 
-  x$features <- x$features[i]
+  content <- content_response(res, "200", c("application/geo+json",
+                                            "application/json"))
 
-  return(x)
+  RSTACDocument(content = content, q = q, subclass = "STACItem")
 }
-
-# TODO: implement head and tail S3 methods for stac_collection_list object
