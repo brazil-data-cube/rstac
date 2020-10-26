@@ -113,10 +113,9 @@
   # TODO: validate polygon
 
   # validate provided geojson
-  if (!geojsonlint::geojson_validate(geom))
-    .error(paste("The supplied Geojson does not follow the specifications of",
-                 "RFC 7946. Please correct it according to the rules of RFC",
-                 "7946."))
+  if (!jsonlite::validate(geom))
+    .error(paste("The supplied JSON is not valid. Please correct it according",
+                  "to the JSON rules."))
   geom
 }
 
