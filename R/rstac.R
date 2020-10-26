@@ -46,4 +46,5 @@ NULL
 #' @importFrom crayon bold
 #' @importFrom utils modifyList
 #' @importFrom magrittr %>%
+#' @importFrom geojsonlint geojson_validate
 NULL

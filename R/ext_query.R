@@ -46,12 +46,6 @@
 #'
 #' @param ...    entries with format \code{<field> <operator> <value>}.
 #'
-#' @param keys   a \code{character} with the \code{<field>} information.
-#'
-#' @param ops    a \code{character} with the \code{<opetator>} information.
-#'
-#' @param values a \code{character} with the \code{<value>} information.
-#'
 #' @seealso \code{\link{stac_search}}, \code{\link{post_request}},
 #' \code{\link{endpoint}}, \code{\link{before_request}},
 #' \code{\link{after_response}}, \code{\link{content_response}}
@@ -62,22 +56,17 @@
 #'
 #' @examples
 #' \donttest{
-#' # filter items that has 'bdc:tile' property equal to '022024'
 #' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   ext_query("bdc:tile" == "022024") %>%
+#'   ext_query("bdc:tile" == c("022024")) %>%
 #'   post_request()
 #' }
 #'
 #' @export
-ext_query <- function(q, ..., keys = NULL, ops = NULL, values = NULL) {
+ext_query <- function(q, ...) {
 
   # check s parameter
   check_subclass(q, c("search", "ext_query"))
-
-  if (!is.null(values)) {
-    values <- list(values)
-  }
 
   params <- list()
   if (!is.null(substitute(list(...))[-1])) {
@@ -85,15 +74,14 @@ ext_query <- function(q, ..., keys = NULL, ops = NULL, values = NULL) {
     tryCatch({
       ops <- lapply(dots, function(x) as.character(x[[1]]))
       keys <- lapply(dots, function(x) as.character(x[[2]]))
-      values <- lapply(dots, function(x) eval(x[[3]]))
+      values <- lapply(dots, function(x) eval(x[[3]], parent.frame(n = 3)))
     }, error = function(e) {
 
       .error("Invalid query expression.")
     })
   }
 
-  if (sapply(values, length) == 1 && ops == "%in%")
-    values <- list(values)
+  values <- .parse_ops(values, ops)
 
   ops <- lapply(ops, function(op) {
     if (op == "==") return("eq")
@@ -154,11 +142,4 @@ after_response.ext_query <- function(q, res) {
                                             "application/json"))
 
   RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
-}
-
-
-m <- function(k){
-  stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
-    stac_search(collections = "CB4_64_16D_STK-1") %>%
-    ext_query("bdc:tile" %in% c("ola", "tudi"))
 }

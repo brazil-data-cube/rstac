@@ -111,6 +111,12 @@
 .parse_geometry <- function(geom) {
 
   # TODO: validate polygon
+
+  # validate provided geojson
+  if (!geojsonlint::geojson_validate(geom))
+    .error(paste("The supplied Geojson does not follow the specifications of",
+                 "RFC 7946. Please correct it according to the rules of RFC",
+                 "7946."))
   geom
 }
 
@@ -133,7 +139,6 @@
 
   return(items_length(items))
 }
-
 
 #' @title Utility functions
 #'
@@ -213,6 +218,27 @@
     }
   }
 }
+
+#' @title Utility functions
+#'
+#' @param values a \code{list} with the values supplied on ext_query function.
+#' @param ops    a \code{character} with the operations supplied on ext_query
+#'  function.
+#'
+#' @return       a \code{list} with the supplied values.
+#'
+#' @noRd
+.parse_ops <- function(values, ops) {
+
+  if (is.atomic(values[[1]]) && ops == "%in%") {
+    if (length(values[[1]]) == 1)
+      return(list(values))
+    return(values)
+  }
+
+  return(values)
+}
+
 
 #' @title Utility functions
 #'
@@ -299,7 +325,7 @@
 }
 
 
-#' @title uUtility functions
+#' @title Utility functions
 #'
 #' @rdname http_request
 #'
