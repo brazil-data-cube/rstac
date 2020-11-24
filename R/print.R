@@ -54,6 +54,7 @@
 #'
 #' @examples
 #' \donttest{
+#' library(magrittr)
 #'
 #' # STACItemCollection object
 #' stac_item_collection <-

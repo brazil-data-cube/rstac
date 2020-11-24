@@ -27,6 +27,8 @@ This function returns the values of a field of the
 }
 \examples{
 \donttest{
+library(magrittr)
+
 # STACItemCollection object
 stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,

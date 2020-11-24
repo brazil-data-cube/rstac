@@ -61,6 +61,8 @@ The \code{get_assets_name()} function returns the assets name from
 \examples{
 \dontrun{
 
+library(magrittr)
+
 x <- stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1") \%>\%
   stac_search() \%>\%
@@ -73,6 +75,8 @@ x \%>\% items_bbox()
 }
 
 \dontrun{
+library(magrittr)
+
 x <-
   stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1") \%>\%

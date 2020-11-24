@@ -459,6 +459,8 @@ stac_version <- function(x, ...) {
 #'
 #' @examples
 #' \donttest{
+#' library(magrittr)
+#'
 #' # STACItemCollection object
 #' stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
@@ -529,6 +531,8 @@ assets_list <- function(items, assets_names, sort = TRUE,
 #'
 #' @examples
 #' \donttest{
+#' library(magrittr)
+#'
 #' # STACItemCollection object
 #' stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
@@ -578,6 +582,8 @@ items_reap <- function(items, ..., fields = NULL) {
 #'
 #' @examples
 #' \donttest{
+#' library(magrittr)
+#'
 #' # STACItemCollection object
 #' stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
@@ -628,6 +634,8 @@ items_fields <- function(items, ..., fields = NULL) {
 #'
 #' @examples
 #' \donttest{
+#' library(magrittr)
+#'
 #' # STACItemCollection object
 #' stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,

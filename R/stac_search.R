@@ -20,7 +20,7 @@
 #' searched.
 #'
 #' @param ids         a \code{character} vector with item IDs. All other filter
-#' parameters that futher restrict the number of search results are ignored.
+#' parameters that further restrict the number of search results are ignored.
 #'
 #' @param datetime    a \code{character} with a date-time or an interval. Date
 #'  and time strings needs to conform RFC 3339. Intervals are expressed by
@@ -70,6 +70,8 @@
 #'
 #' @examples
 #' \donttest{
+#' library(magrittr)
+#'
 #' # GET request
 #' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,

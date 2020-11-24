@@ -76,6 +76,7 @@
 #'
 #' @examples
 #' \donttest{
+#' library(magrittr)
 #'
 #' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   collections("CB4_64_16D_STK-1") %>%

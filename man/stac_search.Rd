@@ -23,7 +23,7 @@ the search for items. Only items in one of the provided collections will be
 searched.}
 
 \item{ids}{a \code{character} vector with item IDs. All other filter
-parameters that futher restrict the number of search results are ignored.}
+parameters that further restrict the number of search results are ignored.}
 
 \item{bbox}{a \code{numeric} vector with only features that have a
 geometry that intersects the bounding box are selected. The bounding box is
@@ -83,6 +83,8 @@ returned by these requests is a \code{STACItemCollection} object, a regular R
 }
 \examples{
 \donttest{
+library(magrittr)
+
 # GET request
 stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,

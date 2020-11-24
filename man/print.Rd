@@ -72,6 +72,7 @@ For printing use the \code{print()} function directly, since the package has
 }
 \examples{
 \donttest{
+library(magrittr)
 
 # STACItemCollection object
 stac_item_collection <-

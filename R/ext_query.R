@@ -56,6 +56,8 @@
 #'
 #' @examples
 #' \donttest{
+#' library(magrittr)
+#'
 #' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
 #'   ext_query("bdc:tile" == c("022024")) %>%
@@ -68,13 +70,16 @@ ext_query <- function(q, ...) {
   # check s parameter
   check_subclass(q, c("search", "ext_query"))
 
+  # get the env parent
+  env_parent <- parent.frame()
+
   params <- list()
   if (!is.null(substitute(list(...))[-1])) {
     dots <- substitute(list(...))[-1]
     tryCatch({
       ops <- lapply(dots, function(x) as.character(x[[1]]))
       keys <- lapply(dots, function(x) as.character(x[[2]]))
-      values <- lapply(dots, function(x) eval(x[[3]], parent.frame(n = 3)))
+      values <- lapply(dots, function(x) eval(x[[3]], env_parent))
     }, error = function(e) {
 
       .error("Invalid query expression.")
