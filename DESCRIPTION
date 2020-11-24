@@ -22,9 +22,9 @@ Imports:
     httr,
     crayon,
     utils,
-    magrittr
+    magrittr,
+    jsonlite
 Suggests:
-    jsonlite,
     covr,
     testthat,
     vcr
