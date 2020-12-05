@@ -83,8 +83,6 @@ returned by these requests is a \code{STACItemCollection} object, a regular R
 }
 \examples{
 \donttest{
-library(magrittr)
-
 # GET request
 stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,

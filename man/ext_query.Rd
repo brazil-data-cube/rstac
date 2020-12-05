@@ -59,11 +59,9 @@ extensions.
 }
 \examples{
 \donttest{
-library(magrittr)
-
 stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1") \%>\%
-  ext_query("bdc:tile" == c("022024")) \%>\%
+  ext_query("bdc:tile" \%in\% c("022024")) \%>\%
   post_request()
 }
 

@@ -4,20 +4,20 @@
 \alias{items_group}
 \title{Utility functions}
 \usage{
-items_group(items, ..., index = NULL, fields = NULL)
+items_group(items, ..., field = NULL, index = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
 the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.}
 
-\item{...}{a named way to provide fields names to get the subfields values
+\item{...}{a named way to provide field names to get the subfields values
 from the \code{RSTACDocument} objects.}
+
+\item{field}{a \code{character} with the names of the field to get the
+subfields values from the \code{RSTACDocument} objects.}
 
 \item{index}{a \code{character} with the indexes to be grouped. It can be
 used with the function \link{items_reap}.}
-
-\item{fields}{a \code{character} with the names of the fields to get the
-subfields values from the \code{RSTACDocument} objects.}
 }
 \value{
 a \code{list} in which each index corresponds to a group with its
@@ -30,15 +30,14 @@ This function groups the items contained within the
 }
 \examples{
 \donttest{
-library(magrittr)
-
 # STACItemCollection object
 stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
- stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-        datetime = "2017-08-01/2018-03-01") \%>\%
- get_request()
+ stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+        datetime = "2017-08-01/2018-03-01",
+        bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
+ get_request() \%>\% items_fetch(progress = FALSE)
 
- stac_item \%>\% items_group(., fields = c("properties", "bdc:tile"))
+ stac_item \%>\% items_group(., field = c("properties", "bdc:tiles"))
 }
 
 }

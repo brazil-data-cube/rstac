@@ -79,8 +79,6 @@ filters parameters of \code{\link{stac_search}} function.
 }
 \examples{
 \donttest{
-library(magrittr)
-
 stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
   collections("CB4_64_16D_STK-1") \%>\%
   items(bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) \%>\%

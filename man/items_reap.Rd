@@ -4,7 +4,7 @@
 \alias{items_reap}
 \title{Utility functions}
 \usage{
-items_reap(items, ..., fields = NULL)
+items_reap(items, ..., field = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
@@ -13,7 +13,7 @@ the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.}
 \item{...}{a named way to provide fields names to get the
 subfields values from the \code{RSTACDocument} objects.}
 
-\item{fields}{a \code{character} with the names of the fields to
+\item{field}{a \code{character} with the names of the field to
 get the subfields values from the \code{RSTACDocument} objects.}
 }
 \value{
@@ -27,15 +27,14 @@ This function returns the values of a field of the
 }
 \examples{
 \donttest{
-library(magrittr)
-
 # STACItemCollection object
 stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
- stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-        datetime = "2017-08-01/2018-03-01") \%>\%
- get_request()
+ stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+        datetime = "2017-08-01/2018-03-01",
+        bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
+ get_request() \%>\% items_fetch(progress = FALSE)
 
-stac_item \%>\% items_reap(fields = c("properties", "datetime"))
+stac_item \%>\% items_reap(field = c("properties", "datetime"))
 }
 
 }

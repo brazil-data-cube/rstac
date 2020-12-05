@@ -33,8 +33,6 @@ Each endpoint retrieves specific STAC objects:
 }
 \examples{
 \donttest{
-library(magrittr)
-
 stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
   collections() \%>\%
   get_request()
