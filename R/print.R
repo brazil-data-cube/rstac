@@ -54,8 +54,6 @@
 #'
 #' @examples
 #' \donttest{
-#' library(magrittr)
-#'
 #' # STACItemCollection object
 #' stac_item_collection <-
 #'   stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
@@ -92,7 +90,8 @@ print.RSTACQuery <- function(x, ...) {
   cat("-", crayon::bold("url:"), x$base_url, fill = TRUE)
   cat("-", crayon::bold("params:"), fill = TRUE)
   for (n in names(x$params)) {
-    cat(paste0("  - ", n, ":"), fill = TRUE)
+    cat(paste0("  - ", n, ": ", paste(x$params[[n]], collapse = ",")),
+        fill = TRUE)
   }
   cat("-", crayon::bold("field(s):"),
       paste0(names(x), collapse = ", "), fill = TRUE)
@@ -110,6 +109,16 @@ print.STACCatalog <- function(x, ...) {
   cat("-", crayon::bold("id:"), x$id, fill = TRUE)
   if (!is.null(x$description) && x$description != "")
     cat("-", crayon::bold("description:"), x$description, fill = TRUE)
+
+  if (!is.null(x$links) && x$links != "") {
+    cat("-", crayon::bold("links avaliable:"), fill = TRUE)
+
+    for (item in 1:length(x$links)) {
+      if (!is.null(x$links[[item]]$href) && x$links[[item]]$href != "")
+        cat(paste0("  - ", x$links[[item]]$href, collapse = ","), fill = TRUE)
+    }
+  }
+
   cat("-", crayon::bold("field(s):"),
       paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
@@ -211,7 +220,6 @@ print.STACItem <- function(x, ...) {
       fill = TRUE)
   invisible(x)
 }
-
 
 #'
 #' #### prints ####

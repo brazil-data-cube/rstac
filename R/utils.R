@@ -111,11 +111,6 @@
 .parse_geometry <- function(geom) {
 
   # TODO: validate polygon
-
-  # validate provided geojson
-  if (!jsonlite::validate(geom))
-    .error(paste("The supplied JSON is not valid. Please correct it according",
-                  "to the JSON rules."))
   geom
 }
 
@@ -138,6 +133,7 @@
 
   return(items_length(items))
 }
+
 
 #' @title Utility functions
 #'
@@ -217,27 +213,6 @@
     }
   }
 }
-
-#' @title Utility functions
-#'
-#' @param values a \code{list} with the values supplied on ext_query function.
-#' @param ops    a \code{character} with the operations supplied on ext_query
-#'  function.
-#'
-#' @return       a \code{list} with the supplied values.
-#'
-#' @noRd
-.parse_ops <- function(values, ops) {
-
-  if (is.atomic(values[[1]]) && ops == "%in%") {
-    if (length(values[[1]]) == 1)
-      return(list(values))
-    return(values)
-  }
-
-  return(values)
-}
-
 
 #' @title Utility functions
 #'
@@ -324,7 +299,7 @@
 }
 
 
-#' @title Utility functions
+#' @title uUtility functions
 #'
 #' @rdname http_request
 #'
@@ -459,13 +434,12 @@ stac_version <- function(x, ...) {
 #'
 #' @examples
 #' \donttest{
-#' library(magrittr)
-#'
 #' # STACItemCollection object
 #' stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-#'         datetime = "2017-08-01/2018-03-01") %>%
-#'  get_request()
+#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'         datetime = "2017-08-01/2018-03-01",
+#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'  get_request() %>% items_fetch(progress = FALSE)
 #'
 #' stac_item %>% assets_list(assets_names = c("EVI", "NDVI"))
 #' }
@@ -475,7 +449,7 @@ assets_list <- function(items, assets_names, sort = TRUE,
                         gdal_vsi_resolution = TRUE) {
 
 
-  timeline <- items_reap(items, fields =  c("properties", "datetime"))
+  timeline <- items_reap(items, field = c("properties", "datetime"))
   index    <- seq_along(timeline)
 
   if (sort) index <- order(timeline)
@@ -485,7 +459,7 @@ assets_list <- function(items, assets_names, sort = TRUE,
 
   for (b in assets_names) {
 
-    href <- items_reap(items, fields = c("assets", b, "href"))[index]
+    href <- items_reap(items, field = c("assets", b, "href"))[index]
 
     if (gdal_vsi_resolution) {
 
@@ -524,26 +498,25 @@ assets_list <- function(items, assets_names, sort = TRUE,
 #' @param ...                 a named way to provide fields names to get the
 #'  subfields values from the \code{RSTACDocument} objects.
 #'
-#' @param fields              a \code{character} with the names of the fields to
+#' @param field               a \code{character} with the names of the field to
 #'  get the subfields values from the \code{RSTACDocument} objects.
 #'
 #' @return a \code{vector} if the supplied field is atomic, or a list if not.
 #'
 #' @examples
 #' \donttest{
-#' library(magrittr)
-#'
 #' # STACItemCollection object
 #' stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-#'         datetime = "2017-08-01/2018-03-01") %>%
-#'  get_request()
+#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'         datetime = "2017-08-01/2018-03-01",
+#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'  get_request() %>% items_fetch(progress = FALSE)
 #'
-#' stac_item %>% items_reap(fields = c("properties", "datetime"))
+#' stac_item %>% items_reap(field = c("properties", "datetime"))
 #' }
 #'
 #' @export
-items_reap <- function(items, ..., fields = NULL) {
+items_reap <- function(items, ..., field = NULL) {
 
   # checks if the object is STACItemCollections
   if (items_length(items) == 0) return(NULL)
@@ -551,13 +524,21 @@ items_reap <- function(items, ..., fields = NULL) {
   dots <- substitute(list(...))[-1]
   if (!is.character(dots)) dots <- as.character(dots)
 
-  if (length(dots) > 0 && length(fields) > 0 )
-    .error("Only one of the parameters '...' or 'fields' must be supplied.")
+  if (length(dots) > 0 && length(field) > 0)
+    .error("Only one of the parameters '...' or 'field' must be supplied.")
 
-  if (length(fields) == 0 && length(dots) == 0)
+  if (items_matched(items) > items_length(items))
+    .warning(paste("The number of matched items is greater than the number",
+                   "of items length on your object. Considere to use",
+                   "the 'items_fetch()' function before this operation."))
+
+  if (length(field) == 0 && length(dots) == 0)
     return(items$features)
 
-  values <- lapply(items$features, `[[`, c(dots, fields))
+  values <- lapply(items$features, `[[`, c(dots, field))
+
+  if (all(sapply(values, is.null)))
+    .error("The provided field does not exist.")
 
   if (all(sapply(values, is.atomic)))
     return(unlist(values))
@@ -572,29 +553,27 @@ items_reap <- function(items, ..., fields = NULL) {
 #' @param items  a \code{STACItemCollection} object representing
 #'  the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.
 #'
-#' @param ...    a named way to provide fields names to get the subfields values
+#' @param ...    a named way to provide field names to get the subfields values
 #'  from the \code{RSTACDocument} objects.
 #'
-#' @param fields a \code{character} with the names of the fields to get the
+#' @param field a \code{character} with the names of the field to get the
 #'  subfields values from the \code{RSTACDocument} objects.
 #'
 #' @return a \code{character} with the subfields of the \code{feature} field.
 #'
 #' @examples
 #' \donttest{
-#' library(magrittr)
-#'
 #' # STACItemCollection object
 #' stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
 #'         datetime = "2017-08-01/2018-03-01") %>%
 #'  get_request()
 #'
-#' stac_item %>% items_fields(fields = c("properties"))
+#' stac_item %>% items_fields(field = c("properties"))
 #' }
 #'
 #' @export
-items_fields <- function(items, ..., fields = NULL) {
+items_fields <- function(items, ..., field = NULL) {
 
   # checks if the object is STACItemCollections
   if (items_length(items) == 0) return(NULL)
@@ -602,12 +581,12 @@ items_fields <- function(items, ..., fields = NULL) {
   dots <- substitute(list(...))[-1]
   if (!is.character(dots)) dots <- as.character(dots)
 
-  if (length(fields) > 0 && length(dots) > 0)
-    .error("Only one of the parameters '...' or 'fields' must be supplied.")
+  if (length(field) > 0 && length(dots) > 0)
+    .error("Only one of the parameters '...' or 'field' must be supplied.")
 
-  if (length(fields) == 0 && length(dots) == 0)
+  if (length(field) == 0 && length(dots) == 0)
     return(names(items$features[[1]]))
-  names(items$features[[1]][[c(dots, fields)]])
+  names(items$features[[1]][[c(dots, field)]])
 }
 
 
@@ -620,33 +599,32 @@ items_fields <- function(items, ..., fields = NULL) {
 #' @param items               a \code{STACItemCollection} object representing
 #'  the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.
 #'
-#' @param ...    a named way to provide fields names to get the subfields values
+#' @param ...    a named way to provide field names to get the subfields values
 #'  from the \code{RSTACDocument} objects.
+#'
+#' @param field  a \code{character} with the names of the field to get the
+#'  subfields values from the \code{RSTACDocument} objects.
 #'
 #' @param index a \code{character} with the indexes to be grouped. It can be
 #'  used with the function \link{items_reap}.
-#'
-#' @param fields a \code{character} with the names of the fields to get the
-#'  subfields values from the \code{RSTACDocument} objects.
 #'
 #' @return a \code{list} in which each index corresponds to a group with its
 #'  corresponding \code{STACItemCollection} objects.
 #'
 #' @examples
 #' \donttest{
-#' library(magrittr)
-#'
 #' # STACItemCollection object
 #' stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-#'         datetime = "2017-08-01/2018-03-01") %>%
-#'  get_request()
+#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'         datetime = "2017-08-01/2018-03-01",
+#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'  get_request() %>% items_fetch(progress = FALSE)
 #'
-#'  stac_item %>% items_group(., fields = c("properties", "bdc:tile"))
+#'  stac_item %>% items_group(., field = c("properties", "bdc:tiles"))
 #' }
 #'
 #' @export
-items_group <- function(items, ..., index = NULL, fields = NULL) {
+items_group <- function(items, ..., field = NULL, index = NULL) {
 
   # checks if the object is STACItemCollections
   if (items_length(items) == 0) return(list(items))
@@ -654,23 +632,30 @@ items_group <- function(items, ..., index = NULL, fields = NULL) {
   dots <- substitute(list(...))[-1]
   if (!is.character(dots)) dots <- as.character(dots)
 
-  if (length(index) == 0 && length(fields) == 0 &&  length(dots) == 0)
-    .error(paste("Either parameters 'index', 'fields' or '...' parameters must",
+  if (length(index) == 0 && length(field) == 0 &&  length(dots) == 0)
+    .error(paste("Either parameters 'index', 'field' or '...' parameters must",
                  "be supplied."))
 
-  if (length(index) > 0 && (length(fields) > 0 || length(dots) > 0))
-    .error(paste("Only one of the parameters '...','index' or 'fields' should",
+  if (length(index) > 0 && (length(field) > 0 || length(dots) > 0))
+    .error(paste("Only one of the parameters '...','index' or 'field' should",
                  "be supplied."))
 
-  if (is.null(index))
-    index <- items_reap(items, ..., fields = fields)
+  if (is.null(index)) {
+    index <- items_reap(items, ..., field = field)
+
+    if (!is.atomic(index))
+      .error("The field must be atomic vector.")
+  } else {
+
+    if (items_matched(items) > items_length(items))
+      .warning(paste("The number of matched items is greater than the number",
+                     "of items length on your object. Considere to use",
+                     "the 'items_fetch()' function before this operation."))
+  }
 
   if (items_length(items) != length(index))
     .error(paste("The length of the field provided for grouping must contain",
                  "the same size as the length of the items."))
-
-  if (!is.atomic(index))
-    .error("Error ...")
 
   features <- unname(tapply(X = items$features,
                             INDEX = index,

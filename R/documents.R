@@ -122,8 +122,6 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' @examples
 #' \dontrun{
 #'
-#' library(magrittr)
-#'
 #' x <- stac("http://brazildatacube.dpi.inpe.br/stac") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
 #'   stac_search() %>%
@@ -183,8 +181,6 @@ items_matched <- function(items) {
 #'
 #' @examples
 #' \dontrun{
-#' library(magrittr)
-#'
 #' x <-
 #'   stac("http://brazildatacube.dpi.inpe.br/stac") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%

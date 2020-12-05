@@ -24,8 +24,6 @@
 #'
 #' @examples
 #' \donttest{
-#' library(magrittr)
-#'
 #' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   get_request()
 #' }

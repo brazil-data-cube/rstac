@@ -56,11 +56,9 @@
 #'
 #' @examples
 #' \donttest{
-#' library(magrittr)
-#'
 #' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   ext_query("bdc:tile" == c("022024")) %>%
+#'   ext_query("bdc:tile" %in% c("022024")) %>%
 #'   post_request()
 #' }
 #'
@@ -86,8 +84,6 @@ ext_query <- function(q, ...) {
     })
   }
 
-  values <- .parse_ops(values, ops)
-
   ops <- lapply(ops, function(op) {
     if (op == "==") return("eq")
     if (op == "!=") return("neq")
@@ -106,6 +102,9 @@ ext_query <- function(q, ...) {
   entries <- lapply(uniq_keys, function(k) {
 
     res <- lapply(values[keys == k], c)
+    names(res) <- ops[keys == k]
+
+    res <- lapply(names(res), .parse_values_op, res)
     names(res) <- ops[keys == k]
     return(res)
   })
@@ -147,4 +146,26 @@ after_response.ext_query <- function(q, res) {
                                             "application/json"))
 
   RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
+}
+
+#' @title Utility function
+#'
+#' @param op     a \code{character} with operation to be searched.
+#' @param values a named \code{list} with all values.
+#'
+#' @return a \code{vector} with one operation value.
+#'
+#' @noRd
+.parse_values_op <- function(op, values) {
+
+  if (op == "in") {
+    if (length(values[[op]]) == 1)
+      return(list(values[[op]]))
+    return(values[[op]])
+  }
+
+  if (length(values[[op]]) > 1)
+    .warning(paste("Only the first value of '%s' operation was considered",
+                   "in 'ext_query()' function."), op)
+  values[[op]][[1]]
 }
