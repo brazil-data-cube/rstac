@@ -110,15 +110,6 @@ print.STACCatalog <- function(x, ...) {
   if (!is.null(x$description) && x$description != "")
     cat("-", crayon::bold("description:"), x$description, fill = TRUE)
 
-  if (!is.null(x$links) && x$links != "") {
-    cat("-", crayon::bold("links avaliable:"), fill = TRUE)
-
-    for (item in 1:length(x$links)) {
-      if (!is.null(x$links[[item]]$href) && x$links[[item]]$href != "")
-        cat(paste0("  - ", x$links[[item]]$href, collapse = ","), fill = TRUE)
-    }
-  }
-
   cat("-", crayon::bold("field(s):"),
       paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
@@ -181,7 +172,6 @@ print.STACItemCollection <- function(x, n = 10, ..., tail = FALSE) {
     cat("-", crayon::bold("matched feature(s):"), matched, fill = TRUE)
   cat("-", crayon::bold("features"),
       sprintf("(%s item(s)):", length(x$features)), fill = TRUE)
-  # if (length(x$collections) > 0) cat(fill = TRUE)
   if (missing(n) && length(x$features) < 2 * n)
     n <- length(x$features)
   n <- min(n, length(x$features))
