@@ -527,11 +527,6 @@ items_reap <- function(items, ..., field = NULL) {
   if (length(dots) > 0 && length(field) > 0)
     .error("Only one of the parameters '...' or 'field' must be supplied.")
 
-  if (items_matched(items) > items_length(items))
-    .warning(paste("The number of matched items is greater than the number",
-                   "of items length on your object. Considere to use",
-                   "the 'items_fetch()' function before this operation."))
-
   if (length(field) == 0 && length(dots) == 0)
     return(items$features)
 
