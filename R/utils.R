@@ -362,7 +362,7 @@
 
   if (!is.null(names(params)))
     return(paste(names(params),
-                 sapply(unname(params), paste0, collapse = ","),
+                 vapply(unname(params), paste0, collapse = ",", character(1)),
                  sep = "=", collapse = "&"))
   return(paste0(params, collapse = ","))
 }
@@ -380,7 +380,7 @@
                    function(x) strsplit(x, split = "=")[[1]])
 
   params <- lapply(values, `[[`, 2)
-  names(params) <- sapply(values, `[[`, 1)
+  names(params) <- vapply(values, `[[`, 1, FUN.VALUE = character(1))
 
   return(params)
 }
@@ -532,10 +532,10 @@ items_reap <- function(items, ..., field = NULL) {
 
   values <- lapply(items$features, `[[`, c(dots, field))
 
-  if (all(sapply(values, is.null)))
+  if (all(vapply(values, is.null, logical(1))))
     .error("The provided field does not exist.")
 
-  if (all(sapply(values, is.atomic)))
+  if (all(vapply(values, is.atomic, logical(1))))
     return(unlist(values))
   values
 }
