@@ -18,9 +18,9 @@ A \code{RSTACQuery} object  with the subclass \code{ext_query} containing
 }
 \description{
 The \code{ext_query()} is the \emph{exported function} of the STAC API
-query extension. It can be used after a call to \code{stac_search()} function.
-It allows that additional fields and operators other than those defined in
-\code{stac_search()} function be used to make a complex filter.
+query extension. It can be used after a call to \code{stac_search()}
+function. It allows that additional fields and operators other than those
+defined in \code{stac_search()} function be used to make a complex filter.
 
 The function accepts multiple filter criteria. Each filter entry is an
 expression formed by \code{<field> <operator> <value>}, where

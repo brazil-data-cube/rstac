@@ -39,8 +39,8 @@ shown or not. Defaults to \code{TRUE}.}
 \link[httr]{set_cookies}.}
 }
 \value{
-The same \code{STACItemCollection} or \code{STACItem} object, with the
-link of the item pointing to the directory where the assets were saved.
+The same \code{STACItemCollection} or \code{STACItem} object, with
+the link of the item pointing to the directory where the assets were saved.
 }
 \description{
 The \code{assets_download} function downloads the assets

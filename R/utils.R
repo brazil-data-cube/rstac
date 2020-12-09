@@ -116,8 +116,8 @@
 
 #' @title Utility functions
 #'
-#' @param items       \code{STACItemCollection} object representing the result of
-#'  \code{/stac/search} or \code{/collections/{collectionId}/items}.
+#' @param items       \code{STACItemCollection} object representing the result
+#'  of \code{/stac/search} or \code{/collections/{collectionId}/items}.
 #'
 #' @return A \code{numeric} with the length of a \code{STACItemCollection}
 #'  object.
