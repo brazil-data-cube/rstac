@@ -16,6 +16,8 @@ status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](
 [![codecov](https://codecov.io/gh/OldLipe/rstac/branch/master/graph/badge.svg)](https://codecov.io/gh/OldLipe/rstac)
 [![Software Life
 Cycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/rstac)](https://cran.r-project.org/package=rstac)
 [![Join us at
 Discord](https://img.shields.io/discord/689541907621085198?logo=discord&logoColor=ffffff&color=7389D8)](https://discord.com/channels/689541907621085198#)
 <!-- badges: end -->
@@ -30,6 +32,13 @@ maturity, we plan update `rstac` to support upcoming STAC 1.0.0 version
 soon.
 
 ## Installation
+
+``` r
+# install via CRAN 
+install.packages("rstac")
+```
+
+### Development version
 
 To install the development version of `rstac`, run the following
 commands
@@ -96,18 +105,18 @@ it_obj <- s_obj %>%
 
 it_obj
 #> ###STACItemCollection
-#> - matched feature(s): 210
+#> - matched feature(s): 212
 #> - features (10 item(s)):
+#>   - CB4_64_16D_STK_v001_022025_2020-07-27_2020-08-11
+#>   - CB4_64_16D_STK_v001_022024_2020-07-27_2020-08-11
 #>   - CB4_64_16D_STK_v001_022024_2020-07-11_2020-07-26
 #>   - CB4_64_16D_STK_v001_022025_2020-07-11_2020-07-26
-#>   - CB4_64_16D_STK_v001_022025_2020-06-25_2020-07-10
 #>   - CB4_64_16D_STK_v001_022024_2020-06-25_2020-07-10
+#>   - CB4_64_16D_STK_v001_022025_2020-06-25_2020-07-10
 #>   - CB4_64_16D_STK_v001_022024_2020-06-09_2020-06-24
 #>   - CB4_64_16D_STK_v001_022025_2020-06-09_2020-06-24
 #>   - CB4_64_16D_STK_v001_022024_2020-05-24_2020-06-08
 #>   - CB4_64_16D_STK_v001_022025_2020-05-24_2020-06-08
-#>   - CB4_64_16D_STK_v001_022024_2020-05-08_2020-05-23
-#>   - CB4_64_16D_STK_v001_022025_2020-05-08_2020-05-23
 #> - field(s): type, links, context, features
 ```
 
@@ -137,7 +146,7 @@ criteria, which shows `210`:
 ``` r
 # it_obj variable from the last code example
 it_obj %>% items_matched()
-#> [1] 210
+#> [1] 212
 ```
 
 However, if we count how many items there are in `it_obj` variable, we
@@ -154,7 +163,7 @@ it_obj %>% items_length()
 # (but don't stored them back in it_obj)
 it_obj %>% items_fetch(progress = FALSE) %>%
     items_length()
-#> [1] 210
+#> [1] 212
 ```
 
 ### Download assets

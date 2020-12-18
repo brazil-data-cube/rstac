@@ -23,7 +23,7 @@ the search for items. Only items in one of the provided collections will be
 searched.}
 
 \item{ids}{a \code{character} vector with item IDs. All other filter
-parameters that futher restrict the number of search results are ignored.}
+parameters that further restrict the number of search results are ignored.}
 
 \item{bbox}{a \code{numeric} vector with only features that have a
 geometry that intersects the bounding box are selected. The bounding box is

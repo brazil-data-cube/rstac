@@ -9,7 +9,8 @@ Authors@R:
             role = c("cph")))
 Description: Provides functions to access, search and download spacetime earth 
     observation data via SpatioTemporal Asset Catalog (STAC). This package 
-    supports the version 0.8.1 or higher of the STAC specification.
+    supports the version 0.8.1 or higher of the STAC specification
+    (<http://stacspec.org>).
 License: MIT + file LICENSE
 URL: https://github.com/brazil-data-cube/rstac
 BugReports: https://github.com/brazil-data-cube/rstac/issues
@@ -17,10 +18,13 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Depends:
+    R (>= 3.2)
+Imports:
     httr,
     crayon,
     utils,
-    magrittr
+    magrittr,
+    jsonlite
 Suggests:
     covr,
     testthat,

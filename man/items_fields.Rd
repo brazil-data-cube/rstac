@@ -4,16 +4,16 @@
 \alias{items_fields}
 \title{Utility functions}
 \usage{
-items_fields(items, ..., fields = NULL)
+items_fields(items, ..., field = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
 the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.}
 
-\item{...}{a named way to provide fields names to get the subfields values
+\item{...}{a named way to provide field names to get the subfields values
 from the \code{RSTACDocument} objects.}
 
-\item{fields}{a \code{character} with the names of the fields to get the
+\item{field}{a \code{character} with the names of the field to get the
 subfields values from the \code{RSTACDocument} objects.}
 }
 \value{
@@ -31,7 +31,7 @@ stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
         datetime = "2017-08-01/2018-03-01") \%>\%
  get_request()
 
-stac_item \%>\% items_fields(fields = c("properties"))
+stac_item \%>\% items_fields(field = c("properties"))
 }
 
 }

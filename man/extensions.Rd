@@ -191,10 +191,10 @@ are defined as query parameters to simplify the creation of a query.
 Therefore, use this method only in endpoints that specify a parameter in
 their paths.
 
-\item \code{RSTACQuery}: The \code{RSTACQuery()} function is a constructor of \code{RSTACQuery} objects.
-Every extension must implement a subclass of \code{RSTACQuery} to represent
-its queries. This is done by informing to the \code{subclass} parameter
-the extension's subclass name.
+\item \code{RSTACQuery}: The \code{RSTACQuery()} function is a constructor of \code{RSTACQuery}
+objects. Every extension must implement a subclass of \code{RSTACQuery} to
+represent its queries. This is done by informing to the \code{subclass}
+parameter the extension's subclass name.
 
 The \code{params} parameter is a named \code{list} where user parameters
 must be stored. It is important to know if previous query parameters needs

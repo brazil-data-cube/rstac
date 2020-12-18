@@ -33,9 +33,10 @@ This function returns the \code{date}, \code{band} and
 \donttest{
 # STACItemCollection object
 stac_item <- stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
- stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-        datetime = "2017-08-01/2018-03-01") \%>\%
- get_request()
+ stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+        datetime = "2017-08-01/2018-03-01",
+        bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
+ get_request() \%>\% items_fetch(progress = FALSE)
 
 stac_item \%>\% assets_list(assets_names = c("EVI", "NDVI"))
 }

@@ -38,7 +38,6 @@ requests to STAC web services, retrieves, and parse the data.
 }
 \examples{
 \donttest{
-
 stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
  get_request()
 

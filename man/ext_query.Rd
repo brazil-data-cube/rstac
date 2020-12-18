@@ -4,19 +4,13 @@
 \alias{ext_query}
 \title{Extension functions}
 \usage{
-ext_query(q, ..., keys = NULL, ops = NULL, values = NULL)
+ext_query(q, ...)
 }
 \arguments{
 \item{q}{a \code{RSTACQuery} object expressing a STAC query
 criteria.}
 
 \item{...}{entries with format \code{<field> <operator> <value>}.}
-
-\item{keys}{a \code{character} with the \code{<field>} information.}
-
-\item{ops}{a \code{character} with the \code{<opetator>} information.}
-
-\item{values}{a \code{character} with the \code{<value>} information.}
 }
 \value{
 A \code{RSTACQuery} object  with the subclass \code{ext_query} containing
@@ -24,9 +18,9 @@ A \code{RSTACQuery} object  with the subclass \code{ext_query} containing
 }
 \description{
 The \code{ext_query()} is the \emph{exported function} of the STAC API
-query extension. It can be used after a call to \code{stac_search()} function.
-It allows that additional fields and operators other than those defined in
-\code{stac_search()} function be used to make a complex filter.
+query extension. It can be used after a call to \code{stac_search()}
+function. It allows that additional fields and operators other than those
+defined in \code{stac_search()} function be used to make a complex filter.
 
 The function accepts multiple filter criteria. Each filter entry is an
 expression formed by \code{<field> <operator> <value>}, where
@@ -65,10 +59,9 @@ extensions.
 }
 \examples{
 \donttest{
-# filter items that has 'bdc:tile' property equal to '022024'
 stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1") \%>\%
-  ext_query("bdc:tile" == "022024") \%>\%
+  ext_query("bdc:tile" \%in\% c("022024")) \%>\%
   post_request()
 }
 

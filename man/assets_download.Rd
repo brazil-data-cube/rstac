@@ -39,8 +39,8 @@ shown or not. Defaults to \code{TRUE}.}
 \link[httr]{set_cookies}.}
 }
 \value{
-The same \code{STACItemCollection} or \code{STACItem} object, with the
-link of the item pointing to the directory where the assets were saved.
+The same \code{STACItemCollection} or \code{STACItem} object, with
+the link of the item pointing to the directory where the assets were saved.
 }
 \description{
 The \code{assets_download} function downloads the assets
@@ -48,7 +48,6 @@ provided by the STAC API.
 }
 \examples{
 \dontrun{
-
 stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1") \%>\%
   stac_search(limit = 2) \%>\%

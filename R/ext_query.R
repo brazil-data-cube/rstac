@@ -2,9 +2,9 @@
 #'
 #' @description
 #' The \code{ext_query()} is the \emph{exported function} of the STAC API
-#' query extension. It can be used after a call to \code{stac_search()} function.
-#' It allows that additional fields and operators other than those defined in
-#' \code{stac_search()} function be used to make a complex filter.
+#' query extension. It can be used after a call to \code{stac_search()}
+#' function. It allows that additional fields and operators other than those
+#' defined in \code{stac_search()} function be used to make a complex filter.
 #'
 #' The function accepts multiple filter criteria. Each filter entry is an
 #' expression formed by \code{<field> <operator> <value>}, where
@@ -46,12 +46,6 @@
 #'
 #' @param ...    entries with format \code{<field> <operator> <value>}.
 #'
-#' @param keys   a \code{character} with the \code{<field>} information.
-#'
-#' @param ops    a \code{character} with the \code{<opetator>} information.
-#'
-#' @param values a \code{character} with the \code{<value>} information.
-#'
 #' @seealso \code{\link{stac_search}}, \code{\link{post_request}},
 #' \code{\link{endpoint}}, \code{\link{before_request}},
 #' \code{\link{after_response}}, \code{\link{content_response}}
@@ -62,22 +56,20 @@
 #'
 #' @examples
 #' \donttest{
-#' # filter items that has 'bdc:tile' property equal to '022024'
 #' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   ext_query("bdc:tile" == "022024") %>%
+#'   ext_query("bdc:tile" %in% c("022024")) %>%
 #'   post_request()
 #' }
 #'
 #' @export
-ext_query <- function(q, ..., keys = NULL, ops = NULL, values = NULL) {
+ext_query <- function(q, ...) {
 
   # check s parameter
   check_subclass(q, c("search", "ext_query"))
 
-  if (!is.null(values)) {
-    values <- list(values)
-  }
+  # get the env parent
+  env_parent <- parent.frame()
 
   params <- list()
   if (!is.null(substitute(list(...))[-1])) {
@@ -85,15 +77,12 @@ ext_query <- function(q, ..., keys = NULL, ops = NULL, values = NULL) {
     tryCatch({
       ops <- lapply(dots, function(x) as.character(x[[1]]))
       keys <- lapply(dots, function(x) as.character(x[[2]]))
-      values <- lapply(dots, function(x) eval(x[[3]]))
+      values <- lapply(dots, function(x) eval(x[[3]], env_parent))
     }, error = function(e) {
 
       .error("Invalid query expression.")
     })
   }
-
-  if (sapply(values, length) == 1 && ops == "%in%")
-    values <- list(values)
 
   ops <- lapply(ops, function(op) {
     if (op == "==") return("eq")
@@ -113,6 +102,9 @@ ext_query <- function(q, ..., keys = NULL, ops = NULL, values = NULL) {
   entries <- lapply(uniq_keys, function(k) {
 
     res <- lapply(values[keys == k], c)
+    names(res) <- ops[keys == k]
+
+    res <- lapply(names(res), .parse_values_op, res)
     names(res) <- ops[keys == k]
     return(res)
   })
@@ -156,9 +148,24 @@ after_response.ext_query <- function(q, res) {
   RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
 }
 
+#' @title Utility function
+#'
+#' @param op     a \code{character} with operation to be searched.
+#' @param values a named \code{list} with all values.
+#'
+#' @return a \code{vector} with one operation value.
+#'
+#' @noRd
+.parse_values_op <- function(op, values) {
 
-m <- function(k){
-  stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
-    stac_search(collections = "CB4_64_16D_STK-1") %>%
-    ext_query("bdc:tile" %in% c("ola", "tudi"))
+  if (op == "in") {
+    if (length(values[[op]]) == 1)
+      return(list(values[[op]]))
+    return(values[[op]])
+  }
+
+  if (length(values[[op]]) > 1)
+    .warning(paste("Only the first value of '%s' operation was considered",
+                   "in 'ext_query()' function."), op)
+  values[[op]][[1]]
 }
