@@ -72,7 +72,6 @@ For printing use the \code{print()} function directly, since the package has
 }
 \examples{
 \donttest{
-
 # STACItemCollection object
 stac_item_collection <-
   stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%

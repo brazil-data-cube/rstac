@@ -342,10 +342,10 @@ testthat::test_that("stac item object", {
         rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
           collections("CB4_64_16D_STK-1") %>%
           items(
-            bbox          = c(-48.19039, -16.00871, -41.6341, -11.91345),
-            limit         = 10,
-            datetime      = "2018-02-01/..",
-            feature_id    = "CB4_64_16D_STK_v001_021027_2020-07-11_2020-07-26") %>%
+            bbox       = c(-48.19039, -16.00871, -41.6341, -11.91345),
+            limit      = 10,
+            datetime   = "2018-02-01/..",
+            feature_id = "CB4_64_16D_STK_v001_021027_2020-07-11_2020-07-26") %>%
           get_request()),
       regexp   = "###STACItem"
     )

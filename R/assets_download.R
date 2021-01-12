@@ -13,16 +13,16 @@
 #' @param output_dir  a \code{character} directory in which the assets will be
 #'  saved.
 #'
-#' @param overwrite  a \code{logical} if TRUE will replaced the existing file,
+#' @param overwrite   a \code{logical} if TRUE will replaced the existing file,
 #'  if FALSE a warning message is shown.
 #'
-#' @param items_max a \code{numeric} corresponding how many items will be
+#' @param items_max   a \code{numeric} corresponding how many items will be
 #'  downloaded.
 #'
 #' @param progress    a \code{logical} indicating if a progress bar must be
 #'  shown or not. Defaults to \code{TRUE}.
 #'
-#' @param ...       config parameters to be passed to \link[httr]{GET} or
+#' @param ...         config parameters to be passed to \link[httr]{GET} or
 #' \link[httr]{POST} methods, such as \link[httr]{add_headers} or
 #' \link[httr]{set_cookies}.
 #'
@@ -31,7 +31,6 @@
 #'
 #' @examples
 #' \dontrun{
-#'
 #' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
 #'   stac_search(limit = 2) %>%
@@ -40,12 +39,13 @@
 #'   overwrite = FALSE)
 #' }
 #'
-#' @return The same \code{STACItemCollection} or \code{STACItem} object, with the
-#' link of the item pointing to the directory where the assets were saved.
+#' @return The same \code{STACItemCollection} or \code{STACItem} object, with
+#' the link of the item pointing to the directory where the assets were saved.
 #'
 #' @export
 assets_download <- function(items, assets_name, output_dir = ".",
-                            overwrite = FALSE, items_max = Inf, progress = TRUE, ...) {
+                            overwrite = FALSE, items_max = Inf, progress = TRUE,
+                            ...) {
 
   #check the object subclass
   check_subclass(items, subclasses = c("STACItemCollection", "STACItem"))
@@ -68,7 +68,8 @@ assets_download <- function(items, assets_name, output_dir = ".",
   if (!missing(items_max)) {
     if (items_max > items_length(items)) {
       .warning(paste("The number of specified items is greater than the number",
-                     "of items length on your object. By default, items_max = %d"),
+                     "of items length on your object. By default,",
+                     "items_max = %d"),
                items_length(items))
 
       items_max <- .parse_items_size(items)

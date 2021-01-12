@@ -105,10 +105,11 @@ testthat::test_that("examples rstac", {
       object = typeof(
         stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(collections = "CB4_64_16D_STK-1",
-                    limit = 10,
+                    limit = 100,
+                    bbox = c(-48.206,-14.195,-45.067,-12.272),
                     datetime = "2017-08-01/2018-03-01") %>%
-        get_request() %>%
-        items_group(fields = c("properties", "bdc:tile"))),
+        get_request() %>% items_fetch(progress = FALSE) %>%
+        items_group(field = c("properties", "bdc:tiles"))),
       expected = "list")
 
     # test items_reap
@@ -119,7 +120,7 @@ testthat::test_that("examples rstac", {
                       limit = 10,
                       datetime = "2017-08-01/2018-03-01") %>%
           get_request() %>%
-          items_reap(fields = c("properties", "datetime"))),
+          items_reap(field = c("properties", "datetime"))),
       expected = "character")
 
     # test items_fields
@@ -130,7 +131,7 @@ testthat::test_that("examples rstac", {
                       limit = 10,
                       datetime = "2017-08-01/2018-03-01") %>%
           get_request() %>%
-          items_fields(fields = c("properties"))),
+          items_fields(field = c("properties"))),
       expected = "character")
 
     # test assets_list

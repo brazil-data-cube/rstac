@@ -42,8 +42,20 @@
 "_PACKAGE"
 NULL
 
-#' @importFrom httr GET POST write_disk add_headers content status_code http_type
+#' Pipe
+#'
+#' Magrittr compound assignment pipe-operator.
+#'
+#' @importFrom magrittr %>%
+#' @name %>%
+#' @rdname pipe
+#' @param lhs,rhs A visualization and a function to apply to it.
+#' @export
+NULL
+
+#' @importFrom httr GET POST write_disk add_headers content status_code
+#' http_type
 #' @importFrom crayon bold
 #' @importFrom utils modifyList
-#' @importFrom magrittr %>%
+#' @importFrom jsonlite validate
 NULL
