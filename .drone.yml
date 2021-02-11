@@ -1,0 +1,30 @@
+kind: pipeline
+name: default
+
+steps:
+- name: test
+  image: brazildatacube/r-webservices:1.0.0
+  commands:
+  - R CMD build .
+  - R CMD check *tar.gz --as-cran
+
+- name: coverage
+  image: brazildatacube/r-webservices:1.0.0
+  environment:
+    CODECOV_TOKEN:
+      from_secret: codecov_token
+  commands:
+  - R -e 'library(covr); codecov(quiet = FALSE)'
+  when:
+    event:
+    - push
+
+- name: discord-notify
+  image: brazildatacube/bdc-drone-discord
+  settings:
+    webhook:
+      from_secret: discord_webhook
+  when:
+    status:
+      - failure
+      - success
