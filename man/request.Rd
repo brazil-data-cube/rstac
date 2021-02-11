@@ -38,10 +38,10 @@ requests to STAC web services, retrieves, and parse the data.
 }
 \examples{
 \donttest{
-stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  get_request()
 
-stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  stac_search(collections = "CB4_64_16D_STK-1") \%>\%
  post_request()
 }

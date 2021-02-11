@@ -84,13 +84,13 @@ returned by these requests is a \code{STACItemCollection} object, a regular R
 \examples{
 \donttest{
 # GET request
-stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
         datetime = "2017-08-01/2018-03-01") \%>\%
  get_request()
 
 # POST request
-stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  stac_search(collections = "CB4_64_16D_STK-1",
         bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) \%>\%
  post_request()
