@@ -421,7 +421,7 @@ stac_version <- function(x, ...) {
 #'  the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.
 #'
 #' @param assets_names        a \code{character} with the assets names to be
-#'  filtered.
+#'  filtered. If \code{NULL} (default) all assets will be returned.
 #'
 #' @param sort                a \code{logical} if true the dates will be sorted
 #'  in increasing order. By default, the dates are sorted.
@@ -445,13 +445,14 @@ stac_version <- function(x, ...) {
 #' }
 #'
 #' @export
-assets_list <- function(items, assets_names, sort = TRUE,
+assets_list <- function(items, assets_names = NULL, sort = TRUE,
                         gdal_vsi_resolution = TRUE) {
 
+  if (is.null(assets_names))
+    assets_names <- items_fields(items, "assets")
 
   timeline <- items_reap(items, field = c("properties", "datetime"))
   index    <- seq_along(timeline)
-
   if (sort) index <- order(timeline)
 
   timeline <- timeline[index]

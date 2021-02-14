@@ -4,14 +4,19 @@
 \alias{assets_list}
 \title{Utility functions}
 \usage{
-assets_list(items, assets_names, sort = TRUE, gdal_vsi_resolution = TRUE)
+assets_list(
+  items,
+  assets_names = NULL,
+  sort = TRUE,
+  gdal_vsi_resolution = TRUE
+)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
 the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.}
 
 \item{assets_names}{a \code{character} with the assets names to be
-filtered.}
+filtered. If \code{NULL} (default) all assets will be returned.}
 
 \item{sort}{a \code{logical} if true the dates will be sorted
 in increasing order. By default, the dates are sorted.}
