@@ -9,11 +9,11 @@ R Client Library for SpatioTemporal Asset Catalog (rstac)
 
 [![Software
 License](https://img.shields.io/badge/license-MIT-green)](https://github.com/brazil-data-cube/rstac/blob/master/LICENSE)
-[![Travis build
-status](https://travis-ci.com/OldLipe/rstac.svg?branch=master)](https://travis-ci.com/OldLipe/rstac)
+[![Build
+Status](https://drone.dpi.inpe.br/api/badges/brazil-data-cube/rstac/status.svg)](https://drone.dpi.inpe.br/brazil-data-cube/rstac)
 [![Build
 status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/rstac)
-[![codecov](https://codecov.io/gh/OldLipe/rstac/branch/master/graph/badge.svg)](https://codecov.io/gh/OldLipe/rstac)
+[![codecov](https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT)](https://codecov.io/gh/brazil-data-cube/rstac)
 [![Software Life
 Cycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![CRAN
@@ -76,7 +76,7 @@ Cube](http://brazildatacube.org/) project of the Brazilian National
 Space Research Institute [INPE](http://www.inpe.br/).
 
 ``` r
-s_obj <- stac("http://brazildatacube.dpi.inpe.br/stac/")
+s_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
 
 get_request(s_obj)
 #> ###STACCatalog

@@ -2,7 +2,7 @@
 ^\.Rproj\.user$
 ^codecov\.yml$
 ^appveyor\.yml$
-^\.travis\.yml$
+^\.drone\.yml$
 ^\.httr-oauth$
 ^_pkgdown\.yml$
 ^docs$

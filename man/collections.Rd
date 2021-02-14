@@ -33,11 +33,11 @@ Each endpoint retrieves specific STAC objects:
 }
 \examples{
 \donttest{
-stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
   collections() \%>\%
   get_request()
 
-stac("http://brazildatacube.dpi.inpe.br/stac/") \%>\%
+stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
   collections(collection_id = "CB4_64_16D_STK-1") \%>\%
   get_request()
 }
