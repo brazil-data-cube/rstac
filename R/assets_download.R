@@ -31,7 +31,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
 #'   stac_search(limit = 2) %>%
 #'   get_request() %>%
