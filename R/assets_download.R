@@ -43,8 +43,12 @@
 #' the link of the item pointing to the directory where the assets were saved.
 #'
 #' @export
-assets_download <- function(items, assets_name, output_dir = ".",
-                            overwrite = FALSE, items_max = Inf, progress = TRUE,
+assets_download <- function(items,
+                            assets_name,
+                            output_dir = ".",
+                            overwrite = FALSE,
+                            items_max = Inf,
+                            progress = TRUE,
                             ...) {
 
   #check the object subclass
@@ -95,8 +99,9 @@ assets_download <- function(items, assets_name, output_dir = ".",
       utils::setTxtProgressBar(pb, i)
 
     items$features[[i]] <- .item_download(items$features[[i]],
-                                          assets_name, output_dir,
-                                          overwrite,...)
+                                          assets_name,
+                                          output_dir,
+                                          overwrite, ...)
   }
   # close progress bar
   if (progress)
@@ -172,6 +177,9 @@ assets_download <- function(items, assets_name, output_dir = ".",
 #'
 #' @noRd
 .file_ext <- function(asset_url) {
+
+  # remove query string from url
+  asset_url[[1]] <- sub("\\?.+", "", asset_url[[1]])
 
   pos <- regexpr("\\.([[:alnum:]]+)$", asset_url[[1]])
   if (pos < 0) return("")
