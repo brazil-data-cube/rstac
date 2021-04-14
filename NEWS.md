@@ -1,5 +1,9 @@
 # rstac (development version)
 
+# rstac 0.9.0-3 (Released 2021-03-24)
+
+* Fix pagination in items_fetch function to conform to STAC API spec
+
 # rstac 0.9.0-2 (Released 2021-03-24)
 
 * Change version 0.9.0 to 0.9.0-2 in DESCRIPTION
