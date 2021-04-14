@@ -1,6 +1,6 @@
 Package: rstac
 Title: Client Library for SpatioTemporal Asset Catalog
-Version: 0.9.0-2
+Version: 0.9.0-3
 Authors@R: 
     c(person("Brazil Data Cube Team", 
             email = "brazildatacube@inpe.br",
@@ -18,7 +18,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Depends:
-    R (>= 3.2)
+    R (>= 3.5)
 Imports:
     httr,
     crayon,
