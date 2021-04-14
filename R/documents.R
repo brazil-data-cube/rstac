@@ -219,13 +219,43 @@ items_fetch <- function(items, ..., progress = TRUE) {
     # get url of the next page
     next_url <- Filter(function(x) x$rel == "next", items$links)
     if (length(next_url) == 0) break
+    next_url <- next_url[[1]]
 
     # create a new stac object with params from the next url
-    # TODO: This is not the specified behavior in spec:
-    # https://github.com/radiantearth/stac-spec/blob/v0.9.0/api-spec/api-spec.md
-    #base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url[[1]]$href)
-    params <- .querystring_decode(substring(
-      gsub("^([^?]+)(\\?.*)?$", "\\2", next_url[[1]]$href), 2))
+    # check for body implementation in next link
+    if (q$verb == "POST" && all(c("body", "method") %in% names(next_url))) {
+
+      # TODO: check if spec can enforce that the same provided base url
+      # must be used to proceed pagination.
+      # For security concerns, here, the original base_url will be used in
+      # subsequent requests of pagination
+
+      # # update query base_url and verb to the returned one
+      # q$base_url <- next_url$href
+
+      # erase current parameters if merge == FALSE
+      if (!is.null(next_url$merge) && !next_url$merge) {
+        q$params <- list()
+      }
+
+      # get parameters
+      params <- next_url$body
+
+    } else {
+
+      # TODO: check if spec can enforce that the same provided base url
+      # must be used to proceed pagination.
+      # For security concerns, here, the original base_url will be used in
+      # subsequent requests of pagination
+
+      # # update query base_url and verb to the returned one
+      # q$base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url$href)
+
+      # get next link parameters from url
+      params <- .querystring_decode(substring(
+        gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2))
+
+    }
 
     next_stac <- RSTACQuery(version = q$version,
                             base_url = q$base_url,
