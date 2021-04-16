@@ -94,9 +94,9 @@ STAC API.
 
 In the code bellow, we get some STAC items of `MOD13Q1` collection that
 intersects the bounding box passed to the `bbox` parameter. To do this,
-we call the `stac_search` function that implements the STAC
-`/stac/search` endpoint. The returned document is a STAC Item Collection
-(a geojson containing a feature collection).
+we call the `stac_search` function that implements the STAC `/search`
+endpoint. The returned document is a STAC Item Collection (a geojson
+containing a feature collection).
 
 ``` r
 it_obj <- s_obj %>% 
@@ -142,7 +142,7 @@ the assets.
 
 `rstac` provides some functions to facilitates the interaction with STAC
 data. In the example bellow, we get how many items matched the search
-criteria, which shows `210`:
+criteria:
 
 ``` r
 # it_obj variable from the last code example
