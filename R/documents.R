@@ -95,8 +95,8 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' The \code{items_length()} function shows how many items there are in
 #' the \code{STACItemCollection} object.
 #' The \code{items_matched()} function shows how many items matched the
-#' search criteria. It support \code{search:metadata} (v0.8.0) and
-#' \code{context} (v0.9.0) STAC API extensions.
+#' search criteria. It supports \code{search:metadata} (v0.8.0),
+#' \code{context} (v0.9.0), and \code{numberMatched} (OGC WFS3 core spec).
 #' The \code{items_fetch()} function request all STAC Items through
 #' pagination.
 #' The \code{items_datetime()} function retrieves a the \code{datetime}
@@ -149,9 +149,6 @@ items_length <- function(items) {
 #' @export
 items_matched <- function(items) {
 
-  # STAC API (<0.9.0): "search:metadata"
-  # STAC API (>=0.9.0): "context"
-
   # Check object class
   check_subclass(items, "STACItemCollection")
 
@@ -162,7 +159,7 @@ items_matched <- function(items) {
     # STAC API >= 0.9.0 extensions
     matched <- items$`context`$matched
 
-  # try the last resort: WFS3 spec
+  # try the last resort: OGC features core spec
   if (is.null(matched))
     matched <- items$numberMatched
 

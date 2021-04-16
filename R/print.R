@@ -4,49 +4,44 @@
 #'
 #' @description The print function covers all objects in the rstac package:
 #' \itemize{
-#'   \item \code{\link{stac}}: Returns a \code{STACCatalog} document in
-#'    \code{/stac} (V0.8.0 or below) or \code{/} (V0.9.0 or above) endpoint.
-#'   \item \code{\link{stac_search}}: Returns a \code{STACItemCollection}
-#'    document in \code{/stac/search} (V0.8.0 or below) or
-#'    \code{/search} (V0.9.0 or above)  endpoint with a group of Items matching
-#'    the provided search predicates.
-#'   \item \code{\link{collections}}: Return a \code{STACCollectionList}
-#'   document by listing of collections contained in the catalog in
-#'   \code{/collections} endpoint and in \code{/collections/\{collectionId\}}
-#'   endpoint return a single \code{STACCollection} document.
-#'   \item \code{\link{items}}: Return a \code{STACItemCollection} document in
-#'   \code{/collections/\{collectionId\}/items} and a \code{STACItem} document
-#'   in \code{/collections/\{collectionId\}/items/\{itemId\}} WFS3 endpoints.
-#'  }
+#' \item \code{\link{stac}}: returns a \code{STACCatalog} document from
+#'   \code{/stac} (v0.8.0) or \code{/} (v0.9.0 or v1.0.0) endpoint.
+#' \item \code{\link{stac_search}}: returns a \code{STACItemCollection}
+#'   document from \code{/stac/search} (v0.8.0) or \code{/search}
+#'   (v0.9.0 or v1.0.0) endpoint containing all Items that match
+#'   the provided search predicates.
+#' \item \code{\link{collections}}: implements the \code{/collections} and
+#'   \code{/collections/\{collectionId\}} endpoints. The former returns
+#'   a \code{STACCollectionList} document that lists all collections published
+#'   by the server, and the later returns a single \code{STACCollection}
+#'   document that describes a unique collection.
+#' \item \code{\link{items}}: retrieves a \code{STACItemCollection} document
+#'   from \code{/collections/\{collectionId\}/items} endpoint and a
+#'   \code{STACItem} document from
+#'   \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
+#' }
 #'
 #' The rstac package objects visualization is based on \strong{Markdown}, a
-#'  lightweight markup language, so you can paste the output into any
-#'  \strong{Markdown} editor for a better visualization.
+#' lightweight markup language, so you can paste the output into any
+#' \strong{Markdown} editor for a better visualization.
 #'
-#' For printing use the \code{print()} function directly, since the package has
-#'  a generic implementation for its objects. For console output control, you
-#'  have the option to determine how many items you want to see through the
-#'  \code{n} in \code{print} objects parameters, the following objects have the
-#'  \code{n} parameter:
-#'  \itemize{
-#'   \item \code{\link{items}}
-#'   \item \code{\link{collections}}
-#'   \item \code{\link{stac}}
-#'  }
+#' Call \code{print()} function to print the rstac's objects.
+#' You can determine how many items will be printed using \code{n} parameter.
+#' }
 #'
-#' @param x either a \code{RSTACQuery} object expressing a STAC query
+#' @param x    either a \code{RSTACQuery} object expressing a STAC query
 #' criteria or any \code{RSTACDocument}.
 #'
-#' @param n number of lines to view on each object. Each object has its own type
-#'  of truncation in lines. In the \code{stac_collection} object, by default, 10
-#'  links will be shown, but if the object has less than 20 collections, all
-#'  the collections will be displayed. In \code{STACItemCollection}, by default,
-#'  10 features will be shown. If you want to show all lines of a rstac object,
-#'  use `n = Inf`.
+#' @param n    number of entries to print. Each object has its own rule of
+#' truncation: the \code{STACCollection} objects will print
+#' 10 links by default. If the object has less than 20 collections, all
+#' collections will be shown. In \code{STACItemCollection}, 10 features
+#' will be printed by default. To show all entries, use \code{n = Inf}.
 #'
-#' @param ... other parameters passed in the functions.
+#' @param ...  other parameters passed in the functions.
 #'
-#' @param tail To show the last lines of an object.
+#' @param tail A \code{logical} value indicating if last features in
+#' STACItemCollection object must be show.
 #'
 #' @seealso
 #' \code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
