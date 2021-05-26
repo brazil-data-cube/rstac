@@ -1,8 +1,7 @@
 #' @title Printing functions
-#'
 #' @name print
-#'
 #' @description The print function covers all objects in the rstac package:
+#'
 #' \itemize{
 #' \item \code{\link{stac}}: returns a \code{STACCatalog} document from
 #'   \code{/stac} (v0.8.0) or \code{/} (v0.9.0 or v1.0.0) endpoint.
@@ -21,13 +20,12 @@
 #'   \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
 #' }
 #'
-#' The rstac package objects visualization is based on \strong{Markdown}, a
-#' lightweight markup language, so you can paste the output into any
-#' \strong{Markdown} editor for a better visualization.
+#' The rstac package objects visualization is based on markdown, a
+#' lightweight markup language. You can paste the output into any
+#' markdown editor for a better visualization.
 #'
 #' Call \code{print()} function to print the rstac's objects.
 #' You can determine how many items will be printed using \code{n} parameter.
-#' }
 #'
 #' @param x    either a \code{RSTACQuery} object expressing a STAC query
 #' criteria or any \code{RSTACDocument}.

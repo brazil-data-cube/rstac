@@ -38,7 +38,32 @@ will be printed by default. To show all entries, use \code{n = Inf}.}
 STACItemCollection object must be show.}
 }
 \description{
+The print function covers all objects in the rstac package:
 
+\itemize{
+\item \code{\link{stac}}: returns a \code{STACCatalog} document from
+  \code{/stac} (v0.8.0) or \code{/} (v0.9.0 or v1.0.0) endpoint.
+\item \code{\link{stac_search}}: returns a \code{STACItemCollection}
+  document from \code{/stac/search} (v0.8.0) or \code{/search}
+  (v0.9.0 or v1.0.0) endpoint containing all Items that match
+  the provided search predicates.
+\item \code{\link{collections}}: implements the \code{/collections} and
+  \code{/collections/\{collectionId\}} endpoints. The former returns
+  a \code{STACCollectionList} document that lists all collections published
+  by the server, and the later returns a single \code{STACCollection}
+  document that describes a unique collection.
+\item \code{\link{items}}: retrieves a \code{STACItemCollection} document
+  from \code{/collections/\{collectionId\}/items} endpoint and a
+  \code{STACItem} document from
+  \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
+}
+
+The rstac package objects visualization is based on markdown, a
+lightweight markup language. You can paste the output into any
+markdown editor for a better visualization.
+
+Call \code{print()} function to print the rstac's objects.
+You can determine how many items will be printed using \code{n} parameter.
 }
 \examples{
 \donttest{
