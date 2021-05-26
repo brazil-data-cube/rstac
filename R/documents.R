@@ -254,6 +254,9 @@ items_fetch <- function(items, ..., progress = TRUE) {
 
     }
 
+    # parse params
+    params <- parse_search_params(params = params)
+
     next_stac <- RSTACQuery(version = q$version,
                             base_url = q$base_url,
                             params = utils::modifyList(q$params, params),
