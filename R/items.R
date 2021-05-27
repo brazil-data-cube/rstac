@@ -3,8 +3,7 @@
 #' @description
 #' The \code{items} function implements WFS3
 #' \code{/collections/\{collectionId\}/items}, and
-#' \code{/collections/\{collectionId\}/items/\{featureId\}}
-#' endpoints (v0.8.0, v0.8.1 and v0.9.0).
+#' \code{/collections/\{collectionId\}/items/\{featureId\}} endpoints.
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{

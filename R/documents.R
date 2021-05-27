@@ -95,8 +95,8 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' The \code{items_length()} function shows how many items there are in
 #' the \code{STACItemCollection} object.
 #' The \code{items_matched()} function shows how many items matched the
-#' search criteria. It support \code{search:metadata} (v0.8.0) and
-#' \code{context} (v0.9.0) STAC API extensions.
+#' search criteria. It supports \code{search:metadata} (v0.8.0),
+#' \code{context} (v0.9.0), and \code{numberMatched} (OGC WFS3 core spec).
 #' The \code{items_fetch()} function request all STAC Items through
 #' pagination.
 #' The \code{items_datetime()} function retrieves a the \code{datetime}
@@ -149,9 +149,6 @@ items_length <- function(items) {
 #' @export
 items_matched <- function(items) {
 
-  # STAC API (<0.9.0): "search:metadata"
-  # STAC API (>=0.9.0): "context"
-
   # Check object class
   check_subclass(items, "STACItemCollection")
 
@@ -162,7 +159,7 @@ items_matched <- function(items) {
     # STAC API >= 0.9.0 extensions
     matched <- items$`context`$matched
 
-  # try the last resort: WFS3 spec
+  # try the last resort: OGC features core spec
   if (is.null(matched))
     matched <- items$numberMatched
 
@@ -208,6 +205,10 @@ items_fetch <- function(items, ..., progress = TRUE) {
 
   while (TRUE) {
 
+    # check if features is complete
+    if (!is.null(matched) && (items_length(items) == matched))
+      break
+
     # protect against infinite loop
     if (!is.null(matched) && (items_length(items) > matched))
       .error(paste("Length of returned items (%s) is different",
@@ -219,13 +220,46 @@ items_fetch <- function(items, ..., progress = TRUE) {
     # get url of the next page
     next_url <- Filter(function(x) x$rel == "next", items$links)
     if (length(next_url) == 0) break
+    next_url <- next_url[[1]]
 
     # create a new stac object with params from the next url
-    # TODO: This is not the specified behavior in spec:
-    # https://github.com/radiantearth/stac-spec/blob/v0.9.0/api-spec/api-spec.md
-    #base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url[[1]]$href)
-    params <- .querystring_decode(substring(
-      gsub("^([^?]+)(\\?.*)?$", "\\2", next_url[[1]]$href), 2))
+    # check for body implementation in next link
+    if (q$verb == "POST" && all(c("body", "method") %in% names(next_url))) {
+
+      # TODO: check if spec can enforce that the same provided base url
+      # must be used to proceed pagination.
+      # For security concerns, here, the original base_url will be used in
+      # subsequent requests of pagination
+
+      # # update query base_url and verb to the returned one
+      # q$base_url <- next_url$href
+
+      # erase current parameters if merge == FALSE
+      if (!is.null(next_url$merge) && !next_url$merge) {
+        q$params <- list()
+      }
+
+      # get parameters
+      params <- next_url$body
+
+    } else {
+
+      # TODO: check if spec can enforce that the same provided base url
+      # must be used to proceed pagination.
+      # For security concerns, here, the original base_url will be used in
+      # subsequent requests of pagination
+
+      # # update query base_url and verb to the returned one
+      # q$base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url$href)
+
+      # get next link parameters from url
+      params <- .querystring_decode(substring(
+        gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2))
+
+    }
+
+    # parse params
+    params <- parse_search_params(params = params)
 
     next_stac <- RSTACQuery(version = q$version,
                             base_url = q$base_url,
@@ -246,6 +280,21 @@ items_fetch <- function(items, ..., progress = TRUE) {
 
     # check content response
     check_subclass(content, "STACItemCollection")
+
+    # check pagination length
+    if (!is.null(q$params[["limit"]]) &&
+        items_length(content) > q$params[["limit"]]) {
+
+      .error("STAC invalid retrieved page length.")
+    }
+
+    # check if result length is valid
+    if (!is.null(matched) && !is.null(q$params[["limit"]]) &&
+        (items_length(content) != q$params[["limit"]]) &&
+        (items_length(content) + items_length(items) != matched)) {
+
+      .error("STAC pagination error.")
+    }
 
     # merge features result into resulting content
     content$features <- c(items$features, content$features)

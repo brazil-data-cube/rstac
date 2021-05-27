@@ -8,7 +8,7 @@
 \description{
 Provides functions to access, search and download spacetime earth 
     observation data via SpatioTemporal Asset Catalog (STAC). This package 
-    supports the version 0.8.1 or higher of the STAC specification
+    supports the version 1.0.0 of the STAC specification
     (<http://stacspec.org>).
 }
 \section{The \code{rstac} functions}{

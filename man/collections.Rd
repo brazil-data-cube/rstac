@@ -20,8 +20,7 @@ A \code{RSTACQuery} object with the subclass \code{collections} for
 }
 \description{
 The \code{collections} function implements the WFS3 \code{/collections}
- and \code{/collections/\{collectionId\}} endpoints
- (v0.8.0, v0.8.1 and v0.9.0).
+ and \code{/collections/\{collectionId\}} endpoints.
 
 Each endpoint retrieves specific STAC objects:
 \itemize{
