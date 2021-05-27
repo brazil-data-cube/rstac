@@ -205,6 +205,10 @@ items_fetch <- function(items, ..., progress = TRUE) {
 
   while (TRUE) {
 
+    # check if features is complete
+    if (!is.null(matched) && (items_length(items) == matched))
+      break
+
     # protect against infinite loop
     if (!is.null(matched) && (items_length(items) > matched))
       .error(paste("Length of returned items (%s) is different",
@@ -276,6 +280,21 @@ items_fetch <- function(items, ..., progress = TRUE) {
 
     # check content response
     check_subclass(content, "STACItemCollection")
+
+    # check pagination length
+    if (!is.null(q$params[["limit"]]) &&
+        items_length(content) > q$params[["limit"]]) {
+
+      .error("STAC invalid retrieved page length.")
+    }
+
+    # check if result length is valid
+    if (!is.null(matched) && !is.null(q$params[["limit"]]) &&
+        (items_length(content) != q$params[["limit"]]) &&
+        (items_length(content) + items_length(items) != matched)) {
+
+      .error("STAC pagination error.")
+    }
 
     # merge features result into resulting content
     content$features <- c(items$features, content$features)
