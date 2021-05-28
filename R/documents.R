@@ -283,14 +283,14 @@ items_fetch <- function(items, ..., progress = TRUE) {
 
     # check pagination length
     if (!is.null(q$params[["limit"]]) &&
-        items_length(content) > q$params[["limit"]]) {
+        items_length(content) > as.numeric(q$params[["limit"]])) {
 
       .error("STAC invalid retrieved page length.")
     }
 
     # check if result length is valid
     if (!is.null(matched) && !is.null(q$params[["limit"]]) &&
-        (items_length(content) != q$params[["limit"]]) &&
+        (items_length(content) != as.numeric(q$params[["limit"]])) &&
         (items_length(content) + items_length(items) != matched)) {
 
       .error("STAC pagination error.")
