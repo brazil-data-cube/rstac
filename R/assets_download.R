@@ -32,8 +32,9 @@
 #' @examples
 #' \dontrun{
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   stac_search(limit = 2) %>%
+#'   stac_search(collections = "CB4_64_16D_STK-1",
+#'               datetime = "2019-06-01/2019-08-01") %>%
+#'   stac_search() %>%
 #'   get_request() %>%
 #'   assets_download(assets_name = "thumbnail", output_dir = ".",
 #'   overwrite = FALSE)
@@ -48,7 +49,7 @@ assets_download <- function(items,
                             output_dir = ".",
                             overwrite = FALSE,
                             items_max = Inf,
-                            progress = TRUE,
+                            progress  = TRUE,
                             ...) {
 
   #check the object subclass
@@ -98,10 +99,10 @@ assets_download <- function(items,
     if (progress)
       utils::setTxtProgressBar(pb, i)
 
-    items$features[[i]] <- .item_download(items$features[[i]],
-                                          assets_name,
-                                          output_dir,
-                                          overwrite, ...)
+    items$features[[i]] <- .item_download(stac_item   = items$features[[i]],
+                                          assets_name = assets_name,
+                                          output_dir  = output_dir,
+                                          overwrite   = overwrite, ...)
   }
   # close progress bar
   if (progress)
@@ -109,8 +110,6 @@ assets_download <- function(items,
 
   return(items)
 }
-
-# helpers ----------------------------------------------------------------------
 
 #' @title Helper function of \code{assets_download} function
 #'

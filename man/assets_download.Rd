@@ -49,8 +49,9 @@ provided by the STAC API.
 \examples{
 \dontrun{
 stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  stac_search(collections = "CB4_64_16D_STK-1") \%>\%
-  stac_search(limit = 2) \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1",
+              datetime = "2019-06-01/2019-08-01") \%>\%
+  stac_search() \%>\%
   get_request() \%>\%
   assets_download(assets_name = "thumbnail", output_dir = ".",
   overwrite = FALSE)
