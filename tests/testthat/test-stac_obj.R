@@ -8,14 +8,14 @@ testthat::test_that("stac search object", {
 
     # Error when creating the stac object by parameter bbox
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::stac_search(bbox = c(-55.16335, -4.26325, -49.31739))
     )
 
     # check object class of stac_search
     testthat::expect_equal(
       object  = class(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           rstac::stac_search(bbox = c(-48.19039, -16.00871,
                                       -41.6341, -11.91345))),
       expected = c("search", "RSTACQuery")
@@ -24,7 +24,7 @@ testthat::test_that("stac search object", {
     # check GET request from stac_search object
     testthat::expect_equal(
       object   = subclass(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           rstac::stac_search(bbox = c(-48.19039, -16.00871,
                                       -41.6341, -11.91345)) %>%
           get_request()),
@@ -35,14 +35,14 @@ testthat::test_that("stac search object", {
 
     # check extension query - wrong contruction
     testthat::expect_error(
-      object = stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         ext_query("bdc:tile" == "022024") %>%
         rstac::stac_search(datetime = "2018-01-01/..")
     )
 
     # check extension query - wrong contruction
     testthat::expect_error(
-      object = stac("http://brazildatacube.dpi.inpe.br/stac/",
+      object = stac("https://brazildatacube.dpi.inpe.br/stac/",
                     force_version = "0.9.0") %>%
         stac_search(datetime = "2018-01-01/..") %>%
         ext_query("bdc:tile" == "022024") %>%
@@ -51,7 +51,7 @@ testthat::test_that("stac search object", {
 
     # check extension query - wrong query
     testthat::expect_error(
-      object = stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(datetime = "2018-01-01/..") %>%
         ext_query("bdc:tile" == "022024", test = "test") %>%
         stac_search(datetime = "2018-01-01/..")
@@ -59,7 +59,7 @@ testthat::test_that("stac search object", {
 
     # check extension query - wrong parameter
     testthat::expect_error(
-      object = stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(datetime = "2018-01-01/..") %>%
         ext_query("bdc:tile" + "022024") %>%
         stac_search(datetime = "2018-01-01/..")
@@ -67,14 +67,14 @@ testthat::test_that("stac search object", {
 
     # check extension query - wrong request
     testthat::expect_error(
-      object = stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(datetime = "2018-01-01/..") %>%
         ext_query("bdc:tile" == "022024") %>%
         get_request()
     )
 
     stac_search_obj <-
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       rstac::stac_search() %>%
       ext_query("bdc:tile" == "022024")
 
@@ -100,7 +100,7 @@ testthat::test_that("stac search object", {
     # check object
     testthat::expect_output(
       object   = print(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           rstac::stac_search(datetime = "2018-01-01/2018-07-01", limit = 10) %>%
           get_request(), n = 10),
       regexp = "###STACItemCollection"
@@ -110,26 +110,26 @@ testthat::test_that("stac search object", {
     # Check errors in fixed date time-------------------------------------------
     # check fixed date time
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::stac_search(datetime = "20-02-2012T00:00:00Z")
     )
 
     # check fixed date time
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::stac_search(datetime = "20-2012-20T00:00:00Z")
     )
 
     # check fixed date time
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::stac_search(datetime = "20-02-2012")
     )
 
     # check fixed date time
     testthat::expect_equal(
       object     = subclass(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           rstac::stac_search(datetime = "2019-02-12T00:00:00Z")),
       expected   = c("search")
     )
@@ -137,7 +137,7 @@ testthat::test_that("stac search object", {
     # Check errors in closed date time------------------------------------------
     # check closed date time
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::stac_search(
           datetime = "2019-02-12T00:00:00Z/2018-03-18T12:31:12Z")
     )
@@ -145,7 +145,7 @@ testthat::test_that("stac search object", {
     # check fixed date time
     testthat::expect_equal(
       object = subclass(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           rstac::stac_search(
             datetime = "2018-02-12T00:00:00Z/2018-03-18T12:31:12Z")),
       expected = c("search")
@@ -154,32 +154,32 @@ testthat::test_that("stac search object", {
     # Check errors in interval date time----------------------------------------
     # check interval date time
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::stac_search(datetime = "./2018-03-18T12:31:12Z")
     )
 
     # check interval date time  - wrong pattern
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::stac_search(datetime = "../1008-03-2018T12:31:12Z")
     )
 
     # check interval date time
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::search(datetime = "2018-03-18T12:31:12Z/.")
     )
 
     # check interval date time - wrong pattern
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::stac_search(datetime = "20-03-2018T12:31:12Z/..")
     )
 
     # check fixed date time
     testthat::expect_equal(
       object   = subclass(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           rstac::stac_search(datetime = "2018-03-20T12:31:12Z/..")),
       expected = c("search")
     )
@@ -193,7 +193,7 @@ testthat::test_that("stac collection object", {
 
     # stac_collections----------------------------------------------------------
     # check object class of stac collections
-    s_col <- rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+    s_col <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       rstac::collections() %>% get_request()
 
     testthat::expect_equal(
@@ -203,7 +203,7 @@ testthat::test_that("stac collection object", {
 
     # check print stac object
     testthat::expect_output(
-      object = print(rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      object = print(rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
                        rstac::collections()),
       regexp = "###RSTACQuery"
     )
@@ -216,7 +216,7 @@ testthat::test_that("stac collection object", {
 
     # check object class of stac collections
     s_colid <-
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       rstac::collections(collection_id = "CB4_64_16D_STK-1")
 
     testthat::expect_null(
@@ -251,14 +251,14 @@ testthat::test_that("stac object", {
     # check object class of stac
     testthat::expect_equal(
       object   = subclass(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac/")),
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/")),
       expected = "stac"
     )
 
     # check request from stac object
     testthat::expect_equal(
       object   = subclass(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           get_request()),
       expected = "STACCatalog"
     )
@@ -266,7 +266,7 @@ testthat::test_that("stac object", {
     # check print stac_collection object
     testthat::expect_output(
       object   = print(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac") %>%
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac") %>%
           get_request()),
       regexp   = "###STACCatalog"
     )
@@ -280,13 +280,13 @@ testthat::test_that("stac item object", {
 
     # not provide collection id
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         items(bbox = c(-48.19039, -16.00871, -41.6341, -11.91345))
     )
 
     # wrong date
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         items(
           bbox          = c(-48.19039, -16.00871, -41.6341, -11.91345),
           datetime      = "2018-02-01/.",
@@ -295,7 +295,7 @@ testthat::test_that("stac item object", {
 
     # wrong bbox
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         items(
           bbox          = c(-48.19039, -16.00871, -41.6341, -11.91345),
           datetime      = "2018-02-01/..",
@@ -305,7 +305,7 @@ testthat::test_that("stac item object", {
     # stac_collection_list object
     testthat::expect_equal(
       object = subclass(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac/",
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/",
                     force_version = "0.9.0") %>%
           collections("CB4_64-1") %>%
           items(
@@ -318,7 +318,7 @@ testthat::test_that("stac item object", {
     # stac_item object
     testthat::expect_equal(
       object = subclass(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           collections("CB4_64-1") %>%
           items(
             bbox          = c(-48.19039, -16.00871, -41.6341, -11.91345),
@@ -331,7 +331,7 @@ testthat::test_that("stac item object", {
     # output test
     testthat::expect_output(
       object   = print(
-        rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           collections("CB4_64_16D_STK-1") %>%
           items(
             bbox       = c(-48.19039, -16.00871, -41.6341, -11.91345),
