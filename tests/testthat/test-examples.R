@@ -1,7 +1,7 @@
 context("tests_examples_0.9.0")
 
 testthat::test_that("examples rstac", {
-  vcr::use_cassette("tests_examples",{
+  vcr::use_cassette("tests_examples", {
     # skip cran check test
     testthat::skip_on_cran()
 
@@ -106,9 +106,10 @@ testthat::test_that("examples rstac", {
         stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(collections = "CB4_64_16D_STK-1",
                     limit = 100,
-                    bbox = c(-48.206,-14.195,-45.067,-12.272),
+                    bbox = c(-48.206, -14.195, -45.067, -12.272),
                     datetime = "2017-08-01/2018-03-01") %>%
-        get_request() %>% items_fetch(progress = FALSE) %>%
+        get_request() %>%
+        items_fetch(progress = FALSE) %>%
         items_group(field = c("properties", "bdc:tiles"))),
       expected = "list")
 

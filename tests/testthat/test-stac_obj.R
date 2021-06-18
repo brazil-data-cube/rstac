@@ -1,7 +1,7 @@
 context("test_stac_obj")
 
 testthat::test_that("stac search object", {
-  vcr::use_cassette("stac_search_obj",{
+  vcr::use_cassette("stac_search_obj", {
     # skip cran check test
     testthat::skip_on_cran()
 
@@ -30,14 +30,6 @@ testthat::test_that("stac search object", {
           get_request()),
       expected = "STACItemCollection"
     )
-
-    # testthat::expect_equal(
-    #   object   = subclass(
-    #     rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
-    #       rstac::stac_search() %>%
-    #       rstac::post_request()),
-    #   expected = "STACItemCollection"
-    # )
 
     # Check extensions ---------------------------------------------------------
 
