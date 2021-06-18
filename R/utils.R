@@ -585,7 +585,6 @@ items_fields <- function(items, ..., field = NULL) {
   names(items$features[[1]][[c(dots, field)]])
 }
 
-
 #' @title Utility functions
 #'
 #' @description This function groups the items contained within the
@@ -662,6 +661,61 @@ items_group <- function(items, ..., field = NULL, index = NULL) {
 
     items
   })
+}
+
+#' @title Utility functions
+#'
+#' @description ...
+#'
+#' @param items     a \code{STACItemCollection} object representing
+#'  the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.
+#'
+#' @param sign_fn ...
+#'
+#' @return a \code{STACItem} ...
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Defining BDC token
+#' Sys.setenv("BDC_ACCESS_KEY" = <your_bdc_access_key>)
+#'
+#' # STACItem object
+#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'         datetime = "2017-08-01/2018-03-01",
+#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'  get_request() %>% items_sign(sign_fn = sign_bdc)
+#'
+#' }
+#'
+#' @export
+items_sign <- function(items, sign_fn = NULL) {
+
+  if (is.null(sign_fn)) {
+    return(items)
+  }
+
+  if (items_length(items) != items_matched(items))
+    .warning(paste("The number of items in this object does not match the",
+    "total number of items in the item. If you want to get all items, use",
+    "`items_fetch()`"))
+
+  # local env to store package variables
+  env <- new.env(parent = emptyenv())
+
+  # assign each href value
+  items[["features"]] <- lapply(items[["features"]], function(item){
+
+    item[["assets"]] <- lapply(item[["assets"]], function(asset){
+      asset[["href"]] <-  sign_fn(asset[["href"]], env)
+      asset
+    })
+
+    item
+  })
+
+  items
 }
 
 #' @title Utility functions
