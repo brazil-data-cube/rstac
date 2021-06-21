@@ -56,6 +56,6 @@ NULL
 #' @importFrom httr GET POST write_disk add_headers content status_code
 #' http_type
 #' @importFrom crayon bold
-#' @importFrom utils modifyList
+#' @importFrom utils modifyList URLdecode
 #' @importFrom jsonlite validate
 NULL

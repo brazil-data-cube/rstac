@@ -108,6 +108,11 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' \code{STACItemCollection} and \code{STACItem} objects.
 #'
 #' @param items      a \code{STACItemCollection} object.
+#' @param path_row   a \code{character} vector with a path with the path where
+#' the number of items returned in the named list is located starting from the
+#' initial node of the list. For example, if the information is at position
+#' \code{items$meta$found} of the object, it must be passed as the following
+#' parameter \code{c("meta", "found")}.
 #'
 #' @return
 #' The \code{items_length()} returns an \code{integer} value.
@@ -147,7 +152,7 @@ items_length <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_matched <- function(items) {
+items_matched <- function(items, path_row = NULL) {
 
   # Check object class
   check_subclass(items, "STACItemCollection")
@@ -158,6 +163,19 @@ items_matched <- function(items) {
   else
     # STAC API >= 0.9.0 extensions
     matched <- items$`context`$matched
+
+  # try by the path_row provided by user, this rarely works because the value
+  # must be a numeric and a object in json (not a list of objects)
+  if (is.null(matched) && !is.null(path_row)) {
+
+    tryCatch({
+      matched <- sapply(list(items), `[[`, path_row)
+
+      if (is.character(matched))
+        matched <- as.numeric(matched)
+    },
+    error = function(e) .warning(e))
+  }
 
   # try the last resort: OGC features core spec
   if (is.null(matched))
@@ -190,12 +208,12 @@ items_matched <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_fetch <- function(items, ..., progress = TRUE) {
+items_fetch <- function(items, ..., progress = TRUE, path_row = NULL) {
 
   # Check object class
   check_subclass(items, "STACItemCollection")
 
-  matched <- items_matched(items)
+  matched <- items_matched(items, path_row)
 
   # verify if progress bar can be shown
   progress <- progress & (!is.null(matched) && (items_length(items) < matched))
@@ -256,6 +274,8 @@ items_fetch <- function(items, ..., progress = TRUE) {
       params <- .querystring_decode(substring(
         gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2))
 
+      # verify if query params is valid
+      params <- .validate_query(params = params)
     }
 
     # parse params

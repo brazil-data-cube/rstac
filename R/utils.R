@@ -376,11 +376,33 @@
 #' @noRd
 .querystring_decode <- function(querystring) {
 
+  # first decode and remove all coded spaces
+  querystring <- URLdecode(querystring)
+
   values <- lapply(strsplit(querystring, split = "&")[[1]],
                    function(x) strsplit(x, split = "=")[[1]])
 
   params <- lapply(values, `[[`, 2)
   names(params) <- vapply(values, `[[`, 1, FUN.VALUE = character(1))
+
+  return(params)
+}
+
+#' @title Utility functions
+#'
+#' @param params a \code{list} with the parameters of query.
+#'
+#' @return a \code{list} with the query parameters.
+#'
+#' @noRd
+.validate_query <- function(params) {
+
+  if (!is.null(params$query) && is.character(params$query)) {
+    params$query <- jsonlite::fromJSON(params$query)
+
+    if (is.list(params$query))
+      params$query <- list(params$query)
+  }
 
   return(params)
 }
