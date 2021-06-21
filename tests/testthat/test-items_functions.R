@@ -5,7 +5,7 @@ testthat::test_that("items functions", {
     # skip cran check test
     testthat::skip_on_cran()
 
-    res <- rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+    res <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       stac_search(
         collections = "CB4_64_16D_STK-1",
         limit = 500) %>%
