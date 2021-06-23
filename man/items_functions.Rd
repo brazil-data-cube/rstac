@@ -25,7 +25,7 @@ items_bands(items)
 \arguments{
 \item{items}{a \code{STACItemCollection} object.}
 
-\item{matched_field}{a \code{character} vector with a path with the path
+\item{matched_field}{a \code{character} vector with the path
 where the number of items returned in the named list is located starting from
 the initial node of the list. For example, if the information is at position
 \code{items$meta$found} of the object, it must be passed as the following

@@ -108,7 +108,7 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' \code{STACItemCollection} and \code{STACItem} objects.
 #'
 #' @param items           a \code{STACItemCollection} object.
-#' @param matched_field   a \code{character} vector with a path with the path
+#' @param matched_field   a \code{character} vector with the path
 #' where the number of items returned in the named list is located starting from
 #' the initial node of the list. For example, if the information is at position
 #' \code{items$meta$found} of the object, it must be passed as the following
@@ -157,29 +157,32 @@ items_matched <- function(items, matched_field = NULL) {
   # Check object class
   check_subclass(items, "STACItemCollection")
 
-  if (stac_version(items) < "0.9.0")
-    # STAC API < 0.9.0 extensions
-    matched <- items$`search:metadata`$matched
-  else
-    # STAC API >= 0.9.0 extensions
-    matched <- items$`context`$matched
+  matched <- NULL
 
-  # try by the path_row provided by user, this rarely works because the value
-  # must be a numeric and a object in json (not a list of objects)
-  if (is.null(matched) && !is.null(matched_field)) {
+  # try by the matched_field provided by user. This allow users specify a
+  # non-standard field for matched items.
+  if (!is.null(matched_field)) {
 
     tryCatch({
-      matched <- sapply(list(items), `[[`, matched_field)
-
-      if (is.character(matched))
-        matched <- as.numeric(matched)
+      matched <- as.numeric(items[[matched_field]])
     },
-    error = function(e) .warning(e))
+    error = function(e) .warning(paste("The provided field was not found in",
+                                       "items object.")))
   }
 
-  # try the last resort: OGC features core spec
-  if (is.null(matched))
-    matched <- items$numberMatched
+  if (is.null(matched)) {
+
+    if (stac_version(items) < "0.9.0")
+      # STAC API < 0.9.0 extensions
+      matched <- items$`search:metadata`$matched
+    else
+      # STAC API >= 0.9.0 extensions
+      matched <- items$`context`$matched
+
+    # try the last resort: OGC features core spec
+    if (is.null(matched))
+      matched <- items$numberMatched
+  }
 
   if (is.null(matched))
     .warning("Items matched not provided.")
