@@ -107,10 +107,10 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' The \code{get_assets_name()} function returns the assets name from
 #' \code{STACItemCollection} and \code{STACItem} objects.
 #'
-#' @param items      a \code{STACItemCollection} object.
-#' @param path_row   a \code{character} vector with a path with the path where
-#' the number of items returned in the named list is located starting from the
-#' initial node of the list. For example, if the information is at position
+#' @param items           a \code{STACItemCollection} object.
+#' @param matched_field   a \code{character} vector with a path with the path
+#' where the number of items returned in the named list is located starting from
+#' the initial node of the list. For example, if the information is at position
 #' \code{items$meta$found} of the object, it must be passed as the following
 #' parameter \code{c("meta", "found")}.
 #'
@@ -152,7 +152,7 @@ items_length <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_matched <- function(items, path_row = NULL) {
+items_matched <- function(items, matched_field = NULL) {
 
   # Check object class
   check_subclass(items, "STACItemCollection")
@@ -166,10 +166,10 @@ items_matched <- function(items, path_row = NULL) {
 
   # try by the path_row provided by user, this rarely works because the value
   # must be a numeric and a object in json (not a list of objects)
-  if (is.null(matched) && !is.null(path_row)) {
+  if (is.null(matched) && !is.null(matched_field)) {
 
     tryCatch({
-      matched <- sapply(list(items), `[[`, path_row)
+      matched <- sapply(list(items), `[[`, matched_field)
 
       if (is.character(matched))
         matched <- as.numeric(matched)
@@ -208,12 +208,12 @@ items_matched <- function(items, path_row = NULL) {
 #' @rdname items_functions
 #'
 #' @export
-items_fetch <- function(items, ..., progress = TRUE, path_row = NULL) {
+items_fetch <- function(items, ..., progress = TRUE, matched_field = NULL) {
 
   # Check object class
   check_subclass(items, "STACItemCollection")
 
-  matched <- items_matched(items, path_row)
+  matched <- items_matched(items, matched_field)
 
   # verify if progress bar can be shown
   progress <- progress & (!is.null(matched) && (items_length(items) < matched))

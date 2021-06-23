@@ -12,9 +12,9 @@
 \usage{
 items_length(items)
 
-items_matched(items, path_row = NULL)
+items_matched(items, matched_field = NULL)
 
-items_fetch(items, ..., progress = TRUE, path_row = NULL)
+items_fetch(items, ..., progress = TRUE, matched_field = NULL)
 
 items_datetime(items)
 
@@ -25,9 +25,9 @@ items_bands(items)
 \arguments{
 \item{items}{a \code{STACItemCollection} object.}
 
-\item{path_row}{a \code{character} vector with a path with the path where
-the number of items returned in the named list is located starting from the
-initial node of the list. For example, if the information is at position
+\item{matched_field}{a \code{character} vector with a path with the path
+where the number of items returned in the named list is located starting from
+the initial node of the list. For example, if the information is at position
 \code{items$meta$found} of the object, it must be passed as the following
 parameter \code{c("meta", "found")}.}
 
