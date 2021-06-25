@@ -12,7 +12,8 @@ License](https://img.shields.io/badge/license-MIT-green)](https://github.com/bra
 [![Build
 Status](https://drone.dpi.inpe.br/api/badges/brazil-data-cube/rstac/status.svg)](https://drone.dpi.inpe.br/brazil-data-cube/rstac)
 [![Build
-status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/rstac)<!-- [![codecov](https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT)](https://codecov.io/gh/brazil-data-cube/rstac) -->
+status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/rstac)
+[![codecov](https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT)](https://codecov.io/gh/brazil-data-cube/rstac)
 [![Software Life
 Cycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![CRAN
@@ -28,7 +29,7 @@ geospatial information assets. The specification can be consulted in
 <https://stacspec.org/>.
 
 R client library for STAC (`rstac`) was designed to fully support STAC
-API v1.0.0. It also supports earlier versions (&gt;= v0.8.0).
+API v1.0.0. It also supports earlier versions (\>= v0.8.0).
 
 ## Installation
 
@@ -60,15 +61,15 @@ library(magrittr) # for pipe (%>%) in examples
 `rstac` implements the following STAC endpoints:
 
 | **STAC** endpoints                           | `rstac` functions            | API version |
-|:---------------------------------------------|:-----------------------------|:------------|
-| `/`                                          | `stac()`                     | &gt;= 0.9.0 |
-| `/stac`                                      | `stac()`                     | &lt; 0.9.0  |
-| `/collections`                               | `collections()`              | &gt;= 0.9.0 |
-| `/collections/{collectionId}`                | `collections(collection_id)` | &gt;= 0.9.0 |
-| `/collections/{collectionId}/items`          | `items()`                    | &gt;= 0.9.0 |
-| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          | &gt;= 0.9.0 |
-| `/search`                                    | `stac_search()`              | &gt;= 0.9.0 |
-| `/stac/search`                               | `stac_search()`              | &lt; 0.9.0  |
+| :------------------------------------------- | :--------------------------- | :---------- |
+| `/`                                          | `stac()`                     | \>= 0.9.0   |
+| `/stac`                                      | `stac()`                     | \< 0.9.0    |
+| `/collections`                               | `collections()`              | \>= 0.9.0   |
+| `/collections/{collectionId}`                | `collections(collection_id)` | \>= 0.9.0   |
+| `/collections/{collectionId}/items`          | `items()`                    | \>= 0.9.0   |
+| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          | \>= 0.9.0   |
+| `/search`                                    | `stac_search()`              | \>= 0.9.0   |
+| `/stac/search`                               | `stac_search()`              | \< 0.9.0    |
 
 These functions can be used to retrieve information from a STAC API
 service. The code bellow creates a `stac` object and list the available
@@ -92,11 +93,11 @@ connection to it and retrieves a STAC Catalog document from the server.
 Each `links` entry is an available collection that can be accessed via
 STAC API.
 
-In the code bellow, we get some STAC items of `MOD13Q1` collection that
-intersects the bounding box passed to the `bbox` parameter. To do this,
-we call the `stac_search` function that implements the STAC `/search`
-endpoint. The returned document is a STAC Item Collection (a geojson
-containing a feature collection).
+In the code bellow, we get some STAC items of `CB4_64_16D_STK-1`
+collection that intersects the bounding box passed to the `bbox`
+parameter. To do this, we call the `stac_search` function that
+implements the STAC `/search` endpoint. The returned document is a STAC
+Item Collection (a geojson containing a feature collection).
 
 ``` r
 it_obj <- s_obj %>% 
