@@ -5,7 +5,7 @@
 #' and reproduces some of its parts)
 #'
 #' The \code{stac_search} function implements \code{/stac/search} API endpoint
-#' (v0.8.1) and \code{/search} (v0.9.0).
+#' (v0.8.1) and \code{/search} (v0.9.0 or v1.0.0).
 #' It prepares query parameters used in search API request, a
 #' \code{stac} object with all filter parameters to be provided to
 #' \code{get_request} or \code{post_request} functions. The GeoJSON content
@@ -27,11 +27,13 @@
 #'  separating two date-time strings by \code{'/'} character. Open intervals are
 #'  expressed by using \code{'..'} in place of date-time.
 #'
-#' Examples: \itemize{
-#'  \item A date-time: \code{"2018-02-12T23:20:50Z"}
-#'  \item A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"}
-#'  \item Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
-#'  \code{"../2018-03-18T12:31:12Z"} }
+#' Examples:
+#' \itemize{
+#' \item A date-time: \code{"2018-02-12T23:20:50Z"}
+#' \item A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"}
+#' \item Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
+#'   \code{"../2018-03-18T12:31:12Z"}
+#' }
 #'
 #' Only features that have a \code{datetime} property that intersects the
 #' interval or date-time informed in \code{datetime} are selected.
@@ -98,27 +100,54 @@ stac_search <- function(q,
   params <- list()
 
   if (!is.null(collections))
-    params[["collections"]] <- .parse_collections(collections)
+    params[["collections"]] <- collections
 
   if (!is.null(ids))
-    params[["ids"]] <- .parse_ids(ids)
+    params[["ids"]] <- ids
 
   if (!is.null(datetime))
-    params[["datetime"]] <- .parse_datetime(datetime)
+    params[["datetime"]] <- datetime
 
   if (!is.null(bbox))
-    params[["bbox"]] <- .parse_bbox(bbox)
+    params[["bbox"]] <- bbox
 
   if (!is.null(intersects))
-    params[["intersects"]] <- .parse_geometry(intersects)
+    params[["intersects"]] <- intersects
 
-  if (!is.null(limit) && !is.null(limit))
-    params[["limit"]] <- .parse_limit(limit)
+  if (!is.null(limit))
+    params[["limit"]] <- limit
 
-  RSTACQuery(version = q$version,
-             base_url = q$base_url,
-             params = utils::modifyList(q$params, params),
-             subclass = "search")
+  params <- parse_search_params(params = params)
+
+  RSTACQuery(
+    version = q$version,
+    base_url = q$base_url,
+    params = utils::modifyList(q$params, params),
+    subclass = "search"
+  )
+}
+
+parse_search_params <- function(params) {
+
+  if (!is.null(params[["collections"]]))
+    params[["collections"]] <- .parse_collections(params[["collections"]])
+
+  if (!is.null(params[["ids"]]))
+    params[["ids"]] <- .parse_ids(params[["ids"]])
+
+  if (!is.null(params[["datetime"]]))
+    params[["datetime"]] <- .parse_datetime(params[["datetime"]])
+
+  if (!is.null(params[["bbox"]]))
+    params[["bbox"]] <- .parse_bbox(params[["bbox"]])
+
+  if (!is.null(params[["intersects"]]))
+    params[["intersects"]] <- .parse_geometry(params[["intersects"]])
+
+  if (!is.null(params[["limit"]]))
+    params[["limit"]] <- .parse_limit(params[["limit"]])
+
+  params
 }
 
 #' @export

@@ -12,12 +12,13 @@ License](https://img.shields.io/badge/license-MIT-green)](https://github.com/bra
 [![Build
 Status](https://drone.dpi.inpe.br/api/badges/brazil-data-cube/rstac/status.svg)](https://drone.dpi.inpe.br/brazil-data-cube/rstac)
 [![Build
-status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/rstac)
-[![codecov](https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT)](https://codecov.io/gh/brazil-data-cube/rstac)
+status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/rstac)<!-- [![codecov](https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT)](https://codecov.io/gh/brazil-data-cube/rstac) -->
 [![Software Life
-Cycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+Cycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/rstac)](https://cran.r-project.org/package=rstac)
+[![STAC
+API](https://img.shields.io/badge/STAC%20API-v1.0.0-informational)](https://github.com/radiantearth/stac-api-spec)
 [![Join us at
 Discord](https://img.shields.io/discord/689541907621085198?logo=discord&logoColor=ffffff&color=7389D8)](https://discord.com/channels/689541907621085198#)
 <!-- badges: end -->
@@ -27,9 +28,7 @@ geospatial information assets. The specification can be consulted in
 <https://stacspec.org/>.
 
 R client library for STAC (`rstac`) was designed to fully support STAC
-v0.8.1 and v0.9.0. As STAC spec is evolving fast and reaching its
-maturity, we plan update `rstac` to support upcoming STAC 1.0.0 version
-soon.
+API v1.0.0. It also supports earlier versions (&gt;= v0.8.0).
 
 ## Installation
 
@@ -60,14 +59,16 @@ library(magrittr) # for pipe (%>%) in examples
 
 `rstac` implements the following STAC endpoints:
 
-| **STAC** endpoints                           | `rstac` functions            |
-| :------------------------------------------- | :--------------------------- |
-| `/stac`                                      | `stac()`                     |
-| `/collections`                               | `collections()`              |
-| `/collections/{collectionId}`                | `collections(collection_id)` |
-| `/collections/{collectionId}/items`          | `items()`                    |
-| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          |
-| `/stac/search`                               | `stac_search()`              |
+| **STAC** endpoints                           | `rstac` functions            | API version |
+|:---------------------------------------------|:-----------------------------|:------------|
+| `/`                                          | `stac()`                     | &gt;= 0.9.0 |
+| `/stac`                                      | `stac()`                     | &lt; 0.9.0  |
+| `/collections`                               | `collections()`              | &gt;= 0.9.0 |
+| `/collections/{collectionId}`                | `collections(collection_id)` | &gt;= 0.9.0 |
+| `/collections/{collectionId}/items`          | `items()`                    | &gt;= 0.9.0 |
+| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          | &gt;= 0.9.0 |
+| `/search`                                    | `stac_search()`              | &gt;= 0.9.0 |
+| `/stac/search`                               | `stac_search()`              | &lt; 0.9.0  |
 
 These functions can be used to retrieve information from a STAC API
 service. The code bellow creates a `stac` object and list the available
@@ -93,9 +94,9 @@ STAC API.
 
 In the code bellow, we get some STAC items of `MOD13Q1` collection that
 intersects the bounding box passed to the `bbox` parameter. To do this,
-we call the `stac_search` function that implements the STAC
-`/stac/search` endpoint. The returned document is a STAC Item Collection
-(a geojson containing a feature collection).
+we call the `stac_search` function that implements the STAC `/search`
+endpoint. The returned document is a STAC Item Collection (a geojson
+containing a feature collection).
 
 ``` r
 it_obj <- s_obj %>% 
@@ -105,18 +106,18 @@ it_obj <- s_obj %>%
 
 it_obj
 #> ###STACItemCollection
-#> - matched feature(s): 212
+#> - matched feature(s): 236
 #> - features (10 item(s)):
-#>   - CB4_64_16D_STK_v001_022025_2020-07-27_2020-08-11
-#>   - CB4_64_16D_STK_v001_022024_2020-07-27_2020-08-11
-#>   - CB4_64_16D_STK_v001_022024_2020-07-11_2020-07-26
-#>   - CB4_64_16D_STK_v001_022025_2020-07-11_2020-07-26
-#>   - CB4_64_16D_STK_v001_022024_2020-06-25_2020-07-10
-#>   - CB4_64_16D_STK_v001_022025_2020-06-25_2020-07-10
-#>   - CB4_64_16D_STK_v001_022024_2020-06-09_2020-06-24
-#>   - CB4_64_16D_STK_v001_022025_2020-06-09_2020-06-24
-#>   - CB4_64_16D_STK_v001_022024_2020-05-24_2020-06-08
-#>   - CB4_64_16D_STK_v001_022025_2020-05-24_2020-06-08
+#>   - CB4_64_16D_STK_v001_022024_2021-02-02_2021-02-17
+#>   - CB4_64_16D_STK_v001_022025_2021-02-02_2021-02-17
+#>   - CB4_64_16D_STK_v001_022024_2021-01-17_2021-02-01
+#>   - CB4_64_16D_STK_v001_022025_2021-01-17_2021-02-01
+#>   - CB4_64_16D_STK_v001_022024_2021-01-01_2021-01-16
+#>   - CB4_64_16D_STK_v001_022025_2021-01-01_2021-01-16
+#>   - CB4_64_16D_STK_v001_022024_2020-12-18_2020-12-31
+#>   - CB4_64_16D_STK_v001_022025_2020-12-18_2020-12-31
+#>   - CB4_64_16D_STK_v001_022024_2020-12-02_2020-12-17
+#>   - CB4_64_16D_STK_v001_022025_2020-12-02_2020-12-17
 #> - field(s): type, links, context, features
 ```
 
@@ -141,12 +142,12 @@ the assets.
 
 `rstac` provides some functions to facilitates the interaction with STAC
 data. In the example bellow, we get how many items matched the search
-criteria, which shows `210`:
+criteria:
 
 ``` r
 # it_obj variable from the last code example
 it_obj %>% items_matched()
-#> [1] 212
+#> [1] 236
 ```
 
 However, if we count how many items there are in `it_obj` variable, we
@@ -163,7 +164,7 @@ it_obj %>% items_length()
 # (but don't stored them back in it_obj)
 it_obj %>% items_fetch(progress = FALSE) %>%
     items_length()
-#> [1] 212
+#> [1] 236
 ```
 
 ### Download assets
@@ -184,7 +185,7 @@ download_items <- it_obj %>%
 
 The `rstac` package was implemented based on an extensible architecture,
 so feel free to contribute by implementing new STAC API
-[extensions](https://github.com/radiantearth/stac-spec/tree/v0.9.0/api-spec/extensions)
+[extensions/fragments](https://github.com/radiantearth/stac-api-spec/tree/master/fragments)
 based on the STAC API specifications.
 
 1.  Make a project
@@ -210,9 +211,9 @@ based on the STAC API specifications.
 
 ## Getting help
 
-You can get a full explanation about each STAC (v0.9.0) endpoint at
-[STAC spec
-GitHub](https://github.com/radiantearth/stac-spec/tree/v0.9.0). A
-detailed documentation with examples on how to use each endpoint and
+You can get a full explanation about each STAC (v1.0.0) endpoint at
+[STAC API
+spec](https://github.com/radiantearth/stac-api-spec/tree/master/ogcapi-features).
+A detailed documentation with examples on how to use each endpoint and
 other functions available in the `rstac` package can be obtained by
 typing `?rstac` in R console.
