@@ -14,7 +14,8 @@ steps:
     CODECOV_TOKEN:
       from_secret: codecov_token
   commands:
-  - R -e 'library(covr); codecov(quiet = FALSE)'
+  - R -e 'install.packages("pacman"); pacman::p_load(desc::desc_get_deps()[desc::desc_get_deps()[["type"]] != "Depends",][["package"]], install = T, update = F, character.only = T)'
+  - R -e 'withr::with_envvar(c(NOT_CRAN="true"), covr::codecov(quiet = FALSE))'
   when:
     event:
     - push
