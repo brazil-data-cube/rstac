@@ -107,7 +107,12 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' The \code{get_assets_name()} function returns the assets name from
 #' \code{STACItemCollection} and \code{STACItem} objects.
 #'
-#' @param items      a \code{STACItemCollection} object.
+#' @param items           a \code{STACItemCollection} object.
+#' @param matched_field   a \code{character} vector with the path
+#' where the number of items returned in the named list is located starting from
+#' the initial node of the list. For example, if the information is at position
+#' \code{items$meta$found} of the object, it must be passed as the following
+#' parameter \code{c("meta", "found")}.
 #'
 #' @return
 #' The \code{items_length()} returns an \code{integer} value.
@@ -147,21 +152,37 @@ items_length <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_matched <- function(items) {
+items_matched <- function(items, matched_field = NULL) {
 
   # Check object class
   check_subclass(items, "STACItemCollection")
 
-  if (stac_version(items) < "0.9.0")
-    # STAC API < 0.9.0 extensions
-    matched <- items$`search:metadata`$matched
-  else
-    # STAC API >= 0.9.0 extensions
-    matched <- items$`context`$matched
+  matched <- NULL
 
-  # try the last resort: OGC features core spec
-  if (is.null(matched))
-    matched <- items$numberMatched
+  # try by the matched_field provided by user. This allow users specify a
+  # non-standard field for matched items.
+  if (!is.null(matched_field)) {
+
+    tryCatch({
+      matched <- as.numeric(items[[matched_field]])
+    },
+    error = function(e) .warning(paste("The provided field was not found in",
+                                       "items object.")))
+  }
+
+  if (is.null(matched)) {
+
+    if (stac_version(items) < "0.9.0")
+      # STAC API < 0.9.0 extensions
+      matched <- items$`search:metadata`$matched
+    else
+      # STAC API >= 0.9.0 extensions
+      matched <- items$`context`$matched
+
+    # try the last resort: OGC features core spec
+    if (is.null(matched))
+      matched <- items$numberMatched
+  }
 
   if (is.null(matched))
     .warning("Items matched not provided.")
@@ -190,12 +211,12 @@ items_matched <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_fetch <- function(items, ..., progress = TRUE) {
+items_fetch <- function(items, ..., progress = TRUE, matched_field = NULL) {
 
   # Check object class
   check_subclass(items, "STACItemCollection")
 
-  matched <- items_matched(items)
+  matched <- items_matched(items, matched_field)
 
   # verify if progress bar can be shown
   progress <- progress & (!is.null(matched) && (items_length(items) < matched))
@@ -256,6 +277,8 @@ items_fetch <- function(items, ..., progress = TRUE) {
       params <- .querystring_decode(substring(
         gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2))
 
+      # verify if query params is valid
+      params <- .validate_query(params = params)
     }
 
     # parse params
