@@ -6,7 +6,7 @@ testthat::test_that("internals functions", {
     # skip cran check test
     testthat::skip_on_cran()
 
-    stac_obj <- rstac::stac("http://brazildatacube.dpi.inpe.br/stac/")
+    stac_obj <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/")
 
     # check_subclass object
     testthat::expect_null(
