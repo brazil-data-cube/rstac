@@ -2,7 +2,7 @@
 
 # rstac 0.9.1-3 (Released 2021-06-25)
 
-* Introduction support to sign items #38
+* Fix in bug related with `items_fetch` in using bbox as parameter #41
 * Update fixtures and introduces new parameter in items_fetch #39
 
 # rstac 0.9.1-2 (Released 2021-05-28)

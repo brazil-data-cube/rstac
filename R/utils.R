@@ -18,6 +18,9 @@
 #' @noRd
 .parse_bbox <- function(bbox) {
 
+  if (is.character(bbox))
+    bbox <- strsplit(bbox, ",")[[1]]
+
   if (!length(bbox) %in% c(4, 6))
     .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
 
@@ -77,6 +80,9 @@
 #' @noRd
 .parse_collections <- function(collections) {
 
+  if (is.character(collections))
+    collections <- strsplit(collections, ",")[[1]]
+
   if (length(collections) == 1 && !is.list(collections))
     collections <- list(collections)
 
@@ -92,6 +98,9 @@
 #'
 #' @noRd
 .parse_ids <- function(ids) {
+
+  if (is.character(ids))
+    ids <- strsplit(ids, ",")[[1]]
 
   if (length(ids) == 1 && !is.list(ids))
     ids <- list(ids)
