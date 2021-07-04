@@ -1,6 +1,11 @@
 # rstac (development version)
 
-# rstac 0.9.1 (Released 2021-05-28)
+# rstac 0.9.1-3 (Released 2021-06-25)
+
+* Fix in bug related with `items_fetch` in using bbox as parameter #41
+* Update fixtures and introduces new parameter in items_fetch #39
+
+# rstac 0.9.1-2 (Released 2021-05-28)
 
 * Fix pagination in items_fetch function to conform to STAC API spec
 * Improve README
