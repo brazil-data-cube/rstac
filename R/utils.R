@@ -407,7 +407,7 @@
 .validate_query <- function(params) {
 
   if (!is.null(params$query) && is.character(params$query)) {
-    params$query <- jsonlite::fromJSON(params$query)
+    params$query <- jsonlite::fromJSON(params$query, simplifyVector = FALSE)
 
     if (is.list(params$query))
       params$query <- list(params$query)

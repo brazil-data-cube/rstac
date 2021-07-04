@@ -282,7 +282,7 @@ items_fetch <- function(items, ..., progress = TRUE, matched_field = NULL) {
     }
 
     # parse params
-    params <- parse_search_params(params = params)
+    params <- parse_params(q, params = params)
 
     next_stac <- RSTACQuery(version = q$version,
                             base_url = q$base_url,
