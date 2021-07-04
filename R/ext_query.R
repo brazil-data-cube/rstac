@@ -148,6 +148,17 @@ after_response.ext_query <- function(q, res) {
   RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
 }
 
+#' @export
+parse_params.ext_query <- function(q, params) {
+
+  # call super class
+  params <- parse_params.search(q, params)
+
+  params$query <- .parse_values_keys(params$query)
+
+  params
+}
+
 #' @title Utility function
 #'
 #' @param op     a \code{character} with operation to be searched.
@@ -168,4 +179,34 @@ after_response.ext_query <- function(q, res) {
     .warning(paste("Only the first value of '%s' operation was considered",
                    "in 'ext_query()' function."), op)
   values[[op]][[1]]
+}
+
+#' @title Utility function
+#'
+#' @param query a \code{list} with parameters to be provided in requests.
+#'
+#' @return a \code{list} with parsed parameters.
+#'
+#' @noRd
+.parse_values_keys <- function(query) {
+
+  uniq_keys <- names(query)
+
+  entries <- lapply(uniq_keys, function(k) {
+    ops <- names(query[[k]])
+
+    values <- lapply(ops, function(op){
+      query[[k]][[op]]
+    })
+
+    names(values) <- ops
+
+    res <- lapply(ops, .parse_values_op, values)
+    names(res) <- ops
+    return(res)
+  })
+
+  names(entries) <- uniq_keys
+
+  entries
 }
