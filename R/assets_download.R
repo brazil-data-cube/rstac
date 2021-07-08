@@ -14,13 +14,13 @@
 #'  saved.
 #'
 #' @param overwrite   a \code{logical} if TRUE will replaced the existing file,
-#'  if FALSE a warning message is shown.
+#'  if FALSE a warning message is shown. (\code{FALSE}, default).
 #'
 #' @param items_max   a \code{numeric} corresponding how many items will be
 #'  downloaded.
 #'
 #' @param progress    a \code{logical} indicating if a progress bar must be
-#'  shown or not. Defaults to \code{TRUE}.
+#'  shown or not. (\code{TRUE}, default).
 #'
 #' @param ...         config parameters to be passed to \link[httr]{GET} or
 #' \link[httr]{POST} methods, such as \link[httr]{add_headers} or
@@ -35,12 +35,11 @@
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
 #'   stac_search(limit = 2) %>%
 #'   get_request() %>%
-#'   assets_download(assets_name = "thumbnail", output_dir = ".",
-#'   overwrite = FALSE)
+#'   assets_download(assets_name = "thumbnail", output_dir = ".")
 #' }
 #'
 #' @return The same \code{STACItemCollection} or \code{STACItem} object, with
-#' the link of the item pointing to the directory where the assets were saved.
+#' the link pointing to the directory where the assets were saved.
 #'
 #' @export
 assets_download <- function(items,
@@ -98,10 +97,10 @@ assets_download <- function(items,
     if (progress)
       utils::setTxtProgressBar(pb, i)
 
-    items$features[[i]] <- .item_download(items$features[[i]],
-                                          assets_name,
-                                          output_dir,
-                                          overwrite, ...)
+    items$features[[i]] <- .item_download(stac_item   = items$features[[i]],
+                                          assets_name = assets_name,
+                                          output_dir  = output_dir,
+                                          overwrite   = overwrite, ...)
   }
   # close progress bar
   if (progress)
@@ -115,7 +114,7 @@ assets_download <- function(items,
 #' @title Helper function of \code{assets_download} function
 #'
 #' @description the \code{.item_download} function downloads the assets of a
-#'  stac_item
+#'  \code{STACItem} object.
 #'
 #' @param stac_item   a  \code{stac_item} object expressing a STAC
 #'  search criteria provided by \code{stac_item} function.
@@ -155,7 +154,7 @@ assets_download <- function(items,
       httr::GET(url = asset_href,
                 httr::write_disk(path = dest_file, overwrite = overwrite), ...)
 
-    }, error = function(error){
+    }, error = function(error) {
       .warning(paste("\n", error, "in ", asset_href))
     })
 
