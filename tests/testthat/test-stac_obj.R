@@ -194,11 +194,17 @@ testthat::test_that("stac collection object", {
     # stac_collections----------------------------------------------------------
     # check object class of stac collections
     s_col <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-      rstac::collections() %>% get_request()
+      rstac::collections() %>%
+      get_request()
 
     testthat::expect_equal(
       object   =  subclass(s_col),
       expected = "STACCollectionList"
+    )
+
+    testthat::expect_equal(
+      object   =  stac_version(s_col),
+      expected = "0.9.0"
     )
 
     # check print stac object
@@ -288,9 +294,9 @@ testthat::test_that("stac item object", {
     testthat::expect_error(
       rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         items(
-          bbox          = c(-48.19039, -16.00871, -41.6341, -11.91345),
-          datetime      = "2018-02-01/.",
-          collection_id = "CB4_64-1")
+          bbox       = c(-48.19039, -16.00871, -41.6341, -11.91345),
+          datetime   = "2018-02-01/.",
+          feature_id = "CB4_64-1")
     )
 
     # wrong bbox
@@ -299,7 +305,7 @@ testthat::test_that("stac item object", {
         items(
           bbox          = c(-48.19039, -16.00871, -41.6341, -11.91345),
           datetime      = "2018-02-01/..",
-          collection_id = "CB4_64-1")
+          feature_id = "CB4_64-1")
     )
 
     # stac_collection_list object
@@ -326,6 +332,19 @@ testthat::test_that("stac item object", {
             datetime      = "2018-02-01/..",
             feature_id    = "MOD13Q1.A2019241.h13v09.006.2019262164754")),
       expected = c("item_id")
+    )
+
+    # stac_item object
+    testthat::expect_equal(
+      object = stac_version(
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+          collections("CB4_64-1") %>%
+          items(
+            bbox          = c(-48.19039, -16.00871, -41.6341, -11.91345),
+            limit         = 10,
+            datetime      = "2018-02-01/..",
+            feature_id    = "MOD13Q1.A2019241.h13v09.006.2019262164754")),
+      expected = "0.9.0"
     )
 
     # output test

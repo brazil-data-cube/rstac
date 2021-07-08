@@ -11,11 +11,16 @@ testthat::test_that("items functions", {
         limit = 500) %>%
       get_request(.)
 
+    item_stac <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+      collections(collection_id = "CB4_64_16D_STK-1") %>%
+      items(feature_id = "CB4_64_16D_STK_v001_019022_2021-02-02_2021-02-17") %>%
+      get_request(.)
+
     # items_fetch---------------------------------------------------------------
     # error - given another object
     testthat::expect_error(items_fetch(list(res)))
 
-   # ok - stac_collection_list object
+    # ok - stac_collection_list object
     testthat::expect_equal(
       object   = subclass(items_fetch(res)),
       expected = "STACItemCollection")
@@ -26,6 +31,54 @@ testthat::test_that("items functions", {
 
     # ok - return a numeric
     testthat::expect_true(is.numeric(items_length(res)))
+
+    # items_datetime------------------------------------------------------------
+    # STACItemCollection
+    testthat::expect_length(items_datetime(res), n = 500)
+
+    # STACItem
+    testthat::expect_vector(items_datetime(item_stac), ptype = character())
+
+    # provide wrong object
+    testthat::expect_error(
+      object = items_datetime(
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+          collections(collection_id = "CB4_64_16D_STK-1") %>%
+          get_request()
+      )
+    )
+
+    # items_bbox----------------------------------------------------------------
+    # STACItemCollection
+    testthat::expect_length(items_bbox(res), n = 500)
+
+    # STACItem
+    testthat::expect_vector(items_bbox(item_stac), ptype = double())
+
+    # provide wrong object
+    testthat::expect_error(
+      object = items_bbox(
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+          collections(collection_id = "CB4_64_16D_STK-1") %>%
+          get_request()
+      )
+    )
+
+    # items_bands---------------------------------------------------------------
+    # STACItemCollection
+    testthat::expect_length(items_bands(res), n = 500)
+
+    # STACItem
+    testthat::expect_vector(items_bands(item_stac), ptype = character())
+
+    # provide wrong object
+    testthat::expect_error(
+      object = items_bands(
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+          collections(collection_id = "CB4_64_16D_STK-1") %>%
+          get_request()
+      )
+    )
 
     # items_matched-------------------------------------------------------------
     # error - given another object
