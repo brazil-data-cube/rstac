@@ -41,10 +41,10 @@
 #' See source file \code{ext_query.R} for an example on how implement new
 #' extensions.
 #'
-#' @param q      a \code{RSTACQuery} object expressing a STAC query
+#' @param q   a \code{RSTACQuery} object expressing a STAC query
 #' criteria.
 #'
-#' @param ...    entries with format \code{<field> <operator> <value>}.
+#' @param ... entries with format \code{<field> <operator> <value>}.
 #'
 #' @seealso \code{\link{stac_search}}, \code{\link{post_request}},
 #' \code{\link{endpoint}}, \code{\link{before_request}},
@@ -58,7 +58,7 @@
 #' \donttest{
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   ext_query("bdc:tile" %in% c("022024")) %>%
+#'   ext_query("bdc:tile" %in% "022024") %>%
 #'   post_request()
 #' }
 #'
