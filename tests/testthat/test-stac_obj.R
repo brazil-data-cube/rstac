@@ -89,12 +89,6 @@ testthat::test_that("stac search object", {
       object = stac_search_obj %>% get_request()
     )
 
-    # # expect class
-    # testthat::expect_equal(
-    #   object = subclass(stac_search_obj %>% post_request()),
-    #   expect = "STACItemCollection"
-    # )
-
     # Check print function------------------------------------------------------
 
     # check object

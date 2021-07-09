@@ -77,7 +77,7 @@ testthat::test_that("examples rstac", {
       object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(collections = "CB4_64_16D_STK-1",
                     bbox = c(-47.02148, -12.98314, -42.53906, -17.35063),
-                    limit = 500) %>%
+                    limit = 10) %>%
         get_request() %>%
         items_fetch(),
       class = c("STACItemCollection", "RSTACDocument"))
@@ -86,16 +86,16 @@ testthat::test_that("examples rstac", {
     testthat::expect_equal(
       object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(collections = "CB4_64_16D_STK-1",
-                    limit = 500) %>%
+                    limit = 10) %>%
         get_request() %>%
         items_length(),
-      expected = 500)
+      expected = 10)
 
     # test item_length
     testthat::expect_equal(
       object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(collections = "CB4_64_16D_STK-1",
-                    limit = 500) %>%
+                    limit = 10) %>%
         get_request() %>%
         items_matched(),
       expected = 5774)
@@ -105,7 +105,7 @@ testthat::test_that("examples rstac", {
       object = typeof(
         stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(collections = "CB4_64_16D_STK-1",
-                    limit = 100,
+                    limit = 10,
                     bbox = c(-48.206,-14.195,-45.067,-12.272),
                     datetime = "2017-08-01/2018-03-01") %>%
           get_request() %>%
