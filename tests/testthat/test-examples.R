@@ -75,9 +75,8 @@ testthat::test_that("examples rstac", {
     # test items_fetch
     testthat::expect_s3_class(
       object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        stac_search(collections = "CB4_64_16D_STK-1",
-                    bbox = c(-47.02148, -12.98314, -42.53906, -17.35063),
-                    limit = 10) %>%
+        stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
+                    limit = 500) %>%
         get_request() %>%
         items_fetch(),
       class = c("STACItemCollection", "RSTACDocument"))
@@ -104,10 +103,9 @@ testthat::test_that("examples rstac", {
     testthat::expect_equal(
       object = typeof(
         stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        stac_search(collections = "CB4_64_16D_STK-1",
-                    limit = 10,
-                    bbox = c(-48.206,-14.195,-45.067,-12.272),
-                    datetime = "2017-08-01/2018-03-01") %>%
+        stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
+                    limit = 500,
+                    datetime = "2018-09-01/2019-08-31") %>%
           get_request() %>%
           items_fetch(progress = FALSE) %>%
           items_group(field = c("properties", "bdc:tiles"))),
