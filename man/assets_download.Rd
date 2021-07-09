@@ -26,13 +26,13 @@ representing the result of \code{/stac/search},
 saved.}
 
 \item{overwrite}{a \code{logical} if TRUE will replaced the existing file,
-if FALSE a warning message is shown.}
+if FALSE a warning message is shown. (\code{FALSE}, default).}
 
 \item{items_max}{a \code{numeric} corresponding how many items will be
 downloaded.}
 
 \item{progress}{a \code{logical} indicating if a progress bar must be
-shown or not. Defaults to \code{TRUE}.}
+shown or not. (\code{TRUE}, default).}
 
 \item{...}{config parameters to be passed to \link[httr]{GET} or
 \link[httr]{POST} methods, such as \link[httr]{add_headers} or
@@ -40,7 +40,7 @@ shown or not. Defaults to \code{TRUE}.}
 }
 \value{
 The same \code{STACItemCollection} or \code{STACItem} object, with
-the link of the item pointing to the directory where the assets were saved.
+the link pointing to the directory where the assets were saved.
 }
 \description{
 The \code{assets_download} function downloads the assets
@@ -52,8 +52,7 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1") \%>\%
   stac_search(limit = 2) \%>\%
   get_request() \%>\%
-  assets_download(assets_name = "thumbnail", output_dir = ".",
-  overwrite = FALSE)
+  assets_download(assets_name = "thumbnail", output_dir = ".")
 }
 
 }

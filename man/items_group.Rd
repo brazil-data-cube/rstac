@@ -7,8 +7,8 @@
 items_group(items, ..., field = NULL, index = NULL)
 }
 \arguments{
-\item{items}{a \code{STACItemCollection} object representing
-the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.}
+\item{items}{a \code{STACItemCollection} object representing the result of
+\code{/stac/search}, \code{/collections/{collectionId}/items}.}
 
 \item{...}{a named way to provide field names to get the subfields values
 from the \code{RSTACDocument} objects.}
@@ -20,7 +20,7 @@ subfields values from the \code{RSTACDocument} objects.}
 used with the function \link{items_reap}.}
 }
 \value{
-a \code{list} in which each index corresponds to a group with its
+A \code{list} in which each index corresponds to a group with its
  corresponding \code{STACItemCollection} objects.
 }
 \description{

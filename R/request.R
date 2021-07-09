@@ -132,7 +132,7 @@ post_request <- function(q, ..., encode = c("json", "multipart", "form")) {
 #' The \code{.do_omit_query_params()} Function to make the omission of the
 #'  parameters that were omitted in function \code{omit_query_params()}.
 #'
-#' @param q       a \code{RSTACQuery} object.
+#' @param q a \code{RSTACQuery} object.
 #'
 #' @noRd
 .do_omit_query_params <- function(q) {
@@ -152,7 +152,7 @@ post_request <- function(q, ..., encode = c("json", "multipart", "form")) {
 #' The \code{.undo_omit_query_params()} function to undo the omission of
 #'  parameters that were omitted in function \code{omit_query_params()}.
 #'
-#' @param q       a \code{RSTACQuery} object.
+#' @param q a \code{RSTACQuery} object.
 #'
 #' @noRd
 .undo_omit_query_params <- function(q) {

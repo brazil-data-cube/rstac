@@ -6,6 +6,7 @@
 \alias{endpoint}
 \alias{before_request}
 \alias{after_response}
+\alias{parse_params}
 \alias{content_response}
 \alias{check_query_verb}
 \alias{check_subclass}
@@ -21,6 +22,8 @@ endpoint(q)
 before_request(q)
 
 after_response(q, res)
+
+parse_params(q, params)
 
 content_response(res, status_codes, content_types)
 
@@ -45,6 +48,9 @@ object to be created.}
 
 \item{res}{a \code{httr} \code{response} object.}
 
+\item{params}{a named \code{list} with all URL query parameters to be
+appended in the URL.}
+
 \item{status_codes}{a \code{character} vector with successful
 status codes.}
 
@@ -66,9 +72,6 @@ criteria or any \code{RSTACDocument}.}
 
 \item{base_url}{a \code{character} informing the base URL of a
 STAC web service.}
-
-\item{params}{a named \code{list} with all URL query parameters to be
-appended in the URL.}
 }
 \value{
 The \code{RSTACDocument()} function returns a \code{RSTACDocument} object

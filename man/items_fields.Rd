@@ -17,7 +17,7 @@ from the \code{RSTACDocument} objects.}
 subfields values from the \code{RSTACDocument} objects.}
 }
 \value{
-a \code{character} with the subfields of the \code{feature} field.
+A \code{character} with the subfields of the \code{feature} field.
 }
 \description{
 This function returns the subfields of the \code{feature}

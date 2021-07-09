@@ -1,7 +1,7 @@
 context("test_internal_functions")
 
 testthat::test_that("internals functions", {
-  vcr::use_cassette("test_internal_functions",{
+  vcr::use_cassette("test_internal_functions", {
 
     # skip cran check test
     testthat::skip_on_cran()

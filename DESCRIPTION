@@ -1,6 +1,6 @@
 Package: rstac
 Title: Client Library for SpatioTemporal Asset Catalog
-Version: 0.9.1-3
+Version: 0.9.1-4
 Authors@R:
     c(person("Brazil Data Cube Team",
             email = "brazildatacube@inpe.br",

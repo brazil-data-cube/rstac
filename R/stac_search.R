@@ -100,24 +100,22 @@ stac_search <- function(q,
   params <- list()
 
   if (!is.null(collections))
-    params[["collections"]] <- collections
+    params[["collections"]] <- .parse_collections(collections)
 
   if (!is.null(ids))
-    params[["ids"]] <- ids
+    params[["ids"]] <- .parse_ids(ids)
 
   if (!is.null(datetime))
-    params[["datetime"]] <- datetime
+    params[["datetime"]] <- .parse_datetime(datetime)
 
   if (!is.null(bbox))
-    params[["bbox"]] <- bbox
+    params[["bbox"]] <- .parse_bbox(bbox)
 
   if (!is.null(intersects))
-    params[["intersects"]] <- intersects
+    params[["intersects"]] <- .parse_geometry(intersects)
 
   if (!is.null(limit))
-    params[["limit"]] <- limit
-
-  params <- parse_search_params(params = params)
+    params[["limit"]] <- .parse_limit(limit)
 
   RSTACQuery(
     version = q$version,
@@ -127,7 +125,8 @@ stac_search <- function(q,
   )
 }
 
-parse_search_params <- function(params) {
+#' @export
+parse_params.search <- function(q, params) {
 
   if (!is.null(params[["collections"]]))
     params[["collections"]] <- .parse_collections(params[["collections"]])

@@ -74,6 +74,7 @@
 #' criteria.
 #'
 #' @param res     a \code{httr} \code{response} object.
+#' @param params  a \code{list} with params to add in request.
 #'
 #' @return
 #' A \code{character} endpoint value for \code{endpoint()} function.
@@ -90,7 +91,7 @@ NULL
 #' @export
 endpoint <- function(q) {
 
-  UseMethod("endpoint")
+  UseMethod("endpoint", q)
 }
 
 #' @title Extension development functions
@@ -98,7 +99,7 @@ endpoint <- function(q) {
 #' @export
 before_request <- function(q) {
 
-  UseMethod("before_request")
+  UseMethod("before_request", q)
 }
 
 #' @title Extension development functions
@@ -106,7 +107,14 @@ before_request <- function(q) {
 #' @export
 after_response <- function(q, res) {
 
-  UseMethod("after_response")
+  UseMethod("after_response", q)
+}
+
+#' @title Extension development functions
+#' @rdname extensions
+#' @export
+parse_params <- function(q, params) {
+  UseMethod("parse_params", q)
 }
 
 #' @describeIn extensions
