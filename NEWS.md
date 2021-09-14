@@ -1,5 +1,12 @@
 # rstac (development version)
 
+# rstac 0.9.1-4 (Released 2021-09-14)
+
+* Fix typos
+* Update docs
+* Update tests
+* Update fixtures files
+
 # rstac 0.9.1-3 (Released 2021-06-25)
 
 * Fix in bug related with `items_fetch` in using bbox as parameter #41

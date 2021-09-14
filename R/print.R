@@ -118,7 +118,7 @@ print.STACCollectionList <- function(x, n = 10, ...) {
   cat(crayon::bold("###STACCollectionList"), fill = TRUE)
   cat("-", crayon::bold("collections"),
       sprintf("(%s item(s)):", length(x$collections)), fill = TRUE)
-  # if (length(x$collections) > 0) cat(fill = TRUE)
+
   if (missing(n) && length(x$collections) < 2 * n)
     n <- length(x$collections)
   n <- min(n, length(x$collections))

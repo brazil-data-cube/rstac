@@ -10,7 +10,7 @@ stac(base_url, force_version = NULL)
 \item{base_url}{a \code{character} informing the base url of a
 STAC web service.}
 
-\item{force_version}{a \code{character} providing the version of the stac
+\item{force_version}{a \code{character} providing the version of the STAC
 used. If not provided, the rstac package will make requests to try to find
 the version of STAC used. It is highly recommended that you inform the STAC
 version you are using.}
@@ -21,9 +21,10 @@ request parameters to be provided to API service.
 }
 \description{
 The \code{stac} function implements \code{/stac} API
-endpoint (>=0.8.0). It prepares search fields parameters to be provided to
-a STAC API web service. This endpoint should return a STAC Catalog document
-containing all published data catalogs.
+endpoint (>=0.8.0), and \code{/} for versions 0.9.0 or higher. It prepares
+search fields parameters to be provided to a STAC API web service. This
+endpoint should return a STAC Catalog document containing all published data
+catalogs.
 }
 \examples{
 \donttest{
