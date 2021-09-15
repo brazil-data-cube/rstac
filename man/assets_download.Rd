@@ -6,12 +6,14 @@
 \usage{
 assets_download(
   items,
-  assets_name,
+  asset_names = NULL,
   output_dir = ".",
   overwrite = FALSE,
   items_max = Inf,
   progress = TRUE,
-  ...
+  fn = NULL,
+  ...,
+  assets_name = deprecated()
 )
 }
 \arguments{
@@ -20,27 +22,34 @@ representing the result of \verb{/stac/search},
 \code{/collections/{collectionId}/items} or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
 
-\item{assets_name}{a \code{character} with the assets names to be filtered.}
+\item{asset_names}{a \code{character} with the assets names to be filtered.}
 
 \item{output_dir}{a \code{character} directory in which the assets will be
 saved.}
 
 \item{overwrite}{a \code{logical} if TRUE will replaced the existing file,
-if FALSE a warning message is shown. (\code{FALSE}, default).}
+if FALSE a warning message is shown.}
 
 \item{items_max}{a \code{numeric} corresponding how many items will be
 downloaded.}
 
 \item{progress}{a \code{logical} indicating if a progress bar must be
-shown or not. (\code{TRUE}, default).}
+shown or not. Defaults to \code{TRUE}.}
+
+\item{fn}{a \code{function} to handle the list of assets for each item.
+Using this function you can change the hrefs for each asset, as well as use
+another request verb, such as POST.}
 
 \item{...}{config parameters to be passed to \link[httr:GET]{GET} or
 \link[httr:POST]{POST} methods, such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.}
+
+\item{assets_name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+use \code{asset_names} parameter instead.}
 }
 \value{
 The same \code{STACItemCollection} or \code{STACItem} object, with
-the link pointing to the directory where the assets were saved.
+the link of the item pointing to the directory where the assets were saved.
 }
 \description{
 The \code{assets_download} function downloads the assets
@@ -49,10 +58,12 @@ provided by the STAC API.
 \examples{
 \dontrun{
 stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  stac_search(collections = "CB4_64_16D_STK-1") \%>\%
-  stac_search(limit = 2) \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1",
+              datetime = "2019-06-01/2019-08-01") \%>\%
+  stac_search() \%>\%
   get_request() \%>\%
-  assets_download(assets_name = "thumbnail", output_dir = ".")
+  assets_download(assets_name = "thumbnail", output_dir = ".",
+  overwrite = FALSE)
 }
 
 }

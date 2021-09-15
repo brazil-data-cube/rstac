@@ -8,19 +8,27 @@
 #'  \code{/collections/{collectionId}/items} or
 #'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
-#' @param assets_name a `character` with the assets names to be filtered.
+#' @param assets_name `r lifecycle::badge('deprecated')`
+#'  use `asset_names` parameter instead.
+#'
+#' @param asset_names a `character` with the assets names to be filtered.
+#'
 #'
 #' @param output_dir  a `character` directory in which the assets will be
 #'  saved.
 #'
 #' @param overwrite   a `logical` if TRUE will replaced the existing file,
-#'  if FALSE a warning message is shown. (`FALSE`, default).
+#'  if FALSE a warning message is shown.
 #'
 #' @param items_max   a `numeric` corresponding how many items will be
 #'  downloaded.
 #'
 #' @param progress    a `logical` indicating if a progress bar must be
-#'  shown or not. (`TRUE`, default).
+#'  shown or not. Defaults to `TRUE`.
+#'
+#' @param fn          a `function` to handle the list of assets for each item.
+#'  Using this function you can change the hrefs for each asset, as well as use
+#'  another request verb, such as POST.
 #'
 #' @param ...         config parameters to be passed to [GET][httr::GET] or
 #' [POST][httr::POST] methods, such as [add_headers][httr::add_headers] or
@@ -32,36 +40,54 @@
 #' @examples
 #' \dontrun{
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   stac_search(limit = 2) %>%
+#'   stac_search(collections = "CB4_64_16D_STK-1",
+#'               datetime = "2019-06-01/2019-08-01") %>%
+#'   stac_search() %>%
 #'   get_request() %>%
-#'   assets_download(assets_name = "thumbnail", output_dir = ".")
+#'   assets_download(assets_name = "thumbnail", output_dir = ".",
+#'   overwrite = FALSE)
 #' }
 #'
 #' @return The same `STACItemCollection` or `STACItem` object, with
-#' the link pointing to the directory where the assets were saved.
+#' the link of the item pointing to the directory where the assets were saved.
 #'
 #' @export
 assets_download <- function(items,
-                            assets_name,
+                            asset_names = NULL,
                             output_dir = ".",
                             overwrite = FALSE,
                             items_max = Inf,
-                            progress = TRUE,
-                            ...) {
+                            progress  = TRUE,
+                            fn = NULL, ...,
+                            assets_name = deprecated()) {
 
   #check the object subclass
   check_subclass(items, subclasses = c("STACItemCollection", "STACItem"))
+
+  if (lifecycle::is_present(assets_name)) {
+
+    # signal the deprecation to the user
+    lifecycle::deprecate_soft("0.9.1-5",
+                              "rstac::assets_download(assets_name = )",
+                              "rstac::assets_download(asset_names = )")
+
+    # deal with the deprecated argument for compatibility
+    asset_names <- assets_name
+  }
 
   # check output dir
   if (!dir.exists(output_dir))
     .error(paste("The directory provided does not exist.",
                  "Please specify a valid directory."))
 
+
+  if (is.null(asset_names))
+    asset_names <- items_fields(items, "assets")
+
   # if the object is a STACItem
   if (subclass(items) == "STACItem") {
     items <- .item_download(stac_item   = items,
-                            assets_name = assets_name,
+                            asset_names = asset_names,
                             output_dir  = output_dir,
                             overwrite   = overwrite, ...)
     return(items)
@@ -100,7 +126,8 @@ assets_download <- function(items,
     items$features[[i]] <- .item_download(stac_item   = items$features[[i]],
                                           assets_name = assets_name,
                                           output_dir  = output_dir,
-                                          overwrite   = overwrite, ...)
+                                          overwrite   = overwrite,
+                                          fn = fn, ...)
   }
   # close progress bar
   if (progress)
@@ -109,25 +136,23 @@ assets_download <- function(items,
   return(items)
 }
 
-# helpers ----------------------------------------------------------------------
-
 #' @title Helper function of `assets_download` function
 #'
 #' @description the `.item_download` function downloads the assets of a
-#'  `STACItem` object.
+#'  stac_item
 #'
 #' @param stac_item   a  `stac_item` object expressing a STAC
 #'  search criteria provided by `stac_item` function.
 #'
-#' @param assets_name a `character` with the assets names to be filtered.
+#' @param asset_names a `character` with the assets names to be filtered.
 #'
 #' @param output_dir  a `character` directory in which the images will be
 #'  saved.
 #'
-#' @param overwrite  a `logical` if TRUE will replaced the existing file,
+#' @param overwrite   a `logical` if TRUE will replaced the existing file,
 #'  if FALSE a warning message is shown.
 #'
-#' @param ...       config parameters to be passed to [GET][httr::GET] or
+#' @param ...         config parameters to be passed to [GET][httr::GET] or
 #' [POST][httr::POST] methods, such as [add_headers][httr::add_headers] or
 #' [set_cookies][httr::set_cookies].
 #'
@@ -135,33 +160,33 @@ assets_download <- function(items,
 #'  pointing to the directory where the assets were saved.
 #'
 #' @noRd
-.item_download <- function(stac_item, assets_name, output_dir, overwrite, ...) {
+.item_download <- function(stac_item, asset_names, output_dir,
+                           overwrite, ..., fn) {
 
-  feat_id <- stac_item[["id"]]
-  assets  <- .select_assets(stac_item[["assets"]], assets_name)
+  assets <- .select_assets(stac_item[["assets"]], assets_name)
 
-  for (i in seq_along(assets)) {
-    # store the names of assets
-    asset_name <- names(assets[i])
-    asset_href <- assets[[i]]$href
-    file_ext   <- .file_ext(asset_href)
+  stac_item[["assets"]] <- lapply(assets, function(asset){
+
+    if (!is.null(fn))
+      return(fn(asset))
 
     # create a full path name
-    dest_file  <- sprintf("%s/%s_%s.%s", output_dir, feat_id, asset_name,
-                          file_ext)
+    dest_file <- paste0(output_dir, "/",
+                        gsub(".*/([^?]*)\\??.*$", "\\1", asset$href))
 
     tryCatch({
-      httr::GET(url = asset_href,
+      httr::GET(url = asset$href,
                 httr::write_disk(path = dest_file, overwrite = overwrite), ...)
 
-    }, error = function(error) {
-      .warning(paste("\n", error, "in ", asset_href))
+    }, error = function(e){
+      .error("Error while downloading %s. \n%s", asset$href, e$message)
     })
 
-    if (file.exists(dest_file)) {
-      stac_item[["assets"]][[asset_name]]$href <- dest_file
-    }
-  }
+    asset$href <- dest_file
+
+    asset
+  })
+
   return(stac_item)
 }
 
@@ -193,24 +218,19 @@ assets_download <- function(items,
 #' @param assets_list  a `list` with the information of each item provided
 #' by API STAC
 #'
-#' @param assets_names a `character` with the assets names to be filtered.
+#' @param asset_names  a `character` with the assets names to be filtered.
 #'
 #' @return A `list` in the same format as the list of assets, but with the
 #'  selected assets names.
 #'
 #' @noRd
-.select_assets <- function(assets, assets_names) {
+.select_assets <- function(assets, asset_names) {
 
-  # If not provided the assets name, by default all assets will be used
-  if (missing(assets_names)) {
-    return(assets)
-  }
-
-  if (!all(assets_names %in% names(assets))) {
+  if (!all(asset_names %in% names(assets))) {
     .error(paste("The provided assets names do not match with the",
                  "assets names in the document."))
   }
-  assets <- assets[names(assets) %in% assets_names]
+  assets <- assets[names(assets) %in% asset_names]
 
   return(assets)
 }
