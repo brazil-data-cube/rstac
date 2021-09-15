@@ -13,9 +13,9 @@ post_request(q, ..., encode = c("json", "multipart", "form"))
 \item{q}{a \code{RSTACQuery} object expressing a STAC query
 criteria.}
 
-\item{...}{config parameters to be passed to \link[httr]{GET} or
-\link[httr]{POST} methods, such as \link[httr]{add_headers} or
-\link[httr]{set_cookies}.}
+\item{...}{config parameters to be passed to \link[httr:GET]{GET} or
+\link[httr:POST]{POST} methods, such as \link[httr:add_headers]{add_headers} or
+\link[httr:set_cookies]{set_cookies}.}
 
 \item{encode}{a \code{character} informing the request body
 Content-Type. Accepted types are \code{'json'} (\code{'application/json'}),
@@ -47,6 +47,6 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
 }
 }
 \seealso{
-\code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
-\code{\link{items}}
+\code{\link[=stac]{stac()}} \code{\link[=stac_search]{stac_search()}} \code{\link[=collections]{collections()}}
+\code{\link[=items]{items()}}
 }

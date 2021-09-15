@@ -8,7 +8,7 @@ items_reap(items, ..., field = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
-the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.}
+the result of \verb{/stac/search}, \code{/collections/{collectionId}/items}.}
 
 \item{...}{a named way to provide fields names to get the
 subfields values from the \code{RSTACDocument} objects.}
@@ -21,9 +21,9 @@ a \code{vector} if the supplied field is atomic, or a list if not.
 }
 \description{
 This function returns the values of a field of the
- \code{STACItemCollections} object. If the values of the specified field are
- not atomic the return will be in list form, if they are, it will be returned
- in vector form.
+\code{STACItemCollections} object. If the values of the specified field are
+not atomic the return will be in list form, if they are, it will be returned
+in vector form.
 }
 \examples{
 \donttest{

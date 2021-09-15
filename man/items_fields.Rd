@@ -8,7 +8,7 @@ items_fields(items, ..., field = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
-the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.}
+the result of \verb{/stac/search}, \code{/collections/{collectionId}/items}.}
 
 \item{...}{a named way to provide field names to get the subfields values
 from the \code{RSTACDocument} objects.}

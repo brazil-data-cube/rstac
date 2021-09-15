@@ -16,7 +16,7 @@ assets_download(
 }
 \arguments{
 \item{items}{a \code{STACItem} or \code{STACItemCollection} object
-representing the result of \code{/stac/search},
+representing the result of \verb{/stac/search},
 \code{/collections/{collectionId}/items} or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
 
@@ -34,9 +34,9 @@ downloaded.}
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. (\code{TRUE}, default).}
 
-\item{...}{config parameters to be passed to \link[httr]{GET} or
-\link[httr]{POST} methods, such as \link[httr]{add_headers} or
-\link[httr]{set_cookies}.}
+\item{...}{config parameters to be passed to \link[httr:GET]{GET} or
+\link[httr:POST]{POST} methods, such as \link[httr:add_headers]{add_headers} or
+\link[httr:set_cookies]{set_cookies}.}
 }
 \value{
 The same \code{STACItemCollection} or \code{STACItem} object, with
@@ -57,5 +57,5 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
 
 }
 \seealso{
-\code{\link{stac_search}}, \code{\link{items}}, \code{\link{get_request}}
+\code{\link[=stac_search]{stac_search()}}, \code{\link[=items]{items()}}, \code{\link[=get_request]{get_request()}}
 }

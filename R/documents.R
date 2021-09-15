@@ -1,34 +1,34 @@
 #' @title Document development functions
 #'
 #' @describeIn extensions
-#' The \code{RSTACDocument()} function is a constructor of
+#' The `RSTACDocument()` function is a constructor of
 #' STAC documents. Currently, there are five STAC documents defined:
 #' \itemize{
-#' \item \code{STACCatalog}
-#' \item \code{STACCollection}
-#' \item \code{STACCollectionList}
-#' \item \code{STACItem}
-#' \item \code{STACItemCollection}
+#' \item `STACCatalog`
+#' \item `STACCollection`
+#' \item `STACCollectionList`
+#' \item `STACItem`
+#' \item `STACItemCollection`
 #' }
 #'
 #' Each document class is associated with STAC API endpoints.
 #' As soon as new STAC documents are proposed in the specification, new
-#' classes can be created in the \code{rstac} package.
+#' classes can be created in the `rstac` package.
 #'
-#' Let \code{version} parameter \code{NULL} to detect version automatically.
+#' Let `version` parameter `NULL` to detect version automatically.
 #'
-#' @param content    a \code{list} data structure representing the JSON file
-#' received in HTTP response (see \code{\link{content_response}()} function)
+#' @param content    a `list` data structure representing the JSON file
+#' received in HTTP response (see [content_response()] function)
 #'
-#' @param q          a \code{RSTACQuery} object expressing the STAC query used
+#' @param q          a `RSTACQuery` object expressing the STAC query used
 #' to retrieve the document.
 #'
-#' @param subclass   a \code{character} corresponding to the subclass of the
+#' @param subclass   a `character` corresponding to the subclass of the
 #' document to be created.
 #'
 #' @return
-#' The \code{RSTACDocument()} function returns a \code{RSTACDocument} object
-#' with subclass defined by \code{subclass} parameter.
+#' The `RSTACDocument()` function returns a `RSTACDocument` object
+#' with subclass defined by `subclass` parameter.
 #'
 #' @export
 RSTACDocument <- function(content, q, subclass) {
@@ -56,9 +56,9 @@ check_subclass.RSTACDocument <- function(x, subclasses) {
 
 #' @title Document utils functions
 #'
-#' @param d \code{RSTACDocument} object
+#' @param d `RSTACDocument` object
 #'
-#' @return a \code{RSTACQuery} object with the predecessor subclass with the
+#' @return a `RSTACQuery` object with the predecessor subclass with the
 #'  fields used in the request.
 #'
 #' @export
@@ -92,36 +92,36 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' @title STACItemCollection functions
 #'
 #' @description
-#' The \code{items_length()} function shows how many items there are in
-#' the \code{STACItemCollection} object.
-#' The \code{items_matched()} function shows how many items matched the
-#' search criteria. It supports \code{search:metadata} (v0.8.0),
-#' \code{context} (v0.9.0), and \code{numberMatched} (OGC WFS3 core spec).
-#' The \code{items_fetch()} function request all STAC Items through
+#' The `items_length()` function shows how many items there are in
+#' the `STACItemCollection` object.
+#' The `items_matched()` function shows how many items matched the
+#' search criteria. It supports `search:metadata` (v0.8.0),
+#' `context` (v0.9.0), and `numberMatched` (OGC WFS3 core spec).
+#' The `items_fetch()` function request all STAC Items through
 #' pagination.
-#' The \code{items_datetime()} function retrieves a the \code{datetime}
-#' field in \code{properties} from \code{STACItemCollection} and
-#' \code{STACItem} objects.
-#' The \code{items_bbox()} function retrieves a the \code{bbox}
-#' field of a \code{STACItemCollection} or an \code{STACItem} object.
-#' The \code{get_assets_name()} function returns the assets name from
-#' \code{STACItemCollection} and \code{STACItem} objects.
+#' The `items_datetime()` function retrieves a the `datetime`
+#' field in `properties` from `STACItemCollection` and
+#' `STACItem` objects.
+#' The `items_bbox()` function retrieves a the `bbox`
+#' field of a `STACItemCollection` or an `STACItem` object.
+#' The `get_assets_name()` function returns the assets name from
+#' `STACItemCollection` and `STACItem` objects.
 #'
-#' @param items           a \code{STACItemCollection} object.
-#' @param matched_field   a \code{character} vector with the path
+#' @param items           a `STACItemCollection` object.
+#' @param matched_field   a `character` vector with the path
 #' where the number of items returned in the named list is located starting from
 #' the initial node of the list. For example, if the information is at position
-#' \code{items$meta$found} of the object, it must be passed as the following
-#' parameter \code{c("meta", "found")}.
+#' `items$meta$found` of the object, it must be passed as the following
+#' parameter `c("meta", "found")`.
 #'
 #' @return
-#' The \code{items_length()} returns an \code{integer} value.
-#' The \code{items_matched()} returns an \code{integer} value.
-#' If STAC web server does not support this extension, returns \code{NULL}.
-#' The \code{items_fetch()} returns an \code{STACItemCollection} with all
+#' The `items_length()` returns an `integer` value.
+#' The `items_matched()` returns an `integer` value.
+#' If STAC web server does not support this extension, returns `NULL`.
+#' The `items_fetch()` returns an `STACItemCollection` with all
 #' matched items.
-#' The \code{items_datetime()} returns a \code{list} of all items' datetime.
-#' The \code{items_bbox()} returns a \code{list} with all items'
+#' The `items_datetime()` returns a `list` of all items' datetime.
+#' The `items_bbox()` returns a `list` with all items'
 #' bounding boxes.
 #'
 #' @examples
@@ -190,12 +190,12 @@ items_matched <- function(items, matched_field = NULL) {
   return(matched)
 }
 
-#' @param progress   a \code{logical} indicating if a progress bar must be
-#' shown or not. Defaults to \code{TRUE}.
+#' @param progress   a `logical` indicating if a progress bar must be
+#' shown or not. Defaults to `TRUE`.
 #'
-#' @param ...        config parameters to be passed to \link[httr]{GET} or
-#' \link[httr]{POST} methods, such as \link[httr]{add_headers} or
-#' \link[httr]{set_cookies}.
+#' @param ...        config parameters to be passed to [GET][httr::GET] or
+#' [POST][httr::POST] methods, such as [add_headers][httr::add_headers] or
+#' [set_cookies][httr::set_cookies].
 #'
 #' @examples
 #' \dontrun{

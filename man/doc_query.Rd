@@ -11,7 +11,7 @@ doc_query(d)
 }
 \value{
 a \code{RSTACQuery} object with the predecessor subclass with the
- fields used in the request.
+fields used in the request.
 }
 \description{
 Document utils functions

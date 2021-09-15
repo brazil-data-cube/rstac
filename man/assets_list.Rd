@@ -13,7 +13,7 @@ assets_list(
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
-the result of \code{/stac/search}, \code{/collections/{collectionId}/items}.}
+the result of \verb{/stac/search}, \code{/collections/{collectionId}/items}.}
 
 \item{assets_names}{a \code{character} with the assets names to be
 filtered. If \code{NULL} (default) all assets will be returned.}
@@ -30,9 +30,9 @@ a \code{list} with the attributes of date, bands and paths.
 }
 \description{
 This function returns the \code{date}, \code{band} and
- \code{URL} fields for each assets of an \code{STACItemCollection} object.
- For the URL you can add the GDAL library drivers for the following schemes:
- HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
+\code{URL} fields for each assets of an \code{STACItemCollection} object.
+For the URL you can add the GDAL library drivers for the following schemes:
+HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 }
 \examples{
 \donttest{

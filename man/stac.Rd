@@ -20,7 +20,7 @@ A \code{RSTACQuery} object with the subclass \code{stac} containing all
 request parameters to be provided to API service.
 }
 \description{
-The \code{stac} function implements \code{/stac} API
+The \code{stac} function implements \verb{/stac} API
 endpoint (>=0.8.0), and \code{/} for versions 0.9.0 or higher. It prepares
 search fields parameters to be provided to a STAC API web service. This
 endpoint should return a STAC Catalog document containing all published data
@@ -34,7 +34,7 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
 
 }
 \seealso{
-\code{\link{stac_search}}, \code{\link{collections}},
-\code{\link{items}}, \code{\link{get_request}},
-\code{\link{post_request}}
+\code{\link[=stac_search]{stac_search()}}, \code{\link[=collections]{collections()}},
+\code{\link[=items]{items()}}, \code{\link[=get_request]{get_request()}},
+\code{\link[=post_request]{post_request()}}
 }

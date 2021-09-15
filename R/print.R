@@ -3,20 +3,20 @@
 #' @description The print function covers all objects in the rstac package:
 #'
 #' \itemize{
-#' \item \code{\link{stac}}: returns a \code{STACCatalog} document from
-#'   \code{/stac} (v0.8.0) or \code{/} (v0.9.0 or v1.0.0) endpoint.
-#' \item \code{\link{stac_search}}: returns a \code{STACItemCollection}
-#'   document from \code{/stac/search} (v0.8.0) or \code{/search}
+#' \item [stac()]: returns a `STACCatalog` document from
+#'   `/stac` (v0.8.0) or `/` (v0.9.0 or v1.0.0) endpoint.
+#' \item [stac_search()]: returns a `STACItemCollection`
+#'   document from `/stac/search` (v0.8.0) or `/search`
 #'   (v0.9.0 or v1.0.0) endpoint containing all Items that match
 #'   the provided search predicates.
-#' \item \code{\link{collections}}: implements the \code{/collections} and
+#' \item [collections()]: implements the `/collections` and
 #'   \code{/collections/\{collectionId\}} endpoints. The former returns
-#'   a \code{STACCollectionList} document that lists all collections published
-#'   by the server, and the later returns a single \code{STACCollection}
+#'   a `STACCollectionList` document that lists all collections published
+#'   by the server, and the later returns a single `STACCollection`
 #'   document that describes a unique collection.
-#' \item \code{\link{items}}: retrieves a \code{STACItemCollection} document
+#' \item [items()]: retrieves a `STACItemCollection` document
 #'   from \code{/collections/\{collectionId\}/items} endpoint and a
-#'   \code{STACItem} document from
+#'   `STACItem` document from
 #'   \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
 #' }
 #'
@@ -24,26 +24,26 @@
 #' lightweight markup language. You can paste the output into any
 #' markdown editor for a better visualization.
 #'
-#' Call \code{print()} function to print the rstac's objects.
-#' You can determine how many items will be printed using \code{n} parameter.
+#' Call `print()` function to print the rstac's objects.
+#' You can determine how many items will be printed using `n` parameter.
 #'
-#' @param x    either a \code{RSTACQuery} object expressing a STAC query
-#' criteria or any \code{RSTACDocument}.
+#' @param x    either a `RSTACQuery` object expressing a STAC query
+#' criteria or any `RSTACDocument`.
 #'
 #' @param n    number of entries to print. Each object has its own rule of
-#' truncation: the \code{STACCollection} objects will print
+#' truncation: the `STACCollection` objects will print
 #' 10 links by default. If the object has less than 20 collections, all
-#' collections will be shown. In \code{STACItemCollection}, 10 features
-#' will be printed by default. To show all entries, use \code{n = Inf}.
+#' collections will be shown. In `STACItemCollection`, 10 features
+#' will be printed by default. To show all entries, use `n = Inf`.
 #'
 #' @param ...  other parameters passed in the functions.
 #'
-#' @param tail A \code{logical} value indicating if last features in
+#' @param tail A `logical` value indicating if last features in
 #' STACItemCollection object must be show.
 #'
 #' @seealso
-#' \code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
-#' \code{\link{items}}
+#' [stac()] [stac_search()] [collections()]
+#' [items()]
 #'
 #' @examples
 #' \donttest{

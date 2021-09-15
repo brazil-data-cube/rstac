@@ -31,9 +31,9 @@ the initial node of the list. For example, if the information is at position
 \code{items$meta$found} of the object, it must be passed as the following
 parameter \code{c("meta", "found")}.}
 
-\item{...}{config parameters to be passed to \link[httr]{GET} or
-\link[httr]{POST} methods, such as \link[httr]{add_headers} or
-\link[httr]{set_cookies}.}
+\item{...}{config parameters to be passed to \link[httr:GET]{GET} or
+\link[httr:POST]{POST} methods, such as \link[httr:add_headers]{add_headers} or
+\link[httr:set_cookies]{set_cookies}.}
 
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}

@@ -1,33 +1,33 @@
 #' @title Downloads assets via STAC API
 #'
-#' @description The \code{assets_download} function downloads the assets
+#' @description The `assets_download` function downloads the assets
 #' provided by the STAC API.
 #'
-#' @param items       a \code{STACItem} or \code{STACItemCollection} object
-#'  representing the result of \code{/stac/search},
+#' @param items       a `STACItem` or `STACItemCollection` object
+#'  representing the result of `/stac/search`,
 #'  \code{/collections/{collectionId}/items} or
 #'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
-#' @param assets_name a \code{character} with the assets names to be filtered.
+#' @param assets_name a `character` with the assets names to be filtered.
 #'
-#' @param output_dir  a \code{character} directory in which the assets will be
+#' @param output_dir  a `character` directory in which the assets will be
 #'  saved.
 #'
-#' @param overwrite   a \code{logical} if TRUE will replaced the existing file,
-#'  if FALSE a warning message is shown. (\code{FALSE}, default).
+#' @param overwrite   a `logical` if TRUE will replaced the existing file,
+#'  if FALSE a warning message is shown. (`FALSE`, default).
 #'
-#' @param items_max   a \code{numeric} corresponding how many items will be
+#' @param items_max   a `numeric` corresponding how many items will be
 #'  downloaded.
 #'
-#' @param progress    a \code{logical} indicating if a progress bar must be
-#'  shown or not. (\code{TRUE}, default).
+#' @param progress    a `logical` indicating if a progress bar must be
+#'  shown or not. (`TRUE`, default).
 #'
-#' @param ...         config parameters to be passed to \link[httr]{GET} or
-#' \link[httr]{POST} methods, such as \link[httr]{add_headers} or
-#' \link[httr]{set_cookies}.
+#' @param ...         config parameters to be passed to [GET][httr::GET] or
+#' [POST][httr::POST] methods, such as [add_headers][httr::add_headers] or
+#' [set_cookies][httr::set_cookies].
 #'
 #' @seealso
-#' \code{\link{stac_search}}, \code{\link{items}}, \code{\link{get_request}}
+#' [stac_search()], [items()], [get_request()]
 #'
 #' @examples
 #' \dontrun{
@@ -38,7 +38,7 @@
 #'   assets_download(assets_name = "thumbnail", output_dir = ".")
 #' }
 #'
-#' @return The same \code{STACItemCollection} or \code{STACItem} object, with
+#' @return The same `STACItemCollection` or `STACItem` object, with
 #' the link pointing to the directory where the assets were saved.
 #'
 #' @export
@@ -111,27 +111,27 @@ assets_download <- function(items,
 
 # helpers ----------------------------------------------------------------------
 
-#' @title Helper function of \code{assets_download} function
+#' @title Helper function of `assets_download` function
 #'
-#' @description the \code{.item_download} function downloads the assets of a
-#'  \code{STACItem} object.
+#' @description the `.item_download` function downloads the assets of a
+#'  `STACItem` object.
 #'
-#' @param stac_item   a  \code{stac_item} object expressing a STAC
-#'  search criteria provided by \code{stac_item} function.
+#' @param stac_item   a  `stac_item` object expressing a STAC
+#'  search criteria provided by `stac_item` function.
 #'
-#' @param assets_name a \code{character} with the assets names to be filtered.
+#' @param assets_name a `character` with the assets names to be filtered.
 #'
-#' @param output_dir  a \code{character} directory in which the images will be
+#' @param output_dir  a `character` directory in which the images will be
 #'  saved.
 #'
-#' @param overwrite  a \code{logical} if TRUE will replaced the existing file,
+#' @param overwrite  a `logical` if TRUE will replaced the existing file,
 #'  if FALSE a warning message is shown.
 #'
-#' @param ...       config parameters to be passed to \link[httr]{GET} or
-#' \link[httr]{POST} methods, such as \link[httr]{add_headers} or
-#' \link[httr]{set_cookies}.
+#' @param ...       config parameters to be passed to [GET][httr::GET] or
+#' [POST][httr::POST] methods, such as [add_headers][httr::add_headers] or
+#' [set_cookies][httr::set_cookies].
 #'
-#' @return The same \code{stac_item} object, but with the link of the item
+#' @return The same `stac_item` object, but with the link of the item
 #'  pointing to the directory where the assets were saved.
 #'
 #' @noRd
@@ -165,14 +165,14 @@ assets_download <- function(items,
   return(stac_item)
 }
 
-#' @title Helper function of \code{assets_download} function
+#' @title Helper function of `assets_download` function
 #'
-#' @description The \code{.file_ext} is function to extract the extension
+#' @description The `.file_ext` is function to extract the extension
 #' from a file
 #'
-#' @param asset_url  a \code{character} URL provided from a \code{stac_search}.
+#' @param asset_url  a `character` URL provided from a `stac_search`.
 #'
-#' @return A \code{character} of the extracted file extension.
+#' @return A `character` of the extracted file extension.
 #'
 #' @noRd
 .file_ext <- function(asset_url) {
@@ -185,17 +185,17 @@ assets_download <- function(items,
   return(substring(asset_url[[1]], pos + 1))
 }
 
-#' @title Helper function of \code{assets_download} function
+#' @title Helper function of `assets_download` function
 #'
-#' @description The helper function \code{.select_assets} selects the names of
+#' @description The helper function `.select_assets` selects the names of
 #' each asset provided by users
 #'
-#' @param assets_list  a \code{list} with the information of each item provided
+#' @param assets_list  a `list` with the information of each item provided
 #' by API STAC
 #'
-#' @param assets_names a \code{character} with the assets names to be filtered.
+#' @param assets_names a `character` with the assets names to be filtered.
 #'
-#' @return A \code{list} in the same format as the list of assets, but with the
+#' @return A `list` in the same format as the list of assets, but with the
 #'  selected assets names.
 #'
 #' @noRd

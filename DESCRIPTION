@@ -28,3 +28,4 @@ Suggests:
     covr,
     testthat,
     vcr
+Roxygen: list(markdown = TRUE)
