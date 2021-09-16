@@ -57,6 +57,6 @@ NULL
 #' http_type
 #' @importFrom crayon bold
 #' @importFrom utils modifyList URLdecode
-#' @importFrom jsonlite validate
+#' @importFrom jsonlite fromJSON
 #' @importFrom lifecycle deprecated
 NULL
