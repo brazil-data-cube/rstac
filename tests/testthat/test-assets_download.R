@@ -14,13 +14,13 @@ testthat::test_that("assets download", {
           bbox        = c(-47.02148, -12.98314, -42.53906, -17.35063),
           limit       = 0) %>%
         get_request() %>%
-        assets_download(assets_name = c("blue", "evi")))
+        assets_download(asset_names = c("blue", "evi")))
 
     # error - given another object
      testthat::expect_error(
        stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
          get_request(.) %>%
-         assets_download(., assets_name = c("blue", "evi")))
+         assets_download(., asset_names = c("blue", "evi")))
 
    # error - wrong path
    testthat::expect_error(
@@ -30,7 +30,7 @@ testthat::test_that("assets download", {
          datetime    = "2019-09-01/2019-11-01",
          limit       = 1) %>%
        get_request() %>%
-       assets_download(assets_name = c("thumbnail"),
+       assets_download(asset_names = c("thumbnail"),
                        output_dir = "./non-existing-dir/"))
 
    # verify output object
@@ -42,7 +42,7 @@ testthat::test_that("assets download", {
            datetime    = "2019-09-01/2019-11-01",
            limit       = 1) %>%
          get_request() %>%
-         assets_download(assets_name = c("thumbnail"), output_dir = ".")
+         assets_download(asset_names = c("thumbnail"), output_dir = ".")
        subclass(x)
      },
      expected = "STACItemCollection")
