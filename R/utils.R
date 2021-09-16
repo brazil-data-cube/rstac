@@ -859,3 +859,22 @@ items_sign <- function(items, sign_fn = NULL) {
     return(paste(c("xmin:", "ymin:", "zmin:", "xmax:", "ymax:", "zmax:"),
                  sprintf("%.5f", bbox), collapse = ", "))
 }
+
+#' @title Utility functions
+#'
+#' @description Function similar to modifyList of utils, however it is checked
+#'  if the left parameter is null.
+#'
+#' @param x   a `list` to be compared in left side.
+#'
+#' @param y   a `list` to be compared in right side.
+#'
+#' @return a `list` with modified values.
+#'
+#' @noRd
+.modify_list <- function(x, y) {
+
+  if (is.null(x))
+    x <- list()
+  utils::modifyList(x, y, keep.null = TRUE)
+}
