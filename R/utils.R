@@ -535,6 +535,74 @@ assets_list <- function(items, asset_names = NULL,
 
 #' @title Utility functions
 #'
+#' @description This function filters for the attributes contained in the STAC
+#'  properties.
+#'
+#' @param items a `STACItemCollection` object representing
+#'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
+#'
+#' @param ...   expressions used to filter items of a `STACItemCollection`
+#'  object.
+#' @param fn    a `function` that will be used to filter the attributes
+#'  listed in the properties.
+#'
+#' @return a `STACItemCollection` object with the filtered properties.
+#'
+#' @examples
+#' \donttest{
+#' # STACItemCollection object
+#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'         datetime = "2017-08-01/2018-03-01",
+#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'  get_request() %>% items_filter(`eo:cloud_cover` < 10)
+#'
+#' # Example with AWS STAC
+#' items <- stac("https://earth-search.aws.element84.com/v0") %>%
+#'   stac_search(collections = "sentinel-s2-l2a-cogs",
+#'               bbox = c(-48.206,-14.195,-45.067,-12.272),
+#'               datetime = "2018-06-01/2018-06-30",
+#'               limit = 500) %>%
+#'   post_request()
+#'
+#'   items %>%
+#'    items_filter(fn = function(x) {x[["eo:cloud_cover"]] < 10})
+#' }
+#'
+#' @export
+items_filter <- function(items, ..., fn = NULL) {
+
+  dots <- substitute(list(...))[-1]
+
+  if (length(dots) > 0) {
+
+    if (!is.null(names(dots)))
+      .error("Invalid filter arguments.")
+
+    for (i in seq_along(dots)) {
+
+      sel <- vapply(items$features, function(f) {
+        eval(dots[[i]], envir = f$properties)
+      }, logical(1))
+
+      items$features <- items$features[sel]
+    }
+  }
+
+  if (!is.null(fn)) {
+
+    sel <- vapply(items$features, function(f) {
+      fn(f$properties)
+    }, logical(1))
+
+    items$features <- items$features[sel]
+  }
+
+  items
+}
+
+#' @title Utility functions
+#'
 #' @description This function returns the values of a field of the
 #'  `STACItemCollections` object. If the values of the specified field are
 #'  not atomic the return will be in list form, if they are, it will be returned
