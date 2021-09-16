@@ -62,7 +62,7 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
               datetime = "2019-06-01/2019-08-01") \%>\%
   stac_search() \%>\%
   get_request() \%>\%
-  assets_download(assets_name = "thumbnail", output_dir = ".",
+  assets_download(asset_names = "thumbnail", output_dir = ".",
   overwrite = FALSE)
 }
 

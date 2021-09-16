@@ -9,7 +9,6 @@ assets_list(
   asset_names = NULL,
   sort = TRUE,
   gdal_vsi_resolution = TRUE,
-  ...,
   assets_names = deprecated()
 )
 }

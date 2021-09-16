@@ -480,7 +480,7 @@ stac_version <- function(x, ...) {
 #'
 #' @export
 assets_list <- function(items, asset_names = NULL,
-                        sort = TRUE, gdal_vsi_resolution = TRUE, ...,
+                        sort = TRUE, gdal_vsi_resolution = TRUE,
                         assets_names = deprecated()) {
 
 

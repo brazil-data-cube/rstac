@@ -44,7 +44,7 @@
 #'               datetime = "2019-06-01/2019-08-01") %>%
 #'   stac_search() %>%
 #'   get_request() %>%
-#'   assets_download(assets_name = "thumbnail", output_dir = ".",
+#'   assets_download(asset_names = "thumbnail", output_dir = ".",
 #'   overwrite = FALSE)
 #' }
 #'
@@ -124,7 +124,7 @@ assets_download <- function(items,
       utils::setTxtProgressBar(pb, i)
 
     items$features[[i]] <- .item_download(stac_item   = items$features[[i]],
-                                          assets_name = assets_name,
+                                          asset_names = asset_names,
                                           output_dir  = output_dir,
                                           overwrite   = overwrite,
                                           fn = fn, ...)
@@ -163,7 +163,7 @@ assets_download <- function(items,
 .item_download <- function(stac_item, asset_names, output_dir,
                            overwrite, ..., fn) {
 
-  assets <- .select_assets(stac_item[["assets"]], assets_name)
+  assets <- .select_assets(stac_item[["assets"]], asset_names)
 
   stac_item[["assets"]] <- lapply(assets, function(asset){
 
