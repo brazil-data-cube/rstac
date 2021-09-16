@@ -6,17 +6,19 @@
 \usage{
 assets_list(
   items,
-  assets_names = NULL,
+  asset_names = NULL,
   sort = TRUE,
-  gdal_vsi_resolution = TRUE
+  gdal_vsi_resolution = TRUE,
+  ...,
+  assets_names = deprecated()
 )
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
 the result of \verb{/stac/search}, \code{/collections/{collectionId}/items}.}
 
-\item{assets_names}{a \code{character} with the assets names to be
-filtered. If \code{NULL} (default) all assets will be returned.}
+\item{asset_names}{a \code{character} with the assets names to be
+filtered. If \code{NULL} (default) all assets will be returned..}
 
 \item{sort}{a \code{logical} if true the dates will be sorted
 in increasing order. By default, the dates are sorted.}
@@ -24,6 +26,9 @@ in increasing order. By default, the dates are sorted.}
 \item{gdal_vsi_resolution}{a \code{logical}  if true, gdal drivers are
 included in the URL of each asset. The following schemes are supported:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
+
+\item{assets_names}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+use \code{asset_names} parameter instead.}
 }
 \value{
 a \code{list} with the attributes of date, bands and paths.

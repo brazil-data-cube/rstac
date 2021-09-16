@@ -451,8 +451,11 @@ stac_version <- function(x, ...) {
 #' @param items               a `STACItemCollection` object representing
 #'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
 #'
-#' @param assets_names        a `character` with the assets names to be
-#'  filtered. If `NULL` (default) all assets will be returned.
+#' @param assets_names `r lifecycle::badge('deprecated')`
+#'  use `asset_names` parameter instead.
+#'
+#' @param asset_names  a `character` with the assets names to be
+#'  filtered. If `NULL` (default) all assets will be returned..
 #'
 #' @param sort                a `logical` if true the dates will be sorted
 #'  in increasing order. By default, the dates are sorted.
@@ -476,20 +479,33 @@ stac_version <- function(x, ...) {
 #' }
 #'
 #' @export
-assets_list <- function(items, assets_names = NULL, sort = TRUE,
-                        gdal_vsi_resolution = TRUE) {
+assets_list <- function(items, asset_names = NULL,
+                        sort = TRUE, gdal_vsi_resolution = TRUE, ...,
+                        assets_names = deprecated()) {
 
-  if (is.null(assets_names))
-    assets_names <- items_fields(items, "assets")
+
+  if (lifecycle::is_present(assets_names)) {
+
+    # Signal the deprecation to the user
+    lifecycle::deprecate_soft("0.9.1-5",
+                              "rstac::assets_download(assets_names = )",
+                              "rstac::assets_download(asset_names = )")
+
+    # Deal with the deprecated argument for compatibility
+    asset_names <- assets_names
+  }
+
+  if (is.null(asset_names))
+    asset_names <- items_fields(items, "assets")
 
   timeline <- items_reap(items, field = c("properties", "datetime"))
   index    <- seq_along(timeline)
   if (sort) index <- order(timeline)
 
   timeline <- timeline[index]
-  assets   <- list(date = rep(timeline, length(unique(assets_names))))
+  assets   <- list(date = rep(timeline, length(unique(asset_names))))
 
-  for (b in assets_names) {
+  for (b in asset_names) {
 
     href <- items_reap(items, field = c("assets", b, "href"))[index]
 
