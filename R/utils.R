@@ -780,6 +780,60 @@ items_group <- function(items, ..., field = NULL, index = NULL) {
 
 #' @title Utility functions
 #'
+#' @description A utility function to create signatures in hrefs of each
+#'  asset in the STAC items. To create the signatures, the provided function
+#'  must return a function, being a factory function, so the manufactured
+#'  function will sign the hrefs returning one feature per interaction.
+#'
+#' @param items   a `STACItemCollection` object representing
+#'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
+#'
+#' @param sign_fn a `function` to assign each assets in STAC items.
+#'
+#' @return A `STACItemCollection` object with the signed assets according to the
+#'  supplied parameter function.
+#' @examples
+#' \dontrun{
+#'
+#' # Defining BDC token
+#' Sys.setenv("BDC_ACCESS_KEY" = <your_bdc_access_key>)
+#'
+#' # STACItem object
+#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'         datetime = "2017-08-01/2018-03-01",
+#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'  get_request() %>% items_sign(sign_fn = sign_bdc)
+#'
+#' }
+#'
+#' @export
+items_sign <- function(items, sign_fn = NULL) {
+
+  if (is.null(sign_fn)) {
+    return(items)
+  }
+
+  if (!is.null(items_matched(items))) {
+    if (items_length(items) != items_matched(items))
+      .warning(paste("The number of items in this object does not match the",
+                     "total number of items in the item. If you want to get",
+                     "all items, use `items_fetch()`"))
+  }
+
+  # assign each item obj
+  items[["features"]] <- lapply(items[["features"]], function(item){
+
+    item <- sign_fn(item)
+
+    item
+  })
+
+  items
+}
+
+#' @title Utility functions
+#'
 #' @param bbox a `numeric` vector with only features that have a
 #' geometry that intersects the bounding box are selected. The bounding box is
 #' provided as four or six numbers, depending on whether the coordinate
