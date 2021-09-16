@@ -58,4 +58,5 @@ NULL
 #' @importFrom crayon bold
 #' @importFrom utils modifyList URLdecode
 #' @importFrom jsonlite validate
+#' @importFrom lifecycle deprecated
 NULL
