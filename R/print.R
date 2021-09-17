@@ -163,8 +163,15 @@ print.STACItemCollection <- function(x, n = 10, ..., tail = FALSE) {
   matched <- suppressWarnings(items_matched(x))
   if (!is.null(matched))
     cat("-", crayon::bold("matched feature(s):"), matched, fill = TRUE)
-  cat("-", crayon::bold("features"),
-      sprintf("(%s item(s)):", length(x$features)), fill = TRUE)
+
+  if (!is.null(matched))
+    cat("-", crayon::bold("features"),
+        sprintf("(%s item(s) / %s not fetched):",
+                length(x$features), matched - length(x$features)), fill = TRUE)
+  else
+    cat("-", crayon::bold("features"),
+        sprintf("(%s item(s)):", length(x$features)), fill = TRUE)
+
   if (missing(n) && length(x$features) < 2 * n)
     n <- length(x$features)
   n <- min(n, length(x$features))
@@ -180,7 +187,11 @@ print.STACItemCollection <- function(x, n = 10, ..., tail = FALSE) {
   if (n != length(x$features))
     cat(sprintf("  - ... with %s more feature(s).",
                 length(x$features) - n), fill = TRUE)
-  cat("-", crayon::bold("field(s):"),
+
+  cat("-", crayon::bold("assets:"),
+      paste0(items_assets(x, simplify = TRUE), collapse = ", "),
+      fill = TRUE)
+  cat("-", crayon::bold("other field(s):"),
       paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
 }
@@ -198,8 +209,9 @@ print.STACItem <- function(x, ...) {
   cat("-", crayon::bold("bbox:"), .format_bbox(x$bbox), fill = TRUE)
   cat("-", crayon::bold("datetime:"), x$properties$datetime, fill = TRUE)
   cat("-", crayon::bold("assets:"),
-      paste0("'", names(x$assets), "'", collapse = ", "), fill = TRUE)
-  cat("-", crayon::bold("field(s):"), paste0(names(x), collapse = ", "),
+      paste0(items_assets(x, simplify = TRUE), collapse = ", "),
+      fill = TRUE)
+  cat("-", crayon::bold("other field(s):"), paste0(names(x), collapse = ", "),
       fill = TRUE)
   invisible(x)
 }
