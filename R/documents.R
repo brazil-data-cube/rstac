@@ -148,7 +148,7 @@ stac_version.STACCollectionList <- function(x, ...) {
 #' @examples
 #' \dontrun{
 #'
-#' x <- stac("http://brazildatacube.dpi.inpe.br/stac") %>%
+#' x <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1") %>%
 #'   stac_search(limit = 500) %>%
 #'   get_request()
@@ -280,99 +280,16 @@ items_fetch.STACItemCollection <- function(items, ...,
       .error(paste("Length of returned items (%s) is different",
                    "from matched items (%s)."), items_length(items), matched)
 
-    q <- doc_query(items)
-    if (is.null(q)) break
+    content <- items_next(items)
 
-    # get url of the next page
-    next_url <- Filter(function(x) x$rel == "next", items$links)
-    if (length(next_url) == 0) break
-    next_url <- next_url[[1]]
-
-    # create a new stac object with params from the next url
-    # check for body implementation in next link
-    if (q$verb == "POST" && all(c("body", "method") %in% names(next_url))) {
-
-      # TODO: check if spec can enforce that the same provided base url
-      # must be used to proceed pagination.
-      # For security concerns, here, the original base_url will be used in
-      # subsequent requests of pagination
-
-      # # update query base_url and verb to the returned one
-      # q$base_url <- next_url$href
-
-      # erase current parameters if merge == FALSE
-      if (!is.null(next_url$merge) && !next_url$merge) {
-        q$params <- list()
-      }
-
-      # get parameters
-      params <- next_url$body
-
-    } else {
-
-      # TODO: check if spec can enforce that the same provided base url
-      # must be used to proceed pagination.
-      # For security concerns, here, the original base_url will be used in
-      # subsequent requests of pagination
-
-      # # update query base_url and verb to the returned one
-      # q$base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url$href)
-
-      # get next link parameters from url
-      params <- .querystring_decode(substring(
-        gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2))
-
-      # verify if query params is valid
-      params <- .validate_query(params = params)
-    }
-
-    # parse params
-    params <- parse_params(q, params = params)
-
-    next_stac <- RSTACQuery(version = q$version,
-                            base_url = q$base_url,
-                            params = utils::modifyList(q$params, params),
-                            subclass = subclass(q))
-
-    # call request
-    if (q$verb == "GET") {
-
-      content <- get_request(next_stac, ...)
-    } else if (q$verb == "POST") {
-
-      content <- post_request(next_stac, ..., encode = q$encode)
-    } else {
-
-      .error("Invalid HTTP method.")
-    }
-
-    # check content response
-    check_subclass(content, "STACItemCollection")
-
-    # check pagination length
-    if (!is.null(q$params[["limit"]]) &&
-        items_length(content) > as.numeric(q$params[["limit"]])) {
-
-      .error("STAC invalid retrieved page length.")
-    }
-
-    # check if result length is valid
-    if (!is.null(matched) && !is.null(q$params[["limit"]]) &&
-        (items_length(content) != as.numeric(q$params[["limit"]])) &&
-        (items_length(content) + items_length(items) != matched)) {
-
-      .error("STAC pagination error.")
-    }
-
-    # merge features result into resulting content
-    content$features <- c(items$features, content$features)
+    if (!is.null(content))
+        items <- content
+    else
+      break
 
     # update progress bar
     if (progress)
       utils::setTxtProgressBar(pb, items_length(content))
-
-    # prepares next iteration
-    items <- content
   }
 
   # close progress bar
@@ -382,6 +299,125 @@ items_fetch.STACItemCollection <- function(items, ...,
   }
 
   return(items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_next <- function(items, ...) {
+
+  UseMethod("items_next", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_next.STACItem <- function(items, ...) {
+
+  return(items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_next.STACItemCollection <- function(items, ...) {
+
+  matched <- items_matched(items)
+
+  q <- doc_query(items)
+  if (is.null(q))
+    return(NULL)
+
+  # get url of the next page
+  next_url <- Filter(function(x) x$rel == "next", items$links)
+  if (length(next_url) == 0)
+    return(NULL)
+
+  next_url <- next_url[[1]]
+
+  # create a new stac object with params from the next url
+  # check for body implementation in next link
+  if (q$verb == "POST" && all(c("body", "method") %in% names(next_url))) {
+
+    # TODO: check if spec can enforce that the same provided base url
+    # must be used to proceed pagination.
+    # For security concerns, here, the original base_url will be used in
+    # subsequent requests of pagination
+
+    # # update query base_url and verb to the returned one
+    # q$base_url <- next_url$href
+
+    # erase current parameters if merge == FALSE
+    if (!is.null(next_url$merge) && !next_url$merge) {
+      q$params <- list()
+    }
+
+    # get parameters
+    params <- next_url$body
+
+  } else {
+
+    # TODO: check if spec can enforce that the same provided base url
+    # must be used to proceed pagination.
+    # For security concerns, here, the original base_url will be used in
+    # subsequent requests of pagination
+
+    # # update query base_url and verb to the returned one
+    # q$base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url$href)
+
+    # get next link parameters from url
+    params <- .querystring_decode(substring(
+      gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2))
+
+    # verify if query params is valid
+    params <- .validate_query(params = params)
+  }
+
+  # parse params
+  params <- parse_params(q, params = params)
+
+  next_stac <- RSTACQuery(version = q$version,
+                          base_url = q$base_url,
+                          params = utils::modifyList(q$params, params),
+                          subclass = subclass(q))
+
+  # call request
+  if (q$verb == "GET") {
+
+    content <- get_request(next_stac, ...)
+  } else if (q$verb == "POST") {
+
+    content <- post_request(next_stac, ..., encode = q$encode)
+  } else {
+
+    .error("Invalid HTTP method.")
+  }
+
+  # check content response
+  check_subclass(content, "STACItemCollection")
+
+  # check pagination length
+  if (!is.null(q$params[["limit"]]) &&
+      items_length(content) > as.numeric(q$params[["limit"]])) {
+
+    .error("STAC invalid retrieved page length.")
+  }
+
+  # check if result length is valid
+  if (!is.null(matched) && !is.null(q$params[["limit"]]) &&
+      (items_length(content) != as.numeric(q$params[["limit"]])) &&
+      (items_length(content) + items_length(items) != matched)) {
+
+    .error("STAC pagination error.")
+  }
+
+  # merge features result into resulting content
+  content$features <- c(items$features, content$features)
+
+  # prepares next iteration
+  items <- content
+
+  items
 }
 
 #' @rdname items_functions
@@ -497,6 +533,9 @@ items_assets.STACItemCollection <- function(items, ..., simplify = FALSE) {
 #'
 #' @export
 items_filter <- function(items, ..., fn = NULL) {
+
+  # check items parameter
+  check_subclass(items, "STACItemCollection")
 
   dots <- substitute(list(...))[-1]
 
@@ -755,8 +794,21 @@ items_group <- function(items, ..., field = NULL, index = NULL) {
 #'
 #' }
 #'
+#' @name items_assign_change
+NULL
+
+#' @rdname items_assign_change
+#'
 #' @export
-items_sign <- function(items, sign_fn = NULL) {
+items_sign <- function(items, sign_fn = NULL, ...) {
+
+  UseMethod("items_sign", items)
+}
+
+#' @rdname items_assign_change
+#'
+#' @export
+items_sign.STACItemCollection <- function(items, sign_fn = NULL) {
 
   if (is.null(sign_fn)) {
     return(items)
@@ -764,7 +816,7 @@ items_sign <- function(items, sign_fn = NULL) {
 
   if (!is.null(items_matched(items))) {
     if (items_length(items) != items_matched(items))
-      .warning(paste("The number of items in this object does not match the",
+      .message(paste("The number of items in this object does not match the",
                      "total number of items in the item. If you want to get",
                      "all items, use `items_fetch()`"))
   }
@@ -776,6 +828,20 @@ items_sign <- function(items, sign_fn = NULL) {
 
     item
   })
+
+  items
+}
+
+#' @rdname items_assign_change
+#'
+#' @export
+items_sign.STACItem <- function(items, sign_fn = NULL) {
+
+  if (is.null(sign_fn)) {
+    return(items)
+  }
+
+  items <- sign_fn(items)
 
   items
 }
@@ -888,6 +954,14 @@ assets_list <- function(items, asset_names = NULL,
 #' @export
 assets_select <- function(items, asset_names) {
 
+  UseMethod("assets_select", items)
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_select.STACItemCollection <- function(items, asset_names) {
+
   if (!all(asset_names %in% items_assets(items, simplify = TRUE)))
     .error("Invalid 'asset_names' parameter.")
 
@@ -903,7 +977,28 @@ assets_select <- function(items, asset_names) {
 #' @rdname assets_function
 #'
 #' @export
+assets_select.STACItem <- function(items, asset_names) {
+
+  if (!all(asset_names %in% items_assets(items)))
+    .error("Invalid 'asset_names' parameter.")
+
+  items$assets <- items$assets[asset_names]
+
+  items
+}
+
+#' @rdname assets_function
+#'
+#' @export
 assets_filter <- function(items, ..., fn = NULL) {
+
+  UseMethod("assets_filter", items)
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_filter.STACItemCollection <- function(items, ..., fn = NULL) {
 
   dots <- substitute(list(...))[-1]
 
@@ -917,6 +1012,12 @@ assets_filter <- function(items, ..., fn = NULL) {
       items$features <- lapply(items$features, function(item) {
 
         sel <- vapply(item$assets, function(asset) {
+
+          # is the searched key in the asset's name?
+          key <- as.character(dots[[i]][[2]])
+          if (!key %in% names(asset))
+            return(TRUE)
+
           eval(dots[[i]], envir = asset)
         }, logical(1))
 
@@ -936,6 +1037,44 @@ assets_filter <- function(items, ..., fn = NULL) {
       item$assets <- item$assets[sel]
       item
     })
+  }
+
+  items
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_filter.STACItem <- function(items, ..., fn = NULL) {
+
+  dots <- substitute(list(...))[-1]
+
+  if (length(dots) > 0) {
+
+    if (!is.null(names(dots)))
+      .error("Invalid filter arguments.")
+
+    for (i in seq_along(dots)) {
+
+      sel <- vapply(items$assets, function(asset) {
+
+        # is the searched key in the asset's name?
+        key <- as.character(dots[[i]][[2]])
+        if (!key %in% names(asset))
+          return(TRUE)
+
+        eval(dots[[i]], envir = asset)
+      }, logical(1))
+
+      items$assets <- items$assets[sel]
+    }
+  }
+
+  if (!is.null(fn)) {
+
+    sel <- vapply(items$assets, function(asset) { fn(asset) }, logical(1))
+
+    items$assets <- items$assets[sel]
   }
 
   items
