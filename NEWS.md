@@ -22,6 +22,21 @@
 * Change version 0.9.0 to 0.9.0-2 in DESCRIPTION
 * Fix assets without extension in assets_download function
 
+# rstac 0.9.0-1 (Released 2020-10-20)
+
+* Update ext_query function
+* Add magrittr package in depends
+* Add function items_bands
+* Introduces items_bbox and items_datetime functions
+* Update print.R file
+* Fix items_fetch
+* Update 'assets_download.R' and others functions
+* Add function 'get_assets_name'
+* Add overwrite and items_max parameter; solve issue #10
+* Fix bug in stac_matched and update documentation
+* Change function name '.verify_datime()' to 'parse_datetime()'
+* Rename extension_query -> ext_query
+
 # rstac 0.9.0 (Released 2020-09-18)
 
 * Fix issue from CRAN.
