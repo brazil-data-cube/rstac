@@ -12,6 +12,20 @@
 #'
 #' @return a `function` that signs each item assets.
 #'
+#' @examples
+#' \donttest{
+#' # STACItemCollection object
+#' stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'   stac_search(collections = "CB4_64_16D_STK-1",
+#'               datetime = "2019-06-01/2019-08-01") %>%
+#'   stac_search() %>%
+#'   get_request()
+#'
+#' # signing each item href
+#' stac_obj %>% items_sign(sign_fn = sign_bdc())
+#'
+#' }
+#'
 #' @export
 sign_bdc <- function(access_token = NULL, ...) {
 
@@ -91,15 +105,35 @@ sign_bdc <- function(access_token = NULL, ...) {
 #' Planetary Computer servers and the returned content corresponds to the
 #' token that will be used in the href.
 #'
-#' @param ...  additional parameters can be supplied to the `GET` function
+#' @param ...       additional parameters can be supplied to the `GET` function
 #' of the `httr` package.
+#' @param token_url a `character` with the URL that generates the tokens
+#'  in the Microsoft service.
+#'  By default is used:
+#'  `"https://planetarycomputer.microsoft.com/api/sas/v1/token"`
 #'
 #' @return a `function` that signs each item assets.
 #'
+#' @examples
+#' \donttest{
+#' # STACItemCollection object
+#' stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
+#'  stac_search(collections = "sentinel-2-l2a",
+#'              bbox = c(-47.02148, -12.98314, -42.53906,-17.35063)) %>%
+#'  get_request()
+#'
+#' # signing each item href
+#' stac_obj %>% items_sign(sign_fn = sign_planetary_computer())
+#'
+#' }
+#'
 #' @export
-sign_planetary_computer <- function(...) {
+sign_planetary_computer <- function(..., token_url = NULL) {
 
   default_endpoint <- "https://planetarycomputer.microsoft.com/api/sas/v1/token"
+  if (!is.null(token_url))
+    default_endpoint <- token_url
+
   default_max_timeleft <- 300
 
   token <- list()
