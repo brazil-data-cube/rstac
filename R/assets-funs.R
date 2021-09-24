@@ -234,3 +234,239 @@ assets_download <- function(items,
 
   return(assets)
 }
+
+#' @title Assets functions
+#'
+#' @description This function returns the `date`, `band` and
+#'  `URL` fields for each assets of an `STACItemCollection` object.
+#'  For the URL you can add the GDAL library drivers for the following schemes:
+#'  HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
+#'
+#' @param items        a `STACItemCollection` object representing
+#'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
+#'
+#' @param assets_names `r lifecycle::badge('deprecated')`
+#'  use `asset_names` parameter instead.
+#'
+#' @param asset_names  a `character` with the assets names to be
+#'  filtered. If `NULL` (default) all assets will be returned..
+#'
+#' @param sort         a `logical` if true the dates will be sorted
+#'  in increasing order. By default, the dates are sorted.
+#'
+#' @param gdal_vsi_resolution a `logical`  if true, gdal drivers are
+#'  included in the URL of each asset. The following schemes are supported:
+#'  HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
+#'
+#' @param ...          additional arguments. See details.
+#'
+#' @param fn           a `function` that will be used to filter the attributes
+#'  listed in the properties.
+#'
+#' @return a `list` with the attributes of date, bands and paths.
+#'
+#' @examples
+#' \donttest{
+#' # STACItemCollection object
+#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'         datetime = "2017-08-01/2018-03-01",
+#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'  get_request() %>% items_fetch(progress = FALSE)
+#'
+#' stac_item %>% assets_list(assets_names = c("EVI", "NDVI"))
+#' }
+#'
+#' @name assets_function
+NULL
+
+#' @rdname assets_function
+#' @export
+assets_list <- function(items, asset_names = NULL,
+                        sort = TRUE, gdal_vsi_resolution = TRUE,
+                        assets_names = deprecated()) {
+
+
+  if (lifecycle::is_present(assets_names)) {
+
+    # Signal the deprecation to the user
+    lifecycle::deprecate_soft("0.9.1-5",
+                              "rstac::assets_download(assets_names = )",
+                              "rstac::assets_download(asset_names = )")
+
+    # Deal with the deprecated argument for compatibility
+    asset_names <- assets_names
+  }
+
+  if (is.null(asset_names))
+    asset_names <- items_fields(items, "assets")
+
+  timeline <- items_reap(items, field = c("properties", "datetime"))
+  index    <- seq_along(timeline)
+  if (sort) index <- order(timeline)
+
+  timeline <- timeline[index]
+  assets   <- list(date = rep(timeline, length(unique(asset_names))))
+
+  for (b in asset_names) {
+
+    href <- items_reap(items, field = c("assets", b, "href"))[index]
+
+    if (gdal_vsi_resolution) {
+
+      # for http or https schema
+      paste_index <- grepl("^http|[s]://.*", href)
+      if (any(paste_index))
+        href[paste_index] <- paste("/vsicurl", href[paste_index], sep = "/")
+
+      # for S3 schema
+      paste_index <- grepl("^s3://.*", href)
+      if (any(paste_index))
+        href[paste_index] <- paste("/vsis3", gsub("^s3://(.*)$", "\\1",
+                                                  href[paste_index]), sep = "/")
+      # for gs schema
+      paste_index <- grepl("^gs://.*", href)
+      if (any(paste_index))
+        href[paste_index] <- paste("/vsigs", gsub("^gs://(.*)$", "\\1",
+                                                  href[paste_index]), sep = "/")
+    }
+    assets$band <- c(rep(b, length(href)), assets$band)
+    assets$path <- c(href,  assets$path)
+  }
+  assets
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_select <- function(items, asset_names) {
+
+  UseMethod("assets_select", items)
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_select.STACItemCollection <- function(items, asset_names) {
+
+  if (!all(asset_names %in% items_assets(items, simplify = TRUE)))
+    .error("Invalid 'asset_names' parameter.")
+
+  items$features <- lapply(items$features, function(item) {
+    item$assets <- item$assets[asset_names]
+
+    item
+  })
+
+  items
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_select.STACItem <- function(items, asset_names) {
+
+  if (!all(asset_names %in% items_assets(items)))
+    .error("Invalid 'asset_names' parameter.")
+
+  items$assets <- items$assets[asset_names]
+
+  items
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_filter <- function(items, ..., fn = NULL) {
+
+  UseMethod("assets_filter", items)
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_filter.STACItemCollection <- function(items, ..., fn = NULL) {
+
+  dots <- substitute(list(...))[-1]
+
+  if (length(dots) > 0) {
+
+    if (!is.null(names(dots)))
+      .error("Invalid filter arguments.")
+
+    for (i in seq_along(dots)) {
+
+      items$features <- lapply(items$features, function(item) {
+
+        sel <- vapply(item$assets, function(asset) {
+
+          tryCatch({
+            eval(dots[[i]], envir = asset, enclos = baseenv())
+          }, error = function(e) { NA })
+        }, logical(1))
+
+        if (all(is.na(sel)))
+          .error("Invalid condition arguments.")
+
+        sel[is.na(sel)] <- FALSE
+
+        item$assets <- item$assets[sel]
+
+        item
+      })
+    }
+  }
+
+  if (!is.null(fn)) {
+
+    items$features <- lapply(items$features, function(item) {
+
+      sel <- vapply(item$assets, function(asset) { fn(asset) }, logical(1))
+
+      item$assets <- item$assets[sel]
+      item
+    })
+  }
+
+  items
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_filter.STACItem <- function(items, ..., fn = NULL) {
+
+  dots <- substitute(list(...))[-1]
+
+  if (length(dots) > 0) {
+
+    if (!is.null(names(dots)))
+      .error("Invalid filter arguments.")
+
+    for (i in seq_along(dots)) {
+
+      sel <- vapply(items$assets, function(asset) {
+
+        tryCatch({
+          eval(dots[[i]], envir = asset, enclos = baseenv())
+        }, error = function(e) { NA })
+      }, logical(1))
+
+      if (all(is.na(sel)))
+        .error("Invalid condition arguments.")
+
+      sel[is.na(sel)] <- FALSE
+
+      items$assets <- items$assets[sel]
+    }
+  }
+
+  if (!is.null(fn)) {
+
+    sel <- vapply(items$assets, function(asset) { fn(asset) }, logical(1))
+
+    items$assets <- items$assets[sel]
+  }
+
+  items
+}

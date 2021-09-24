@@ -112,7 +112,7 @@ testthat::test_that("assets functions", {
       object = assets_filter(stac_items, fn = function(x) {
         if ("eo:bands" %in% names(x))
           return(x$`eo:bands` < 6)
-        return(TRUE)
+        return(FALSE)
       }),
       class = c("STACItemCollection", "RSTACDocument")
     )
@@ -122,7 +122,7 @@ testthat::test_that("assets functions", {
       object = assets_filter(stac_items, fn = function(x) {
         if ("eo:bands" %in% names(x))
           return(x$`eo:bands` < 6)
-        return(TRUE)
+        return(FALSE)
       }),
       class = c("STACItem", "RSTACDocument")
     )
