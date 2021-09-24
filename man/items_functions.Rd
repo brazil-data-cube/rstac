@@ -11,6 +11,9 @@
 \alias{items_fetch}
 \alias{items_fetch.STACItem}
 \alias{items_fetch.STACItemCollection}
+\alias{items_next}
+\alias{items_next.STACItem}
+\alias{items_next.STACItemCollection}
 \alias{items_datetime}
 \alias{items_datetime.STACItem}
 \alias{items_datetime.STACItemCollection}
@@ -39,6 +42,12 @@ items_fetch(items, ...)
 \method{items_fetch}{STACItem}(items, ...)
 
 \method{items_fetch}{STACItemCollection}(items, ..., progress = TRUE, matched_field = NULL)
+
+items_next(items, ...)
+
+\method{items_next}{STACItem}(items, ...)
+
+\method{items_next}{STACItemCollection}(items, ...)
 
 items_datetime(items)
 
@@ -120,7 +129,7 @@ For \code{items_filter} function is used to pass logical expressions.
 \examples{
 \dontrun{
 
-x <- stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
+x <- stac("https://brazildatacube.dpi.inpe.br/stac") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1") \%>\%
   stac_search(limit = 500) \%>\%
   get_request()

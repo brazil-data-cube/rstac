@@ -15,7 +15,7 @@ License: MIT + file LICENSE
 URL: https://github.com/brazil-data-cube/rstac
 BugReports: https://github.com/brazil-data-cube/rstac/issues
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends:
     R (>= 3.5)
 Imports:

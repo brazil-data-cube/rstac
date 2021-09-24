@@ -4,7 +4,11 @@
 \alias{assets_function}
 \alias{assets_list}
 \alias{assets_select}
+\alias{assets_select.STACItemCollection}
+\alias{assets_select.STACItem}
 \alias{assets_filter}
+\alias{assets_filter.STACItemCollection}
+\alias{assets_filter.STACItem}
 \title{Assets functions}
 \usage{
 assets_list(
@@ -17,7 +21,15 @@ assets_list(
 
 assets_select(items, asset_names)
 
+\method{assets_select}{STACItemCollection}(items, asset_names)
+
+\method{assets_select}{STACItem}(items, asset_names)
+
 assets_filter(items, ..., fn = NULL)
+
+\method{assets_filter}{STACItemCollection}(items, ..., fn = NULL)
+
+\method{assets_filter}{STACItem}(items, ..., fn = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
