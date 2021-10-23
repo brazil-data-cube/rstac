@@ -1,44 +1,44 @@
 #' @title Endpoint functions
 #'
 #' @description (This document is based on STAC specification documentation
-#' \url{https://github.com/radiantearth/stac-spec/}
+#' <https://github.com/radiantearth/stac-spec/>
 #' and reproduces some of its parts)
 #'
-#' The \code{stac_search} function implements \code{/stac/search} API endpoint
-#' (v0.8.1) and \code{/search} (v0.9.0 or v1.0.0).
+#' The `stac_search` function implements `/stac/search` API endpoint
+#' (v0.8.1) and `/search` (v0.9.0 or v1.0.0).
 #' It prepares query parameters used in search API request, a
-#' \code{stac} object with all filter parameters to be provided to
-#' \code{get_request} or \code{post_request} functions. The GeoJSON content
-#' returned by these requests is a \code{STACItemCollection} object, a regular R
-#' \code{list} representing a STAC Item Collection document.
+#' `stac` object with all filter parameters to be provided to
+#' `get_request` or `post_request` functions. The GeoJSON content
+#' returned by these requests is a `STACItemCollection` object, a regular R
+#' `list` representing a STAC Item Collection document.
 #'
-#' @param q           a \code{RSTACQuery} object expressing a STAC query
+#' @param q           a `RSTACQuery` object expressing a STAC query
 #' criteria.
 #'
-#' @param collections a \code{character} vector of collection IDs to include in
+#' @param collections a `character` vector of collection IDs to include in
 #' the search for items. Only items in one of the provided collections will be
 #' searched.
 #'
-#' @param ids         a \code{character} vector with item IDs. All other filter
+#' @param ids         a `character` vector with item IDs. All other filter
 #' parameters that further restrict the number of search results are ignored.
 #'
-#' @param datetime    a \code{character} with a date-time or an interval. Date
+#' @param datetime    a `character` with a date-time or an interval. Date
 #'  and time strings needs to conform RFC 3339. Intervals are expressed by
-#'  separating two date-time strings by \code{'/'} character. Open intervals are
-#'  expressed by using \code{'..'} in place of date-time.
+#'  separating two date-time strings by `'/'` character. Open intervals are
+#'  expressed by using `'..'` in place of date-time.
 #'
 #' Examples:
 #' \itemize{
-#' \item A date-time: \code{"2018-02-12T23:20:50Z"}
-#' \item A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"}
-#' \item Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
-#'   \code{"../2018-03-18T12:31:12Z"}
+#' \item A date-time: `"2018-02-12T23:20:50Z"`
+#' \item A closed interval: `"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"`
+#' \item Open intervals: `"2018-02-12T00:00:00Z/.."` or
+#'   `"../2018-03-18T12:31:12Z"`
 #' }
 #'
-#' Only features that have a \code{datetime} property that intersects the
-#' interval or date-time informed in \code{datetime} are selected.
+#' Only features that have a `datetime` property that intersects the
+#' interval or date-time informed in `datetime` are selected.
 #'
-#' @param bbox        a \code{numeric} vector with only features that have a
+#' @param bbox        a `numeric` vector with only features that have a
 #' geometry that intersects the bounding box are selected. The bounding box is
 #' provided as four or six numbers, depending on whether the coordinate
 #' reference system includes a vertical axis (elevation or depth):
@@ -50,24 +50,24 @@
 #'           \item Upper right corner, coordinate axis 3 (optional) }
 #'
 #' The coordinate reference system of the values is WGS84 longitude/latitude
-#' (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}). The values are in
+#' (<http://www.opengis.net/def/crs/OGC/1.3/CRS84>). The values are in
 #' most cases the sequence of minimum longitude, minimum latitude, maximum
 #' longitude and maximum latitude. However, in cases where the box spans the
 #' antimeridian the first value (west-most box edge) is larger than the third
 #' value (east-most box edge).
 #'
-#' @param intersects  a \code{character} value expressing GeoJSON geometries
+#' @param intersects  a `character` value expressing GeoJSON geometries
 #' objects as specified in RFC 7946. Only returns items that intersect with
 #' the provided polygon.
 #'
-#' @param limit       an \code{integer} defining the maximum number of results
+#' @param limit       an `integer` defining the maximum number of results
 #' to return. If not informed it defaults to the service implementation.
 #'
-#' @seealso \code{\link{stac}}, \code{\link{ext_query}},
-#' \code{\link{get_request}}, \code{\link{post_request}}
+#' @seealso [stac()], [ext_query()],
+#' [get_request()], [post_request()]
 #'
 #' @return
-#' A \code{RSTACQuery} object with the subclass \code{search} containing all
+#' A `RSTACQuery` object with the subclass `search` containing all
 #' search field parameters to be provided to STAC API web service.
 #'
 #' @examples
@@ -100,24 +100,22 @@ stac_search <- function(q,
   params <- list()
 
   if (!is.null(collections))
-    params[["collections"]] <- collections
+    params[["collections"]] <- .parse_collections(collections)
 
   if (!is.null(ids))
-    params[["ids"]] <- ids
+    params[["ids"]] <- .parse_ids(ids)
 
   if (!is.null(datetime))
-    params[["datetime"]] <- datetime
+    params[["datetime"]] <- .parse_datetime(datetime)
 
   if (!is.null(bbox))
-    params[["bbox"]] <- bbox
+    params[["bbox"]] <- .parse_bbox(bbox)
 
   if (!is.null(intersects))
-    params[["intersects"]] <- intersects
+    params[["intersects"]] <- .parse_geometry(intersects)
 
   if (!is.null(limit))
-    params[["limit"]] <- limit
-
-  params <- parse_search_params(params = params)
+    params[["limit"]] <- .parse_limit(limit)
 
   RSTACQuery(
     version = q$version,
@@ -127,7 +125,8 @@ stac_search <- function(q,
   )
 }
 
-parse_search_params <- function(params) {
+#' @export
+parse_params.search <- function(q, params) {
 
   if (!is.null(params[["collections"]]))
     params[["collections"]] <- .parse_collections(params[["collections"]])

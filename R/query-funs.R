@@ -1,39 +1,39 @@
 #' @title Query development functions
 #'
 #' @describeIn extensions
-#' The \code{RSTACQuery()} function is a constructor of \code{RSTACQuery}
-#' objects. Every extension must implement a subclass of \code{RSTACQuery} to
-#' represent its queries. This is done by informing to the \code{subclass}
+#' The `RSTACQuery()` function is a constructor of `RSTACQuery`
+#' objects. Every extension must implement a subclass of `RSTACQuery` to
+#' represent its queries. This is done by informing to the `subclass`
 #' parameter the extension's subclass name.
 #'
-#' The \code{params} parameter is a named \code{list} where user parameters
+#' The `params` parameter is a named `list` where user parameters
 #' must be stored. It is important to know if previous query parameters needs
 #' to be keeped in the new query. If so, it is recommended do use
-#' \code{\link[utils]{modifyList}()} function to merge the old and new
+#' [utils::modifyList()] function to merge the old and new
 #' query parameters.
 #'
-#' If the \code{version} parameter is \code{NULL}, \code{rstac} will detect
+#' If the `version` parameter is `NULL`, `rstac` will detect
 #' STAC API version automatically.
 #'
 #' In general, if you are implementing a new subclass, the parameters
-#' \code{version} and \code{url} will be the same as the previous query. The
-#' \code{params} parameter will be merged with previous query. And subclass
+#' `version` and `url` will be the same as the previous query. The
+#' `params` parameter will be merged with previous query. And subclass
 #' is the extension's subclass name.
 #'
-#' @param version    a \code{character} with the STAC version.
+#' @param version    a `character` with the STAC version.
 #'
-#' @param base_url   a \code{character} informing the base URL of a
+#' @param base_url   a `character` informing the base URL of a
 #' STAC web service.
 #'
-#' @param params     a named \code{list} with all URL query parameters to be
+#' @param params     a named `list` with all URL query parameters to be
 #' appended in the URL.
 #'
-#' @param subclass   a \code{character} corresponding to the subclass of the
+#' @param subclass   a `character` corresponding to the subclass of the
 #' object to be created.
 #'
 #' @return
-#' The \code{RSTACQuery()} function returns a \code{STACQuery} object with
-#' subclass defined by \code{subclass} parameter.
+#' The `RSTACQuery()` function returns a `STACQuery` object with
+#' subclass defined by `subclass` parameter.
 #'
 #' @export
 RSTACQuery <- function(version = NULL, base_url, params = list(), subclass) {

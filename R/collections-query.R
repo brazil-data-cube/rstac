@@ -3,29 +3,29 @@
 #' @rdname collections
 #'
 #' @description
-#' The \code{collections} function implements the WFS3 \code{/collections}
+#' The `collections` function implements the WFS3 `/collections`
 #'  and \code{/collections/\{collectionId\}} endpoints.
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{
-#'   \item \code{/collections}: Returns a list of STAC Collection published in
+#'   \item `/collections`: Returns a list of STAC Collection published in
 #'     the STAC service
 #'   \item \code{/collections/\{collectionId\}}: Returns a single STAC
 #'     Collection object
 #' }
 #'
-#' @param q             a \code{RSTACQuery} object expressing a STAC query
+#' @param q             a `RSTACQuery` object expressing a STAC query
 #' criteria.
 #'
-#' @param collection_id a \code{character} collection id to be retrieved.
+#' @param collection_id a `character` collection id to be retrieved.
 #'
 #' @seealso
-#' \code{\link{get_request}}, \code{\link{post_request}},
-#'  \code{\link{items}}
+#' [get_request()], [post_request()],
+#'  [items()]
 #'
 #' @return
-#' A \code{RSTACQuery} object with the subclass \code{collections} for
-#'  \code{/collections/} endpoint, or a \code{collection_id} subclass for
+#' A `RSTACQuery` object with the subclass `collections` for
+#'  `/collections/` endpoint, or a `collection_id` subclass for
 #'  \code{/collections/{collection_id}} endpoint, containing all search field
 #'  parameters to be provided to STAC API web service.
 #'

@@ -2,39 +2,100 @@
 #'  project.
 #'
 #' @description To sign the hrefs with your token you need to store it in an
-#' environment variable. Use the environment variable \code{BDC_ACCESS_KEY}.
+#' environment variable in `BDC_ACCESS_KEY`or use `acess_token` parameter.
 #'
-#' @param url a \code{character} with the reference href link provided by
-#' objects \code{STACItem} or \code{STACItemCollection}.
+#' @param access_token a `character` with the access token parameter to access
+#'  Brazil Data Cube assets.
 #'
-#' @param env a \code{enviroment} object created to store local variables of the
-#'  package.
+#' @param ...          additional parameters can be supplied to the `GET`
+#'  function of the `httr` package.
 #'
-#' @param ...  additional parameters can be supplied to the \code{GET} function
-#' of the \code{httr} package.
+#' @return a `function` that signs each item assets.
 #'
+#' @examples
+#' \donttest{
+#' # STACItemCollection object
+#' stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'   stac_search(collections = "CB4_64_16D_STK-1",
+#'               datetime = "2019-06-01/2019-08-01") %>%
+#'   stac_search() %>%
+#'   get_request()
 #'
-#' @return a \code{character} with the href signed by the token.
+#' # signing each item href
+#' stac_obj %>% items_sign(sign_fn = sign_bdc())
+#'
+#' }
 #'
 #' @export
-sign_bdc <- function(url, env = NULL, ...) {
+sign_bdc <- function(access_token = NULL, ...) {
 
-  parsed_href <- httr::parse_url(url)
+  token <- list()
 
-  bdc_access_key <- Sys.getenv("BDC_ACCESS_KEY")
-  if (nchar(bdc_access_key) == 0)
-    .error(paste("items_sign: To sign the hrefs the environment variable",
-                 "`BDC_ACCESS_KEY` needs to be provided."))
+  # parse href to separate each query element, this will be used to dont
+  # append the same token for an asset
+  parse <- function(obj_req) {
 
-  # in case of href does not have query parameters
-  if (is.null(parsed_href$query)) parsed_href$query <- list()
+    token_str <- paste0("?access_token=", obj_req[["token"]])
+    obj_req[["token_value"]] <- httr::parse_url(token_str)[["query"]]
 
-  # if the href is already sign it will not be modified
-  url$query <- utils::modifyList(url$query,
-                                 list("access_token" = bdc_access_key))
+    obj_req
+  }
 
-  # creates a new href with access token
-  httr::build_url(url)
+  new_token <- function(item) {
+
+    token[["default"]] <<- list("token" = access_token)
+
+    if (is.null(access_token)) {
+
+      if (!nzchar(Sys.getenv("BDC_ACCESS_KEY")))
+        .error("No token informed in 'BDC_ACCESS_KEY' enviroment variable.")
+
+      token[["default"]] <<- list("token" = Sys.getenv("BDC_ACCESS_KEY"))
+    }
+
+    token[["default"]] <<- parse(token[["default"]])
+  }
+
+  exists_token <- function(item) {
+    "default" %in% names(token)
+  }
+
+  get_token_value <- function(item) {
+    token[["default"]][["token_value"]]
+  }
+
+  # in the current implementation bdc tokens do not expire
+  get_token_expiry <- function(item) {
+    return(NULL)
+  }
+
+  is_token_expired <- function(item) {
+    return(FALSE)
+  }
+
+  sign_asset <- function(asset, token) {
+
+    asset_url <- httr::parse_url(asset[["href"]])
+
+    # if the href is already sign it will not be modified
+    asset_url$query <- .modify_list(asset_url$query, token)
+
+    asset[["href"]] <- httr::build_url(asset_url)
+    asset
+  }
+
+  sign_item <- function(item) {
+
+    if (!exists_token(item) || is_token_expired(item))
+      new_token(item)
+
+    item[["assets"]] <- lapply(item[["assets"]], sign_asset,
+                               get_token_value(item))
+
+    return(item)
+  }
+
+  return(sign_item)
 }
 
 #' @title Signature in hrefs provided by the STAC from Microsoft's Planetary
@@ -44,69 +105,112 @@ sign_bdc <- function(url, env = NULL, ...) {
 #' Planetary Computer servers and the returned content corresponds to the
 #' token that will be used in the href.
 #'
-#' @param url a \code{character} with the reference href link provided by
-#' objects \code{STACItem} or \code{STACItemCollection}.
+#' @param ...       additional parameters can be supplied to the `GET` function
+#' of the `httr` package.
+#' @param token_url a `character` with the URL that generates the tokens
+#'  in the Microsoft service.
+#'  By default is used:
+#'  `"https://planetarycomputer.microsoft.com/api/sas/v1/token"`
 #'
-#' @param env a \code{enviroment} object created to store local variables of the
-#'  package.
+#' @return a `function` that signs each item assets.
 #'
-#' @param ...  additional parameters can be supplied to the \code{GET} function
-#' of the \code{httr} package.
+#' @examples
+#' \donttest{
+#' # STACItemCollection object
+#' stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
+#'  stac_search(collections = "sentinel-2-l2a",
+#'              bbox = c(-47.02148, -12.98314, -42.53906,-17.35063)) %>%
+#'  get_request()
 #'
-#' @return a \code{character} with the href signed by the token.
+#' # signing each item href
+#' stac_obj %>% items_sign(sign_fn = sign_planetary_computer())
+#'
+#' }
 #'
 #' @export
-sign_planetary_computer <- function(url, env, ...) {
+sign_planetary_computer <- function(..., token_url = NULL) {
 
-  if (!"res_token" %in% names(env))
-    env$res_token <- list()
+  default_endpoint <- "https://planetarycomputer.microsoft.com/api/sas/v1/token"
+  if (!is.null(token_url))
+    default_endpoint <- token_url
 
-  url_token <- paste0("https://planetarycomputer.microsoft.com/api/sas/v1/sign",
-                      "?href=", url)
+  default_max_timeleft <- 300
 
-  get_response_token <- function(url, ...) {
+  token <- list()
+
+  # parse href to separate each query element, this will be used to dont
+  # append the same token for an asset
+  parse <- function(obj_req) {
+
+    # transform to a datetime object
+    obj_req[["msft:expiry"]] <- strptime(obj_req[["msft:expiry"]],
+                                         "%Y-%m-%dT%H:%M:%SZ")
+
+    token_str <- paste0("?", obj_req[["token"]])
+    obj_req[["token_value"]] <- httr::parse_url(token_str)[["query"]]
+
+    obj_req
+  }
+
+  new_token <- function(item) {
+
+    url <- paste0(default_endpoint, "/", item$collection)
+
     tryCatch({
       res_content <- httr::content(httr::GET(url, ...), encoding = "UTF-8")
-    }, error = function(error) {
-      .warning(paste("\n", error, "in ", url))
+    },
+    error = function(e) {
+      .error("Request error. %s", e$message)
     })
 
-    # store token and datetime values in local environment
-    env$res_token <- .parse_pc(res_content)
+    if (!"token" %in% names(res_content))
+      .error("No collection found with id '%s'", item$collection)
+
+    token[[item$collection]] <<- parse(res_content)
   }
 
-  if (length(env$res_token) == 0 || env$res_token[["delta_time"]] < 60) {
-    get_response_token(url_token, ...)
+  exists_token <- function(item) {
+    item$collection %in% names(token)
   }
 
-  # update delta time in global variable
-  env$res_token[["delta_time"]] <- difftime(env$res_token[["msft:expiry"]],
-                                            Sys.time(),
-                                            units = "secs")
+  get_token_value <- function(item) {
+    token[[item$collection]][["token_value"]]
+  }
 
-  url_sign <- paste0(url, "?", env$res_token[["token"]])
+  get_token_expiry <- function(item) {
+    token[[item$collection]][["msft:expiry"]]
+  }
 
-  url_sign
-}
+  is_token_expired <- function(item) {
 
-#' @title Utility function
-#'
-#' @param r_obj a \code{list} returned from the requisition on the
-#' microsoft planetary.
-#'
-#' @return a \code{list} with `delta_time` attribute.
-#'
-#' @noRd
-.parse_pc <- function(r_obj) {
+    difftime_token <- difftime(get_token_expiry(item),
+                               as.POSIXlt(Sys.time(), tz = "UTC"),
+                               units = "secs")
 
-  # transform to a datetime object
-  r_obj[["msft:expiry"]] <- strptime(r_obj[["msft:expiry"]],
-                                     "%Y-%m-%dT%H:%M:%SZ")
+    difftime_token < default_max_timeleft
+  }
 
-  r_obj[["delta_time"]] <- difftime(r_obj[["msft:expiry"]], Sys.time(),
-                                    units = "secs")
+  sign_asset <- function(asset, token) {
 
-  r_obj[["token"]] <- strsplit(r_obj[["href"]], "\\?")[[1]][2]
+    asset_url <- httr::parse_url(asset[["href"]])
 
-  r_obj
+    # if the href is already sign it will not be modified
+    asset_url$query <- .modify_list(asset_url$query, token)
+
+    asset[["href"]] <- httr::build_url(asset_url)
+    asset
+  }
+
+  sign_item <- function(item) {
+
+    if (!exists_token(item) || is_token_expired(item))
+      new_token(item)
+
+    item[["assets"]] <- lapply(item[["assets"]], sign_asset,
+                               get_token_value(item))
+
+    return(item)
+  }
+
+  return(sign_item)
 }

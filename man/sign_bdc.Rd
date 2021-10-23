@@ -3,24 +3,36 @@
 \name{sign_bdc}
 \alias{sign_bdc}
 \title{Signature in hrefs provided by the STAC from the Brazil Data Cube
- project.}
+project.}
 \usage{
-sign_bdc(url, env = NULL, ...)
+sign_bdc(access_token = NULL, ...)
 }
 \arguments{
-\item{url}{a \code{character} with the reference href link provided by
-objects \code{STACItem} or \code{STACItemCollection}.}
+\item{access_token}{a \code{character} with the access token parameter to access
+Brazil Data Cube assets.}
 
-\item{env}{a \code{enviroment} object created to store local variables of the
-package.}
-
-\item{...}{additional parameters can be supplied to the \code{GET} function
-of the \code{httr} package.}
+\item{...}{additional parameters can be supplied to the \code{GET}
+function of the \code{httr} package.}
 }
 \value{
-a \code{character} with the href signed by the token.
+a \code{function} that signs each item assets.
 }
 \description{
 To sign the hrefs with your token you need to store it in an
-environment variable. Use the environment variable \code{BDC_ACCESS_KEY}.
+environment variable in \code{BDC_ACCESS_KEY}or use \code{acess_token} parameter.
+}
+\examples{
+\donttest{
+# STACItemCollection object
+stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1",
+              datetime = "2019-06-01/2019-08-01") \%>\%
+  stac_search() \%>\%
+  get_request()
+
+# signing each item href
+stac_obj \%>\% items_sign(sign_fn = sign_bdc())
+
+}
+
 }

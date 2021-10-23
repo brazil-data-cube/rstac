@@ -30,11 +30,11 @@ geometry that intersects the bounding box are selected. The bounding box is
 provided as four or six numbers, depending on whether the coordinate
 reference system includes a vertical axis (elevation or depth):
 \itemize{ \item Lower left corner, coordinate axis 1
-          \item Lower left corner, coordinate axis 2
-          \item Lower left corner, coordinate axis 3 (optional)
-          \item Upper right corner, coordinate axis 1
-          \item Upper right corner, coordinate axis 2
-          \item Upper right corner, coordinate axis 3 (optional) }
+\item Lower left corner, coordinate axis 2
+\item Lower left corner, coordinate axis 3 (optional)
+\item Upper right corner, coordinate axis 1
+\item Upper right corner, coordinate axis 2
+\item Upper right corner, coordinate axis 3 (optional) }
 
 The coordinate reference system of the values is WGS84 longitude/latitude
 (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}). The values are in
@@ -44,16 +44,16 @@ antimeridian the first value (west-most box edge) is larger than the third
 value (east-most box edge).}
 
 \item{datetime}{a \code{character} with a date-time or an interval. Date
- and time strings needs to conform RFC 3339. Intervals are expressed by
- separating two date-time strings by \code{'/'} character. Open intervals are
- expressed by using \code{'..'} in place of date-time.
+and time strings needs to conform RFC 3339. Intervals are expressed by
+separating two date-time strings by \code{'/'} character. Open intervals are
+expressed by using \code{'..'} in place of date-time.
 
 Examples:
 \itemize{
 \item A date-time: \code{"2018-02-12T23:20:50Z"}
 \item A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"}
 \item Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
-  \code{"../2018-03-18T12:31:12Z"}
+\code{"../2018-03-18T12:31:12Z"}
 }
 
 Only features that have a \code{datetime} property that intersects the
@@ -75,8 +75,8 @@ search field parameters to be provided to STAC API web service.
 \url{https://github.com/radiantearth/stac-spec/}
 and reproduces some of its parts)
 
-The \code{stac_search} function implements \code{/stac/search} API endpoint
-(v0.8.1) and \code{/search} (v0.9.0 or v1.0.0).
+The \code{stac_search} function implements \verb{/stac/search} API endpoint
+(v0.8.1) and \verb{/search} (v0.9.0 or v1.0.0).
 It prepares query parameters used in search API request, a
 \code{stac} object with all filter parameters to be provided to
 \code{get_request} or \code{post_request} functions. The GeoJSON content
@@ -100,6 +100,6 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
 
 }
 \seealso{
-\code{\link{stac}}, \code{\link{ext_query}},
-\code{\link{get_request}}, \code{\link{post_request}}
+\code{\link[=stac]{stac()}}, \code{\link[=ext_query]{ext_query()}},
+\code{\link[=get_request]{get_request()}}, \code{\link[=post_request]{post_request()}}
 }
