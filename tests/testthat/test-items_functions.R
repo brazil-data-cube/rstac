@@ -69,16 +69,16 @@ testthat::test_that("items functions", {
       )
     )
 
-    # items_bands---------------------------------------------------------------
+    # items_assets---------------------------------------------------------------
     # STACItemCollection
-    testthat::expect_length(items_bands(res), n = 10)
+    testthat::expect_length(items_assets(res), n = 10)
 
     # STACItem
-    testthat::expect_vector(items_bands(item_stac), ptype = character())
+    testthat::expect_vector(items_assets(item_stac), ptype = character())
 
     # provide wrong object
     testthat::expect_error(
-      object = items_bands(
+      object = items_assets(
         rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           collections(collection_id = "CB4_64_16D_STK-1") %>%
           get_request()
