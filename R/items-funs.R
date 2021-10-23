@@ -1,66 +1,142 @@
 #' @title STACItemCollection functions
 #'
 #' @description
-#' The `items_length()` function shows how many items there are in
+#' These functions provide support to work with
+#' `STACItemCollection` and `STACItem` objects.
+#'
+#' \itemize{
+#' \item `items_length()`: shows how many items there are in
 #' the `STACItemCollection` object.
 #'
-#' The `items_matched()` function shows how many items matched the
+#' \item `items_matched()`: shows how many items matched the
 #' search criteria. It supports `search:metadata` (v0.8.0),
 #' `context` (v0.9.0), and `numberMatched` (OGC WFS3 core spec).
 #'
-#' The `items_fetch()` function request all STAC Items through
+#' \item `items_fetch()`: request all STAC Items through
 #' pagination.
 #'
-#' The `items_datetime()` function retrieves a the `datetime`
+#' \item `items_next()`: fetches a new page from STAC service.
+#'
+#' \item `items_datetime()`: retrieves a the `datetime`
 #' field in `properties` from `STACItemCollection` and
 #' `STACItem` objects.
 #'
-#' The `items_bbox()` function retrieves a the `bbox`
+#' \item `items_bbox()`: retrieves a the `bbox`
 #' field of a `STACItemCollection` or an `STACItem` object.
 #'
-#' The `item_assets()` function returns the assets name from
+#' \item `item_assets()`: returns the assets name from
 #' `STACItemCollection` and `STACItem` objects.
 #'
+#' \item `items_filter()`: selects only items that match some
+#' criteria.
+#'
+#' \item `items_reap()`: extract key values by traversing all items
+#' in an `STACItemCollection` object.
+#'
+#' \item `items_fields()`: lists field names inside an item.
+#'
+#' \item `items_group()`: organizes items as elements of a list using
+#' some criteria.
+#'
+#' \item `items_sign()`: allow access assets by preparing its url.
+#' }
+#'
 #' @param items           a `STACItemCollection` object.
+#'
 #' @param matched_field   a `character` vector with the path
 #' where the number of items returned in the named list is located starting from
 #' the initial node of the list. For example, if the information is at position
 #' `items$meta$found` of the object, it must be passed as the following
 #' parameter `c("meta", "found")`.
-#' @param simplify        a `logical` should return only the assets name of the
-#'  first item? if not a `list` with all assets name will be returned. Default
-#'  is `FALSE`.
-#' @param ...             additional arguments. See details.
+#'
 #' @param progress        a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
-#' @details
-#' For `items_fetch` ellipsis is used to pass additional `httr` options to
-#'  [GET][httr::GET] or [POST][httr::POST] methods, such as
-#'  [add_headers][httr::add_headers] or [set_cookies][httr::set_cookies].
+#' @param simplify        a `logical` should return only the assets name of the
+#'  first item? if not a `list` with all assets name will be returned. Default
+#'  is `FALSE`.
 #'
-#' For `items_filter` function is used to pass logical expressions.
+#' @param filter_fn       a `function` that receives an item that should
+#' evaluate a `logical` value.
+#'
+#' @param field           a `character` with the names of the field to
+#'  get the subfields values.
+#'
+#' @param index           an `atomic` vector with values as group index
+#'
+#' @param sign_fn         a `function` that receives an item as parameter
+#' and returns an item signed.
+#'
+#' @param ...             additional arguments. See details.
+#'
+#' @details
+#' Ellipsis argument (`...`) appears in different items function and
+#' has distinct purposes:
+#' \itemize{
+#' \item `items_matched()` and `items_assets()`: ellipsis is not used.
+#'
+#' \item `items_fetch()` and `items_next()`: ellipsis is used to pass
+#' additional `httr` options to [GET][httr::GET] or [POST][httr::POST]
+#' methods, such as [add_headers][httr::add_headers] or
+#' [set_cookies][httr::set_cookies].
+#'
+#' \item `items_filter()`: ellipsis is used to pass logical
+#' expressions using keys in `properties` field as filter criteria.
+#'
+#' \item `items_reap()`, `items_fields()`, and `items_group()`: ellipsis can
+#' be used to provide fields names to get the subfields values from
+#' the `STACItemCollection` objects.
+#'
+#' \item `items_sign()`: in a near future, ellipsis will be used to append
+#' key value pairs to url query string of an asset.
+#' }
+#'
+#' `items_sign()` has `sign_fn` parameter that must be a function that
+#' receives as argument an item and returns an signed item. `rstac` provides
+#' `sign_bdc()` and `sign_planetary_computer()` functions to access Brazil
+#' Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 #'
 #' @return
-#' The `items_assets()` if simplify is `TRUE`, returns a `character` value with
-#'  all assets names of the first item. Otherwise, returns a `list` with assets
-#'  name for each item.
-#' The `items_length()` returns an `integer` value.
-#' The `items_matched()` returns an `integer` value.
-#' If STAC web server does not support this extension, returns `NULL`.
-#' The `items_fetch()` returns an `STACItemCollection` with all
-#' matched items.
-#' The `items_datetime()` returns a `list` of all items' datetime.
-#' The `items_bbox()` returns a `list` with all items'
-#' bounding boxes.
+#'
+#' \itemize{
+#' \item `items_length()`: an `integer` value.
+#'
+#' \item `items_matched()`: returns an `integer` value if STAC web server does
+#' support this extension, otherwise returns `NULL`.
+#'
+#' \item `items_fetch()`: an `STACItemCollection` with all matched items.
+#'
+#' \item `items_next()`: fetches a new page from STAC service.
+#'
+#' \item `items_datetime()`: a `list` of all items' datetime.
+#'
+#' \item `items_bbox()`: returns a `list` with all items' bounding boxes.
+#'
+#' \item `item_assets()`: if simplify is `TRUE`, returns a `character`
+#' value with all assets names of the first item. Otherwise, returns a
+#' `list` with assets name for each item.
+#'
+#' \item `items_filter()`: a `STACItemCollection` object.
+#'
+#' \item `items_reap()`: a `vector` if the supplied field is atomic,
+#' otherwise or a `list`.
+#'
+#' \item `items_fields()`: a `character` vector.
+#'
+#' \item `items_group()`: a `list` of `STACItemCollection` objects.
+#'
+#' \item `items_sign()`: a `STACItemCollection` object with signed assets url
+#' }
+#'
 #'
 #' @examples
+#'
 #' \dontrun{
 #'
 #' x <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   stac_search(limit = 500) %>%
-#'   get_request()
+#'     stac_search(collections = "CB4_64_16D_STK-1") %>%
+#'     stac_search(limit = 500) %>%
+#'     get_request()
 #'
 #' x %>% items_length()
 #' x %>% items_matched()
@@ -69,7 +145,65 @@
 #' x %>% items_fetch()
 #' }
 #'
+#' \dontrun{
+#'
+#' # Defining BDC token
+#' Sys.setenv("BDC_ACCESS_KEY" = <your_bdc_access_key>)
+#'
+#' # STACItem object
+#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'         datetime = "2017-08-01/2018-03-01",
+#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'     get_request() %>% items_sign(sign_fn = sign_bdc())
+#'
+#' }
+#'
+#' \dontrun{
+#'
+#' # STACItemCollection object
+#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'         datetime = "2017-08-01/2018-03-01",
+#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'     get_request() %>% items_filter(`eo:cloud_cover` < 10)
+#'
+#' # Example with AWS STAC
+#' stac("https://earth-search.aws.element84.com/v0") %>%
+#'     stac_search(collections = "sentinel-s2-l2a-cogs",
+#'               bbox = c(-48.206,-14.195,-45.067,-12.272),
+#'               datetime = "2018-06-01/2018-06-30",
+#'               limit = 500) %>%
+#'     post_request() %>%
+#'     items_filter(filter_fn = function(x) {x[["eo:cloud_cover"]] < 10})
+#' }
+#'
+#' \dontrun{
+#' # STACItemCollection object
+#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'         datetime = "2017-08-01/2018-03-01",
+#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'  get_request() %>% items_fetch(progress = FALSE)
+#'
+#' stac_item %>% items_reap(field = c("properties", "datetime"))
+#' }
+#'
+#' \dontrun{
+#' # STACItemCollection object
+#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'         datetime = "2017-08-01/2018-03-01",
+#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'  get_request() %>% items_fetch(progress = FALSE)
+#'
+#'  stac_item %>% items_group(., field = c("properties", "bdc:tiles"))
+#' }
+#'
 #' @name items_functions
+NULL
+
+#' @rdname items_functions
 #'
 #' @export
 items_length <- function(items) {
@@ -189,7 +323,7 @@ items_fetch.STACItemCollection <- function(items, ...,
       .error(paste("Length of returned items (%s) is different",
                    "from matched items (%s)."), items_length(items), matched)
 
-    content <- items_next(items)
+    content <- items_next(items, ...)
 
     if (!is.null(content))
       items <- content
@@ -404,44 +538,10 @@ items_assets.STACItemCollection <- function(items, ..., simplify = FALSE) {
 }
 
 
-#' @title Utility functions
-#'
-#' @description This function filters for the attributes contained in the STAC
-#'  properties.
-#'
-#' @param items a `STACItemCollection` object representing
-#'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
-#'
-#' @param ...   expressions used to filter items of a `STACItemCollection`
-#'  object.
-#' @param fn    a `function` that will be used to filter the attributes
-#'  listed in the properties.
-#'
-#' @return a `STACItemCollection` object with the filtered properties.
-#'
-#' @examples
-#' \donttest{
-#' # STACItemCollection object
-#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
-#'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
-#'  get_request() %>% items_filter(`eo:cloud_cover` < 10)
-#'
-#' # Example with AWS STAC
-#' items <- stac("https://earth-search.aws.element84.com/v0") %>%
-#'   stac_search(collections = "sentinel-s2-l2a-cogs",
-#'               bbox = c(-48.206,-14.195,-45.067,-12.272),
-#'               datetime = "2018-06-01/2018-06-30",
-#'               limit = 500) %>%
-#'   post_request()
-#'
-#'   items %>%
-#'    items_filter(fn = function(x) {x[["eo:cloud_cover"]] < 10})
-#' }
+#' @rdname items_functions
 #'
 #' @export
-items_filter <- function(items, ..., fn = NULL) {
+items_filter <- function(items, ..., filter_fn = NULL) {
 
   # check items parameter
   check_subclass(items, "STACItemCollection")
@@ -463,10 +563,10 @@ items_filter <- function(items, ..., fn = NULL) {
     }
   }
 
-  if (!is.null(fn)) {
+  if (!is.null(filter_fn)) {
 
     sel <- vapply(items$features, function(f) {
-      fn(f$properties)
+      filter_fn(f$properties)
     }, logical(1))
 
     items$features <- items$features[sel]
@@ -475,35 +575,7 @@ items_filter <- function(items, ..., fn = NULL) {
   items
 }
 
-#' @title Utility functions
-#'
-#' @description This function returns the values of a field of the
-#'  `STACItemCollections` object. If the values of the specified field are
-#'  not atomic the return will be in list form, if they are, it will be returned
-#'  in vector form.
-#'
-#' @param items  a `STACItemCollection` object representing
-#'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
-#'
-#' @param ...   a named way to provide fields names to get the
-#'  subfields values from the `RSTACDocument` objects.
-#'
-#' @param field a `character` with the names of the field to
-#'  get the subfields values from the `RSTACDocument` objects.
-#'
-#' @return a `vector` if the supplied field is atomic, or a list if not.
-#'
-#' @examples
-#' \donttest{
-#' # STACItemCollection object
-#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
-#'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
-#'  get_request() %>% items_fetch(progress = FALSE)
-#'
-#' stac_item %>% items_reap(field = c("properties", "datetime"))
-#' }
+#' @rdname items_functions
 #'
 #' @export
 items_reap <- function(items, ..., field = NULL) {
@@ -557,14 +629,14 @@ items_reap <- function(items, ..., field = NULL) {
 #' stac_item %>% items_fields(field = c("properties"))
 #' }
 #'
-#' @name items_utils
+#' @rdname items_functions
 #'
 #' @export
 items_fields <- function(items, ..., field = NULL) {
   UseMethod("items_fields", items)
 }
 
-#' @rdname items_utils
+#' @rdname items_functions
 #'
 #' @export
 items_fields.STACItemCollection <- function(items, ..., field = NULL) {
@@ -580,7 +652,7 @@ items_fields.STACItemCollection <- function(items, ..., field = NULL) {
   names(items$features[[1]][[c(dots, field)]])
 }
 
-#' @rdname items_utils
+#' @rdname items_functions
 #'
 #' @export
 items_fields.STACItem <- function(items, ..., field = NULL) {
@@ -596,38 +668,7 @@ items_fields.STACItem <- function(items, ..., field = NULL) {
   names(items[[c(dots, field)]])
 }
 
-#' @title Utility functions
-#'
-#' @description This function groups the items contained within the
-#'  `STACItemCollection` object according to some specified fields. Each
-#'  index in the returned list contains items belonging to the same group.
-#'
-#' @param items a `STACItemCollection` object representing the result of
-#' `/stac/search`, \code{/collections/{collectionId}/items}.
-#'
-#' @param ...   a named way to provide field names to get the subfields values
-#'  from the `RSTACDocument` objects.
-#'
-#' @param field a `character` with the names of the field to get the
-#'  subfields values from the `RSTACDocument` objects.
-#'
-#' @param index a `character` with the indexes to be grouped. It can be
-#'  used with the function [items_reap].
-#'
-#' @return A `list` in which each index corresponds to a group with its
-#'  corresponding `STACItemCollection` objects.
-#'
-#' @examples
-#' \donttest{
-#' # STACItemCollection object
-#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
-#'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
-#'  get_request() %>% items_fetch(progress = FALSE)
-#'
-#'  stac_item %>% items_group(., field = c("properties", "bdc:tiles"))
-#' }
+#' @rdname items_functions
 #'
 #' @export
 items_group <- function(items, ..., field = NULL, index = NULL) {
@@ -674,50 +715,18 @@ items_group <- function(items, ..., field = NULL, index = NULL) {
   })
 }
 
-#' @title Utility functions
-#'
-#' @description A utility function to create signatures in hrefs of each
-#'  asset in the STAC items. To create the signatures, the provided function
-#'  must return a function, being a factory function, so the manufactured
-#'  function will sign the hrefs returning one feature per interaction.
-#'
-#' @param items   a `STACItemCollection` object representing
-#'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
-#'
-#' @param sign_fn a `function` to assign each assets in STAC items.
-#'
-#' @return A `STACItemCollection` object with the signed assets according to the
-#'  supplied parameter function.
-#' @examples
-#' \dontrun{
-#'
-#' # Defining BDC token
-#' Sys.setenv("BDC_ACCESS_KEY" = <your_bdc_access_key>)
-#'
-#' # STACItem object
-#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
-#'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
-#'  get_request() %>% items_sign(sign_fn = sign_bdc)
-#'
-#' }
-#'
-#' @name items_assign_change
-NULL
-
-#' @rdname items_assign_change
+#' @rdname items_functions
 #'
 #' @export
-items_sign <- function(items, sign_fn = NULL, ...) {
+items_sign <- function(items, ..., sign_fn = NULL) {
 
   UseMethod("items_sign", items)
 }
 
-#' @rdname items_assign_change
+#' @rdname items_functions
 #'
 #' @export
-items_sign.STACItemCollection <- function(items, sign_fn = NULL) {
+items_sign.STACItemCollection <- function(items, ..., sign_fn = NULL) {
 
   if (is.null(sign_fn)) {
     return(items)
@@ -741,10 +750,10 @@ items_sign.STACItemCollection <- function(items, sign_fn = NULL) {
   items
 }
 
-#' @rdname items_assign_change
+#' @rdname items_functions
 #'
 #' @export
-items_sign.STACItem <- function(items, sign_fn = NULL) {
+items_sign.STACItem <- function(items, ..., sign_fn = NULL) {
 
   if (is.null(sign_fn)) {
     return(items)
