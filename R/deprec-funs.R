@@ -22,8 +22,8 @@ items_bands <- function(items) {
 
   # signal the deprecation to the user
   lifecycle::deprecate_soft("0.9.1-5",
-                            "rstac::items_bands(items = )",
-                            "rstac::items_assets(items = )")
+                            "rstac::items_bands()",
+                            "rstac::items_assets()")
 
   return(items_assets(items))
 }
