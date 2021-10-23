@@ -1,0 +1,22 @@
+citHeader("To cite rstac in publications use:")
+
+citEntry(entry = "InProceedings",
+         title        = "Rstac: An R Package to Access Spatiotemporal Asset Catalog Satellite Imagery",
+         author       = personList(as.person("Rolf Simoes"),
+                                   as.person("Felipe Souza"),
+                                   as.person("Matheus Zaglia"),
+                                   as.person("Gilberto Ribeiro Queiroz"),
+                                   as.person("Rafael Santos"),
+                                   as.person("Karine Ferreira")),
+         booktitle    = "2021 IEEE International Geoscience and Remote Sensing Symposium IGARSS",
+         year         = "2021",
+         pages        = "7674-7677",
+         doi          = "10.1109/IGARSS47720.2021.9553518",
+         textVersion  =
+             paste("R. Simoes, F. C. de Souza, M. Zaglia, G. R. de Queiroz,",
+                   "R. D. C. dos Santos and K. R. Ferreira, \"Rstac: An R",
+                   "Package to Access Spatiotemporal Asset Catalog Satellite",
+                   "Imagery,\" 2021 IEEE International Geoscience and Remote",
+                   "Sensing Symposium IGARSS, 2021, pp. 7674-7677, doi:",
+                   "10.1109/IGARSS47720.2021.9553518.")
+)
