@@ -9,8 +9,7 @@ R Client Library for SpatioTemporal Asset Catalog (rstac)
 
 [![Software
 License](https://img.shields.io/badge/license-MIT-green)](https://github.com/brazil-data-cube/rstac/blob/master/LICENSE)
-[![Build
-Status](https://drone.dpi.inpe.br/api/badges/brazil-data-cube/rstac/status.svg)](https://drone.dpi.inpe.br/brazil-data-cube/rstac)
+<!-- [![Build Status](https://drone.dpi.inpe.br/api/badges/brazil-data-cube/rstac/status.svg)](https://drone.dpi.inpe.br/brazil-data-cube/rstac) -->
 [![Build
 status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/rstac)
 [![codecov](https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT)](https://codecov.io/gh/brazil-data-cube/rstac)
@@ -29,7 +28,7 @@ geospatial information assets. The specification can be consulted in
 <https://stacspec.org/>.
 
 R client library for STAC (`rstac`) was designed to fully support STAC
-API v1.0.0. It also supports earlier versions (\>= v0.8.0).
+API v1.0.0. It also supports earlier versions (&gt;= v0.8.0).
 
 ## Installation
 
@@ -61,15 +60,15 @@ library(magrittr) # for pipe (%>%) in examples
 `rstac` implements the following STAC endpoints:
 
 | **STAC** endpoints                           | `rstac` functions            | API version |
-| :------------------------------------------- | :--------------------------- | :---------- |
-| `/`                                          | `stac()`                     | \>= 0.9.0   |
-| `/stac`                                      | `stac()`                     | \< 0.9.0    |
-| `/collections`                               | `collections()`              | \>= 0.9.0   |
-| `/collections/{collectionId}`                | `collections(collection_id)` | \>= 0.9.0   |
-| `/collections/{collectionId}/items`          | `items()`                    | \>= 0.9.0   |
-| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          | \>= 0.9.0   |
-| `/search`                                    | `stac_search()`              | \>= 0.9.0   |
-| `/stac/search`                               | `stac_search()`              | \< 0.9.0    |
+|:---------------------------------------------|:-----------------------------|:------------|
+| `/`                                          | `stac()`                     | &gt;= 0.9.0 |
+| `/stac`                                      | `stac()`                     | &lt; 0.9.0  |
+| `/collections`                               | `collections()`              | &gt;= 0.9.0 |
+| `/collections/{collectionId}`                | `collections(collection_id)` | &gt;= 0.9.0 |
+| `/collections/{collectionId}/items`          | `items()`                    | &gt;= 0.9.0 |
+| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          | &gt;= 0.9.0 |
+| `/search`                                    | `stac_search()`              | &gt;= 0.9.0 |
+| `/stac/search`                               | `stac_search()`              | &lt; 0.9.0  |
 
 These functions can be used to retrieve information from a STAC API
 service. The code bellow creates a `stac` object and list the available
@@ -107,19 +106,21 @@ it_obj <- s_obj %>%
 
 it_obj
 #> ###STACItemCollection
-#> - matched feature(s): 236
-#> - features (10 item(s)):
-#>   - CB4_64_16D_STK_v001_022024_2021-02-02_2021-02-17
-#>   - CB4_64_16D_STK_v001_022025_2021-02-02_2021-02-17
-#>   - CB4_64_16D_STK_v001_022024_2021-01-17_2021-02-01
-#>   - CB4_64_16D_STK_v001_022025_2021-01-17_2021-02-01
-#>   - CB4_64_16D_STK_v001_022024_2021-01-01_2021-01-16
-#>   - CB4_64_16D_STK_v001_022025_2021-01-01_2021-01-16
-#>   - CB4_64_16D_STK_v001_022024_2020-12-18_2020-12-31
-#>   - CB4_64_16D_STK_v001_022025_2020-12-18_2020-12-31
-#>   - CB4_64_16D_STK_v001_022024_2020-12-02_2020-12-17
-#>   - CB4_64_16D_STK_v001_022025_2020-12-02_2020-12-17
-#> - field(s): type, links, context, features
+#> - matched feature(s): 264
+#> - features (10 item(s) / 254 not fetched):
+#>   - CB4_64_16D_STK_v001_022024_2021-09-14_2021-09-29
+#>   - CB4_64_16D_STK_v001_022025_2021-09-14_2021-09-29
+#>   - CB4_64_16D_STK_v001_022024_2021-08-29_2021-09-13
+#>   - CB4_64_16D_STK_v001_022025_2021-08-29_2021-09-13
+#>   - CB4_64_16D_STK_v001_022024_2021-08-13_2021-08-28
+#>   - CB4_64_16D_STK_v001_022025_2021-08-13_2021-08-28
+#>   - CB4_64_16D_STK_v001_022024_2021-07-28_2021-08-12
+#>   - CB4_64_16D_STK_v001_022025_2021-07-28_2021-08-12
+#>   - CB4_64_16D_STK_v001_022024_2021-07-12_2021-07-27
+#>   - CB4_64_16D_STK_v001_022025_2021-07-12_2021-07-27
+#> - assets: 
+#> EVI, NDVI, CMASK, BAND13, BAND14, BAND15, BAND16, CLEAROB, TOTALOB, thumbnail, PROVENANCE
+#> - other field(s): type, links, context, features
 ```
 
 The `rstac` uses the [httr](https://github.com/r-lib/httr) package to
@@ -148,7 +149,7 @@ criteria:
 ``` r
 # it_obj variable from the last code example
 it_obj %>% items_matched()
-#> [1] 236
+#> [1] 264
 ```
 
 However, if we count how many items there are in `it_obj` variable, we
@@ -165,7 +166,7 @@ it_obj %>% items_length()
 # (but don't stored them back in it_obj)
 it_obj %>% items_fetch(progress = FALSE) %>%
     items_length()
-#> [1] 236
+#> [1] 264
 ```
 
 ### Download assets
@@ -218,3 +219,13 @@ spec](https://github.com/radiantearth/stac-api-spec/tree/master/ogcapi-features)
 A detailed documentation with examples on how to use each endpoint and
 other functions available in the `rstac` package can be obtained by
 typing `?rstac` in R console.
+
+## Citation
+
+To cite rstac in publications use:
+
+R. Simoes, F. C. de Souza, M. Zaglia, G. R. de Queiroz, R. D. C. dos
+Santos and K. R. Ferreira, “Rstac: An R Package to Access Spatiotemporal
+Asset Catalog Satellite Imagery,” 2021 IEEE International Geoscience and
+Remote Sensing Symposium IGARSS, 2021, pp. 7674-7677, doi:
+10.1109/IGARSS47720.2021.9553518.

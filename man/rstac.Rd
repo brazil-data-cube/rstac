@@ -6,10 +6,7 @@
 \alias{rstac-package}
 \title{R client library for STAC (rstac)}
 \description{
-Provides functions to access, search and download spacetime earth
-    observation data via SpatioTemporal Asset Catalog (STAC). This package
-    supports the version 1.0.0 of the STAC specification
-    (<http://stacspec.org>).
+Provides functions to access, search and download spacetime earth observation data via SpatioTemporal Asset Catalog (STAC). This package supports the version 1.0.0 of the STAC specification (<http://stacspec.org>). For further details see DOI: 10.1109/IGARSS47720.2021.9553518
 }
 \section{The \code{rstac} functions}{
 
