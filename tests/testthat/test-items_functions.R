@@ -1,5 +1,3 @@
-context("test_items_functions")
-
 testthat::test_that("items functions", {
   vcr::use_cassette("items_functions", {
     # skip cran check test
@@ -91,5 +89,56 @@ testthat::test_that("items functions", {
 
     # ok - return a numeric
     testthat::expect_true(is.numeric(items_matched(res)))
+
+    # items_filter--------------------------------------------------------------
+    testthat::expect_s3_class(
+      object = items_filter(res, fn = function(x) {x[["eo:cloud_cover"]] < 10}),
+      class = "STACItemCollection"
+    )
+
+    testthat::expect_s3_class(
+      object = items_filter(res, `eo:cloud_cover` < 10),
+      class = "STACItemCollection"
+    )
+
+    testthat::expect_s3_class(
+      object = items_filter(res),
+      class = "STACItemCollection"
+    )
+
+    testthat::expect_error(
+      object = items_filter(item_stac, `eo:cloud_cover` < 10)
+    )
+
+    testthat::expect_error(
+      object = items_filter(res, list(`eo:cloud_cover` < 10))
+    )
+
+    # items_assets--------------------------------------------------------------
+    testthat::expect_equal(
+      object = class(items_assets(res)),
+      expected = "list"
+    )
+
+    testthat::expect_equal(
+      object = class(items_assets(item_stac)),
+      expected = "character"
+    )
+
+    # items_next----------------------------------------------------------------
+    testthat::expect_s3_class(
+      object = items_next(item_stac),
+      class = "STACItem"
+    )
+
+    testthat::expect_s3_class(
+      object = items_next(res),
+      class = "STACItemCollection"
+    )
+
+    testthat::expect_equal(
+      object = items_length(items_next(res)),
+      expected = 20
+    )
   })
 })

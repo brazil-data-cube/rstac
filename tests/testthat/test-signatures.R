@@ -81,8 +81,8 @@ testthat::test_that("signature functions", {
     # stac item collection from ms
     stac_items <-
       stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
-      stac_search(collections = "landsat-8-c2-l2",
-                  bbox = c(-47.02148, -12.98314, -42.53906, -17.35063),
+      stac_search(collections = "sentinel-2-l2a",
+                  bbox = c(-47.02148, -42.53906, -12.98314, -17.35063),
                   limit = 1) %>%
       get_request()
 
