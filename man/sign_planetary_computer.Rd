@@ -25,7 +25,7 @@ Planetary Computer servers and the returned content corresponds to the
 token that will be used in the href.
 }
 \examples{
-\donttest{
+\dontrun{
 # STACItemCollection object
 stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") \%>\%
  stac_search(collections = "sentinel-2-l2a",

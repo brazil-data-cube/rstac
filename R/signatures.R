@@ -13,7 +13,7 @@
 #' @return a `function` that signs each item assets.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # STACItemCollection object
 #' stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   stac_search(collections = "CB4_64_16D_STK-1",
@@ -22,7 +22,7 @@
 #'   get_request()
 #'
 #' # signing each item href
-#' stac_obj %>% items_sign(sign_fn = sign_bdc())
+#' stac_obj %>% items_sign(sign_fn = sign_bdc(access_token = "123"))
 #'
 #' }
 #'
@@ -115,7 +115,7 @@ sign_bdc <- function(access_token = NULL, ...) {
 #' @return a `function` that signs each item assets.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # STACItemCollection object
 #' stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
 #'  stac_search(collections = "sentinel-2-l2a",

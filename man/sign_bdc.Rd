@@ -22,7 +22,7 @@ To sign the hrefs with your token you need to store it in an
 environment variable in \code{BDC_ACCESS_KEY}or use \code{acess_token} parameter.
 }
 \examples{
-\donttest{
+\dontrun{
 # STACItemCollection object
 stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1",
@@ -31,7 +31,7 @@ stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
   get_request()
 
 # signing each item href
-stac_obj \%>\% items_sign(sign_fn = sign_bdc())
+stac_obj \%>\% items_sign(sign_fn = sign_bdc(access_token = "123"))
 
 }
 
