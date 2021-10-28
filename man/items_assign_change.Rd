@@ -7,7 +7,7 @@
 \alias{items_sign.STACItem}
 \title{Utility functions}
 \usage{
-items_sign(items, sign_fn = NULL, ...)
+items_sign(items, sign_fn = NULL)
 
 \method{items_sign}{STACItemCollection}(items, sign_fn = NULL)
 
