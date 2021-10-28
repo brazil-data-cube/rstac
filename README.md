@@ -10,8 +10,11 @@ R Client Library for SpatioTemporal Asset Catalog (rstac)
 [![Software
 License](https://img.shields.io/badge/license-MIT-green)](https://github.com/brazil-data-cube/rstac/blob/master/LICENSE)
 <!-- [![Build Status](https://drone.dpi.inpe.br/api/badges/brazil-data-cube/rstac/status.svg)](https://drone.dpi.inpe.br/brazil-data-cube/rstac) -->
+<<<<<<< HEAD
 [![Build
 Status](https://cloud.drone.io/api/badges/OldLipe/rstac/status.svg)](https://cloud.drone.io/OldLipe/rstac)
+=======
+>>>>>>> 9c35257931cbefd90b5169050b6b677458bcd357
 [![Build
 status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/rstac)
 [![codecov](https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT)](https://codecov.io/gh/brazil-data-cube/rstac)
@@ -221,3 +224,13 @@ spec](https://github.com/radiantearth/stac-api-spec/tree/master/ogcapi-features)
 A detailed documentation with examples on how to use each endpoint and
 other functions available in the `rstac` package can be obtained by
 typing `?rstac` in R console.
+
+## Citation
+
+To cite rstac in publications use:
+
+R. Simoes, F. C. de Souza, M. Zaglia, G. R. de Queiroz, R. D. C. dos
+Santos and K. R. Ferreira, “Rstac: An R Package to Access Spatiotemporal
+Asset Catalog Satellite Imagery,” 2021 IEEE International Geoscience and
+Remote Sensing Symposium IGARSS, 2021, pp. 7674-7677, doi:
+10.1109/IGARSS47720.2021.9553518.
