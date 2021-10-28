@@ -18,17 +18,17 @@ testthat::test_that("signature functions", {
 
     # return the same object after signature?
     testthat::expect_s3_class(
-      object = items_sign(stac_items, sign_bdc("AAAA-BBB")),
+      object = items_sign(stac_items, sign_fn = sign_bdc("AAAA-BBB")),
       class = c("STACItemCollection", "RSTACDocument")
     )
 
     # return the same object after signature?
     testthat::expect_s3_class(
-      object = stac_item %>% items_sign(sign_bdc("AAAA-BBB")),
+      object = stac_item %>% items_sign(sign_fn = sign_bdc("AAAA-BBB")),
       class = c("STACItem", "RSTACDocument")
     )
 
-    items_signed <- items_sign(stac_items, sign_bdc("AAAA-BBB"))
+    items_signed <- items_sign(stac_items, sign_fn = sign_bdc("AAAA-BBB"))
     href_items <- items_signed$features[[1]]$assets[[1]]$href
 
     # is the token being added at the end of the url?
@@ -36,7 +36,7 @@ testthat::test_that("signature functions", {
       gsub("^([^?]+)(\\?.*)?$", "\\2", href_items), "?access_token=AAAA-BBB"
     )
 
-    item_signed <- items_sign(stac_item, sign_bdc("AAAA-BBB"))
+    item_signed <- items_sign(stac_item, sign_fn =sign_bdc("AAAA-BBB"))
     href_item <- item_signed$assets[[1]]$href
 
     # is the token being added at the end of the url?
@@ -45,7 +45,7 @@ testthat::test_that("signature functions", {
     )
 
     Sys.setenv("BDC_ACCESS_KEY" = "CCCC-DDD")
-    items_signed <- items_sign(stac_items, sign_bdc())
+    items_signed <- items_sign(stac_items, sign_fn = sign_bdc())
     href_items <- items_signed$features[[1]]$assets[[1]]$href
 
     # is the token being added at the end of the url with env var?
@@ -53,7 +53,7 @@ testthat::test_that("signature functions", {
       gsub("^([^?]+)(\\?.*)?$", "\\2", href_items), "?access_token=CCCC-DDD"
     )
 
-    item_signed <- items_sign(stac_item, sign_bdc())
+    item_signed <- items_sign(stac_item, sign_fn = sign_bdc())
     href_item <- item_signed$assets[[1]]$href
 
     # is the token being added at the end of the url with env var?
@@ -65,12 +65,12 @@ testthat::test_that("signature functions", {
 
     # an error is expected if no option is provided
     testthat::expect_error(
-      items_sign(stac_items, sign_bdc())
+      items_sign(stac_items, sign_fn = sign_bdc())
     )
 
     # an error is expected if no option is provided
     testthat::expect_error(
-      items_sign(stac_item, sign_bdc())
+      items_sign(stac_item, sign_fn = sign_bdc())
     )
   })
 
@@ -103,13 +103,13 @@ testthat::test_that("signature functions", {
     # return the same object after signature?
     testthat::expect_s3_class(
       object = suppressWarnings(
-        items_sign(stac_item, sign_planetary_computer())
+        items_sign(stac_item, sign_fn = sign_planetary_computer())
       ),
       class = c("STACItem", "RSTACDocument")
     )
 
     items_signed <- suppressWarnings(
-      items_sign(stac_items, sign_planetary_computer())
+      items_sign(stac_items, sign_fn = sign_planetary_computer())
     )
     href_items <- items_signed$features[[1]]$assets[[1]]$href
 
@@ -120,7 +120,7 @@ testthat::test_that("signature functions", {
     )
 
     item_signed <- suppressWarnings(
-      items_sign(stac_item, sign_planetary_computer())
+      items_sign(stac_item, sign_fn = sign_planetary_computer())
     )
     href_item <- item_signed$assets[[1]]$href
 
@@ -134,7 +134,7 @@ testthat::test_that("signature functions", {
     testthat::expect_error(
       object = suppressWarnings(
         items_sign(stac_items,
-                   sign_planetary_computer(token_url = "test"))
+                   sign_fn = sign_planetary_computer(token_url = "test"))
       )
     )
   })

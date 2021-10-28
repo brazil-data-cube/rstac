@@ -92,7 +92,9 @@ testthat::test_that("items functions", {
 
     # items_filter--------------------------------------------------------------
     testthat::expect_s3_class(
-      object = items_filter(res, fn = function(x) {x[["eo:cloud_cover"]] < 10}),
+      object = items_filter(
+        res, filter_fn = function(x) {x[["eo:cloud_cover"]] < 10}
+      ),
       class = "STACItemCollection"
     )
 
