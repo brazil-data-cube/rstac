@@ -125,6 +125,17 @@ testthat::test_that("items functions", {
       expected = "character"
     )
 
+    # items_bands---------------------------------------------------------------
+    testthat::expect_equal(
+      object = class(items_bands(res)),
+      expected = "list"
+    )
+
+    testthat::expect_equal(
+      object = class(items_bands(item_stac)),
+      expected = "character"
+    )
+
     # items_next----------------------------------------------------------------
     testthat::expect_s3_class(
       object = items_next(item_stac),
