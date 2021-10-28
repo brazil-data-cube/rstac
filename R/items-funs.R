@@ -709,7 +709,7 @@ NULL
 #' @rdname items_assign_change
 #'
 #' @export
-items_sign <- function(items, sign_fn = NULL, ...) {
+items_sign <- function(items, sign_fn = NULL) {
 
   UseMethod("items_sign", items)
 }
