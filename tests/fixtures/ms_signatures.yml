@@ -53,7 +53,7 @@ http_interactions:
         Annual North America"},{"rel":"child","type":"application/json","href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/daymet-annual-hi","title":"Daymet
         Annual Hawaii"},{"rel":"child","type":"application/json","href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/terraclimate","title":"TerraClimate"},{"rel":"child","type":"application/json","href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/jrc-gsw","title":"JRC
         Global Surface Water"}],"type":"Catalog"}'
-  recorded_at: 2021-09-24 14:30:36 GMT
+  recorded_at: 2021-10-28 23:43:16 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -149,7 +149,7 @@ http_interactions:
         resolution browse image"},"tilejson":{"title":"TileJSON with default rendering","href":"https://planetarycomputer.microsoft.com/api/data/v1/item/tilejson.json?collection=landsat-8-c2-l2&items=LC08_L2SP_217072_20210909_02_T1&assets=SR_B4,SR_B3,SR_B2&","type":"application/json","roles":["tiles"]},"rendered_preview":{"title":"Rendered
         preview","rel":"preview","href":"https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=landsat-8-c2-l2&items=LC08_L2SP_217072_20210909_02_T1&assets=SR_B4,SR_B3,SR_B2&","roles":["overview"],"type":"image/png"}},"geometry":{"type":"Polygon","coordinates":[[[-42.74446188,-16.27064967],[-40.96165121,-16.66944524],[-41.38821483,-18.42112096],[-43.17076884,-18.01890298],[-42.74446188,-16.27064967]]]},"collection":"landsat-8-c2-l2","properties":{"datetime":"2021-09-09T12:50:40.186933Z","platform":"landsat-8","proj:bbox":[695385.0,-2037915.0,927015.0,-1802985.0],"proj:epsg":32723,"description":"Landsat
         Collection 2 Level-2 Surface Reflectance Product","instruments":["oli","tirs"],"eo:cloud_cover":15.88,"view:off_nadir":0,"landsat:wrs_row":"072","landsat:scene_id":"LC82170722021252LGN00","landsat:wrs_path":"217","landsat:wrs_type":"2","view:sun_azimuth":54.175292,"view:sun_elevation":53.82982169,"landsat:cloud_cover_land":15.88,"landsat:processing_level":"L2SP","landsat:collection_number":"02","landsat:collection_category":"T1"},"stac_version":"1.0.0","stac_extensions":["https://stac-extensions.github.io/eo/v1.0.0/schema.json","https://stac-extensions.github.io/view/v1.0.0/schema.json","https://stac-extensions.github.io/projection/v1.0.0/schema.json","https://landsat.usgs.gov/stac/landsat-extension/v1.1.0/schema.json"]}],"timeStamp":"2021-09-24T14:30:32.215273+00:00"}'
-  recorded_at: 2021-09-24 14:30:36 GMT
+  recorded_at: 2021-10-28 23:43:16 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -205,7 +205,7 @@ http_interactions:
         Annual North America"},{"rel":"child","type":"application/json","href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/daymet-annual-hi","title":"Daymet
         Annual Hawaii"},{"rel":"child","type":"application/json","href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/terraclimate","title":"TerraClimate"},{"rel":"child","type":"application/json","href":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/jrc-gsw","title":"JRC
         Global Surface Water"}],"type":"Catalog"}'
-  recorded_at: 2021-09-24 14:30:36 GMT
+  recorded_at: 2021-10-28 23:43:16 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -301,7 +301,7 @@ http_interactions:
         resolution browse image"},"tilejson":{"title":"TileJSON with default rendering","href":"https://planetarycomputer.microsoft.com/api/data/v1/item/tilejson.json?collection=landsat-8-c2-l2&items=LC08_L2SP_217072_20210909_02_T1&assets=SR_B4,SR_B3,SR_B2&","type":"application/json","roles":["tiles"]},"rendered_preview":{"title":"Rendered
         preview","rel":"preview","href":"https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=landsat-8-c2-l2&items=LC08_L2SP_217072_20210909_02_T1&assets=SR_B4,SR_B3,SR_B2&","roles":["overview"],"type":"image/png"}},"geometry":{"type":"Polygon","coordinates":[[[-42.74446188,-16.27064967],[-40.96165121,-16.66944524],[-41.38821483,-18.42112096],[-43.17076884,-18.01890298],[-42.74446188,-16.27064967]]]},"collection":"landsat-8-c2-l2","properties":{"datetime":"2021-09-09T12:50:40.186933Z","platform":"landsat-8","proj:bbox":[695385.0,-2037915.0,927015.0,-1802985.0],"proj:epsg":32723,"description":"Landsat
         Collection 2 Level-2 Surface Reflectance Product","instruments":["oli","tirs"],"eo:cloud_cover":15.88,"view:off_nadir":0,"landsat:wrs_row":"072","landsat:scene_id":"LC82170722021252LGN00","landsat:wrs_path":"217","landsat:wrs_type":"2","view:sun_azimuth":54.175292,"view:sun_elevation":53.82982169,"landsat:cloud_cover_land":15.88,"landsat:processing_level":"L2SP","landsat:collection_number":"02","landsat:collection_category":"T1"},"stac_version":"1.0.0","stac_extensions":["https://stac-extensions.github.io/eo/v1.0.0/schema.json","https://stac-extensions.github.io/view/v1.0.0/schema.json","https://stac-extensions.github.io/projection/v1.0.0/schema.json","https://landsat.usgs.gov/stac/landsat-extension/v1.1.0/schema.json"]}'
-  recorded_at: 2021-09-24 14:30:36 GMT
+  recorded_at: 2021-10-28 23:43:16 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -329,7 +329,7 @@ http_interactions:
       encoding: UTF-8
       file: no
       string: '{"msft:expiry":"2021-09-24T15:15:34Z","token":"st=2021-09-23T14%3A30%3A34Z&se=2021-09-24T15%3A15%3A34Z&sp=rl&sv=2020-02-10&sr=c&skoid=c85c15d6-d1ae-42d4-af60-e2ca0f81359b&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2021-09-24T13%3A30%3A34Z&ske=2021-09-25T14%3A30%3A34Z&sks=b&skv=2020-02-10&sig=uU0CO42uiNJ58itHCepSEfoXzm0iwwlWCKj3o0i2gdw%3D"}'
-  recorded_at: 2021-09-24 14:30:36 GMT
+  recorded_at: 2021-10-28 23:43:16 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -357,7 +357,7 @@ http_interactions:
       encoding: UTF-8
       file: no
       string: '{"msft:expiry":"2021-09-24T15:15:35Z","token":"st=2021-09-23T14%3A30%3A35Z&se=2021-09-24T15%3A15%3A35Z&sp=rl&sv=2020-02-10&sr=c&skoid=c85c15d6-d1ae-42d4-af60-e2ca0f81359b&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2021-09-24T13%3A30%3A35Z&ske=2021-09-25T14%3A30%3A35Z&sks=b&skv=2020-02-10&sig=NYfop6ohW296ldSJxu5kr/WYgp0VuyXRUVqVEvz07Oc%3D"}'
-  recorded_at: 2021-09-24 14:30:36 GMT
+  recorded_at: 2021-10-28 23:43:16 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
 - request:
     method: get
@@ -385,5 +385,32 @@ http_interactions:
       encoding: UTF-8
       file: no
       string: '{"msft:expiry":"2021-09-24T15:15:36Z","token":"st=2021-09-23T14%3A30%3A36Z&se=2021-09-24T15%3A15%3A36Z&sp=rl&sv=2020-02-10&sr=c&skoid=c85c15d6-d1ae-42d4-af60-e2ca0f81359b&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2021-09-24T13%3A30%3A36Z&ske=2021-09-25T14%3A30%3A36Z&sks=b&skv=2020-02-10&sig=GyDxbOy%2BeiVWGwtAQTU47PVrTVzX8cgWVA5ziCc1mMU%3D"}'
-  recorded_at: 2021-09-24 14:30:36 GMT
+  recorded_at: 2021-10-28 23:43:16 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
+- request:
+    method: get
+    uri: https://planetarycomputer.microsoft.com/api/stac/v1/search?collections=landsat-8-c2-l2&bbox=-47.02148%2C-12.98314%2C-42.53906%2C-17.35063&limit=1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 400
+      category: Client error
+      reason: Bad Request
+      message: 'Client error: (400) Bad Request'
+    headers:
+      content-length: '27'
+      content-type: text/plain; charset=utf-8
+      strict-transport-security: max-age=15724800; includeSubDomains
+      x-cache: CONFIG_NOCACHE
+      x-azure-ref: 0kzV7YQAAAABqMwvOLSRrRJdyu3i79neXUklPMDNFREdFMDcxMgA5MjdhYmZhNi0xOWY2LTRhZjEtYTA5ZC1jOTU5ZDlhMWU2NDQ=
+      date: Thu, 28 Oct 2021 23:43:16 GMT
+    body:
+      encoding: UTF-8
+      file: no
+      string: Invalid parameters provided
+  recorded_at: 2021-10-28 23:43:16 GMT
   recorded_with: vcr/1.0.2, webmockr/0.8.0
