@@ -1,5 +1,13 @@
 # rstac (development version)
 
+# rstac 0.9.1-5 (Released 2021-11-01)
+
+* Add the `rstac` reference paper in README
+* Add feature name on print items objects
+* Create `items_next` function
+* Adjust download helpers to access data from Microsoft's Planetary Computer
+* Update news.md of v0.9.0-1 
+
 # rstac 0.9.1-4 (Released 2021-09-14)
 
 * Fix typos
