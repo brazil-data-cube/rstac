@@ -2,9 +2,17 @@
 
 # rstac 0.9.1-5 (Released 2021-11-01)
 
+* Add support to `lifecycle` package
+* Documentation has been changed from `Rd` to `markdown`
+* New functions that support assets and items manipulation have been added: `assets_select`, `assets_filter`, and `items_filter`
+* The documentation was reviewed
+* New examples and tests were added
+* `rstac` now supports signatures in `href` using the `items_sign` function
+* Function `items_bands()` was changed to `items_assets()` 
+* Parameters `assets_name` and `assets_names` are now called `asset_names`
 * Add the `rstac` reference paper in README
 * Add feature name on print items objects
-* Create `items_next` function
+* Create `items_next` function to do a single pagination request 
 * Adjust download helpers to access data from Microsoft's Planetary Computer
 * Update news.md of v0.9.0-1 
 
