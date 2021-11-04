@@ -12,15 +12,15 @@
 #' }
 #' Here, we will focus on the second type of extension.
 #'
-#' To let \code{rstac} package perform some behavior according to an
+#' To let `rstac` package perform some behavior according to an
 #' STAC API extension we need define some functions. These functions
 #' can be implemented in three environments:
 #' \enumerate{
-#' \item In \code{rstac} package by including new functions make a
-#' GitHub pull request on \code{rstac} repository
-#' (\url{https://github.com/brazil-data-cube/rstac})
-#' \item In a new package by using \code{rstac} as dependent package
-#' \item In a script that loads \code{rstac} into the environment
+#' \item In `rstac` package by including new functions make a
+#' GitHub pull request on `rstac` repository
+#' (<https://github.com/brazil-data-cube/rstac>)
+#' \item In a new package by using `rstac` as dependent package
+#' \item In a script that loads `rstac` into the environment
 #' }
 #' All these places may impose specific requirements, however the core
 #' logic to implement an extension is the same.
@@ -29,59 +29,59 @@
 #' extensions. An extension must define a subclass name and implement all the
 #' following S3 generic methods for that subclass:
 #' \itemize{
-#' \item \code{endpoint()}: returns the endpoint value of the extension.
+#' \item `endpoint()`: returns the endpoint value of the extension.
 #' Endpoints that vary between STAC API versions can be properly returned by
-#' checking the \code{version} field of \code{RSTACQuery} object.
-#' \item \code{before_request()}: allows handling query parameters before
+#' checking the `version` field of `RSTACQuery` object.
+#' \item `before_request()`: allows handling query parameters before
 #' submit them to the HTTP server;
-#' \item \code{after_request()}: allows to check and parse document received
+#' \item `after_request()`: allows to check and parse document received
 #' by the HTTP server;
 #' }
 #'
-#' These methods will work 'behind the scenes' when a \code{RSTACQuery} object
+#' These methods will work 'behind the scenes' when a `RSTACQuery` object
 #' representing a user query are passed to a request function
-#' (e.g. \code{get_request()} or \code{post_request()}). The calling order is:
+#' (e.g. `get_request()` or `post_request()`). The calling order is:
 #' \enumerate{
-#' \item begin of \code{get_request()} or \code{post_request()}
+#' \item begin of `get_request()` or `post_request()`
 #' \item if STAC API version is not defined, try detect it
-#' \item call \code{endpoint()}
-#' \item call \code{before_request()}
+#' \item call `endpoint()`
+#' \item call `before_request()`
 #' \item send HTTP request
 #' \item receive HTTP response
-#' \item \code{after_response()}
-#' \item end of \code{get_request()} or \code{post_request()}
+#' \item `after_response()`
+#' \item end of `get_request()` or `post_request()`
 #' }
 #'
 #' Besides that, the extension must expose a function to receive user
-#' parameters and return a \code{RSTACQuery} object with a subclass
+#' parameters and return a `RSTACQuery` object with a subclass
 #' associated with the above S3 methods. This function must accept as its
-#' first parameter a \code{RSTACQuery} object representing the actual query.
+#' first parameter a `RSTACQuery` object representing the actual query.
 #' To keep the command flow consistency, the function needs to check the
 #' subclass of the input query. After that, it must set new or changes the
 #' input query parameters according to the user input and, finally,
-#' return the new query as a \code{RSTACQuery} object.
+#' return the new query as a `RSTACQuery` object.
 #'
 #' You can see examples on how to implement an STAC API extension by looking at
-#' \code{stac.R}, \code{collections.R}, \code{items.R}, \code{stac_search.R},
-#' and \code{ext_query.R} source files. These files implement core STAC API
+#' `stac.R`, `collections.R`, `items.R`, `stac_search.R`,
+#' and `ext_query.R` source files. These files implement core STAC API
 #' endpoints, as well as the query API extension.
 #'
-#' There are also some utility functions described in \strong{Functions}
+#' There are also some utility functions described in **Functions**
 #' section bellow that can help the extension development.
 #'
 #'
-#' @param q       a \code{RSTACQuery} object expressing a STAC query
+#' @param q       a `RSTACQuery` object expressing a STAC query
 #' criteria.
 #'
-#' @param res     a \code{httr} \code{response} object.
-#' @param params  a \code{list} with params to add in request.
+#' @param res     a `httr` `response` object.
+#' @param params  a `list` with params to add in request.
 #'
 #' @return
-#' A \code{character} endpoint value for \code{endpoint()} function.
-#' A \code{RSTACQuery} object for \code{before_request()} and
-#' \code{after_response()} functions.
+#' A `character` endpoint value for `endpoint()` function.
+#' A `RSTACQuery` object for `before_request()` and
+#' `after_response()` functions.
 #'
-#' @seealso \code{\link{ext_query}}
+#' @seealso [ext_query()]
 #'
 #' @name extensions
 NULL
@@ -118,20 +118,20 @@ parse_params <- function(q, params) {
 }
 
 #' @describeIn extensions
-#' The \code{content_response} function checks if the request's
+#' The `content_response` function checks if the request's
 #' response is in accordance with the allowed status codes and content-types.
 #' It returns the parsed content response.
 #'
-#' @param res     a \code{httr} \code{response} object.
+#' @param res     a `httr` `response` object.
 #'
-#' @param status_codes  a \code{character} vector with successful
+#' @param status_codes  a `character` vector with successful
 #' status codes.
 #'
-#' @param content_types a \code{character} vector with all acceptable
+#' @param content_types a `character` vector with all acceptable
 #' responses' content type.
 #'
 #' @return
-#' The \code{content_response()} function returns a \code{list} data structure
+#' The `content_response()` function returns a `list` data structure
 #' representing the JSON file received in HTTP response
 #'
 #' @export
@@ -171,15 +171,15 @@ content_response <- function(res, status_codes, content_types) {
 }
 
 #' @describeIn extensions
-#' The \code{check_query_verb()} function allows you to define which HTTP
+#' The `check_query_verb()` function allows you to define which HTTP
 #' verbs are allowed. It is useful for establishing which verbs will be
 #' supported by an extension.
 #'
-#' @param q       a \code{RSTACQuery} object.
+#' @param q       a `RSTACQuery` object.
 #'
-#' @param verbs   a \code{character} vector with allowed HTTP request methods
+#' @param verbs   a `character` vector with allowed HTTP request methods
 #'
-#' @param msg     a \code{character} with a personalized error message
+#' @param msg     a `character` with a personalized error message
 #'
 #' @export
 check_query_verb <- function(q, verbs, msg = NULL) {
@@ -193,14 +193,14 @@ check_query_verb <- function(q, verbs, msg = NULL) {
 }
 
 #' @describeIn extensions
-#' The \code{check_subclass()} function specifies which type of query
-#' objects (\code{RSTACQuery}) or document objects (\code{RSTACDocument})
+#' The `check_subclass()` function specifies which type of query
+#' objects (`RSTACQuery`) or document objects (`RSTACDocument`)
 #' are expected in the function extension.
 #'
-#' @param x            either a \code{RSTACQuery} object expressing a STAC query
-#' criteria or any \code{RSTACDocument}.
+#' @param x            either a `RSTACQuery` object expressing a STAC query
+#' criteria or any `RSTACDocument`.
 #'
-#' @param subclasses   a \code{character} vector with all allowed S3 subclasses
+#' @param subclasses   a `character` vector with all allowed S3 subclasses
 #'
 #' @export
 check_subclass <- function(x, subclasses) {
@@ -209,8 +209,8 @@ check_subclass <- function(x, subclasses) {
 }
 
 #' @describeIn extensions
-#' The \code{subclass()} function returns a \code{character} representing the
-#' subclass name of either \code{RSTACQuery} or \code{RSTACDocument} S3 classes.
+#' The `subclass()` function returns a `character` representing the
+#' subclass name of either `RSTACQuery` or `RSTACDocument` S3 classes.
 #'
 #' @export
 subclass <- function(x) {
@@ -219,14 +219,14 @@ subclass <- function(x) {
 }
 
 #' @describeIn extensions
-#' The \code{omit_query_params()} function was created to omit the paths that
+#' The `omit_query_params()` function was created to omit the paths that
 #'  are defined as query parameters to simplify the creation of a query.
 #'  Therefore, use this method only in endpoints that specify a parameter in
 #'  their paths.
 #'
-#' @param q       a \code{RSTACQuery} object.
+#' @param q       a `RSTACQuery` object.
 #'
-#' @param names   a \code{character} vector with the names do omit.
+#' @param names   a `character` vector with the names do omit.
 #'
 #' @export
 omit_query_params <- function(q, names) {

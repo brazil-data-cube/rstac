@@ -11,8 +11,8 @@ stac_version(x, ...)
 \item{x}{either a \code{RSTACQuery} object expressing a STAC query
 criteria or any \code{RSTACDocument}.}
 
-\item{...}{config parameters to be passed to \link[httr]{GET}
-method, such as \link[httr]{add_headers} or \link[httr]{set_cookies}.}
+\item{...}{config parameters to be passed to \link[httr:GET]{GET}
+method, such as \link[httr:add_headers]{add_headers} or \link[httr:set_cookies]{set_cookies}.}
 }
 \value{
 The \code{stac_version()} function returns a \code{character} STAC API
