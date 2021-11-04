@@ -81,7 +81,7 @@
 #' # POST request
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1",
-#'         bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) %>%
+#'         bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
 #'  post_request()
 #' }
 #'
