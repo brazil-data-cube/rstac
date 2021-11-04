@@ -103,7 +103,7 @@ Item Collection (a geojson containing a feature collection).
 ``` r
 it_obj <- s_obj %>% 
     stac_search(collections = "CB4_64_16D_STK-1",
-                bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) %>%
+                bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
     get_request()
 
 it_obj
@@ -134,7 +134,7 @@ on a HTTP request.
 ``` r
 it_obj <- s_obj %>% 
     stac_search(collections = "CB4_64_16D_STK-1",
-                bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) %>%
+                bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
     get_request(add_headers("x-api-key" = "MY-TOKEN"))
 ```
 
