@@ -1,6 +1,6 @@
 Package: rstac
 Title: Client Library for SpatioTemporal Asset Catalog
-Version: 0.9.1-4
+Version: 0.9.1-5
 Authors@R:
     c(person("Brazil Data Cube Team",
             email = "brazildatacube@inpe.br",
@@ -8,14 +8,15 @@ Authors@R:
     person(given = "National Institute for Space Research (INPE)",
             role = c("cph")))
 Description: Provides functions to access, search and download spacetime earth
-    observation data via SpatioTemporal Asset Catalog (STAC). This package
+    observation data via SpatioTemporal Asset Catalog (STAC). This package 
     supports the version 1.0.0 of the STAC specification
-    (<http://stacspec.org>).
+    (<https://github.com/radiantearth/stac-spec>). 
+    For further details see Simoes et al. (2021) <doi:10.1109/IGARSS47720.2021.9553518>.
 License: MIT + file LICENSE
 URL: https://github.com/brazil-data-cube/rstac
 BugReports: https://github.com/brazil-data-cube/rstac/issues
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends:
     R (>= 3.5)
 Imports:
@@ -23,8 +24,10 @@ Imports:
     crayon,
     utils,
     magrittr,
-    jsonlite
+    jsonlite,
+    lifecycle
 Suggests:
     covr,
     testthat,
     vcr
+Roxygen: list(markdown = TRUE)

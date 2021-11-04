@@ -1,7 +1,7 @@
 #' @title Endpoint functions
 #'
 #' @description
-#' The \code{items} function implements WFS3
+#' The `items` function implements WFS3
 #' \code{/collections/\{collectionId\}/items}, and
 #' \code{/collections/\{collectionId\}/items/\{featureId\}} endpoints.
 #'
@@ -14,32 +14,32 @@
 #' }
 #'
 #' The endpoint \code{/collections/\{collectionId\}/items} accepts the same
-#' filters parameters of \code{\link{stac_search}} function.
+#' filters parameters of [stac_search()] function.
 #'
-#' @param q           a \code{RSTACQuery} object expressing a STAC query
+#' @param q           a `RSTACQuery` object expressing a STAC query
 #' criteria.
 #'
-#' @param feature_id  a \code{character} with item id to be fetched.
-#' Only works if the \code{collection_id} is informed. This is equivalent to
+#' @param feature_id  a `character` with item id to be fetched.
+#' Only works if the `collection_id` is informed. This is equivalent to
 #' the endpoint \code{/collections/\{collectionId\}/items/\{featureId\}}.
 #'
-#' @param datetime    a \code{character} with a date-time or an interval.
+#' @param datetime    a `character` with a date-time or an interval.
 #' Date and time strings needs to conform RFC 3339. Intervals are
-#' expressed by separating two date-time strings by \code{'/'} character.
-#' Open intervals are expressed by using \code{'..'} in place of date-time.
+#' expressed by separating two date-time strings by `'/'` character.
+#' Open intervals are expressed by using `'..'` in place of date-time.
 #'
 #' Examples:
 #' \itemize{
-#'   \item A date-time: \code{"2018-02-12T23:20:50Z"}
-#'   \item A closed interval: \code{"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"}
-#'   \item Open intervals: \code{"2018-02-12T00:00:00Z/.."} or
-#'     \code{"../2018-03-18T12:31:12Z"}
+#'   \item A date-time: `"2018-02-12T23:20:50Z"`
+#'   \item A closed interval: `"2018-02-12T00:00:00Z/2018-03-18T12:31:12Z"`
+#'   \item Open intervals: `"2018-02-12T00:00:00Z/.."` or
+#'     `"../2018-03-18T12:31:12Z"`
 #' }
 #'
-#' Only features that have a \code{datetime} property that intersects
-#' the interval or date-time informed in \code{datetime} are selected.
+#' Only features that have a `datetime` property that intersects
+#' the interval or date-time informed in `datetime` are selected.
 #'
-#' @param bbox        a \code{numeric} vector with only features that have a
+#' @param bbox        a `numeric` vector with only features that have a
 #' geometry that intersects the bounding box are selected. The bounding box is
 #' provided as four or six numbers, depending on whether the coordinate
 #' reference system includes a vertical axis (elevation or depth):
@@ -51,24 +51,24 @@
 #'           \item Upper right corner, coordinate axis 3 (optional) }
 #'
 #' The coordinate reference system of the values is WGS84
-#' longitude/latitude (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}).
+#' longitude/latitude (<http://www.opengis.net/def/crs/OGC/1.3/CRS84>).
 #' The values are in most cases the sequence of minimum longitude,
 #' minimum latitude, maximum longitude and maximum latitude. However,
 #' in cases where the box spans the antimeridian the first value
 #' (west-most box edge) is larger than the third value
 #' (east-most box edge).
 #'
-#' @param limit       an \code{integer} defining the maximum number of results
+#' @param limit       an `integer` defining the maximum number of results
 #' to return. If not informed it defaults to the service implementation.
 #'
 #' @seealso
-#' \code{\link{get_request}},  \code{\link{post_request}},
-#'  \code{\link{collections}}
+#' [get_request()],  [post_request()],
+#'  [collections()]
 #'
 #' @return
-#' A \code{RSTACQuery} object with the subclass \code{items} for
+#' A `RSTACQuery` object with the subclass `items` for
 #'  \code{/collections/{collection_id}/items} endpoint, or a
-#'  \code{item_id} subclass for
+#'  `item_id` subclass for
 #'  \code{/collections/{collection_id}/items/{feature_id}} endpoint,
 #'  containing all search field parameters to be provided to STAC API web
 #'  service.
