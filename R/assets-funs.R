@@ -95,14 +95,10 @@ assets_download <- function(items,
 
   # check if items length corresponds with items matched
   if (!missing(items_max)) {
-    if (items_max > items_length(items)) {
-      .warning(paste("The number of specified items is greater than the number",
-                     "of items length on your object. By default,",
-                     "items_max = %d"),
-               items_length(items))
 
+    if (items_max > items_length(items))
       items_max <- .parse_items_size(items)
-    }
+
   } else {
     # Queries that return without features
     if (items_length(items) == 0)
@@ -113,7 +109,7 @@ assets_download <- function(items,
   }
 
   # verify if progress bar can be shown
-  progress <- progress & (!is.null(items_max))
+  progress <- progress && (!is.null(items_max)) && items_max > 1
   if (progress)
     pb <- utils::txtProgressBar(min = 0, max = items_max, style = 3, width = 50)
 
