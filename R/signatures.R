@@ -119,7 +119,7 @@ sign_bdc <- function(access_token = NULL, ...) {
 #' # STACItemCollection object
 #' stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
 #'  stac_search(collections = "sentinel-2-l2a",
-#'              bbox = c(-47.02148, -42.53906, -12.98314, -17.35063)) %>%
+#'              bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
 #'  get_request()
 #'
 #' # signing each item href
