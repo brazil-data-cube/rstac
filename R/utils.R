@@ -24,6 +24,19 @@
   if (!length(bbox) %in% c(4, 6))
     .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
 
+  if (length(bbox) == 4) {
+
+    if (bbox[[2]] > bbox[[4]])
+      bbox <- bbox[c(1, 4, 3, 2)]
+  } else {
+
+    if (bbox[[2]] > bbox[[5]])
+      bbox <- bbox[c(1, 5, 3, 4, 2, 6)]
+
+    if (bbox[[3]] > bbox[[6]])
+      bbox <- bbox[c(1, 2, 6, 4, 5, 3)]
+  }
+
   return(bbox)
 }
 
@@ -134,7 +147,7 @@
 #' @noRd
 .parse_items_size <- function(items) {
 
-  if (items_length(items) != items_matched(items))
+  if (!is.null(items_matched(items)) && items_length(items) != items_matched(items))
     .message(paste("The length of items in your object, does not correspond",
                    "with the total of matched items. Consider using the",
                    "function `items_fetch()`. By default, items_max = %d"),
