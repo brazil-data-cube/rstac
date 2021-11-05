@@ -1,5 +1,12 @@
 # rstac (development version)
 
+# rstac 0.9.1-6 (Released 2021-11-05)
+
+* Fix examples and README where bbox parameter is in wrong order
+* Now items without the "match" property can be downloaded
+* Introduce a bbox checker
+* Fix appveyor bug
+
 # rstac 0.9.1-5 (Released 2021-11-01)
 
 * Add support to `lifecycle` package
