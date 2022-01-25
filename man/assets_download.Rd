@@ -2,6 +2,8 @@
 % Please edit documentation in R/assets-funs.R
 \name{assets_download}
 \alias{assets_download}
+\alias{assets_download.STACItemCollection}
+\alias{assets_download.STACItem}
 \title{Downloads assets via STAC API}
 \usage{
 assets_download(
@@ -10,10 +12,37 @@ assets_download(
   output_dir = ".",
   overwrite = FALSE,
   items_max = Inf,
-  progress = TRUE,
-  fn = NULL,
+  toggle_progress = TRUE,
+  download_fn = NULL,
   ...,
-  assets_name = deprecated()
+  assets_name = deprecated(),
+  fn = deprecated()
+)
+
+\method{assets_download}{STACItemCollection}(
+  items,
+  asset_names = NULL,
+  output_dir = ".",
+  overwrite = FALSE,
+  items_max = Inf,
+  toggle_progress = TRUE,
+  download_fn = NULL,
+  ...,
+  assets_name = deprecated(),
+  fn = deprecated()
+)
+
+\method{assets_download}{STACItem}(
+  items,
+  asset_names = NULL,
+  output_dir = ".",
+  overwrite = FALSE,
+  items_max = Inf,
+  progress = TRUE,
+  download_fn = NULL,
+  ...,
+  assets_name = deprecated(),
+  fn = deprecated()
 )
 }
 \arguments{
@@ -33,19 +62,19 @@ if FALSE a warning message is shown.}
 \item{items_max}{a \code{numeric} corresponding how many items will be
 downloaded.}
 
-\item{progress}{a \code{logical} indicating if a progress bar must be
-shown or not. Defaults to \code{TRUE}.}
+\item{...}{config parameters to be passed to \link[httr:GET]{GET},
+such as \link[httr:add_headers]{add_headers} or
+\link[httr:set_cookies]{set_cookies}.}
+
+\item{assets_name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+use \code{asset_names} parameter instead.}
 
 \item{fn}{a \code{function} to handle the list of assets for each item.
 Using this function you can change the hrefs for each asset, as well as use
 another request verb, such as POST.}
 
-\item{...}{config parameters to be passed to \link[httr:GET]{GET} or
-\link[httr:POST]{POST} methods, such as \link[httr:add_headers]{add_headers} or
-\link[httr:set_cookies]{set_cookies}.}
-
-\item{assets_name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-use \code{asset_names} parameter instead.}
+\item{progress}{a \code{logical} indicating if a progress bar must be
+shown or not. Defaults to \code{TRUE}.}
 }
 \value{
 The same \code{STACItemCollection} or \code{STACItem} object, with
@@ -62,7 +91,7 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
               datetime = "2019-06-01/2019-08-01") \%>\%
   stac_search() \%>\%
   get_request() \%>\%
-  assets_download(asset_names = "thumbnail", output_dir = ".",
+  assets_download(assets_name = "thumbnail", output_dir = ".",
   overwrite = FALSE)
 }
 
