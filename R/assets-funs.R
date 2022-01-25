@@ -235,21 +235,11 @@ NULL
 
 #' @rdname assets_function
 #' @export
-assets_list <- function(items, asset_names = NULL,
-                        sort = TRUE, gdal_vsi_resolution = TRUE,
-                        assets_names = deprecated()) {
+assets_gdalvfs <- function(items,
+                           asset_names = NULL,
+                           sort = TRUE,
+                           gdal_vsi_resolution = TRUE) {
 
-
-  if (lifecycle::is_present(assets_names)) {
-
-    # Signal the deprecation to the user
-    lifecycle::deprecate_soft("0.9.1-5",
-                              "rstac::assets_download(assets_names = )",
-                              "rstac::assets_download(asset_names = )")
-
-    # Deal with the deprecated argument for compatibility
-    asset_names <- assets_names
-  }
 
   if (is.null(asset_names))
     asset_names <- items_fields(items, "assets")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/assets-funs.R
 \name{assets_function}
 \alias{assets_function}
-\alias{assets_list}
+\alias{assets_gdalvfs}
 \alias{assets_select}
 \alias{assets_select.STACItemCollection}
 \alias{assets_select.STACItem}
@@ -11,12 +11,11 @@
 \alias{assets_filter.STACItem}
 \title{Assets functions}
 \usage{
-assets_list(
+assets_gdalvfs(
   items,
   asset_names = NULL,
   sort = TRUE,
-  gdal_vsi_resolution = TRUE,
-  assets_names = deprecated()
+  gdal_vsi_resolution = TRUE
 )
 
 assets_select(items, asset_names)
@@ -25,11 +24,11 @@ assets_select(items, asset_names)
 
 \method{assets_select}{STACItem}(items, asset_names)
 
-assets_filter(items, ..., fn = NULL)
+assets_filter(items, ..., filter_fn = NULL)
 
-\method{assets_filter}{STACItemCollection}(items, ..., fn = NULL)
+\method{assets_filter}{STACItemCollection}(items, ..., filter_fn = NULL, fn = deprecated())
 
-\method{assets_filter}{STACItem}(items, ..., fn = NULL)
+\method{assets_filter}{STACItem}(items, ..., filter_fn = NULL, fn = deprecated())
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
@@ -45,13 +44,13 @@ in increasing order. By default, the dates are sorted.}
 included in the URL of each asset. The following schemes are supported:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 
-\item{assets_names}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-use \code{asset_names} parameter instead.}
-
 \item{...}{additional arguments. See details.}
 
-\item{fn}{a \code{function} that will be used to filter the attributes
-listed in the properties.}
+\item{filter_fn}{a \code{function} that will be used to filter the
+attributes listed in the properties.}
+
+\item{assets_names}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+use \code{asset_names} parameter instead.}
 }
 \value{
 a \code{list} with the attributes of date, bands and paths.
