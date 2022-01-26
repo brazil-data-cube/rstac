@@ -130,9 +130,10 @@
 #' @return A `character` with the validate polygon.
 #'
 #' @noRd
-.parse_geometry <- function(geom) {
+.parse_intersects <- function(geom) {
 
-  # TODO: validate polygon
+  if (!is.list(geom))
+    .error("The 'intersects' parameter must be a list.")
   geom
 }
 
@@ -312,9 +313,6 @@
 
   obj_name <- as.character(substitute(obj))
 
-  if (missing(obj))
-    .error("Param `%s` is missing.", obj_name)
-
   if (!inherits(obj, expected))
     .error("Invalid %s value in `%s` param.",
            paste0("`", expected, "`", collapse = " or "), obj_name)
@@ -451,7 +449,7 @@
 #' @export
 stac_version <- function(x, ...) {
 
-  UseMethod("stac_version")
+  UseMethod("stac_version", x)
 }
 
 #' @title Utility functions
@@ -500,3 +498,165 @@ stac_version <- function(x, ...) {
     x <- list()
   utils::modifyList(x, y, keep.null = TRUE)
 }
+
+.deprec_parameter <- function(deprec_var, dest_var, deprec_version, env) {
+
+  dest_chr <- as.character(substitute(dest_var, env = environment()))
+  deprec_chr <- as.character(substitute(deprec_var, env = environment()))
+
+  if (!exists(deprec_chr, envir = env))
+    return(invisible(NULL))
+
+  # TODO: remove s3 class
+  called_fun <- sys.call(-1)[[1]]
+
+  .message(
+    paste("The parameter", deprec_chr, "in", called_fun, "is deprecated in version",
+          deprec_version, "of rstac.", "Please use the", dest_chr, "parameter instead.")
+  )
+  assign(dest_chr, get(deprec_chr, envir = env), envir = env)
+}
+
+# nocov start
+links_filter <- function(x, ..., filter_fn = NULL) {
+
+  stopifnot("links" %in% names(x))
+
+  # check items parameter
+  check_subclass(x, c("STACItem", "STACItemCollection", "STACCatalog",
+                      "STACCollection", "STACCollectionList"))
+
+  dots <- substitute(list(...))[-1]
+
+  if (length(dots) > 0) {
+
+    if (!is.null(names(dots)))
+      .error("Invalid filter arguments.")
+
+    for (i in seq_along(dots)) {
+
+      sel <- vapply(x$links, function(l) {
+        eval(dots[[i]], envir = l)
+      }, logical(1))
+
+      x$links <- x$links[sel]
+    }
+  }
+
+  if (!is.null(filter_fn)) {
+
+    sel <- vapply(x$links, function(l) {
+      filter_fn(l$links)
+    }, logical(1))
+
+    x$links <- x$links[sel]
+  }
+
+  x$links
+}
+
+
+.field_filter <- function(x, field, ..., filter_fn = NULL) {
+
+  stopifnot(field %in% names(x))
+
+  x <- x[[field]]
+  stopifnot(!is.atomic(x))
+
+  dots <- .check_unnamed(.capture_dots(...))
+
+  if (length(dots) > 0) {
+
+    if (!is.null(names(dots)))
+      .error("Invalid filter arguments.")
+
+    for (i in seq_along(dots)) {
+
+      sel <- vapply(x, function(xi) {
+        eval(dots[[i]], envir = xi)
+      }, logical(1))
+
+      x <- x[sel]
+    }
+  }
+
+  if (!is.null(filter_fn)) {
+
+    sel <- vapply(x, function(xi) {
+      filter_fn(xi)
+    }, logical(1))
+
+    x <- x[sel]
+  }
+
+  x
+}
+
+.field_apply <- function(x, field, apply_fn, ...) {
+
+  stopifnot(field %in% names(x))
+
+  x <- x[[field]]
+  stopifnot(!is.atomic(x))
+
+  lapply(x, apply_fn, ...)
+}
+
+.field_mutate <- function(x, field, ..., apply_fn = NULL) {
+
+  stopifnot(field %in% names(x))
+
+  x <- x[[field]]
+  stopifnot(!is.atomic(x))
+
+  dots <- .check_named(.capture_dots(...))
+  stopifnot(length(dots) > 0 && is.null(apply_fn))
+
+  if (length(dots) > 0) {
+
+    if (!is.null(names(dots)))
+      .error("Invalid filter arguments.")
+
+    value_d <- lapply(dots, function(di) {
+
+      lapply(x, function(xi) eval(di, envir = xi))
+    })
+  }
+
+  if (!is.null(apply_fn)) {
+
+    value_fn <- vapply(x, function(xi) {
+      apply_fn(xi)
+    }, logical(1))
+
+    x <- x[value_fn]
+  }
+
+  x
+}
+
+.capture_dots <- function(...) {
+
+  lapply(substitute(list(...), env = environment()), unlist, recursive = F)[-1]
+}
+
+.is_named <- function(x) {
+
+  !is.null(names(x)) && all(nzchar(names(x)))
+}
+
+.check_named <- function(x) {
+
+  stopifnot(.is_named(x))
+
+  x
+}
+
+.check_unnamed <- function(x) {
+
+  stopifnot(!.is_named(x))
+
+  x
+}
+
+# nocov end
