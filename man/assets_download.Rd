@@ -12,7 +12,7 @@ assets_download(
   output_dir = ".",
   overwrite = FALSE,
   items_max = Inf,
-  toggle_progress = TRUE,
+  progress = TRUE,
   download_fn = NULL,
   ...,
   assets_name = deprecated(),
@@ -25,7 +25,7 @@ assets_download(
   output_dir = ".",
   overwrite = FALSE,
   items_max = Inf,
-  toggle_progress = TRUE,
+  progress = TRUE,
   download_fn = NULL,
   ...,
   assets_name = deprecated(),
@@ -62,6 +62,13 @@ if FALSE a warning message is shown.}
 \item{items_max}{a \code{numeric} corresponding how many items will be
 downloaded.}
 
+\item{progress}{a \code{logical} indicating if a progress bar must be
+shown or not. Defaults to \code{TRUE}.}
+
+\item{download_fn}{a \code{function} to handle the list of assets for each item.
+Using this function you can change the hrefs for each asset, as well as use
+another request verb, such as POST.}
+
 \item{...}{config parameters to be passed to \link[httr:GET]{GET},
 such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.}
@@ -69,12 +76,8 @@ such as \link[httr:add_headers]{add_headers} or
 \item{assets_name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 use \code{asset_names} parameter instead.}
 
-\item{fn}{a \code{function} to handle the list of assets for each item.
-Using this function you can change the hrefs for each asset, as well as use
-another request verb, such as POST.}
-
-\item{progress}{a \code{logical} indicating if a progress bar must be
-shown or not. Defaults to \code{TRUE}.}
+\item{fn}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+use \code{download_fn} parameter instead.}
 }
 \value{
 The same \code{STACItemCollection} or \code{STACItem} object, with

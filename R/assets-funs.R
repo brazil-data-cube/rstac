@@ -27,9 +27,12 @@
 #' @param progress    a `logical` indicating if a progress bar must be
 #'  shown or not. Defaults to `TRUE`.
 #'
-#' @param fn          a `function` to handle the list of assets for each item.
+#' @param download_fn a `function` to handle the list of assets for each item.
 #'  Using this function you can change the hrefs for each asset, as well as use
 #'  another request verb, such as POST.
+#'
+#' @param fn          `r lifecycle::badge('deprecated')`
+#'  use `download_fn` parameter instead.
 #'
 #' @param ...         config parameters to be passed to [GET][httr::GET],
 #'  such as [add_headers][httr::add_headers] or
@@ -58,7 +61,7 @@ assets_download <- function(items,
                             output_dir = ".",
                             overwrite = FALSE,
                             items_max = Inf,
-                            toggle_progress = TRUE,
+                            progress = TRUE,
                             download_fn = NULL, ...,
                             assets_name = deprecated(),
                             fn = deprecated()) {
@@ -78,7 +81,7 @@ assets_download.STACItemCollection <- function(items,
                                                output_dir = ".",
                                                overwrite = FALSE,
                                                items_max = Inf,
-                                               toggle_progress = TRUE,
+                                               progress = TRUE,
                                                download_fn = NULL, ...,
                                                assets_name = deprecated(),
                                                fn = deprecated()) {
@@ -118,14 +121,14 @@ assets_download.STACItemCollection <- function(items,
   }
 
   # verify if progress bar can be shown
-  toggle_progress <- toggle_progress && (!is.null(items_max)) && items_max > 1
+  progress <- progress && (!is.null(items_max)) && items_max > 1
 
-  if (toggle_progress)
+  if (progress)
     pb <- utils::txtProgressBar(min = 0, max = items_max, style = 3, width = 50)
 
   for (i in seq_len(items_max)) {
 
-    if (toggle_progress)
+    if (progress)
       utils::setTxtProgressBar(pb, i)
 
     items$features[[i]] <- .asset_download(
@@ -137,7 +140,7 @@ assets_download.STACItemCollection <- function(items,
   }
 
   # close progress bar
-  if (toggle_progress)
+  if (progress)
     close(pb)
 
   return(items)
@@ -195,16 +198,13 @@ assets_download.STACItem <- function(items,
 #'  For the URL you can add the GDAL library drivers for the following schemes:
 #'  HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 #'
-#' @param items        a `STACItemCollection` object representing
+#' @param items                a `STACItemCollection` object representing
 #'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
 #'
-#' @param assets_names `r lifecycle::badge('deprecated')`
-#'  use `asset_names` parameter instead.
-#'
-#' @param asset_names  a `character` with the assets names to be
+#' @param asset_names         a `character` with the assets names to be
 #'  filtered. If `NULL` (default) all assets will be returned..
 #'
-#' @param sort         a `logical` if true the dates will be sorted
+#' @param sort                a `logical` if true the dates will be sorted
 #'  in increasing order. By default, the dates are sorted.
 #'
 #' @param gdal_vsi_resolution a `logical`  if true, gdal drivers are
@@ -215,6 +215,10 @@ assets_download.STACItem <- function(items,
 #'
 #' @param filter_fn           a `function` that will be used to filter the
 #'  attributes listed in the properties.
+#'
+#'
+#' @param fn                 `r lifecycle::badge('deprecated')`
+#'  use `filter_fn` parameter instead.
 #'
 #' @return a `list` with the attributes of date, bands and paths.
 #'
@@ -227,7 +231,7 @@ assets_download.STACItem <- function(items,
 #'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
 #'  get_request() %>% items_fetch(progress = FALSE)
 #'
-#' stac_item %>% assets_list(assets_names = c("EVI", "NDVI"))
+#' stac_item %>% assets_gdalvfs(asset_names = c("EVI", "NDVI"))
 #' }
 #'
 #' @name assets_function
@@ -332,6 +336,16 @@ assets_filter.STACItemCollection <- function(items, ...,
                                              filter_fn = NULL,
                                              fn = deprecated()) {
 
+
+  if (!missing(fn))
+
+    filter_fn <- .deprec_parameter(
+      deprec_var = fn,
+      dest_var = filter_fn,
+      deprec_version = "0.9.1-5",
+      env = environment()
+    )
+
   dots <- substitute(list(...))[-1]
 
   if (length(dots) > 0) {
@@ -382,6 +396,15 @@ assets_filter.STACItemCollection <- function(items, ...,
 assets_filter.STACItem <- function(items, ...,
                                    filter_fn = NULL,
                                    fn = deprecated()) {
+
+  if (!missing(fn))
+
+    filter_fn <- .deprec_parameter(
+      deprec_var = fn,
+      dest_var = filter_fn,
+      deprec_version = "0.9.1-5",
+      env = environment()
+    )
 
   dots <- substitute(list(...))[-1]
 

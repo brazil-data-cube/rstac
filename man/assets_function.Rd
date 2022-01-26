@@ -49,8 +49,8 @@ HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 \item{filter_fn}{a \code{function} that will be used to filter the
 attributes listed in the properties.}
 
-\item{assets_names}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-use \code{asset_names} parameter instead.}
+\item{fn}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+use \code{filter_fn} parameter instead.}
 }
 \value{
 a \code{list} with the attributes of date, bands and paths.
@@ -70,7 +70,7 @@ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
         bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
  get_request() \%>\% items_fetch(progress = FALSE)
 
-stac_item \%>\% assets_list(assets_names = c("EVI", "NDVI"))
+stac_item \%>\% assets_gdalvfs(asset_names = c("EVI", "NDVI"))
 }
 
 }
