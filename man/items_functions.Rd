@@ -25,6 +25,8 @@
 \alias{items_assets.STACItemCollection}
 \alias{items_filter}
 \alias{items_reap}
+\alias{items_reap.STACItem}
+\alias{items_reap.STACItemCollection}
 \alias{items_fields}
 \alias{items_fields.STACItemCollection}
 \alias{items_fields.STACItem}
@@ -32,6 +34,9 @@
 \alias{items_sign}
 \alias{items_sign.STACItemCollection}
 \alias{items_sign.STACItem}
+\alias{items_apply}
+\alias{items_apply.STACItemCollection}
+\alias{items_apply.STACItem}
 \title{STACItemCollection functions}
 \usage{
 items_length(items)
@@ -80,6 +85,10 @@ items_filter(items, ..., filter_fn = NULL)
 
 items_reap(items, ..., field = NULL)
 
+\method{items_reap}{STACItem}(items, ..., field = NULL)
+
+\method{items_reap}{STACItemCollection}(items, ..., field = NULL)
+
 items_fields(items, ..., field = NULL)
 
 \method{items_fields}{STACItemCollection}(items, ..., field = NULL)
@@ -93,6 +102,12 @@ items_sign(items, ..., sign_fn = NULL)
 \method{items_sign}{STACItemCollection}(items, ..., sign_fn = NULL)
 
 \method{items_sign}{STACItem}(items, ..., sign_fn = NULL)
+
+items_apply(items, ..., field, apply_fn = NULL)
+
+\method{items_apply}{STACItemCollection}(items, ..., field, apply_fn = NULL)
+
+\method{items_apply}{STACItem}(items, ..., field, apply_fn = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
@@ -124,6 +139,9 @@ subfields values from the \code{RSTACDocument} objects.}
 
 \item{sign_fn}{a \code{function} that receives an item as parameter
 and returns an item signed.}
+
+\item{apply_fn}{a \code{function} that is applicable for any property of
+an item.}
 }
 \value{
 \itemize{

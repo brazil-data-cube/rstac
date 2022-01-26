@@ -56,9 +56,6 @@
 #'  first item? if not a `list` with all assets name will be returned. Default
 #'  is `FALSE`.
 #'
-#' @param filter_fn       a `function` that receives an item that should
-#' evaluate a `logical` value.
-#'
 #' @param field           a `character` with the names of the field to
 #'  get the subfields values.
 #'
@@ -66,6 +63,12 @@
 #'
 #' @param sign_fn         a `function` that receives an item as parameter
 #' and returns an item signed.
+#'
+#' @param apply_fn         a `function` that is applicable for any property of
+#'  an item.
+#'
+#' @param filter_fn       a `function` that receives an item that should
+#' evaluate a `logical` value.
 #'
 #' @param ...             additional arguments. See details.
 #'
@@ -580,6 +583,40 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #' @export
 items_reap <- function(items, ..., field = NULL) {
 
+  UseMethod("items_reap", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_reap.STACItem <- function(items, ..., field = NULL) {
+
+  if (items_length(items) == 0) return(NULL)
+
+  dots <- substitute(list(...))[-1]
+  if (!is.character(dots)) dots <- as.character(dots)
+
+  if (length(dots) > 0 && length(field) > 0)
+    .error("Only one of the parameters '...' or 'field' must be supplied.")
+
+  if (length(field) == 0 && length(dots) == 0)
+    return(items)
+
+  values <- items[c(dots, field)]
+
+  if (all(vapply(values, is.null, logical(1))))
+    .error("The provided field does not exist.")
+
+  if (all(vapply(values, is.atomic, logical(1))))
+    return(unlist(values))
+  values
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_reap.STACItemCollection <- function(items, ..., field = NULL) {
+
   # checks if the object is STACItemCollections
   if (items_length(items) == 0) return(NULL)
 
@@ -760,6 +797,68 @@ items_sign.STACItem <- function(items, ..., sign_fn = NULL) {
   }
 
   items <- sign_fn(items)
+
+  items
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_apply <- function(items, ..., field, apply_fn = NULL) {
+
+  UseMethod("items_apply", items)
+}
+
+
+#' @rdname items_functions
+#'
+#' @export
+items_apply.STACItemCollection <- function(items, ..., field, apply_fn = NULL) {
+
+  if (is.null(apply_fn)) {
+    return(items)
+  }
+
+  stopifnot(length(field) == 1)
+
+  if (!is.null(items_matched(items))) {
+    if (items_length(items) != items_matched(items))
+      .message(paste("The number of items in this object does not match the",
+                     "total number of items in the item. If you want to get",
+                     "all items, use `items_fetch()`"))
+  }
+
+  # assign each item obj
+  items[["features"]] <- lapply(items[["features"]], function(item) {
+
+    stopifnot(all(field %in% names(item)))
+
+    item[[field]] <- vapply(item[[field]], function(x) {
+      x <- apply_fn(x)
+
+      x
+    }, FUN.VALUE = class(item[[field]]))
+
+    item
+  })
+
+  items
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_apply.STACItem <- function(items, ..., field, apply_fn = NULL) {
+
+  if (is.null(apply_fn)) {
+    return(items)
+  }
+
+  items[[field]] <- vapply(items[[field]], function(x) {
+    x <- apply_fn(x)
+
+    x
+  }, FUN.VALUE = class(items[[field]]))
 
   items
 }
