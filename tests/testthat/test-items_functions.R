@@ -9,6 +9,12 @@ testthat::test_that("items functions", {
         limit = 10) %>%
       get_request(.)
 
+    res_ext <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+      stac_search(collections = "CB4_64_16D_STK-1",
+                  limit = 10) %>%
+      ext_query("bdc:tile" %in% "022024") %>%
+      post_request(.)
+
     item_stac <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       collections(collection_id = "CB4_64_16D_STK-1") %>%
       items(feature_id = "CB4_64_16D_STK_v001_019022_2021-02-02_2021-02-17") %>%
@@ -146,6 +152,11 @@ testthat::test_that("items functions", {
 
     testthat::expect_s3_class(
       object = items_next(res),
+      class = "STACItemCollection"
+    )
+
+    testthat::expect_s3_class(
+      object = items_next(res_ext),
       class = "STACItemCollection"
     )
 

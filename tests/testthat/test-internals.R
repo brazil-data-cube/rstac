@@ -10,6 +10,11 @@ testthat::test_that("internals functions", {
     object = check_subclass(stac_obj, subclasses = c("stac"))
   )
 
+  # check for query for wrong verb
+  testthat::expect_error(
+    check_query_verb(q = stac_obj, verbs = c("DDDDD"))
+  )
+
   # subclass object
   testthat::expect_equal(
     object = subclass(stac_obj),
@@ -30,4 +35,18 @@ testthat::test_that("internals functions", {
   testthat::expect_message(
     .message("message function")
   )
+
+  testthat::expect_error(
+    .make_url("aaa", params = list(1))
+  )
 })
+
+# testthat::test_that("internals format functions", {
+#
+#   # skip cran check test
+#   testthat::skip_on_cran()
+#
+#   stac_obj <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/")
+#
+#
+# })
