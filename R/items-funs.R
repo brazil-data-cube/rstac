@@ -583,6 +583,8 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #' @export
 items_reap <- function(items, ..., field = NULL) {
 
+  if (items_length(items) == 0) return(NULL)
+
   UseMethod("items_reap", items)
 }
 
@@ -590,8 +592,6 @@ items_reap <- function(items, ..., field = NULL) {
 #'
 #' @export
 items_reap.STACItem <- function(items, ..., field = NULL) {
-
-  if (items_length(items) == 0) return(NULL)
 
   dots <- substitute(list(...))[-1]
   if (!is.character(dots)) dots <- as.character(dots)
@@ -602,7 +602,7 @@ items_reap.STACItem <- function(items, ..., field = NULL) {
   if (length(field) == 0 && length(dots) == 0)
     return(items)
 
-  values <- items[c(dots, field)]
+  values <- items[[c(dots, field)]]
 
   if (all(vapply(values, is.null, logical(1))))
     .error("The provided field does not exist.")
@@ -616,9 +616,6 @@ items_reap.STACItem <- function(items, ..., field = NULL) {
 #'
 #' @export
 items_reap.STACItemCollection <- function(items, ..., field = NULL) {
-
-  # checks if the object is STACItemCollections
-  if (items_length(items) == 0) return(NULL)
 
   dots <- substitute(list(...))[-1]
   if (!is.character(dots)) dots <- as.character(dots)
@@ -806,6 +803,10 @@ items_sign.STACItem <- function(items, ..., sign_fn = NULL) {
 #' @export
 items_apply <- function(items, ..., field, apply_fn = NULL) {
 
+  if (is.null(apply_fn)) {
+    return(items)
+  }
+
   UseMethod("items_apply", items)
 }
 
@@ -814,10 +815,6 @@ items_apply <- function(items, ..., field, apply_fn = NULL) {
 #'
 #' @export
 items_apply.STACItemCollection <- function(items, ..., field, apply_fn = NULL) {
-
-  if (is.null(apply_fn)) {
-    return(items)
-  }
 
   stopifnot(length(field) == 1)
 
@@ -833,11 +830,12 @@ items_apply.STACItemCollection <- function(items, ..., field, apply_fn = NULL) {
 
     stopifnot(all(field %in% names(item)))
 
-    item[[field]] <- vapply(item[[field]], function(x) {
-      x <- apply_fn(x)
+    x <- apply_fn(item[[field]])
 
-      x
-    }, FUN.VALUE = class(item[[field]]))
+    if (class(x) != class(item[[field]]))
+      .error("The return of function is different that was expected.")
+
+    item[[field]] <- x
 
     item
   })
@@ -850,15 +848,12 @@ items_apply.STACItemCollection <- function(items, ..., field, apply_fn = NULL) {
 #' @export
 items_apply.STACItem <- function(items, ..., field, apply_fn = NULL) {
 
-  if (is.null(apply_fn)) {
-    return(items)
-  }
+  x <- apply_fn(items[[field]])
 
-  items[[field]] <- vapply(items[[field]], function(x) {
-    x <- apply_fn(x)
+  if (class(x) != class(items[[field]]))
+    .error("The return of function is different that was expected.")
 
-    x
-  }, FUN.VALUE = class(items[[field]]))
+  items[[field]] <- x
 
   items
 }
