@@ -20,19 +20,56 @@ testthat::test_that("items functions", {
       items(feature_id = "CB4_64_16D_STK_v001_019022_2021-02-02_2021-02-17") %>%
       get_request(.)
 
+    items_ms <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+      stac_search(
+        collections = "sentinel-2-l2a",
+        datetime = "2020-01-01/2020-01-31",
+        limit = 1) %>%
+      post_request()
+
     # items_fetch---------------------------------------------------------------
     # error - given another object
     testthat::expect_error(items_fetch(list(res)))
 
     # ok - stac_collection_list object
     testthat::expect_equal(
-      object   = subclass(
+      object = subclass(
         rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
                       limit = 500) %>%
           get_request(.) %>%
           items_fetch()),
-      expected = "STACItemCollection")
+      expected = "STACItemCollection"
+    )
+
+    testthat::expect_equal(
+      object   = rstac::subclass(
+        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+          stac_search(collections = "S2-SEN2COR_10_16D_STK-1", limit = 10) %>%
+          ext_query("bdc:tile" %in% "078086") %>%
+          post_request() %>%
+          items_fetch()),
+      expected = "STACItemCollection"
+    )
+
+    testthat::expect_equal(
+      object = subclass(
+        suppressWarnings(
+          stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+            stac_search(collections = "io-lulc", limit = 1) %>%
+            ext_query("io:tile_id" %in% "60W") %>%
+            post_request() %>%
+            items_fetch())),
+      expected = "STACItemCollection"
+    )
+
+    testthat::expect_warning(
+      object = stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+        stac_search(collections = "io-lulc", limit = 1) %>%
+        ext_query("io:tile_id" %in% "60W") %>%
+        post_request() %>%
+        items_fetch()
+    )
 
     # items_length--------------------------------------------------------------
     # error - given another object
@@ -96,6 +133,20 @@ testthat::test_that("items functions", {
     # ok - return a numeric
     testthat::expect_true(is.numeric(items_matched(res)))
 
+    # ok - return a null
+    testthat::expect_null(suppressWarnings(items_matched(items_ms)))
+
+    # empty vector for invalid field
+    testthat::expect_length(
+      items_matched(items_ms, matched_field = "1232"),
+      n = 0
+    )
+
+    # invalid field
+    testthat::expect_warning(
+      items_matched(items_ms, matched_field = FALSE)
+    )
+
     # items_filter--------------------------------------------------------------
     testthat::expect_s3_class(
       object = items_filter(
@@ -135,12 +186,7 @@ testthat::test_that("items functions", {
 
     # items_bands---------------------------------------------------------------
     testthat::expect_equal(
-      object = class(items_bands(res)),
-      expected = "list"
-    )
-
-    testthat::expect_equal(
-      object = class(items_bands(item_stac)),
+      object = class(suppressMessages(items_bands(item_stac))),
       expected = "character"
     )
 
@@ -163,6 +209,142 @@ testthat::test_that("items functions", {
     testthat::expect_equal(
       object = items_length(items_next(res)),
       expected = 20
+    )
+
+    # items_reap----------------------------------------------------------------
+    # STACItemCollection
+    testthat::expect_equal(
+      object = class(items_reap(item_stac, field = c("properties", "datetime"))),
+      expected = "character"
+    )
+
+    testthat::expect_length(
+      object = items_reap(item_stac, field = c("properties", "datetime")),
+      n = 1
+    )
+
+    testthat::expect_error(items_reap(item_stac, FALSE))
+    testthat::expect_error(items_reap(item_stac, FALSE, field = FALSE))
+
+    testthat::expect_equal(
+      object = subclass(items_reap(item_stac)),
+      expected = "STACItem"
+    )
+
+    # STACItemCollection
+    testthat::expect_equal(
+      object = class(items_reap(res, field = c("properties", "datetime"))),
+      expected = "character"
+    )
+
+    testthat::expect_length(
+      object = items_reap(res, field = c("properties", "datetime")),
+      n = 10
+    )
+
+    copy_res <- res
+    copy_res$features <- NULL
+    testthat::expect_null(items_reap(copy_res))
+
+    testthat::expect_error(items_reap(res, FALSE))
+    testthat::expect_error(items_reap(res, FALSE, field = FALSE))
+
+    testthat::expect_equal(
+      object = class(items_reap(res)),
+      expected = "list"
+    )
+
+    # items_apply---------------------------------------------------------------
+    testthat::expect_equal(
+      object = subclass(items_apply(res)),
+      expected = "STACItemCollection"
+    )
+
+    testthat::expect_equal(
+      object = subclass(items_apply(res)),
+      expected = "STACItemCollection"
+    )
+
+    testthat::expect_error(
+      items_apply(res,
+                  field = c("properties", "datetime"),
+                  apply_fn = function(x) {x})
+    )
+
+    testthat::expect_error(
+      items_apply(res,
+                  field = c("propertiessdddd"),
+                  apply_fn = function(x) {x})
+    )
+
+    items_applied <- suppressMessages(
+      items_apply(
+        items = res,
+        field = c("properties"),
+        apply_fn = function(x) {
+          x[["eo:cloud_cover"]] <- x[["eo:cloud_cover"]] * 1.10
+          x
+        })
+    )
+
+    item_applied <- suppressMessages(
+      items_apply(
+        items = item_stac,
+        field = c("properties"),
+        apply_fn = function(x) {
+          x[["eo:cloud_cover"]] <- x[["eo:cloud_cover"]] * 1.10
+          x
+        })
+    )
+
+    testthat::expect_equal(
+      object = subclass(items_applied),
+      expected = "STACItemCollection"
+    )
+
+
+    testthat::expect_equal(
+      object = subclass(item_applied),
+      expected = "STACItem"
+    )
+
+    cc_origin <- items_reap(
+      items = item_stac,
+      field = c("properties", "eo:cloud_cover")
+    )
+
+    cc_applied <- items_reap(
+      items = item_applied,
+      field = c("properties", "eo:cloud_cover")
+    )
+
+    testthat::expect_equal(
+      object = cc_origin * 1.10,
+      expected = cc_applied
+    )
+
+    testthat::expect_error(
+      suppressMessages(
+        items_apply(
+          items = res,
+          field = c("properties"),
+          apply_fn = function(x) {
+            x[["eo:cloud_cover"]] <- x[["eo:cloud_cover"]] * 1.10
+            x[["eo:cloud_cover"]]
+          })
+      )
+    )
+
+    testthat::expect_error(
+      suppressMessages(
+        items_apply(
+          items = item_applied,
+          field = c("properties"),
+          apply_fn = function(x) {
+            x[["eo:cloud_cover"]] <- x[["eo:cloud_cover"]] * 1.10
+            x[["eo:cloud_cover"]]
+          })
+      )
     )
   })
 })

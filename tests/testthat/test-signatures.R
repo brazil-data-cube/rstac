@@ -18,13 +18,25 @@ testthat::test_that("signature functions", {
 
     # return the same object after signature?
     testthat::expect_s3_class(
-      object = items_sign(stac_items, sign_fn = sign_bdc("AAAA-BBB")),
+      object = stac_items %>% items_sign(sign_fn = sign_bdc("AAAA-BBB")),
+      class = c("STACItemCollection", "RSTACDocument")
+    )
+
+    # return the same object after signature?
+    testthat::expect_s3_class(
+      object = stac_items %>% items_sign(),
       class = c("STACItemCollection", "RSTACDocument")
     )
 
     # return the same object after signature?
     testthat::expect_s3_class(
       object = stac_item %>% items_sign(sign_fn = sign_bdc("AAAA-BBB")),
+      class = c("STACItem", "RSTACDocument")
+    )
+
+    # return the same object after signature?
+    testthat::expect_s3_class(
+      object = stac_item %>% items_sign(),
       class = c("STACItem", "RSTACDocument")
     )
 
@@ -36,7 +48,7 @@ testthat::test_that("signature functions", {
       gsub("^([^?]+)(\\?.*)?$", "\\2", href_items), "?access_token=AAAA-BBB"
     )
 
-    item_signed <- items_sign(stac_item, sign_fn =sign_bdc("AAAA-BBB"))
+    item_signed <- items_sign(stac_item, sign_fn = sign_bdc("AAAA-BBB"))
     href_item <- item_signed$assets[[1]]$href
 
     # is the token being added at the end of the url?
