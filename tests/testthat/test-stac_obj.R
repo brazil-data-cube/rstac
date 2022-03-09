@@ -391,6 +391,11 @@ testthat::test_that("stac collection object", {
       regexp = "###RSTACQuery"
     )
 
+    testthat::expect_output(
+      object = print(rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+                       rstac::collections()),
+      regexp = "https://brazildatacube.dpi.inpe.br/stac/"
+    )
 
     testthat::expect_equal(
       object   =  attributes(s_col)$query$endpoint,
