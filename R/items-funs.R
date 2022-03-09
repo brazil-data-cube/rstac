@@ -810,7 +810,6 @@ items_apply <- function(items, ..., field, apply_fn = NULL) {
   UseMethod("items_apply", items)
 }
 
-
 #' @rdname items_functions
 #'
 #' @export
