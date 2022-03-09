@@ -110,12 +110,7 @@ assets_download.STACItemCollection <- function(items,
 
     if (items_max > items_length(items))
       items_max <- .parse_items_size(items)
-
   } else {
-    # queries that return without features
-    if (items_length(items) == 0)
-      .error(paste("Query provided returned 0 items.",
-                   "Please verify your query."))
 
     items_max <- .parse_items_size(items)
   }
@@ -489,24 +484,3 @@ assets_filter.STACItem <- function(items, ...,
 
   return(item)
 }
-
-#' @title Helper function of `assets_download` function
-#'
-#' @description The `.file_ext` is function to extract the extension
-#' from a file
-#'
-#' @param asset_url  a `character` URL provided from a `stac_search`.
-#'
-#' @return A `character` of the extracted file extension.
-#'
-#' @noRd
-.file_ext <- function(asset_url) {
-
-  # remove query string from url
-  asset_url[[1]] <- sub("\\?.+", "", asset_url[[1]])
-
-  pos <- regexpr("\\.([[:alnum:]]+)$", asset_url[[1]])
-  if (pos < 0) return("")
-  return(substring(asset_url[[1]], pos + 1))
-}
-
