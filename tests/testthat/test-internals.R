@@ -15,6 +15,27 @@ testthat::test_that("internals functions", {
     check_query_verb(q = stac_obj, verbs = c("DDDDD"))
   )
 
+  testthat::expect_equal(
+    object = subclass(before_request(stac_obj)),
+    expected = "stac"
+  )
+
+  testthat::expect_error(
+    object = {
+      mock_obj <- stac_obj
+      class(mock_obj) <- "RSTACQuery"
+      after_response(mock_obj, res = NULL)
+    }
+  )
+
+  testthat::expect_error(
+    object = {
+      mock_obj <- stac_obj
+      class(mock_obj) <- "RSTACQuery"
+      endpoint(mock_obj)
+    }
+  )
+
   # subclass object
   testthat::expect_equal(
     object = subclass(stac_obj),

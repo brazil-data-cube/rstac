@@ -5,6 +5,15 @@ testthat::test_that("stac search object", {
     # skip cran check test
     testthat::skip_on_cran()
 
+    # no stac version detected
+    testthat::expect_error(
+      stac("https://landsatlook.usgs.gov/sat-api/stac") %>%
+        stac_search(
+          collections = "landsat-c2l2-sr",
+          datetime = "2019-01-01/2019-01-31",
+          limit = 1) %>%
+        post_request()
+    )
 
     # Error when creating the stac object by parameter bbox
     testthat::expect_error(
