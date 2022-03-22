@@ -240,7 +240,7 @@ testthat::test_that("assets functions", {
         object = items_assets(assets_select(stac_item, asset_names = "BAND13")),
         expected = "BAND13"
       )
-#
+
       # assets_gdalvfs----------------------------------------------------------
       testthat::expect_s3_class(
         object =  assets_append_gdalvfs(stac_items),
@@ -336,9 +336,27 @@ testthat::test_that("assets functions", {
         class = c("STACItemCollection", "RSTACDocument")
       )
 
+      testthat::expect_s3_class(
+        object = assets_filter(stac_item, filter_fn = function(x) {
+          if ("eo:bands" %in% names(x))
+            return(x$`eo:bands` < 6)
+          return(FALSE)
+        }),
+        class = c("STACItem", "RSTACDocument")
+      )
+
       # deprec param
       testthat::expect_message(
         object = assets_filter(stac_items, fn = function(x) {
+          if ("eo:bands" %in% names(x))
+            return(x$`eo:bands` < 6)
+          return(FALSE)
+        }),
+        regexp = "deprecated"
+      )
+
+      testthat::expect_message(
+        object = assets_filter(stac_item, fn = function(x) {
           if ("eo:bands" %in% names(x))
             return(x$`eo:bands` < 6)
           return(FALSE)
@@ -369,6 +387,11 @@ testthat::test_that("assets functions", {
       # an error is expected if the ellipses is named
       testthat::expect_error(
         assets_filter(stac_items, j = "a" < 20)
+      )
+
+      # an error is expected if the ellipses is named
+      testthat::expect_error(
+        assets_filter(stac_item, j = "a" < 20)
       )
 
       # an error is expected if the ellipses is named
