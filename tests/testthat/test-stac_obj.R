@@ -5,6 +5,39 @@ testthat::test_that("stac search object", {
     # skip cran check test
     testthat::skip_on_cran()
 
+    testthat::expect_warning(
+      stac("https://landsatlook.usgs.gov/sat-api/stac", force_version = "0.7.0")
+    )
+
+    testthat::expect_equal(
+      suppressWarnings(
+        endpoint(stac("https://landsatlook.usgs.gov/sat-api/stac",
+             force_version = "0.7.0")
+        )
+      ),
+      expected = "/stac"
+    )
+
+    testthat::expect_equal(
+      suppressWarnings(
+        endpoint(stac("https://landsatlook.usgs.gov/sat-api/stac",
+                      force_version = "0.8.1") %>%
+                   stac_search()
+
+        )
+      ),
+      expected = "/stac/search"
+    )
+
+    testthat::expect_equal(
+      suppressWarnings(
+        endpoint(stac("https://landsatlook.usgs.gov/sat-api/stac",
+                      force_version = "1.0.0")
+        )
+      ),
+      expected = "/"
+    )
+
     # no stac version detected
     testthat::expect_error(
       stac("https://landsatlook.usgs.gov/sat-api/stac") %>%

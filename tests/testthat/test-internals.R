@@ -62,12 +62,22 @@ testthat::test_that("internals functions", {
   )
 })
 
-# testthat::test_that("internals format functions", {
-#
-#   # skip cran check test
-#   testthat::skip_on_cran()
-#
-#   stac_obj <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/")
-#
-#
-# })
+testthat::test_that("internals response", {
+  vcr::use_cassette("stac_response_internals", {
+
+    bdc_catalog <- httr::GET("https://brazildatacube.dpi.inpe.br/stac/")
+    bdc_wrong_path <- httr::GET("https://brazildatacube.dpi.inpe.br/stac/dddd")
+
+    testthat::expect_error(
+      content_response(res = bdc_catalog,
+                       status_codes = c(300),
+                       content_types = "application/json")
+    )
+
+    testthat::expect_error(
+      content_response(res = bdc_wrong_path,
+                       status_codes = c(300),
+                       content_types = "application/json")
+    )
+  })
+})

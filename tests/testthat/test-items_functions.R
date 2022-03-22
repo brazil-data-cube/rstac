@@ -7,18 +7,43 @@ testthat::test_that("items functions", {
       stac_search(
         collections = "CB4_64_16D_STK-1",
         limit = 10) %>%
-      get_request(.)
+      get_request()
+
+    res_bbox <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+      stac_search(
+        collections = "CB4_64_16D_STK-1",
+        limit = 1,
+        datetime = "2017-01-01/2017-03-01",
+        bbox = c(-52.5732, -12.5975, -51.4893, -11.6522)) %>%
+      get_request()
+
+    intersects_geojson <- list(type = "Polygon",
+                               coordinates = structure(c(-52.5732, -51.4893,
+                                                         -51.4893, -52.5732,
+                                                         -52.5732, -12.5975,
+                                                         -12.5975, -11.6522,
+                                                         -11.6522, -12.5975),
+                                                       .Dim = c(1L, 5L, 2L))
+    )
+
+    res_geo <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+      stac_search(
+        collections = "CB4_64_16D_STK-1",
+        limit = 1,
+        datetime = "2017-01-01/2017-03-01",
+        intersects = intersects_geojson) %>%
+      post_request()
 
     res_ext <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       stac_search(collections = "CB4_64_16D_STK-1",
                   limit = 10) %>%
       ext_query("bdc:tile" %in% "022024") %>%
-      post_request(.)
+      post_request()
 
     item_stac <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       collections(collection_id = "CB4_64_16D_STK-1") %>%
       items(feature_id = "CB4_64_16D_STK_v001_019022_2021-02-02_2021-02-17") %>%
-      get_request(.)
+      get_request()
 
     items_ms <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
       stac_search(
@@ -42,15 +67,6 @@ testthat::test_that("items functions", {
       expected = "STACItemCollection"
     )
 
-    testthat::expect_equal(
-      object   = rstac::subclass(
-        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-          stac_search(collections = "S2-SEN2COR_10_16D_STK-1", limit = 10) %>%
-          ext_query("bdc:tile" %in% "078086") %>%
-          post_request() %>%
-          items_fetch()),
-      expected = "STACItemCollection"
-    )
 
     testthat::expect_equal(
       object = subclass(
@@ -186,7 +202,7 @@ testthat::test_that("items functions", {
 
     # items_bands---------------------------------------------------------------
     testthat::expect_equal(
-      object = class(suppressMessages(items_bands(item_stac))),
+      object = class(suppressWarnings(items_bands(item_stac))),
       expected = "character"
     )
 
@@ -194,6 +210,16 @@ testthat::test_that("items functions", {
     testthat::expect_s3_class(
       object = items_next(item_stac),
       class = "STACItem"
+    )
+
+    testthat::expect_s3_class(
+      object = items_next(res_geo),
+      class = "STACItemCollection"
+    )
+
+    testthat::expect_s3_class(
+      object = items_next(res_bbox),
+      class = "STACItemCollection"
     )
 
     testthat::expect_s3_class(

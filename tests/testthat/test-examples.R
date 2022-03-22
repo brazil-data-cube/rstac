@@ -134,14 +134,13 @@ testthat::test_that("examples rstac", {
       expected = "character")
 
     # test assets_list
-    testthat::expect_equal(
-      object = typeof(
-        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-          stac_search(collections = "CB4_64_16D_STK-1",
-                      limit = 10,
-                      datetime = "2017-08-01/2018-03-01") %>%
-          get_request() %>%
-          assets_list(assets_names = c("EVI", "NDVI"))),
-      expected = "list")
+    testthat::expect_s3_class(
+      object = suppressWarnings(stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+                                  stac_search(collections = "CB4_64_16D_STK-1",
+                                              limit = 10,
+                                              datetime = "2017-08-01/2018-03-01") %>%
+                                  get_request() %>%
+                                  assets_list(assets_names = c("EVI", "NDVI"))),
+      class = "STACItemCollection")
   })
 })
