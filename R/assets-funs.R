@@ -234,48 +234,33 @@ NULL
 
 #' @rdname assets_function
 #' @export
-assets_gdalvfs <- function(items,
-                           asset_names = NULL,
-                           sort = TRUE,
-                           gdal_vsi_resolution = TRUE) {
-
+assets_append_gdalvfs <- function(items,
+                                  asset_names = NULL,
+                                  sort = TRUE,
+                                  gdal_vsi_resolution = TRUE) {
 
   if (is.null(asset_names))
     asset_names <- items_fields(items, "assets")
 
-  timeline <- items_reap(items, field = c("properties", "datetime"))
-  index    <- seq_along(timeline)
-  if (sort) index <- order(timeline)
+  items_apply(items, field = "assets", apply_fn = function(x) {
 
-  timeline <- timeline[index]
-  assets   <- list(date = rep(timeline, length(unique(asset_names))))
+    stopifnot(all(asset_names %in% names(x)))
 
-  for (b in asset_names) {
+    assets_lst <- x[asset_names]
 
-    href <- items_reap(items, field = c("assets", b, "href"))[index]
+    assets_lst <- lapply(assets_lst, function(asset) {
+      url_scheme <- gsub("^(s3|http|https|gs)://.*$", "\\1", asset[["href"]])
 
-    if (gdal_vsi_resolution) {
+      asset[["href"]] <- .append_gdalvfs(
+        asset_href = asset[["href"]],
+        scheme = url_scheme
+      )
 
-      # for http or https schema
-      paste_index <- grepl("^http|[s]://.*", href)
-      if (any(paste_index))
-        href[paste_index] <- paste("/vsicurl", href[paste_index], sep = "/")
+      asset
+    })
 
-      # for S3 schema
-      paste_index <- grepl("^s3://.*", href)
-      if (any(paste_index))
-        href[paste_index] <- paste("/vsis3", gsub("^s3://(.*)$", "\\1",
-                                                  href[paste_index]), sep = "/")
-      # for gs schema
-      paste_index <- grepl("^gs://.*", href)
-      if (any(paste_index))
-        href[paste_index] <- paste("/vsigs", gsub("^gs://(.*)$", "\\1",
-                                                  href[paste_index]), sep = "/")
-    }
-    assets$band <- c(rep(b, length(href)), assets$band)
-    assets$path <- c(href,  assets$path)
-  }
-  assets
+    return(assets_lst)
+  })
 }
 
 #' @rdname assets_function

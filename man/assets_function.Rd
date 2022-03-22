@@ -2,7 +2,7 @@
 % Please edit documentation in R/assets-funs.R
 \name{assets_function}
 \alias{assets_function}
-\alias{assets_gdalvfs}
+\alias{assets_append_gdalvfs}
 \alias{assets_select}
 \alias{assets_select.STACItemCollection}
 \alias{assets_select.STACItem}
@@ -11,7 +11,7 @@
 \alias{assets_filter.STACItem}
 \title{Assets functions}
 \usage{
-assets_gdalvfs(
+assets_append_gdalvfs(
   items,
   asset_names = NULL,
   sort = TRUE,

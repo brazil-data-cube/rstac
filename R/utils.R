@@ -517,6 +517,53 @@ stac_version <- function(x, ...) {
   assign(dest_chr, get(deprec_chr, envir = env), envir = env)
 }
 
+#' @title Utility functions
+#'
+#' @name .append_gdalvfs
+#'
+#' @description Append the gdal virtual file system in an asset href.
+#'
+#' @param asset_href a `character` with the asset href.
+#'
+#' @param scheme     a `character` with the scheme from asset href
+#'
+#' @return a `character` with the gdal virtual file system appended.
+#'
+#' @noRd
+#'
+#' @export
+.append_gdalvfs <- function(asset_href, scheme) {
+
+  class(scheme) <- scheme
+
+  UseMethod(".append_gdalvfs", scheme)
+}
+
+#' @export
+.append_gdalvfs.http <- function(asset_href, scheme) {
+  paste("/vsicurl", asset_href, sep = "/")
+}
+
+#' @export
+.append_gdalvfs.https <- function(asset_href, scheme) {
+  paste("/vsicurl", asset_href, sep = "/")
+}
+
+#' @export
+.append_gdalvfs.s3 <- function(asset_href, scheme) {
+  paste("/vsis3", gsub("^s3://(.*)$", "\\1", asset_href), sep = "/")
+}
+
+#' @export
+.append_gdalvfs.gs <- function(asset_href, scheme) {
+  paste("/vsigs", gsub("^gs://(.*)$", "\\1", asset_href), sep = "/")
+}
+
+#' @export
+.append_gdalvfs.default <- function(asset_href, scheme) {
+  asset_href
+}
+
 # nocov start
 links_filter <- function(x, ..., filter_fn = NULL) {
 
