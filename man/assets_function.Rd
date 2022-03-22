@@ -2,7 +2,7 @@
 % Please edit documentation in R/assets-funs.R
 \name{assets_function}
 \alias{assets_function}
-\alias{assets_append_gdalvfs}
+\alias{assets_append_gdalvsi}
 \alias{assets_select}
 \alias{assets_select.STACItemCollection}
 \alias{assets_select.STACItem}
@@ -11,7 +11,7 @@
 \alias{assets_filter.STACItem}
 \title{Assets functions}
 \usage{
-assets_append_gdalvfs(
+assets_append_gdalvsi(
   items,
   asset_names = NULL,
   sort = TRUE,
@@ -70,7 +70,7 @@ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
         bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
  get_request() \%>\% items_fetch(progress = FALSE)
 
-stac_item \%>\% assets_append_gdalvfs(asset_names = c("EVI", "NDVI"))
+stac_item \%>\% assets_append_gdalvsi(asset_names = c("EVI", "NDVI"))
 }
 
 }

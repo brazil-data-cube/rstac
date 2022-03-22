@@ -44,7 +44,7 @@ x <- stac("http://brazildatacube.dpi.inpe.br/stac") \%>\%
   stac_search() \%>\%
   get_request()
 
-x \%>\% assets_append_gdalvfs()
+x \%>\% assets_append_gdalvsi()
 }
 
 }

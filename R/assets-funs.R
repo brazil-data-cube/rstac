@@ -226,7 +226,7 @@ assets_download.STACItem <- function(items,
 #'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
 #'  get_request() %>% items_fetch(progress = FALSE)
 #'
-#' stac_item %>% assets_append_gdalvfs(asset_names = c("EVI", "NDVI"))
+#' stac_item %>% assets_append_gdalvsi(asset_names = c("EVI", "NDVI"))
 #' }
 #'
 #' @name assets_function
@@ -234,7 +234,7 @@ NULL
 
 #' @rdname assets_function
 #' @export
-assets_append_gdalvfs <- function(items,
+assets_append_gdalvsi <- function(items,
                                   asset_names = NULL,
                                   sort = TRUE,
                                   gdal_vsi_resolution = TRUE) {
@@ -242,13 +242,13 @@ assets_append_gdalvfs <- function(items,
   if (is.null(asset_names))
     asset_names <- items_fields(items, "assets")
 
-  items_apply(items, field = "assets", apply_fn = function(x) {
+  items_apply(items, field = "assets", apply_fn = function(assets) {
 
-    stopifnot(all(asset_names %in% names(x)))
+    stopifnot(all(asset_names %in% names(assets)))
 
-    assets_lst <- x[asset_names]
+    assets_filtered <- assets[asset_names]
 
-    assets_lst <- lapply(assets_lst, function(asset) {
+    assets_filtered <- lapply(assets_filtered, function(asset) {
       url_scheme <- gsub("^(s3|http|https|gs)://.*$", "\\1", asset[["href"]])
 
       asset[["href"]] <- .append_gdalvfs(
@@ -259,7 +259,7 @@ assets_append_gdalvfs <- function(items,
       asset
     })
 
-    return(assets_lst)
+    return(assets_filtered)
   })
 }
 
