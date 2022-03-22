@@ -63,7 +63,7 @@ items_bands <- function(items) {
 #'   stac_search() %>%
 #'   get_request()
 #'
-#' x %>% assets_gdalvfs()
+#' x %>% assets_append_gdalvfs()
 #' }
 #'
 #' @export
@@ -77,7 +77,7 @@ assets_list <- function(items,
   lifecycle::deprecate_soft(
     when = "0.9.1-5",
     what = "rstac::assets_list()",
-    with = "rstac::assets_gdalvfs()"
+    with = "rstac::assets_append_gdalvfs()"
   )
 
   if (!missing(assets_names))
@@ -89,7 +89,7 @@ assets_list <- function(items,
       env = environment()
     )
 
-  assets_gdalvfs(
+  assets_append_gdalvfs(
     items = items,
     asset_names = asset_names,
     sort = sort,

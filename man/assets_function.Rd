@@ -70,7 +70,7 @@ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
         bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
  get_request() \%>\% items_fetch(progress = FALSE)
 
-stac_item \%>\% assets_gdalvfs(asset_names = c("EVI", "NDVI"))
+stac_item \%>\% assets_append_gdalvfs(asset_names = c("EVI", "NDVI"))
 }
 
 }
