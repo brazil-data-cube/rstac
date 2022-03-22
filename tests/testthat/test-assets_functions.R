@@ -243,12 +243,12 @@ testthat::test_that("assets functions", {
 
     # assets_gdalvfs----------------------------------------------------------
     testthat::expect_s3_class(
-      object =  assets_append_gdalvfs(stac_items),
+      object =  assets_append_gdalvsi(stac_items),
       class = c("STACItemCollection", "RSTACDocument")
     )
 
     testthat::expect_s3_class(
-      object =  assets_append_gdalvfs(stac_item),
+      object =  assets_append_gdalvsi(stac_item),
       class = c("STACItem", "RSTACDocument")
     )
 
@@ -258,7 +258,7 @@ testthat::test_that("assets functions", {
         mock_s3_obj <- stac_item
         mock_s3_obj[["assets"]][[1]][["href"]] <- "s3://abc.com"
 
-        x <- assets_append_gdalvfs(mock_s3_obj)
+        x <- assets_append_gdalvsi(mock_s3_obj)
         x[["assets"]][[1]][["href"]]
       },
       expected = "/vsis3/abc.com"
@@ -270,7 +270,7 @@ testthat::test_that("assets functions", {
         mock_gs_obj <- stac_item
         mock_gs_obj[["assets"]][[1]][["href"]] <- "gs://abc.com"
 
-        x <- assets_append_gdalvfs(mock_gs_obj)
+        x <- assets_append_gdalvsi(mock_gs_obj)
         x[["assets"]][[1]][["href"]]
       },
       expected = "/vsigs/abc.com"
@@ -282,7 +282,7 @@ testthat::test_that("assets functions", {
         mock_http_obj <- stac_item
         mock_http_obj[["assets"]][[1]][["href"]] <- "http://abc.com"
 
-        x <- assets_append_gdalvfs(mock_http_obj)
+        x <- assets_append_gdalvsi(mock_http_obj)
         x[["assets"]][[1]][["href"]]
       },
       expected = "/vsicurl/http://abc.com"
@@ -294,7 +294,7 @@ testthat::test_that("assets functions", {
         mock_https_obj <- stac_item
         mock_https_obj[["assets"]][[1]][["href"]] <- "https://abc.com"
 
-        x <- assets_append_gdalvfs(mock_https_obj)
+        x <- assets_append_gdalvsi(mock_https_obj)
         x[["assets"]][[1]][["href"]]
       },
       expected = "/vsicurl/https://abc.com"
@@ -306,7 +306,7 @@ testthat::test_that("assets functions", {
         mock_inv_obj <- stac_item
         mock_inv_obj[["assets"]][[1]][["href"]] <- "httpdds://abc.com"
 
-        x <- assets_append_gdalvfs(mock_inv_obj)
+        x <- assets_append_gdalvsi(mock_inv_obj)
         x[["assets"]][[1]][["href"]]
       },
       expected = "httpdds://abc.com"
