@@ -17,13 +17,14 @@ testthat::test_that("items functions", {
         bbox = c(-52.5732, -12.5975, -51.4893, -11.6522)) %>%
       get_request()
 
-    intersects_geojson <- list(type = "Polygon",
-                               coordinates = structure(c(-52.5732, -51.4893,
-                                                         -51.4893, -52.5732,
-                                                         -52.5732, -12.5975,
-                                                         -12.5975, -11.6522,
-                                                         -11.6522, -12.5975),
-                                                       .Dim = c(1L, 5L, 2L))
+    intersects_geojson <- list(
+      type = "Polygon",
+      coordinates = structure(c(-52.5732, -51.4893,
+                                -51.4893, -52.5732,
+                                -52.5732, -12.5975,
+                                -12.5975, -11.6522,
+                                -11.6522, -12.5975),
+                              .Dim = c(1L, 5L, 2L))
     )
 
     res_geo <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
@@ -65,6 +66,14 @@ testthat::test_that("items functions", {
           get_request(.) %>%
           items_fetch()),
       expected = "STACItemCollection"
+    )
+
+    testthat::expect_error(
+      object = {
+        mock_obj <- res_bbox
+        mock_obj$context$matched <- 0
+        items_fetch(mock_obj)
+      }
     )
 
 
@@ -236,6 +245,16 @@ testthat::test_that("items functions", {
       object = items_length(items_next(res)),
       expected = 20
     )
+
+    testthat::expect_error(
+      object = {
+        mock_obj <- res_geo
+        attributes(mock_obj)$query <- list(NULL)
+
+        items_next(mock_obj)
+      }
+    )
+
 
     # items_reap----------------------------------------------------------------
     # STACItemCollection

@@ -312,8 +312,11 @@ items_fetch.STACItemCollection <- function(items, ...,
   # verify if progress bar can be shown
   progress <- progress & (!is.null(matched) && (items_length(items) < matched))
   if (progress)
-    pb <- utils::txtProgressBar(min = items_length(items), max = matched,
-                                style = 3)
+    pb <- utils::txtProgressBar(
+      min = items_length(items),
+      max = matched,
+      style = 3
+    )
 
   while (TRUE) {
 

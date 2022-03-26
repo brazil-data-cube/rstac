@@ -426,6 +426,14 @@ testthat::test_that("stac collection object", {
       expected = "0.9.0"
     )
 
+    testthat::expect_equal(object = {
+      mock_obj <- s_col
+      attributes(mock_obj)$query <- NULL
+      stac_version(mock_obj)
+    },
+    expected = "0.9.0"
+    )
+
     # check print stac object
     testthat::expect_output(
       object = print(rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
@@ -476,6 +484,14 @@ testthat::test_that("stac object", {
   vcr::use_cassette("stac_obj", {
     # skip cran check test
     testthat::skip_on_cran()
+
+    stac_catalog <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+      get_request()
+
+    testthat::expect_equal(
+      object = stac_version(stac_catalog),
+      expected = "0.9.0"
+    )
 
     # check object class of stac
     testthat::expect_equal(
@@ -595,6 +611,14 @@ testthat::test_that("stac item object", {
     testthat::expect_equal(
       object   = items_matched(stac_item),
       expected = 1
+    )
+
+    testthat::expect_warning(
+      {
+        mock_obj <- list(stac_version = "0.78.0")
+        class(mock_obj) <- c("STACItemCollection", "RSTACDocument", "list")
+        items_matched(mock_obj)
+      }
     )
 
     # output test
