@@ -487,3 +487,40 @@ stac_version <- function(x, ...) {
     x <- list()
   utils::modifyList(x, y, keep.null = TRUE)
 }
+
+
+
+#' A function to safely retry the signing of MPC URLs
+#'
+#' @param .f The signing function
+#' @param .url url path for to be signed
+#' @param .req the previous request response that was sent for signing
+#' @param .n the number of times a request should be tried
+#' @param .item the item collection value passed to `.error` on error
+#'
+#' @return The updated response content list
+#'
+#' @noRd
+retry_mpc_request <- function(.f, .url, .req, .n, .item){
+
+  sleep_request <- function(s, f, c_url){
+      message(crayon::cyan(s))
+      Sys.sleep(as.numeric(gsub(".*in (.+) seconds.*", "\\1", s))+1)
+      f(c_url)
+  }
+
+  for (i in 1:.n){
+    # message(crayon::red(paste0("Attempt No.", i)))
+    try({
+      .req <- sleep_request( s=.req$message, f=.f, c_url=.url)
+      if ("token" %in% names(.req)){
+        return(.req)
+      } else if ("message" %in% names(.req)){
+        .req$message <- .req$message
+      } else {
+        .error("No collection found with id '%s'", .item$collection)
+      }
+    }, silent=FALSE)
+  }
+
+}

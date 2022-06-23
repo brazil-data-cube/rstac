@@ -111,6 +111,8 @@ sign_bdc <- function(access_token = NULL, ...) {
 #'  in the Microsoft service.
 #'  By default is used:
 #'  `"https://planetarycomputer.microsoft.com/api/sas/v1/token"`
+#' @param retry a logical to determine if a signing request should be retried if
+#'  the rate limit of the API is exceeded.
 #'
 #' @return a `function` that signs each item assets.
 #'
@@ -128,7 +130,7 @@ sign_bdc <- function(access_token = NULL, ...) {
 #' }
 #'
 #' @export
-sign_planetary_computer <- function(..., token_url = NULL) {
+sign_planetary_computer <- function(..., token_url = NULL, retry=FALSE) {
 
   default_endpoint <- "https://planetarycomputer.microsoft.com/api/sas/v1/token"
   if (!is.null(token_url))
@@ -152,19 +154,40 @@ sign_planetary_computer <- function(..., token_url = NULL) {
     obj_req
   }
 
+
   new_token <- function(item) {
 
     url <- paste0(default_endpoint, "/", item$collection)
 
-    tryCatch({
-      res_content <- httr::content(httr::GET(url, ...), encoding = "UTF-8")
-    },
-    error = function(e) {
-      .error("Request error. %s", e$message)
-    })
+    make_request <- function(.url){
+      tryCatch({
+        rc <- httr::content(httr::GET(.url, ...), encoding = "UTF-8")
+      },
+      error = function(e) {
+        .error("Request error. %s", e$message)
+      })
+      rc
+    }
+
+    res_content <- make_request(url)
+
+    if (isTRUE(retry))
+      if ("message" %in% names(res_content))
+        res_content <- retry_mpc_request(
+          .f = make_request,
+          .url = url,
+          .req = res_content,
+          .n = 3,
+          .item = item
+        )
+
 
     if (!"token" %in% names(res_content))
-      .error("No collection found with id '%s'", item$collection)
+      if ("message" %in% names(res_content)){
+        .error(res_content$messgage)
+      } else {
+        .error("No collection found with id '%s'", item$collection)
+      }
 
     token[[item$collection]] <<- parse(res_content)
   }
