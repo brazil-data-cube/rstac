@@ -182,12 +182,14 @@ sign_planetary_computer <- function(..., token_url = NULL, retry=FALSE) {
         )
 
 
-    if (!"token" %in% names(res_content))
+    if (!"token" %in% names(res_content)){
       if ("message" %in% names(res_content)){
-        .error(res_content$messgage)
+        .error("%s", res_content$message)
       } else {
         .error("No collection found with id '%s'", item$collection)
       }
+    }
+
 
     token[[item$collection]] <<- parse(res_content)
   }

@@ -504,7 +504,7 @@ stac_version <- function(x, ...) {
 retry_mpc_request <- function(.f, .url, .req, .n, .item){
 
   sleep_request <- function(s, f, c_url){
-      message(crayon::cyan(s))
+      message(crayon::cyan(gsub("Try", "Trying", s, fixed = TRUE)))
       Sys.sleep(as.numeric(gsub(".*in (.+) seconds.*", "\\1", s))+1)
       f(c_url)
   }
