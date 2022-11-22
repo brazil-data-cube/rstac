@@ -34,8 +34,8 @@ items_bands <- function(items) {
 #' @title STACItemCollection function
 #'
 #' @description
-#' `r lifecycle::badge('deprecated')` Use \code{\link{assets_gdalvfs}()} function
-#'  instead.
+#' `r lifecycle::badge('deprecated')` Use \code{\link{assets_append_gdalvsi}()}
+#' function instead.
 #'
 #' @param items a `STACItemCollection` or `STACItem` object.
 #'
