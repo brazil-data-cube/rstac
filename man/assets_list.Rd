@@ -33,8 +33,8 @@ a items \code{STACItemCollection} or \code{STACItem} object with gdal virtual
 file system added.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use \code{\link{assets_gdalvfs}()} function
-instead.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use \code{\link{assets_append_gdalvsi}()}
+function instead.
 }
 \examples{
 \dontrun{

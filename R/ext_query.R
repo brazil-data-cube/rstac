@@ -1,4 +1,4 @@
-#' @title Extension functions
+#' @title Query extension
 #'
 #' @description
 #' The `ext_query()` is the *exported function* of the STAC API
@@ -46,7 +46,7 @@
 #'
 #' @param ... entries with format `<field> <operator> <value>`.
 #'
-#' @seealso [stac_search()], [post_request()],
+#' @seealso [ext_filter()], [stac_search()], [post_request()],
 #' [endpoint()], [before_request()],
 #' [after_response()], [content_response()]
 #'
