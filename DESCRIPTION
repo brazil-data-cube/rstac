@@ -29,7 +29,9 @@ Imports:
 Suggests:
     covr,
     testthat,
-    vcr
+    vcr,
+    sf,
+    sfheaders
 Collate:
     'cql2-expr-funs.R'
     'cql2-types.R'
