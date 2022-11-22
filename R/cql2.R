@@ -60,7 +60,6 @@
 #' cql2(t_during(timestamp("1969-07-20T20:17:40Z"),
 #'      interval("1969-07-16T13:32:00Z", "1969-07-24T16:50:35Z")),
 #'      lang = "cql2-json")
-NULL
 cql2 <- function(expr, lang = NULL, crs = NULL, env = environment()) {
     expr <- unquote(
         expr = substitute(expr = expr, env = env),
@@ -86,6 +85,7 @@ cql2_text <- function(obj) {
     cql2_filter(x) <- cql2_filter(obj)
     cql2_lang(x) <- "cql2-text"
     cql2_crs(x) <- cql2_crs(obj)
+    x[["filter"]] <- to_text(x[["filter"]])
     x
 }
 
@@ -110,7 +110,7 @@ print.cql2_text <- function(x, ...) {
     if (!is.null(x[["filter-crs"]])) {
         cat("<", x[["filter-crs"]], ">", sep = "", fill = TRUE)
     }
-    cat(to_text(x[["filter"]]))
+    cat(x[["filter"]])
 }
 
 cql2_lang <- function(obj) {
