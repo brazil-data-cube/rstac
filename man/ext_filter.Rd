@@ -44,14 +44,14 @@ Standard comparison operators in rstac:
 \item \code{is_null} corresponds to \code{IS NOT NULL}
 }
 
-Advanced comparison operators in rstac:
+Advanced operators in rstac:
 \itemize{
 \item \code{\%like\%} corresponds to \code{LIKE}
 \item \code{between()} corresponds to \code{BETWEEN}
 \item \code{\%in\%} corresponds to \code{IN}
 }
 
-Spatial comparison operators in rstac:
+Spatial operators in rstac:
 \itemize{
 \item \code{s_intersects} corresponds to \code{S_INTERSECTS}
 \item \code{s_touches} corresponds to \code{S_TOUCHES}
@@ -61,7 +61,7 @@ Spatial comparison operators in rstac:
 \item \code{s_contains} corresponds to \code{S_CONTAINS}
 }
 
-Temporal comparison operators in rstac:
+Temporal operators in rstac:
 \itemize{
 \item \code{t_after} corresponds to \code{T_AFTER}
 \item \code{t_before} corresponds to \code{T_BEFORE}
@@ -81,7 +81,13 @@ Temporal comparison operators in rstac:
 \item \code{t_starts} corresponds to \code{T_STARTS}
 }
 
-TODO: add array comparison operators
+Array Operators in rstac:
+\itemize{
+\item \code{a_equals} corresponds to \code{A_EQUALS}
+\item \code{a_contains} corresponds to \code{A_CONTAINS}
+\item \code{a_containedby} corresponds to \code{A_CONTAINEDBY}
+\item \code{a_overlaps} corresponds to \code{A_OVERLAPS}
+}
 }
 \examples{
 \donttest{
@@ -97,7 +103,7 @@ req \%>\% ext_filter(collection == "sentinel-2-l2a") \%>\% post_request()
 req \%>\% ext_filter(collection != "sentinel-2-l2a") \%>\% post_request()
 
 # Less than operator '<' with cloud_cover property
-req \%>\% ext_filter(`eo:cloud_cover` < 0.10) \%>\% post_request()
+req \%>\% ext_filter(`eo:cloud_cover` < 10) \%>\% post_request()
 
 # Greater than operator '>' with vegetation_percentage property
 req \%>\% ext_filter(`s2:vegetation_percentage` > 50) \%>\% post_request()
