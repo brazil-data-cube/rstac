@@ -113,10 +113,6 @@
 #' # 'LIKE' operator
 #' req %>% ext_filter(collection %like% "modis%") %>% post_request()
 #'
-#' # 'BETWEEN' operator
-#' req %>% ext_filter(collection == "sentinel-2-l2a" &&
-#'                    between(`eo:cloud_cover`, 50, 100)) %>% post_request()
-#'
 #' # 'IN' operator
 #' req %>% ext_filter(collection %in% c("modis-64A1-061",
 #'                                      "landsat-c2-l2",
@@ -181,7 +177,6 @@
 #'             t_after(datetime, timestamp("2022-07-16T05:32:00Z"))) %>%
 #'   post_request()
 #' }
-#'
 #' @export
 ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
 
