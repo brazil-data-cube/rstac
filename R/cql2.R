@@ -6,60 +6,13 @@
 #' @name cql2
 #'
 #' @param expr  An R expression to be represented in CQL2
-#'
-#' @examples
-#' # basic cql2 examples
-#' cql2("This is a literal string.", lang = "cql2-text")
-#' cql2("Via dell'Avvento", lang = "cql2-text")
-#' cql2("Via dell'Avvento", lang = "cql2-json")
-#' cql2(-100, lang = "cql2-text")
-#' cql2(-100, lang = "cql2-json")
-#' cql2(3.14159, lang = "cql2-text")
-#' cql2(TRUE, lang = "cql2-text")
-#' cql2(FALSE, lang = "cql2-text")
-#' cql2(timestamp("1969-07-20T20:17:40Z"), lang = "cql2-text")
-#' cql2(timestamp("1969-07-20T20:17:40Z"), lang = "cql2-json")
-#' cql2(date("1969-07-20"), lang = "cql2-text")
-#' cql2(date("1969-07-20"), lang = "cql2-json")
-#' cql2(interval("1969-07-16", "1969-07-24"), lang = "cql2-text")
-#' cql2(interval("1969-07-16T05:32:00Z", "1969-07-24T16:50:35Z"), lang = "cql2-text")
-#' cql2(interval("2019-09-09", ".."), lang = "cql2-text")
-#' cql2(interval("1969-07-16", "1969-07-24"), lang = "cql2-json")
-#' cql2(interval("1969-07-16T05:32:00Z", "1969-07-24T16:50:35Z"), lang = "cql2-json")
-#' cql2(interval("2019-09-09", ".."), lang = "cql2-json")
-#' cql2(city == "Toronto", lang = "cql2-text")
-#' cql2(city == "Toronto", lang = "cql2-json")
-#' cql2(balance - 150.0 > 0, lang = "cql2-text")
-#' cql2(balance - 150.0 > 0, lang = "cql2-json")
-#' cql2(updated >= date("1970-01-01"), lang = "cql2-text")
-#' cql2(updated >= date("1970-01-01"), lang = "cql2-json")
-#' cql2(!is_null(geometry), lang = "cql2-text")
-#' cql2(!is_null(geometry), lang = "cql2-json")
-#' poly_sf <- sfheaders::sf_polygon(matrix(c(0,0,0,0,1,1), ncol = 2))
-#' cql2(s_intersects({{poly_sf}}, geometry), lang = "cql2-text")
-#' cql2(s_intersects({{poly_sf}}, geometry), lang = "cql2-json")
-#' cql2(s_crosses(geometry, {{poly_sf}}), lang = "cql2-text")
-#' cql2(s_crosses(geometry, {{poly_sf}}), lang = "cql2-json")
-#' cql2(t_intersects(event_date,
-#'           interval("1969-07-16T05:32:00Z", "1969-07-24T16:50:35Z")),
-#'           lang = "cql2-text")
-#' cql2(t_intersects(event_date,
-#'           interval("1969-07-16T05:32:00Z", "1969-07-24T16:50:35Z")),
-#'           lang = "cql2-json")
-#' cql2(t_during(touchdown,
-#'           interval("1969-07-16T13:32:00Z", "1969-07-24T16:50:35Z")),
-#'           lang = "cql2-text")
-#' cql2(t_during(touchdown,
-#'           interval("1969-07-16T13:32:00Z", "1969-07-24T16:50:35Z")),
-#'           lang = "cql2-json")
-#' cql2(s_within(road,Buffer(geometry,10,"m")), lang = "cql2-text")
-#' cql2(s_within(road,Buffer(geometry,10,"m")), lang = "cql2-json")
-#' cql2(t_during(timestamp("1969-07-20T20:17:40Z"),
-#'      interval("1969-07-16T13:32:00Z", "1969-07-24T16:50:35Z")),
-#'      lang = "cql2-text")
-#' cql2(t_during(timestamp("1969-07-20T20:17:40Z"),
-#'      interval("1969-07-16T13:32:00Z", "1969-07-24T16:50:35Z")),
-#'      lang = "cql2-json")
+#' @param lang a character with the syntax used in the filter.
+#' It can be used in text format \code{cql2-text} or in JSON format
+#' \code{cql2-json}. By default, \code{cql2-text} is used in \code{GET}
+#' requests and \code{cql2-json} in \code{POST} requests.
+#' @param crs a character with coordinate reference systems.
+#' By default WGS84 is used, this parameter will rarely be used.
+#' @param env a environment to evaluate the expression
 cql2 <- function(expr, lang = NULL, crs = NULL, env = environment()) {
     expr <- unquote(
         expr = substitute(expr = expr, env = env),
