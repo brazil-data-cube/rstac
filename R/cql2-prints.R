@@ -186,6 +186,16 @@ to_text.cql2_temporal_op <- function(x) {
 }
 
 #' @exportS3Method
+to_text.cql2_array_op <- function(x) {
+  paste0(
+    toupper(x$op), "(",
+    to_text(x$args[[1]]), ",",
+    to_text(x$args[[2]]),
+    ")"
+  )
+}
+
+#' @exportS3Method
 to_text.cql2_func <- function(x) {
   args <- paste0(lapply(x$`function`$args, to_text), collapse = ",")
   paste0(x$`function`$name, "(", args, ")")
@@ -222,6 +232,14 @@ to_text.cql2_timestamp <- function(x)
 #' @exportS3Method
 to_text.cql2_date <- function(x)
   paste0("DATE(", to_text(x$date), ")")
+
+#' @exportS3Method
+to_text.cql2_casei_op <- function(x)
+  paste0("CASEI(", to_text(x$casei), ")")
+
+#' @exportS3Method
+to_text.cql2_accenti_op <- function(x)
+  paste0("ACCENTI(", to_text(x$accenti), ")")
 
 #' @exportS3Method
 to_text.cql2_interval <- function(x)

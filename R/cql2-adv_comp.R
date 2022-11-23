@@ -39,6 +39,20 @@ in_op <- function(a, b) {
               class = c("cql2_in_op", "list"))
 }
 
+casei <- function(a) {
+  a <- cql2_eval(a)
+  stopifnot(is_casei_expr(a))
+  structure(list(casei = a),
+            class = c("cql2_casei_op", "list"))
+}
+
+accenti <- function(a, b) {
+  a <- cql2_eval(a)
+  stopifnot(is_casei_expr(a))
+  structure(list(accenti = a),
+            class = c("cql2_accenti_op", "list"))
+}
+
 # spatial_op
 spatial_op <- function(op) {
     function(a, b) {
@@ -110,12 +124,26 @@ temporal_op <- function(op) {
     }
 }
 
+# array_op
+array_op <- function(op) {
+  function(a, b) {
+    a <- cql2_eval(a)
+    b <- cql2_eval(b)
+    stopifnot(is_array_expr(a))
+    stopifnot(is_array_expr(b))
+    structure(list(op = op, args = list(a, b)),
+              class = c("cql2_array_op", "list"))
+  }
+}
+
 # ---- environment ----
 
 cql2_adv_comp_env <- new_env(
     `%like%` =       like_op,
     `between` =      between_op,
     `%in%` =         in_op,
+    casei =          casei,
+    accenti =        accenti,
     s_intersects =   spatial_op("s_intersects"),
     s_contains =     spatial_op("s_contains"),
     s_crosses =      spatial_op("s_crosses"),
@@ -139,6 +167,10 @@ cql2_adv_comp_env <- new_env(
     t_overlaps =     temporal_op("t_overlaps"),
     t_startedby =    temporal_op("t_startedby"),
     t_starts =       temporal_op("t_starts"),
+    a_equals =       array_op("a_equals"),
+    a_contains =     array_op("a_contains"),
+    a_containedby =  array_op("a_containedby"),
+    a_overlaps =     array_op("a_overlaps"),
     global_env =     cql2_global_env
 )
 
