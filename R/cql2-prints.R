@@ -88,6 +88,15 @@ to_json.cql2_minus_op <- function(x) {
 to_json.cql2_spatial_op <- function(x) json_obj(x)
 
 #' @exportS3Method
+to_json.sf <- function(x) json_obj(get_spatial(x))
+
+#' @exportS3Method
+to_json.sfc <- function(x) json_obj(get_spatial(x))
+
+#' @exportS3Method
+to_json.sfg <- function(x) json_obj(get_spatial(x))
+
+#' @exportS3Method
 to_json.cql2_temporal_op <- function(x) json_obj(x)
 
 #' @exportS3Method
@@ -147,6 +156,15 @@ to_text.logical <- function(x) if (x) "true" else "false"
 
 #' @exportS3Method
 to_text.cql2_spatial <- function(x) to_wkt(x)
+
+#' @exportS3Method
+to_text.sf <- function(x) to_wkt(get_spatial(x))
+
+#' @exportS3Method
+to_text.sfc <- function(x) to_wkt(get_spatial(x))
+
+#' @exportS3Method
+to_text.sfg <- function(x) to_wkt(get_spatial(x))
 
 #' @exportS3Method
 to_text.list <- function(x) {
