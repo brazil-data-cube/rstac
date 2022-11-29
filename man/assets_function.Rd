@@ -6,29 +6,20 @@
 \alias{assets_select}
 \alias{assets_select.STACItemCollection}
 \alias{assets_select.STACItem}
-\alias{assets_filter}
-\alias{assets_filter.STACItemCollection}
-\alias{assets_filter.STACItem}
 \title{Assets functions}
 \usage{
 assets_append_gdalvsi(
   items,
   asset_names = NULL,
-  sort = TRUE,
-  gdal_vsi_resolution = TRUE
+  sort = deprecated(),
+  gdal_vsi_resolution = deprecated()
 )
 
 assets_select(items, asset_names)
 
-\method{assets_select}{STACItemCollection}(items, asset_names)
+\method{assets_select}{STACItemCollection}(items, asset_names = NULL, filter_fn = NULL)
 
-\method{assets_select}{STACItem}(items, asset_names)
-
-assets_filter(items, ..., filter_fn = NULL)
-
-\method{assets_filter}{STACItemCollection}(items, ..., filter_fn = NULL, fn = deprecated())
-
-\method{assets_filter}{STACItem}(items, ..., filter_fn = NULL, fn = deprecated())
+\method{assets_select}{STACItem}(items, asset_names = NULL, filter_fn = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
@@ -44,10 +35,10 @@ in increasing order. By default, the dates are sorted.}
 included in the URL of each asset. The following schemes are supported:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 
-\item{...}{additional arguments. See details.}
-
 \item{filter_fn}{a \code{function} that will be used to filter the
 attributes listed in the properties.}
+
+\item{...}{additional arguments. See details.}
 
 \item{fn}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 use \code{filter_fn} parameter instead.}

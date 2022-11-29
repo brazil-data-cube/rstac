@@ -42,6 +42,5 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
 }
 }
 \seealso{
-\code{\link[=get_request]{get_request()}}, \code{\link[=post_request]{post_request()}},
-\code{\link[=items]{items()}}
+\code{\link[=get_request]{get_request()}}, \code{\link[=post_request]{post_request()}}, \code{\link[=items]{items()}}
 }

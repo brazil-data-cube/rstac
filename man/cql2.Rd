@@ -4,7 +4,7 @@
 \alias{cql2}
 \title{Convert R expressions to CQL2}
 \usage{
-cql2(expr, lang = NULL, crs = NULL, env = environment())
+cql2(expr, lang = NULL, crs = NULL, env_expr = environment())
 }
 \arguments{
 \item{expr}{An R expression to be represented in CQL2}

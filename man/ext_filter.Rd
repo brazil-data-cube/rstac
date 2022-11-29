@@ -89,6 +89,15 @@ Array Operators in rstac:
 \item \code{a_overlaps} corresponds to \code{A_OVERLAPS}
 }
 }
+\details{
+TODO: add how we implement spatial objects: sf objects and list
+
+The specification shows that double quoted should be interpreted as
+property. However, the R language does not distinguishes double quote
+from single quote. The right way to represent especification double
+quotes in R is to use the variable \code{name} without double quotes. For
+exemple, use \code{date} intead of \code{"date"}.
+}
 \examples{
 \donttest{
 # Standard comparison operators in rstac:
@@ -127,6 +136,7 @@ req \%>\% ext_filter(collection \%in\% c("modis-64A1-061",
   post_request()
 
 # Spatial operator
+# TODO: remove sf poly by list poly
 # Lets create a polygon with sf package
 polygon <- sf::st_polygon(
   list(

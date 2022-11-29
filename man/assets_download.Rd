@@ -15,7 +15,6 @@ assets_download(
   progress = TRUE,
   download_fn = NULL,
   ...,
-  assets_name = deprecated(),
   fn = deprecated()
 )
 
@@ -28,7 +27,6 @@ assets_download(
   progress = TRUE,
   download_fn = NULL,
   ...,
-  assets_name = deprecated(),
   fn = deprecated()
 )
 
@@ -41,7 +39,6 @@ assets_download(
   progress = TRUE,
   download_fn = NULL,
   ...,
-  assets_name = deprecated(),
   fn = deprecated()
 )
 }
@@ -72,9 +69,6 @@ another request verb, such as POST.}
 \item{...}{config parameters to be passed to \link[httr:GET]{GET},
 such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.}
-
-\item{assets_name}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-use \code{asset_names} parameter instead.}
 
 \item{fn}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 use \code{download_fn} parameter instead.}
