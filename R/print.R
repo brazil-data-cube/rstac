@@ -91,6 +91,8 @@ print.RSTACQuery <- function(x, ...) {
   invisible(x)
 }
 
+
+
 ####STACCatalog####
 
 #' @title Printing functions
