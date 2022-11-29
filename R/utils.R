@@ -10,29 +10,23 @@
 #' @return a `list` with modified values.
 #'
 #' @noRd
-.modify_list <- function(x, y) {
-
+modify_list <- function(x, y) {
   if (is.null(x))
     x <- list()
-  utils::modifyList(x, y, keep.null = TRUE)
+  stopifnot(is.list(x), is.list(y))
+  ynames <- names(y)
+  for (n in ynames) {
+    x[[n]] <- y[[n]]
+  }
+  x
 }
 
-.deprec_parameter <- function(deprec_var, dest_var, deprec_version, env) {
-
-  dest_chr <- as.character(substitute(dest_var, env = environment()))
-  deprec_chr <- as.character(substitute(deprec_var, env = environment()))
-
-  if (!exists(deprec_chr, envir = env))
-    return(invisible(NULL))
-
-  # TODO: remove s3 class
+deprec_parameter <- function(deprec_var, deprec_version, msg = NULL) {
   called_fun <- sys.call(-1)[[1]]
-
-  .message(
-    paste("The parameter", deprec_chr, "in", called_fun, "is deprecated in version",
-          deprec_version, "of rstac.", "Please use the", dest_chr, "parameter instead.")
+  message(
+    "The parameter ", deprec_var, " in ", called_fun,
+    " is deprecated in version ", deprec_version, " of rstac. ", msg
   )
-  assign(dest_chr, get(deprec_chr, envir = env), envir = env)
 }
 
 # nocov start
