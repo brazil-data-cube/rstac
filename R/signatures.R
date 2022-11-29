@@ -52,7 +52,6 @@ sign_bdc <- function(access_token = NULL, ...) {
 
       token[["default"]] <<- list("token" = Sys.getenv("BDC_ACCESS_KEY"))
     }
-
     token[["default"]] <<- parse(token[["default"]])
   }
 
@@ -78,7 +77,7 @@ sign_bdc <- function(access_token = NULL, ...) {
     asset_url <- httr::parse_url(asset[["href"]])
 
     # if the href is already sign it will not be modified
-    asset_url$query <- .modify_list(asset_url$query, token)
+    asset_url$query <- modify_list(asset_url$query, token)
 
     asset[["href"]] <- httr::build_url(asset_url)
     asset
@@ -97,11 +96,6 @@ sign_bdc <- function(access_token = NULL, ...) {
 
   return(sign_item)
 }
-
-ms_token_endpoint <- "https://planetarycomputer.microsoft.com/api/sas/v1/token"
-ms_max_timeleft <- 300
-ms_blob_name <- ".blob.core.windows.net"
-ms_public_assets <- "ai4edatasetspublicassets.blob.core.windows.net"
 
 #' @title Signature in hrefs provided by the STAC from Microsoft's Planetary
 #' Computer.
@@ -134,6 +128,38 @@ ms_public_assets <- "ai4edatasetspublicassets.blob.core.windows.net"
 #'
 #' @export
 sign_planetary_computer <- function(..., token_url = NULL) {
+  # general info
+  ms_token_endpoint <- "https://planetarycomputer.microsoft.com/api/sas/v1/token"
+  ms_max_timeleft <- 300
+  ms_blob_name <- ".blob.core.windows.net"
+  ms_public_assets <- "ai4edatasetspublicassets.blob.core.windows.net"
+
+  get_ms_info <- function(asset) {
+    parsed_url <- httr::parse_url(asset[["href"]])
+    host_spplited <- strsplit(
+      x = parsed_url[["hostname"]], split = ".", fixed = TRUE
+    )
+    path_spplited <- strsplit(parsed_url[["path"]], split = "/", fixed = TRUE)
+
+    list(
+      account = host_spplited[[1]][[1]],
+      container = path_spplited[[1]][[1]]
+    )
+  }
+
+  get_ms_account <- function(ms_info) {
+    ms_info[["account"]]
+  }
+
+  get_ms_container <- function(ms_info) {
+    ms_info[["container"]]
+  }
+
+  is_public_assets <- function(parsed_url) {
+    !endsWith(parsed_url[["hostname"]], ms_blob_name) ||
+      parsed_url[["hostname"]] == ms_public_assets
+  }
+
   default_endpoint <- ms_token_endpoint
   if (!is.null(token_url)) {
     default_endpoint <- token_url
@@ -220,7 +246,7 @@ sign_planetary_computer <- function(..., token_url = NULL) {
     token_value <- get_token_value(asset)
 
     # if the href is already sign it will not be modified
-    parsed_url$query <- .modify_list(parsed_url[["query"]], token_value)
+    parsed_url$query <- modify_list(parsed_url[["query"]], token_value)
 
     asset[["href"]] <- httr::build_url(parsed_url)
     asset
@@ -233,30 +259,4 @@ sign_planetary_computer <- function(..., token_url = NULL) {
   }
 
   return(sign_item)
-}
-
-get_ms_info <- function(asset) {
-  parsed_url <- httr::parse_url(asset[["href"]])
-  host_spplited <- strsplit(
-    x = parsed_url[["hostname"]], split = ".", fixed = TRUE
-  )
-  path_spplited <- strsplit(parsed_url[["path"]], split = "/", fixed = TRUE)
-
-  list(
-    account = host_spplited[[1]][[1]],
-    container = path_spplited[[1]][[1]]
-  )
-}
-
-get_ms_account <- function(ms_info) {
-  ms_info[["account"]]
-}
-
-get_ms_container <- function(ms_info) {
-  ms_info[["container"]]
-}
-
-is_public_assets <- function(parsed_url) {
-  !endsWith(parsed_url[["hostname"]], ms_blob_name) ||
-    parsed_url[["hostname"]] == ms_public_assets
 }
