@@ -1,14 +1,14 @@
-#' @title uUtility functions
+#' @title Utility functions
 #'
 #' @rdname http_request
 #'
 #' @description
-#' `.make_url` is a helper function to generate url. The returned
+#' `make_url` is a helper function to generate url. The returned
 #' url is formed by appending `endpoint` at the end of base url
 #' informed by `url` parameter. If `endpoint` has multiple elements
 #' it will be collapsed using `'/'` character.
 #'
-#' Note that `.make_url` function differs from standards of relative URI
+#' Note that `make_url` function differs from standards of relative URI
 #' path resolution (RFC 3986). Any existing path in base url
 #' is maintained in the final url, and a simple string contatenation is made
 #' whithout including any character separator. For this reason, this function
@@ -24,28 +24,17 @@
 #' appended in the url.
 #'
 #' @return
-#' `.make_url` returns an url to access STAC endpoints.
+#' `make_url` returns an url to access STAC endpoints.
 #'
 #' @noRd
-.make_url <- function(url, endpoint = "", params = list()) {
-
+make_url <- function(url, endpoint = "", params = list()) {
   # remove trailing '/' char
   if (substring(url, nchar(url)) == "/")
     url <- substring(url, 1, nchar(url) - 1)
 
   endpoint <- paste0(endpoint, collapse = "/")
 
-  # TODO: URI resolution for previous existing query and fragment URI components
-  # in informed url.
   res <- paste0(url, endpoint)
-
-  if (length(params) > 0) {
-
-    if (is.null(names(params)))
-      stop("URL query values must be named.", call. = FALSE)
-    params <- .querystring_encode(params)
-    res <- paste(res, params, sep = "?")
-  }
 
   return(res)
 }
@@ -57,13 +46,8 @@
 #' @return a `character` representing the encode parameters of the query.
 #'
 #' @noRd
-.querystring_encode <- function(params) {
-
-  if (!is.null(names(params)))
-    return(paste(names(params),
-                 vapply(unname(params), paste0, collapse = ",", character(1)),
-                 sep = "=", collapse = "&"))
-  return(paste0(params, collapse = ","))
+.querystrings_encode <- function(params) {
+  return(lapply(params, paste0, collapse = ","))
 }
 
 #' @title Utility functions
@@ -74,12 +58,14 @@
 #'
 #' @noRd
 .querystring_decode <- function(querystring) {
-
   # first decode and remove all coded spaces
   querystring <- URLdecode(querystring)
+  querystring_spplited <- strsplit(querystring, split = "&")[[1]]
+  # remove empty spaces
+  querystring_spplited <- querystring_spplited[nzchar(querystring_spplited)]
+  values <- lapply(querystring_spplited,
+                   function(x) regmatches(x, regexpr("=", x), invert = TRUE)[[1]])
 
-  values <- lapply(strsplit(querystring, split = "&")[[1]],
-                   function(x) strsplit(x, split = "=")[[1]])
 
   params <- lapply(values, `[[`, 2)
   names(params) <- vapply(values, `[[`, 1, FUN.VALUE = character(1))
@@ -106,51 +92,22 @@
   return(params)
 }
 
-#' @title Utility functions
-#'
-#' @name .append_gdalvfs
-#'
-#' @description Append the gdal virtual file system in an asset href.
-#'
-#' @param asset_href a `character` with the asset href.
-#'
-#' @param scheme     a `character` with the scheme from asset href
-#'
-#' @return a `character` with the gdal virtual file system appended.
-#'
-#' @noRd
-#'
-#' @export
-.append_gdalvfs <- function(asset_href, scheme) {
-
-  class(scheme) <- scheme
-
-  UseMethod(".append_gdalvfs", scheme)
+gdalvsi_schema <- function(url) {
+  if (grepl("^(.+):.*$", url)) gsub("^(.+):.*$", "\\1", url)
 }
 
-#' @export
-.append_gdalvfs.http <- function(asset_href, scheme) {
-  paste("/vsicurl", asset_href, sep = "/")
+gdalvsi_switch <- function(url, ...) {
+  switch(gdalvsi_schema(url), ...)
 }
 
-#' @export
-.append_gdalvfs.https <- function(asset_href, scheme) {
-  paste("/vsicurl", asset_href, sep = "/")
-}
-
-#' @export
-.append_gdalvfs.s3 <- function(asset_href, scheme) {
-  paste("/vsis3", gsub("^s3://(.*)$", "\\1", asset_href), sep = "/")
-}
-
-#' @export
-.append_gdalvfs.gs <- function(asset_href, scheme) {
-  paste("/vsigs", gsub("^gs://(.*)$", "\\1", asset_href), sep = "/")
-}
-
-#' @export
-.append_gdalvfs.default <- function(asset_href, scheme) {
-  asset_href
+gdalvsi_append <- function(url) {
+  gdalvsi_switch(
+    url,
+    https = , http = paste("/vsicurl", url, sep = "/"),
+    s3 = paste("/vsis3", gsub("^s3://", "", url), sep = "/"),
+    gs = paste("/vsigs", gsub("^gs://", "", url), sep = "/"),
+    url
+  )
 }
 
 #' @title Utility functions
