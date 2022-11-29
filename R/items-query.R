@@ -122,6 +122,20 @@ items <- function(q, feature_id = NULL,
 }
 
 #' @export
+parse_params.items <- function(q, params) {
+  if (!is.null(params[["datetime"]]))
+    params[["datetime"]] <- .parse_datetime(params[["datetime"]])
+
+  if (!is.null(params[["bbox"]]))
+    params[["bbox"]] <- .parse_bbox(params[["bbox"]])
+
+  if (!is.null(params[["limit"]]))
+    params[["limit"]] <- .parse_limit(params[["limit"]])
+
+  params
+}
+
+#' @export
 endpoint.items <- function(q) {
 
   return(paste("/collections", q$params[["collection_id"]], "items", sep = "/"))
