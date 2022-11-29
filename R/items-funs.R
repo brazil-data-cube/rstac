@@ -416,7 +416,8 @@ items_next.STACItemCollection <- function(items, ...) {
 
     # get next link parameters from url
     params <- .querystring_decode(substring(
-      gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2))
+      gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2)
+    )
 
     # verify if query params is valid
     params <- .validate_query(params = params)
@@ -427,7 +428,7 @@ items_next.STACItemCollection <- function(items, ...) {
 
   next_stac <- RSTACQuery(version = q$version,
                           base_url = q$base_url,
-                          params = utils::modifyList(q$params, params),
+                          params = modify_list(q$params, params),
                           subclass = subclass(q))
 
   # call request
@@ -771,9 +772,9 @@ items_sign.STACItemCollection <- function(items, ..., sign_fn = NULL) {
 
   if (!is.null(items_matched(items))) {
     if (items_length(items) != items_matched(items))
-      .message(paste("The number of items in this object does not match the",
-                     "total number of items in the item. If you want to get",
-                     "all items, use `items_fetch()`"))
+      message("The number of items in this object does not match the ",
+              "total number of items in the item. If you want to get ",
+              "all items, use `items_fetch()`")
   }
 
   # assign each item obj
@@ -822,9 +823,9 @@ items_apply.STACItemCollection <- function(items, ..., field, apply_fn = NULL) {
 
   if (!is.null(items_matched(items))) {
     if (items_length(items) != items_matched(items))
-      .message(paste("The number of items in this object does not match the",
-                     "total number of items in the item. If you want to get",
-                     "all items, use `items_fetch()`"))
+      message("The number of items in this object does not match the ",
+              "total number of items in the item. If you want to get ",
+              "all items, use `items_fetch()`")
   }
 
   # assign each item obj
