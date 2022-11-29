@@ -20,8 +20,7 @@
 #' @param collection_id a `character` collection id to be retrieved.
 #'
 #' @seealso
-#' [get_request()], [post_request()],
-#'  [items()]
+#' [get_request()], [post_request()], [items()]
 #'
 #' @return
 #' A `RSTACQuery` object with the subclass `collections` for
