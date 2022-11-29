@@ -12,24 +12,11 @@
 
 #' @title Utility functions
 #'
-#' @param msg   a `character` string with format text message.
-#'
-#' @param ...   values to be passed to `msg` parameter.
-#'
-#' @noRd
-.message <- function(msg, ...) {
-
-  message(sprintf(msg, ...))
-}
-
-#' @title Utility functions
-#'
 #' @param msg   a `character` string with format warning message.
 #'
 #' @param ...   values to be passed to `msg` parameter.
 #'
 #' @noRd
 .warning <- function(msg, ...) {
-
   warning(sprintf(msg, ...), call. = FALSE)
 }
