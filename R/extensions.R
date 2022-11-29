@@ -88,7 +88,6 @@ NULL
 
 #' @title Extension development functions
 #' @rdname extensions
-#' @export
 endpoint <- function(q) {
 
   UseMethod("endpoint", q)
@@ -96,7 +95,6 @@ endpoint <- function(q) {
 
 #' @title Extension development functions
 #' @rdname extensions
-#' @export
 before_request <- function(q) {
 
   UseMethod("before_request", q)
@@ -104,15 +102,12 @@ before_request <- function(q) {
 
 #' @title Extension development functions
 #' @rdname extensions
-#' @export
 after_response <- function(q, res) {
-
   UseMethod("after_response", q)
 }
 
 #' @title Extension development functions
 #' @rdname extensions
-#' @export
 parse_params <- function(q, params) {
   UseMethod("parse_params", q)
 }
@@ -133,8 +128,6 @@ parse_params <- function(q, params) {
 #' @return
 #' The `content_response()` function returns a `list` data structure
 #' representing the JSON file received in HTTP response
-#'
-#' @export
 content_response <- function(res, status_codes, content_types) {
 
   # convert any json extension
@@ -180,8 +173,6 @@ content_response <- function(res, status_codes, content_types) {
 #' @param verbs   a `character` vector with allowed HTTP request methods
 #'
 #' @param msg     a `character` with a personalized error message
-#'
-#' @export
 check_query_verb <- function(q, verbs, msg = NULL) {
 
   if (!q$verb %in% verbs) {
@@ -201,21 +192,15 @@ check_query_verb <- function(q, verbs, msg = NULL) {
 #' criteria or any `RSTACDocument`.
 #'
 #' @param subclasses   a `character` vector with all allowed S3 subclasses
-#'
-#' @export
 check_subclass <- function(x, subclasses) {
-
-  UseMethod("check_subclass")
+  UseMethod("check_subclass", x)
 }
 
 #' @describeIn extensions
 #' The `subclass()` function returns a `character` representing the
 #' subclass name of either `RSTACQuery` or `RSTACDocument` S3 classes.
-#'
-#' @export
 subclass <- function(x) {
-
-  UseMethod("subclass")
+  UseMethod("subclass", x)
 }
 
 #' @describeIn extensions
@@ -227,10 +212,7 @@ subclass <- function(x) {
 #' @param q       a `RSTACQuery` object.
 #'
 #' @param names   a `character` vector with the names do omit.
-#'
-#' @export
 omit_query_params <- function(q, names) {
-
   .check_obj(names, "character")
   q$omitted <- unname(names)
   q
