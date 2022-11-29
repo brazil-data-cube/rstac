@@ -74,6 +74,15 @@
 #' @param crs a character with coordinate reference systems.
 #' By default WGS84 is used, this parameter will rarely be used.
 #'
+#'
+#' @details TODO: add how we implement spatial objects: sf objects and list
+#'
+#' @details The specification shows that double quoted should be interpreted as
+#' property. However, the R language does not distinguishes double quote
+#' from single quote. The right way to represent especification double
+#' quotes in R is to use the variable `name` without double quotes. For
+#' exemple, use `date` intead of `"date"`.
+#'
 #' @seealso [ext_query()], [stac_search()], [post_request()],
 #' [endpoint()], [before_request()],
 #' [after_response()], [content_response()]
@@ -121,6 +130,7 @@
 #'   post_request()
 #'
 #' # Spatial operator
+#' # TODO: remove sf poly by list poly
 #' # Lets create a polygon with sf package
 #' polygon <- sf::st_polygon(
 #'   list(
@@ -181,16 +191,16 @@
 ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
 
   # check parameter
-  check_subclass(q, c("search", "ext_filter"))
+  check_subclass(q, c("search", "items"))
   .check_lang(lang)
 
   # get expression
-  params <- cql2(expr, lang = lang, crs = crs, env = environment())
+  params <- cql2(expr, lang = lang, crs = crs, env_expr = environment())
 
   RSTACQuery(version = q$version,
              base_url = q$base_url,
-             params = utils::modifyList(q$params, params),
-             subclass = "ext_filter")
+             params = modify_list(q$params, params),
+             subclass = unique(c("ext_filter", subclass(q))))
 }
 
 .check_lang <- function(lang) {
@@ -199,9 +209,10 @@ ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
 
 #' @export
 endpoint.ext_filter <- function(q) {
-
-  # using endpoint from search document
-  endpoint.search(q)
+  # using endpoint from search or items document
+  if ("search" %in% subclass(q))
+    return(endpoint.search(q))
+  return(endpoint.items(q))
 }
 
 #' @export
@@ -223,6 +234,10 @@ before_request.ext_filter <- function(q) {
       q$params <- utils::modifyList(q$params, params)
     }
   }
+  if ("items" %in% subclass(q)) {
+    # don't send 'collection_id' in url's query string or content body
+    q <- omit_query_params(q, names = "collection_id")
+  }
   return(q)
 }
 
@@ -238,11 +253,8 @@ after_response.ext_filter <- function(q, res) {
 #' @export
 parse_params.ext_filter <- function(q, params) {
 
-  # TODO: test with items_fetch
-  # # call super class
-  # params <- parse_params.search(q, params)
-  #
-  # params$query <- .parse_values_keys(params$query)
+  # call super class
+  params <- NextMethod("parse_params")
 
   params
 }
