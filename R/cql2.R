@@ -13,10 +13,10 @@
 #' @param crs a character with coordinate reference systems.
 #' By default WGS84 is used, this parameter will rarely be used.
 #' @param env a environment to evaluate the expression
-cql2 <- function(expr, lang = NULL, crs = NULL, env = environment()) {
+cql2 <- function(expr, lang = NULL, crs = NULL, env_expr = environment()) {
     expr <- unquote(
-        expr = substitute(expr = expr, env = env),
-        env = .GlobalEnv
+        expr = substitute(expr = expr, env = env_expr),
+        env = parent.frame()
     )
     cql2_update_ident_env(expr)
     # create cql2 object
@@ -48,6 +48,16 @@ cql2_json <- function(obj) {
     cql2_lang(x) <- "cql2-json"
     cql2_crs(x) <- cql2_crs(obj)
     x
+}
+
+#' @exportS3Method
+print.cql2_filter <- function(x, ...) {
+  cat(to_text(x))
+}
+
+#' @exportS3Method
+as.character.cql2_filter <- function(x, ...) {
+  to_text(x)
 }
 
 #' @exportS3Method

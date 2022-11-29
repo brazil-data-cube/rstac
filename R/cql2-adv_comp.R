@@ -136,44 +136,6 @@ array_op <- function(op) {
   }
 }
 
-# ---- environment ----
-
-cql2_adv_comp_env <- new_env(
-    `%like%` =       like_op,
-    `between` =      between_op,
-    `%in%` =         in_op,
-    casei =          casei,
-    accenti =        accenti,
-    s_intersects =   spatial_op("s_intersects"),
-    s_contains =     spatial_op("s_contains"),
-    s_crosses =      spatial_op("s_crosses"),
-    s_disjoint =     spatial_op("s_disjoint"),
-    s_equals =       spatial_op("s_equals"),
-    s_overlaps =     spatial_op("s_overlaps"),
-    s_touches =      spatial_op("s_touches"),
-    s_within =       spatial_op("s_within"),
-    t_after =        temporal_op("t_after"),
-    t_before =       temporal_op("t_before"),
-    t_contains =     temporal_op("t_contains"),
-    t_disjoint =     temporal_op("t_disjoint"),
-    t_during =       temporal_op("t_during"),
-    t_equals =       temporal_op("t_equals"),
-    t_finishedby =   temporal_op("t_finishedby"),
-    t_finishes =     temporal_op("t_finishes"),
-    t_intersects =   temporal_op("t_intersects"),
-    t_meets =        temporal_op("t_meets"),
-    t_metby =        temporal_op("t_metby"),
-    t_overlappedby = temporal_op("t_overlappedby"),
-    t_overlaps =     temporal_op("t_overlaps"),
-    t_startedby =    temporal_op("t_startedby"),
-    t_starts =       temporal_op("t_starts"),
-    a_equals =       array_op("a_equals"),
-    a_contains =     array_op("a_contains"),
-    a_containedby =  array_op("a_containedby"),
-    a_overlaps =     array_op("a_overlaps"),
-    global_env =     cql2_global_env
-)
-
 # ---- convert to json ----
 
 #' @exportS3Method

@@ -122,7 +122,7 @@ to_json.default <- function(x)
 
 text_quote <- function(x) paste0("'", x, "'")
 
-text_lst <- function(v) paste0("[", paste0(v, collapse = ","), "]")
+text_lst <- function(v) paste0("(", paste0(v, collapse = ","), ")")
 
 escape <- function(x) gsub("'", "''", x)
 
