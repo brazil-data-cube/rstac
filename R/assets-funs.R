@@ -10,9 +10,6 @@
 #'  \code{/collections/{collectionId}/items} or
 #'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
-#' @param assets_name `r lifecycle::badge('deprecated')`
-#'  use `asset_names` parameter instead.
-#'
 #' @param asset_names a `character` with the assets names to be filtered.
 #'
 #' @param output_dir  a `character` directory in which the assets will be
@@ -63,7 +60,6 @@ assets_download <- function(items,
                             items_max = Inf,
                             progress = TRUE,
                             download_fn = NULL, ...,
-                            assets_name = deprecated(),
                             fn = deprecated()) {
 
   # check output dir
@@ -83,24 +79,15 @@ assets_download.STACItemCollection <- function(items,
                                                items_max = Inf,
                                                progress = TRUE,
                                                download_fn = NULL, ...,
-                                               assets_name = deprecated(),
                                                fn = deprecated()) {
-
-  env <- environment()
-
-  if (!missing(assets_name))
-
-    asset_names <- .deprec_parameter(deprec_var = assets_name,
-                                     dest_var = asset_names,
-                                     deprec_version = "0.9.1-5",
-                                     env = env)
-
-  if (!missing(fn))
-
-    download_fn <- .deprec_parameter(deprec_var = fn,
-                                     dest_var = download_fn,
-                                     deprec_version = "0.9.1-6",
-                                     env = env)
+  if (!missing(fn)) {
+    deprec_parameter(
+      deprec_var = "fn",
+      deprec_version = "0.9.1-6",
+      msg = "Please, use `download_fn` parameter instead."
+    )
+    download_fn <- fn
+  }
 
   if (!is.null(asset_names))
     items <- assets_select(items = items, asset_names = asset_names)
@@ -150,28 +137,15 @@ assets_download.STACItem <- function(items,
                                      items_max = Inf,
                                      progress  = TRUE,
                                      download_fn = NULL, ...,
-                                     assets_name = deprecated(),
                                      fn = deprecated()) {
-
-  env <- environment()
-
-  if (!missing(assets_name))
-
-    asset_names <- .deprec_parameter(
-      deprec_var = assets_name,
-      dest_var = asset_names,
-      deprec_version = "0.9.1-5",
-      env = env
-    )
-
-  if (!missing(fn))
-
-    download_fn <- .deprec_parameter(
-      deprec_var = fn,
-      dest_var = download_fn,
+  if (!missing(fn)) {
+    deprec_parameter(
+      deprec_var = "fn",
       deprec_version = "0.9.1-6",
-      env = env
+      msg = "Please, use `download_fn` parameter instead."
     )
+    download_fn <- fn
+  }
 
   if (!is.null(asset_names))
     items <- assets_select(items = items, asset_names = asset_names)
@@ -236,29 +210,33 @@ NULL
 #' @export
 assets_append_gdalvsi <- function(items,
                                   asset_names = NULL,
-                                  sort = TRUE,
-                                  gdal_vsi_resolution = TRUE) {
+                                  sort = deprecated(),
+                                  gdal_vsi_resolution = deprecated()) {
+  if (!missing(sort)) {
+    deprec_parameter(
+      deprec_var = "sort",
+      deprec_version = "0.9.1-6"
+    )
+  }
+
+  if (!missing(gdal_vsi_resolution)) {
+    deprec_parameter(
+      deprec_var = "gdal_vsi_resolution",
+      deprec_version = "0.9.1-6"
+    )
+  }
 
   if (is.null(asset_names))
     asset_names <- items_fields(items, "assets")
 
   items_apply(items, field = "assets", apply_fn = function(assets) {
-
     stopifnot(all(asset_names %in% names(assets)))
-
     assets_filtered <- assets[asset_names]
 
     assets_filtered <- lapply(assets_filtered, function(asset) {
-      url_scheme <- gsub("^(s3|http|https|gs)://.*$", "\\1", asset[["href"]])
-
-      asset[["href"]] <- .append_gdalvfs(
-        asset_href = asset[["href"]],
-        scheme = url_scheme
-      )
-
+      asset[["href"]] <- gdalvsi_append(asset[["href"]])
       asset
     })
-
     return(assets_filtered)
   })
 }
@@ -267,101 +245,29 @@ assets_append_gdalvsi <- function(items,
 #'
 #' @export
 assets_select <- function(items, asset_names) {
-
   UseMethod("assets_select", items)
 }
 
 #' @rdname assets_function
 #'
 #' @export
-assets_select.STACItemCollection <- function(items, asset_names) {
+assets_select.STACItemCollection <- function(items,
+                                             asset_names = NULL,
+                                             filter_fn = NULL) {
+  if (!is.null(asset_names)) {
+    if (!all(asset_names %in% items_assets(items, simplify = TRUE)))
+      .error("Invalid 'asset_names' parameter.")
 
-  if (!all(asset_names %in% items_assets(items, simplify = TRUE)))
-    .error("Invalid 'asset_names' parameter.")
+    items$features <- lapply(items$features, function(item) {
+      item$assets <- item$assets[asset_names]
 
-  items$features <- lapply(items$features, function(item) {
-    item$assets <- item$assets[asset_names]
-
-    item
-  })
-
-  items
-}
-
-#' @rdname assets_function
-#'
-#' @export
-assets_select.STACItem <- function(items, asset_names) {
-
-  if (!all(asset_names %in% items_assets(items)))
-    .error("Invalid 'asset_names' parameter.")
-
-  items$assets <- items$assets[asset_names]
-
-  items
-}
-
-#' @rdname assets_function
-#'
-#' @export
-assets_filter <- function(items, ..., filter_fn = NULL) {
-
-  UseMethod("assets_filter", items)
-}
-
-#' @rdname assets_function
-#'
-#' @export
-assets_filter.STACItemCollection <- function(items, ...,
-                                             filter_fn = NULL,
-                                             fn = deprecated()) {
-
-
-  if (!missing(fn))
-
-    filter_fn <- .deprec_parameter(
-      deprec_var = fn,
-      dest_var = filter_fn,
-      deprec_version = "0.9.1-5",
-      env = environment()
-    )
-
-  dots <- substitute(list(...))[-1]
-
-  if (length(dots) > 0) {
-
-    if (!is.null(names(dots)))
-      .error("Invalid filter arguments.")
-
-    for (i in seq_along(dots)) {
-
-      items$features <- lapply(items$features, function(item) {
-
-        sel <- vapply(item$assets, function(asset) {
-
-          tryCatch({
-            eval(dots[[i]], envir = asset, enclos = baseenv())
-          }, error = function(e) { NA })
-        }, logical(1))
-
-        if (all(is.na(sel)))
-          .error("Invalid condition arguments.")
-
-        sel[is.na(sel)] <- FALSE
-
-        item$assets <- item$assets[sel]
-
-        item
-      })
-    }
+      item
+    })
   }
 
   if (!is.null(filter_fn)) {
-
     items$features <- lapply(items$features, function(item) {
-
-      sel <- vapply(item$assets, function(asset) { filter_fn(asset) }, logical(1))
-
+      sel <- vapply(item$assets, filter_fn, logical(1))
       item$assets <- item$assets[sel]
       item
     })
@@ -373,48 +279,17 @@ assets_filter.STACItemCollection <- function(items, ...,
 #' @rdname assets_function
 #'
 #' @export
-assets_filter.STACItem <- function(items, ...,
-                                   filter_fn = NULL,
-                                   fn = deprecated()) {
-
-  if (!missing(fn))
-
-    filter_fn <- .deprec_parameter(
-      deprec_var = fn,
-      dest_var = filter_fn,
-      deprec_version = "0.9.1-5",
-      env = environment()
-    )
-
-  dots <- substitute(list(...))[-1]
-
-  if (length(dots) > 0) {
-
-    if (!is.null(names(dots)))
-      .error("Invalid filter arguments.")
-
-    for (i in seq_along(dots)) {
-
-      sel <- vapply(items$assets, function(asset) {
-
-        tryCatch({
-          eval(dots[[i]], envir = asset, enclos = baseenv())
-        }, error = function(e) { NA })
-      }, logical(1))
-
-      if (all(is.na(sel)))
-        .error("Invalid condition arguments.")
-
-      sel[is.na(sel)] <- FALSE
-
-      items$assets <- items$assets[sel]
-    }
+assets_select.STACItem <- function(items,
+                                   asset_names = NULL,
+                                   filter_fn = NULL) {
+  if (!is.null(asset_names)) {
+    if (!all(asset_names %in% items_assets(items)))
+      .error("Invalid 'asset_names' parameter.")
+    items$assets <- items$assets[asset_names]
   }
 
   if (!is.null(filter_fn)) {
-
-    sel <- vapply(items$assets, function(asset) { filter_fn(asset) }, logical(1))
-
+    sel <- vapply(items$assets, filter_fn, logical(1))
     items$assets <- items$assets[sel]
   }
 

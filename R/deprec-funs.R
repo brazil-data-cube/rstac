@@ -1,100 +1,108 @@
-#' @title STACItemCollection function
+#' @title Assets filter
 #'
-#' @description
-#' `r lifecycle::badge('deprecated')` Use \code{\link{items_assets}()} function
-#'  instead.
+#' @description `r lifecycle::badge('deprecated')`
 #'
-#' @param items a `STACItemCollection` or `STACItem` object.
+#' @param items                a `STACItemCollection` object representing
+#'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
 #'
-#' @examples
-#' \dontrun{
+#' @param ...          additional arguments. See details.
 #'
-#' x <- stac("http://brazildatacube.dpi.inpe.br/stac") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   stac_search() %>%
-#'   get_request()
+#' @param filter_fn           a `function` that will be used to filter the
+#'  attributes listed in the properties.
 #'
-#' x %>% items_assets()
-#' }
+#' @return a `list` with the attributes of date, bands and paths.
+#'
+#' @name assets_filter
 #'
 #' @export
-items_bands <- function(items) {
-
-  # signal the deprecation to the user
-  lifecycle::deprecate_soft(
-    when = "0.9.1-5",
-    what = "rstac::items_bands()",
-    with = "rstac::items_assets()"
-  )
-
-  return(items_assets(items))
+assets_filter <- function(items, ..., filter_fn = NULL) {
+  UseMethod("assets_filter", items)
 }
 
-
-#' @title STACItemCollection function
-#'
-#' @description
-#' `r lifecycle::badge('deprecated')` Use \code{\link{assets_append_gdalvsi}()}
-#' function instead.
-#'
-#' @param items a `STACItemCollection` or `STACItem` object.
-#'
-#' @param assets_names `r lifecycle::badge('deprecated')`
-#'  use `asset_names` parameter instead.
-#'
-#' @param asset_names  a `character` with the assets names to be
-#'  filtered. If `NULL` (default) all assets will be returned..
-#'
-#' @param sort         a `logical` if true the dates will be sorted
-#'  in increasing order. By default, the dates are sorted.
-#'
-#' @param gdal_vsi_resolution a `logical`  if true, gdal drivers are
-#'  included in the URL of each asset. The following schemes are supported:
-#'  HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
-#'
-#' @return a items `STACItemCollection` or `STACItem` object with gdal virtual
-#' file system added.
-#'
-#' @examples
-#' \dontrun{
-#'
-#' x <- stac("http://brazildatacube.dpi.inpe.br/stac") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   stac_search() %>%
-#'   get_request()
-#'
-#' x %>% assets_append_gdalvsi()
-#' }
+#' @rdname assets_filter
 #'
 #' @export
-assets_list <- function(items,
-                        asset_names = NULL,
-                        sort = TRUE,
-                        gdal_vsi_resolution = TRUE,
-                        assets_names = deprecated()) {
-
+assets_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
   # signal the deprecation to the user
   lifecycle::deprecate_soft(
-    when = "0.9.1-5",
-    what = "rstac::assets_list()",
-    with = "rstac::assets_append_gdalvsi()"
+    when = "0.9.1-6",
+    what = "rstac::assets_filter()",
+    with = "rstac::assets_select()"
   )
+  dots <- substitute(list(...), env = environment())[-1]
 
-  if (!missing(assets_names))
+  if (length(dots) > 0) {
+    if (!is.null(names(dots))) .error("Invalid filter arguments.")
 
-    asset_names <- .deprec_parameter(
-      deprec_var = assets_names,
-      dest_var = asset_names,
-      deprec_version = "0.9.1-5",
-      env = environment()
-    )
+    for (i in seq_along(dots)) {
 
-  assets_append_gdalvsi(
-    items = items,
-    asset_names = asset_names,
-    sort = sort,
-    gdal_vsi_resolution = gdal_vsi_resolution
-  )
+      items$features <- lapply(items$features, function(item) {
+
+        sel <- vapply(item$assets, function(asset) {
+
+          tryCatch({
+            eval(dots[[i]], envir = asset, enclos = baseenv())
+          }, error = function(e) { NA })
+        }, logical(1))
+
+        if (all(is.na(sel)))
+          .error("Invalid condition arguments.")
+
+        sel[is.na(sel)] <- FALSE
+
+        item$assets <- item$assets[sel]
+
+        item
+      })
+    }
+  }
+
+  if (!is.null(filter_fn)) {
+    items$features <- lapply(items$features, function(item) {
+
+      sel <- vapply(item$assets, filter_fn, logical(1))
+
+      item$assets <- item$assets[sel]
+      item
+    })
+  }
+
+  items
 }
 
+#' @rdname assets_filter
+#'
+#' @export
+assets_filter.STACItem <- function(items, ..., filter_fn = NULL) {
+  # signal the deprecation to the user
+  lifecycle::deprecate_soft(
+    when = "0.9.1-6",
+    what = "rstac::assets_filter()",
+    with = "rstac::assets_select()"
+  )
+  dots <- substitute(list(...), env = environment())[-1]
 
+  if (length(dots) > 0) {
+    if (!is.null(names(dots))) .error("Invalid filter arguments.")
+
+    for (i in seq_along(dots)) {
+      sel <- vapply(items$assets, function(asset) {
+        tryCatch({
+          eval(dots[[i]], envir = asset, enclos = baseenv())
+        }, error = function(e) { NA })
+      }, logical(1))
+
+      if (all(is.na(sel))) .error("Invalid condition arguments.")
+
+      sel[is.na(sel)] <- FALSE
+      items$assets <- items$assets[sel]
+    }
+  }
+
+  if (!is.null(filter_fn)) {
+    sel <- vapply(items$assets, filter_fn, logical(1))
+    items$assets <- items$assets[sel]
+  }
+
+  items
+}
