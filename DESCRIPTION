@@ -23,15 +23,13 @@ Imports:
     httr,
     crayon,
     utils,
-    magrittr,
     jsonlite,
     lifecycle
 Suggests:
-    covr,
+    magrittr,
     testthat,
     vcr,
-    sf,
-    sfheaders
+    sf
 Collate:
     'cql2-expr-funs.R'
     'cql2-types.R'
@@ -41,6 +39,7 @@ Collate:
     'cql2-enhancements.R'
     'cql2-adv_comp.R'
     'cql2.R'
+    'cql2-env.R'
     'assets-funs.R'
     'check-utils.R'
     'collections-query.R'
