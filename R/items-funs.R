@@ -56,9 +56,6 @@
 #'  first item? if not a `list` with all assets name will be returned. Default
 #'  is `FALSE`.
 #'
-#' @param filter_fn       a `function` that receives an item that should
-#' evaluate a `logical` value.
-#'
 #' @param field           a `character` with the names of the field to
 #'  get the subfields values.
 #'
@@ -66,6 +63,12 @@
 #'
 #' @param sign_fn         a `function` that receives an item as parameter
 #' and returns an item signed.
+#'
+#' @param apply_fn         a `function` that is applicable for any property of
+#'  an item.
+#'
+#' @param filter_fn       a `function` that receives an item that should
+#' evaluate a `logical` value.
 #'
 #' @param ...             additional arguments. See details.
 #'
@@ -154,7 +157,7 @@
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
 #'     get_request() %>% items_sign(sign_fn = sign_bdc())
 #'
 #' }
@@ -165,13 +168,13 @@
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
 #'     get_request() %>% items_filter(`eo:cloud_cover` < 10)
 #'
 #' # Example with AWS STAC
 #' stac("https://earth-search.aws.element84.com/v0") %>%
 #'     stac_search(collections = "sentinel-s2-l2a-cogs",
-#'               bbox = c(-48.206,-14.195,-45.067,-12.272),
+#'               bbox = c(-48.206, -14.195, -45.067, -12.272),
 #'               datetime = "2018-06-01/2018-06-30",
 #'               limit = 500) %>%
 #'     post_request() %>%
@@ -183,7 +186,7 @@
 #' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
 #'  get_request() %>% items_fetch(progress = FALSE)
 #'
 #' stac_item %>% items_reap(field = c("properties", "datetime"))
@@ -194,7 +197,7 @@
 #' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
 #'  get_request() %>% items_fetch(progress = FALSE)
 #'
 #'  stac_item %>% items_group(., field = c("properties", "bdc:tiles"))
@@ -309,8 +312,11 @@ items_fetch.STACItemCollection <- function(items, ...,
   # verify if progress bar can be shown
   progress <- progress & (!is.null(matched) && (items_length(items) < matched))
   if (progress)
-    pb <- utils::txtProgressBar(min = items_length(items), max = matched,
-                                style = 3)
+    pb <- utils::txtProgressBar(
+      min = items_length(items),
+      max = matched,
+      style = 3
+    )
 
   while (TRUE) {
 
@@ -410,7 +416,8 @@ items_next.STACItemCollection <- function(items, ...) {
 
     # get next link parameters from url
     params <- .querystring_decode(substring(
-      gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2))
+      gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2)
+    )
 
     # verify if query params is valid
     params <- .validate_query(params = params)
@@ -421,7 +428,7 @@ items_next.STACItemCollection <- function(items, ...) {
 
   next_stac <- RSTACQuery(version = q$version,
                           base_url = q$base_url,
-                          params = utils::modifyList(q$params, params),
+                          params = modify_list(q$params, params),
                           subclass = subclass(q))
 
   # call request
@@ -580,8 +587,39 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #' @export
 items_reap <- function(items, ..., field = NULL) {
 
-  # checks if the object is STACItemCollections
   if (items_length(items) == 0) return(NULL)
+
+  UseMethod("items_reap", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_reap.STACItem <- function(items, ..., field = NULL) {
+
+  dots <- substitute(list(...))[-1]
+  if (!is.character(dots)) dots <- as.character(dots)
+
+  if (length(dots) > 0 && length(field) > 0)
+    .error("Only one of the parameters '...' or 'field' must be supplied.")
+
+  if (length(field) == 0 && length(dots) == 0)
+    return(items)
+
+  values <- items[[c(dots, field)]]
+
+  if (all(vapply(values, is.null, logical(1))))
+    .error("The provided field does not exist.")
+
+  if (all(vapply(values, is.atomic, logical(1))))
+    return(unlist(values))
+  values
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_reap.STACItemCollection <- function(items, ..., field = NULL) {
 
   dots <- substitute(list(...))[-1]
   if (!is.character(dots)) dots <- as.character(dots)
@@ -734,9 +772,9 @@ items_sign.STACItemCollection <- function(items, ..., sign_fn = NULL) {
 
   if (!is.null(items_matched(items))) {
     if (items_length(items) != items_matched(items))
-      .message(paste("The number of items in this object does not match the",
-                     "total number of items in the item. If you want to get",
-                     "all items, use `items_fetch()`"))
+      message("The number of items in this object does not match the ",
+              "total number of items in the item. If you want to get ",
+              "all items, use `items_fetch()`")
   }
 
   # assign each item obj
@@ -760,6 +798,65 @@ items_sign.STACItem <- function(items, ..., sign_fn = NULL) {
   }
 
   items <- sign_fn(items)
+
+  items
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_apply <- function(items, ..., field, apply_fn = NULL) {
+
+  if (is.null(apply_fn)) {
+    return(items)
+  }
+
+  UseMethod("items_apply", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_apply.STACItemCollection <- function(items, ..., field, apply_fn = NULL) {
+
+  stopifnot(length(field) == 1)
+
+  if (!is.null(items_matched(items))) {
+    if (items_length(items) != items_matched(items))
+      message("The number of items in this object does not match the ",
+              "total number of items in the item. If you want to get ",
+              "all items, use `items_fetch()`")
+  }
+
+  # assign each item obj
+  items[["features"]] <- lapply(items[["features"]], function(item) {
+
+    stopifnot(all(field %in% names(item)))
+
+    x <- apply_fn(item[[field]])
+
+    if (class(x) != class(item[[field]]))
+      .error("The return of function is different that was expected.")
+
+    item[[field]] <- x
+
+    item
+  })
+
+  items
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_apply.STACItem <- function(items, ..., field, apply_fn = NULL) {
+
+  x <- apply_fn(items[[field]])
+
+  if (class(x) != class(items[[field]]))
+    .error("The return of function is different that was expected.")
+
+  items[[field]] <- x
 
   items
 }

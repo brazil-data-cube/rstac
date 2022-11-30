@@ -1,6 +1,6 @@
 Package: rstac
 Title: Client Library for SpatioTemporal Asset Catalog
-Version: 0.9.1-5
+Version: 0.9.1-6
 Authors@R:
     c(person("Brazil Data Cube Team",
             email = "brazildatacube@inpe.br",
@@ -10,24 +10,55 @@ Authors@R:
 Description: Provides functions to access, search and download spacetime earth
     observation data via SpatioTemporal Asset Catalog (STAC). This package 
     supports the version 1.0.0 of the STAC specification
-    (<http://stacspec.org>). 
+    (<https://github.com/radiantearth/stac-spec>). 
     For further details see Simoes et al. (2021) <doi:10.1109/IGARSS47720.2021.9553518>.
 License: MIT + file LICENSE
 URL: https://github.com/brazil-data-cube/rstac
 BugReports: https://github.com/brazil-data-cube/rstac/issues
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Depends:
     R (>= 3.5)
 Imports:
     httr,
     crayon,
     utils,
-    magrittr,
     jsonlite,
     lifecycle
 Suggests:
-    covr,
+    magrittr,
     testthat,
-    vcr
+    vcr,
+    sf
+Collate:
+    'cql2-expr-funs.R'
+    'cql2-types.R'
+    'parse-utils.R'
+    'cql2-core.R'
+    'cql2-prints.R'
+    'cql2-enhancements.R'
+    'cql2-adv_comp.R'
+    'cql2.R'
+    'cql2-env.R'
+    'assets-funs.R'
+    'check-utils.R'
+    'collections-query.R'
+    'deprec-funs.R'
+    'document-funs.R'
+    'ext_filter.R'
+    'ext_query.R'
+    'extensions.R'
+    'items-funs.R'
+    'items-query.R'
+    'message-utils.R'
+    'print.R'
+    'query-funs.R'
+    'request.R'
+    'rstac.R'
+    'signatures.R'
+    'stac-query.R'
+    'stac_search.R'
+    'stac_version.R'
+    'url-utils.R'
+    'utils.R'
 Roxygen: list(markdown = TRUE)

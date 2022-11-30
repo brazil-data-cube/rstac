@@ -56,9 +56,10 @@
 #' antimeridian the first value (west-most box edge) is larger than the third
 #' value (east-most box edge).
 #'
-#' @param intersects  a `character` value expressing GeoJSON geometries
+#' @param intersects  a `list` expressing GeoJSON geometries
 #' objects as specified in RFC 7946. Only returns items that intersect with
-#' the provided polygon.
+#' the provided geometry. To turn a GeoJSON into a list the packages `geojsonsf`
+#' or `jsonlite` can be used.
 #'
 #' @param limit       an `integer` defining the maximum number of results
 #' to return. If not informed it defaults to the service implementation.
@@ -81,7 +82,7 @@
 #' # POST request
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1",
-#'         bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) %>%
+#'         bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
 #'  post_request()
 #' }
 #'
@@ -112,7 +113,7 @@ stac_search <- function(q,
     params[["bbox"]] <- .parse_bbox(bbox)
 
   if (!is.null(intersects))
-    params[["intersects"]] <- .parse_geometry(intersects)
+    params[["intersects"]] <- .parse_intersects(intersects)
 
   if (!is.null(limit))
     params[["limit"]] <- .parse_limit(limit)
@@ -141,7 +142,7 @@ parse_params.search <- function(q, params) {
     params[["bbox"]] <- .parse_bbox(params[["bbox"]])
 
   if (!is.null(params[["intersects"]]))
-    params[["intersects"]] <- .parse_geometry(params[["intersects"]])
+    params[["intersects"]] <- .parse_intersects(params[["intersects"]])
 
   if (!is.null(params[["limit"]]))
     params[["limit"]] <- .parse_limit(params[["limit"]])

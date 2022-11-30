@@ -59,9 +59,10 @@ Examples:
 Only features that have a \code{datetime} property that intersects the
 interval or date-time informed in \code{datetime} are selected.}
 
-\item{intersects}{a \code{character} value expressing GeoJSON geometries
+\item{intersects}{a \code{list} expressing GeoJSON geometries
 objects as specified in RFC 7946. Only returns items that intersect with
-the provided polygon.}
+the provided geometry. To turn a GeoJSON into a list the packages \code{geojsonsf}
+or \code{jsonlite} can be used.}
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed it defaults to the service implementation.}
@@ -94,7 +95,7 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
 # POST request
 stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  stac_search(collections = "CB4_64_16D_STK-1",
-        bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) \%>\%
+        bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
  post_request()
 }
 

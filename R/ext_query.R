@@ -1,4 +1,4 @@
-#' @title Extension functions
+#' @title Query extension
 #'
 #' @description
 #' The `ext_query()` is the *exported function* of the STAC API
@@ -46,7 +46,7 @@
 #'
 #' @param ... entries with format `<field> <operator> <value>`.
 #'
-#' @seealso [stac_search()], [post_request()],
+#' @seealso [ext_filter()], [stac_search()], [post_request()],
 #' [endpoint()], [before_request()],
 #' [after_response()], [content_response()]
 #'
@@ -66,14 +66,14 @@
 ext_query <- function(q, ...) {
 
   # check s parameter
-  check_subclass(q, c("search", "ext_query"))
+  check_subclass(q, "search")
 
   # get the env parent
   env_parent <- parent.frame()
 
   params <- list()
-  if (!is.null(substitute(list(...))[-1])) {
-    dots <- substitute(list(...))[-1]
+  if (!is.null(substitute(list(...), env = environment())[-1])) {
+    dots <- substitute(list(...), env = environment())[-1]
     tryCatch({
       ops <- lapply(dots, function(x) as.character(x[[1]]))
       keys <- lapply(dots, function(x) as.character(x[[2]]))
@@ -118,7 +118,7 @@ ext_query <- function(q, ...) {
   RSTACQuery(version = q$version,
              base_url = q$base_url,
              params = utils::modifyList(q$params, params),
-             subclass = "ext_query")
+             subclass = unique(c("ext_query", subclass(q))))
 }
 
 #' @export
@@ -152,7 +152,7 @@ after_response.ext_query <- function(q, res) {
 parse_params.ext_query <- function(q, params) {
 
   # call super class
-  params <- parse_params.search(q, params)
+  params <- NextMethod("parse_params")
 
   params$query <- .parse_values_keys(params$query)
 

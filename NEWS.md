@@ -1,5 +1,28 @@
 # rstac (development version)
 
+# rstac 0.9.1-6 (Released 2021-11-05)
+
+* Fix examples and README where bbox parameter is in wrong order
+* Now items without the "match" property can be downloaded
+* Introduce a bbox checker
+* Fix appveyor bug
+
+# rstac 0.9.1-5 (Released 2021-11-01)
+
+* Add support to `lifecycle` package
+* Documentation has been changed from `Rd` to `markdown`
+* New functions that support assets and items manipulation have been added: `assets_select`, `assets_filter`, and `items_filter`
+* The documentation was reviewed
+* New examples and tests were added
+* `rstac` now supports signatures in `href` using the `items_sign` function
+* Function `items_bands()` was changed to `items_assets()` 
+* Parameters `assets_name` and `assets_names` are now called `asset_names`
+* Add the `rstac` reference paper in README
+* Add feature name on print items objects
+* Create `items_next` function to do a single pagination request 
+* Adjust download helpers to access data from Microsoft's Planetary Computer
+* Update news.md of v0.9.0-1 
+
 # rstac 0.9.1-4 (Released 2021-09-14)
 
 * Fix typos
@@ -24,18 +47,18 @@
 
 # rstac 0.9.0-1 (Released 2020-10-20)
 
-* Update ext_query function
-* Add magrittr package in depends
+* Update `ext_query` function
+* Add `magrittr` package in depends
 * Add function items_bands
-* Introduces items_bbox and items_datetime functions
+* Introduces `items_bbox` and `items_datetime` functions
 * Update print.R file
 * Fix items_fetch
-* Update 'assets_download.R' and others functions
+* Update `assets_download.R` and others functions
 * Add function 'get_assets_name'
 * Add overwrite and items_max parameter; solve issue #10
 * Fix bug in stac_matched and update documentation
-* Change function name '.verify_datime()' to 'parse_datetime()'
-* Rename extension_query -> ext_query
+* Change function name `.verify_datime()'` to `parse_datetime()`
+* Rename function `extension_query` to `ext_query`
 
 # rstac 0.9.0 (Released 2020-09-18)
 

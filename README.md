@@ -14,7 +14,7 @@ License](https://img.shields.io/badge/license-MIT-green)](https://github.com/bra
 Status](https://cloud.drone.io/api/badges/OldLipe/rstac/status.svg)](https://cloud.drone.io/OldLipe/rstac)
 [![Build
 status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/rstac)
-[![codecov](https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT)](https://codecov.io/gh/brazil-data-cube/rstac)
+[![codecov](https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT)](https://app.codecov.io/gh/brazil-data-cube/rstac)
 [![Software Life
 Cycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![CRAN
@@ -103,7 +103,7 @@ Item Collection (a geojson containing a feature collection).
 ``` r
 it_obj <- s_obj %>% 
     stac_search(collections = "CB4_64_16D_STK-1",
-                bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) %>%
+                bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
     get_request()
 
 it_obj
@@ -134,7 +134,7 @@ on a HTTP request.
 ``` r
 it_obj <- s_obj %>% 
     stac_search(collections = "CB4_64_16D_STK-1",
-                bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) %>%
+                bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
     get_request(add_headers("x-api-key" = "MY-TOKEN"))
 ```
 

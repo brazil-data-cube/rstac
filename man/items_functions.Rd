@@ -25,6 +25,8 @@
 \alias{items_assets.STACItemCollection}
 \alias{items_filter}
 \alias{items_reap}
+\alias{items_reap.STACItem}
+\alias{items_reap.STACItemCollection}
 \alias{items_fields}
 \alias{items_fields.STACItemCollection}
 \alias{items_fields.STACItem}
@@ -32,6 +34,9 @@
 \alias{items_sign}
 \alias{items_sign.STACItemCollection}
 \alias{items_sign.STACItem}
+\alias{items_apply}
+\alias{items_apply.STACItemCollection}
+\alias{items_apply.STACItem}
 \title{STACItemCollection functions}
 \usage{
 items_length(items)
@@ -80,6 +85,10 @@ items_filter(items, ..., filter_fn = NULL)
 
 items_reap(items, ..., field = NULL)
 
+\method{items_reap}{STACItem}(items, ..., field = NULL)
+
+\method{items_reap}{STACItemCollection}(items, ..., field = NULL)
+
 items_fields(items, ..., field = NULL)
 
 \method{items_fields}{STACItemCollection}(items, ..., field = NULL)
@@ -93,6 +102,12 @@ items_sign(items, ..., sign_fn = NULL)
 \method{items_sign}{STACItemCollection}(items, ..., sign_fn = NULL)
 
 \method{items_sign}{STACItem}(items, ..., sign_fn = NULL)
+
+items_apply(items, ..., field, apply_fn = NULL)
+
+\method{items_apply}{STACItemCollection}(items, ..., field, apply_fn = NULL)
+
+\method{items_apply}{STACItem}(items, ..., field, apply_fn = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
@@ -124,6 +139,9 @@ subfields values from the \code{RSTACDocument} objects.}
 
 \item{sign_fn}{a \code{function} that receives an item as parameter
 and returns an item signed.}
+
+\item{apply_fn}{a \code{function} that is applicable for any property of
+an item.}
 }
 \value{
 \itemize{
@@ -254,7 +272,7 @@ Sys.setenv("BDC_ACCESS_KEY" = <your_bdc_access_key>)
 stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
         datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
+        bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
     get_request() \%>\% items_sign(sign_fn = sign_bdc())
 
 }
@@ -265,13 +283,13 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
 stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
         datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
+        bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
     get_request() \%>\% items_filter(`eo:cloud_cover` < 10)
 
 # Example with AWS STAC
 stac("https://earth-search.aws.element84.com/v0") \%>\%
     stac_search(collections = "sentinel-s2-l2a-cogs",
-              bbox = c(-48.206,-14.195,-45.067,-12.272),
+              bbox = c(-48.206, -14.195, -45.067, -12.272),
               datetime = "2018-06-01/2018-06-30",
               limit = 500) \%>\%
     post_request() \%>\%
@@ -283,7 +301,7 @@ stac("https://earth-search.aws.element84.com/v0") \%>\%
 stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
         datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
+        bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
  get_request() \%>\% items_fetch(progress = FALSE)
 
 stac_item \%>\% items_reap(field = c("properties", "datetime"))
@@ -294,7 +312,7 @@ stac_item \%>\% items_reap(field = c("properties", "datetime"))
 stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
         datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
+        bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
  get_request() \%>\% items_fetch(progress = FALSE)
 
  stac_item \%>\% items_group(., field = c("properties", "bdc:tiles"))

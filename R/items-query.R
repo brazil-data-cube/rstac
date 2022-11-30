@@ -77,7 +77,7 @@
 #' \donttest{
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'   collections("CB4_64_16D_STK-1") %>%
-#'   items(bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) %>%
+#'   items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
 #'   get_request()
 #'
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
@@ -119,6 +119,20 @@ items <- function(q, feature_id = NULL,
              base_url = q$base_url,
              params = utils::modifyList(q$params, params),
              subclass = subclass)
+}
+
+#' @export
+parse_params.items <- function(q, params) {
+  if (!is.null(params[["datetime"]]))
+    params[["datetime"]] <- .parse_datetime(params[["datetime"]])
+
+  if (!is.null(params[["bbox"]]))
+    params[["bbox"]] <- .parse_bbox(params[["bbox"]])
+
+  if (!is.null(params[["limit"]]))
+    params[["limit"]] <- .parse_limit(params[["limit"]])
+
+  params
 }
 
 #' @export

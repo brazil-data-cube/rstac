@@ -10,6 +10,32 @@ testthat::test_that("internals functions", {
     object = check_subclass(stac_obj, subclasses = c("stac"))
   )
 
+  # check for query for wrong verb
+  testthat::expect_error(
+    check_query_verb(q = stac_obj, verbs = c("DDDDD"))
+  )
+
+  testthat::expect_equal(
+    object = subclass(before_request(stac_obj)),
+    expected = "stac"
+  )
+
+  testthat::expect_error(
+    object = {
+      mock_obj <- stac_obj
+      class(mock_obj) <- "RSTACQuery"
+      after_response(mock_obj, res = NULL)
+    }
+  )
+
+  testthat::expect_error(
+    object = {
+      mock_obj <- stac_obj
+      class(mock_obj) <- "RSTACQuery"
+      endpoint(mock_obj)
+    }
+  )
+
   # subclass object
   testthat::expect_equal(
     object = subclass(stac_obj),
@@ -30,4 +56,28 @@ testthat::test_that("internals functions", {
   testthat::expect_message(
     .message("message function")
   )
+
+  testthat::expect_error(
+    .make_url("aaa", params = list(1))
+  )
+})
+
+testthat::test_that("internals response", {
+  vcr::use_cassette("stac_response_internals", {
+
+    bdc_catalog <- httr::GET("https://brazildatacube.dpi.inpe.br/stac/")
+    bdc_wrong_path <- httr::GET("https://brazildatacube.dpi.inpe.br/stac/dddd")
+
+    testthat::expect_error(
+      content_response(res = bdc_catalog,
+                       status_codes = c(300),
+                       content_types = "application/json")
+    )
+
+    testthat::expect_error(
+      content_response(res = bdc_wrong_path,
+                       status_codes = c(300),
+                       content_types = "application/json")
+    )
+  })
 })

@@ -2,7 +2,7 @@
 % Please edit documentation in R/ext_query.R
 \name{ext_query}
 \alias{ext_query}
-\title{Extension functions}
+\title{Query extension}
 \usage{
 ext_query(q, ...)
 }
@@ -67,7 +67,7 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
 
 }
 \seealso{
-\code{\link[=stac_search]{stac_search()}}, \code{\link[=post_request]{post_request()}},
+\code{\link[=ext_filter]{ext_filter()}}, \code{\link[=stac_search]{stac_search()}}, \code{\link[=post_request]{post_request()}},
 \code{\link[=endpoint]{endpoint()}}, \code{\link[=before_request]{before_request()}},
 \code{\link[=after_response]{after_response()}}, \code{\link[=content_response]{content_response()}}
 }
