@@ -205,23 +205,30 @@ NULL
 
 #' @rdname assets_function
 #' @export
-assets_append_gdalvsi <- function(items,
-                                  asset_names = NULL,
-                                  sort = deprecated(),
-                                  gdal_vsi_resolution = deprecated()) {
-  if (!missing(sort)) {
-    deprec_parameter(
-      deprec_var = "sort",
-      deprec_version = "0.9.1-6"
-    )
-  }
+assets_url <- function(items, asset_names = NULL, append_gdalvsi = TRUE) {
+  UseMethod("assets_url", items)
+}
 
-  if (!missing(gdal_vsi_resolution)) {
-    deprec_parameter(
-      deprec_var = "gdal_vsi_resolution",
-      deprec_version = "0.9.1-6"
-    )
-  }
+#' @rdname assets_function
+#' @export
+assets_url.STACItemCollection <- function(items, append_gdalvsi = TRUE) {
+  url <- vapply(items_assets(items), function(asset_name) {
+    items_reap(items, "assets", asset_name, "href")
+  }, character(1))
+  if (append_gdalvsi) gdalvsi_append(url) else url
+}
+
+#' @rdname assets_function
+#' @export
+assets_url.STACItem <- function(items,
+                                append_gdalvsi = TRUE) {
+
+}
+
+#' @rdname assets_function
+#' @export
+assets_append_gdalvsi <- function(items,
+                                  asset_names = NULL) {
 
   if (is.null(asset_names))
     asset_names <- items_fields(items, "assets")
