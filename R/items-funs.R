@@ -537,8 +537,7 @@ items_assets.STACItem <- function(items, ...) {
 #' @rdname items_functions
 #'
 #' @export
-items_assets.STACItemCollection <- function(items, ..., simplify = FALSE) {
-
+items_assets.STACItemCollection <- function(items, ..., simplify = TRUE) {
   if (simplify)
     return(items_fields(items, "assets"))
   lapply(lapply(items$features, `[[`, c("assets")), names)
