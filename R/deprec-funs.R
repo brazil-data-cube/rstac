@@ -25,7 +25,7 @@ assets_filter <- function(items, ..., filter_fn = NULL) {
 assets_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
   # signal the deprecation to the user
   lifecycle::deprecate_soft(
-    when = "0.9.1-6",
+    when = "0.9.2",
     what = "rstac::assets_filter()",
     with = "rstac::assets_select()"
   )
@@ -76,7 +76,7 @@ assets_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
 assets_filter.STACItem <- function(items, ..., filter_fn = NULL) {
   # signal the deprecation to the user
   lifecycle::deprecate_soft(
-    when = "0.9.1-6",
+    when = "0.9.2",
     what = "rstac::assets_filter()",
     with = "rstac::assets_select()"
   )
