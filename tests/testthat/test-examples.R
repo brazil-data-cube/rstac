@@ -1,7 +1,4 @@
-context("tests_examples_0.9.0")
-
 testthat::test_that("examples rstac", {
-  vcr::use_cassette("tests_examples",{
     # skip cran check test
     testthat::skip_on_cran()
 
@@ -59,7 +56,6 @@ testthat::test_that("examples rstac", {
         get_request(),
       class = c("STACCatalog", "RSTACDocument"))
 
-
     #### tests in extensions ####
 
     # test extension query
@@ -97,7 +93,7 @@ testthat::test_that("examples rstac", {
                     limit = 10) %>%
         get_request() %>%
         items_matched(),
-      expected = 5774)
+      expected = 7505)
 
     # test items_group
     testthat::expect_equal(
@@ -132,15 +128,4 @@ testthat::test_that("examples rstac", {
           get_request() %>%
           items_fields(field = c("properties"))),
       expected = "character")
-
-    # test assets_list
-    testthat::expect_s3_class(
-      object = suppressWarnings(stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-                                  stac_search(collections = "CB4_64_16D_STK-1",
-                                              limit = 10,
-                                              datetime = "2017-08-01/2018-03-01") %>%
-                                  get_request() %>%
-                                  assets_list(assets_names = c("EVI", "NDVI"))),
-      class = "STACItemCollection")
-  })
 })

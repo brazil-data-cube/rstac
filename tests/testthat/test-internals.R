@@ -1,5 +1,4 @@
 testthat::test_that("internals functions", {
-
   # skip cran check test
   testthat::skip_on_cran()
 
@@ -52,19 +51,12 @@ testthat::test_that("internals functions", {
     .warning("warning function")
   )
 
-  # .message function
-  testthat::expect_message(
-    .message("message function")
-  )
-
   testthat::expect_error(
     .make_url("aaa", params = list(1))
   )
 })
 
 testthat::test_that("internals response", {
-  vcr::use_cassette("stac_response_internals", {
-
     bdc_catalog <- httr::GET("https://brazildatacube.dpi.inpe.br/stac/")
     bdc_wrong_path <- httr::GET("https://brazildatacube.dpi.inpe.br/stac/dddd")
 
@@ -79,5 +71,4 @@ testthat::test_that("internals response", {
                        status_codes = c(300),
                        content_types = "application/json")
     )
-  })
 })
