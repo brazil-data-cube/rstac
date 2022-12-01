@@ -35,8 +35,8 @@
 #'
 #' \item `items_fields()`: lists field names inside an item.
 #'
-#' \item `items_group()`: organizes items as elements of a list using
-#' some criteria.
+#' \item `items_group()`: `r lifecycle::badge('deprecated')` organizes
+#' items as elements of a list using some criteria.
 #'
 #' \item `items_sign()`: allow access assets by preparing its url.
 #' }

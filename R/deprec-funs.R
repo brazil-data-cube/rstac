@@ -106,3 +106,56 @@ assets_filter.STACItem <- function(items, ..., filter_fn = NULL) {
 
   items
 }
+
+
+#' @rdname items_functions
+#'
+#' @export
+items_group <- function(items, ..., field = NULL, index = NULL) {
+  # signal the deprecation to the user
+  lifecycle::deprecate_soft(
+    when = "0.9.2",
+    what = "rstac::items_group()"
+  )
+
+  # checks if the object is STACItemCollections
+  if (items_length(items) == 0) return(list(items))
+
+  dots <- substitute(list(...), env = environment())[-1]
+  if (!is.character(dots)) dots <- as.character(dots)
+
+  if (length(index) == 0 && length(field) == 0 &&  length(dots) == 0)
+    .error(paste("Either parameters 'index', 'field' or '...' parameters must",
+                 "be supplied."))
+
+  if (length(index) > 0 && (length(field) > 0 || length(dots) > 0))
+    .error(paste("Only one of the parameters '...','index' or 'field' should",
+                 "be supplied."))
+
+  if (is.null(index)) {
+    index <- items_reap(items, ..., field = field)
+
+    if (!is.atomic(index))
+      .error("The field must be atomic vector.")
+  } else {
+
+    if (items_matched(items) > items_length(items))
+      .warning(paste("The number of matched items is greater than the number",
+                     "of items length on your object. Considere to use",
+                     "the 'items_fetch()' function before this operation."))
+  }
+
+  if (items_length(items) != length(index))
+    .error(paste("The length of the field provided for grouping must contain",
+                 "the same size as the length of the items."))
+
+  features <- unname(tapply(X = items$features,
+                            INDEX = index,
+                            FUN = c, simplify = FALSE))
+
+  lapply(features, function(x){
+    items$features <- x
+
+    items
+  })
+}
