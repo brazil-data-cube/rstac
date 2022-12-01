@@ -1,10 +1,6 @@
-context("test_stac_obj")
-
 testthat::test_that("stac search object", {
-  vcr::use_cassette("stac_search_obj", {
     # skip cran check test
     testthat::skip_on_cran()
-
     testthat::expect_warning(
       stac("https://landsatlook.usgs.gov/sat-api/stac", force_version = "0.7.0")
     )
@@ -187,15 +183,6 @@ testthat::test_that("stac search object", {
         rstac::stac_search(datetime = "2018-01-01/..")
     )
 
-    # check extension query - wrong contruction
-    testthat::expect_error(
-      object = stac("https://brazildatacube.dpi.inpe.br/stac/",
-                    force_version = "0.9.0") %>%
-        stac_search(datetime = "2018-01-01/..") %>%
-        ext_query("bdc:tile" == "022024") %>%
-        stac_search(datetime = "2018-01-01/..")
-    )
-
     # check extension query - wrong query
     testthat::expect_error(
       object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
@@ -229,61 +216,61 @@ testthat::test_that("stac search object", {
     # 'in' operation
     testthat::expect_equal(
       object   =  subclass(ext_query(s_search, "bdc:tile" %in% "022024")),
-      expected = "ext_query"
+      expected = c("ext_query", "search")
     )
 
     # 'neq' operation
     testthat::expect_equal(
-      object   =  subclass(ext_query(s_search, "bdc:tile" != "022024")),
-      expected = "ext_query"
+      object   = subclass(ext_query(s_search, "bdc:tile" != "022024")),
+      expected = c("ext_query", "search")
     )
 
     # 'eq' operation
     testthat::expect_equal(
-      object   =  subclass(ext_query(s_search, "bdc:tile" == "022024")),
-      expected = "ext_query"
+      object   = subclass(ext_query(s_search, "bdc:tile" == "022024")),
+      expected = c("ext_query", "search")
     )
 
     # 'lt' operation
     testthat::expect_equal(
-      object   =  subclass(ext_query(s_search, "eo:cloud_cover" < 50)),
-      expected = "ext_query"
+      object   = subclass(ext_query(s_search, "eo:cloud_cover" < 50)),
+      expected = c("ext_query", "search")
     )
 
     # 'lte' operation
     testthat::expect_equal(
-      object   =  subclass(ext_query(s_search, "eo:cloud_cover" <= 50)),
-      expected = "ext_query"
+      object   = subclass(ext_query(s_search, "eo:cloud_cover" <= 50)),
+      expected = c("ext_query", "search")
     )
 
     # 'gt' operation
     testthat::expect_equal(
-      object   =  subclass(ext_query(s_search, "eo:cloud_cover" > 50)),
-      expected = "ext_query"
+      object   = subclass(ext_query(s_search, "eo:cloud_cover" > 50)),
+      expected = c("ext_query", "search")
     )
 
     # 'gte' operation
     testthat::expect_equal(
-      object   =  subclass(ext_query(s_search, "eo:cloud_cover" >= 50)),
-      expected = "ext_query"
+      object   = subclass(ext_query(s_search, "eo:cloud_cover" >= 50)),
+      expected = c("ext_query", "search")
     )
 
     # 'startsWith' operation
     testthat::expect_equal(
-      object   =  subclass(ext_query(s_search, "bdc:tile" %startsWith% "022")),
-      expected = "ext_query"
+      object   = subclass(ext_query(s_search, "bdc:tile" %startsWith% "022")),
+      expected = c("ext_query", "search")
     )
 
     # 'endsWith' operation
     testthat::expect_equal(
       object   =  subclass(ext_query(s_search, "bdc:tile" %endsWith% "20")),
-      expected = "ext_query"
+      expected = c("ext_query", "search")
     )
 
     # 'contains' operation
     testthat::expect_equal(
       object   =  subclass(ext_query(s_search, "bdc:tile" %contains% "20")),
-      expected = "ext_query"
+      expected = c("ext_query", "search")
     )
 
     # wrong operation
@@ -401,11 +388,9 @@ testthat::test_that("stac search object", {
           rstac::stac_search(datetime = "2018-03-20T12:31:12Z/..")),
       expected = c("search")
     )
-  })
 })
 
 testthat::test_that("stac collection object", {
-  vcr::use_cassette("stac_collection_obj", {
     # skip cran check test
     testthat::skip_on_cran()
 
@@ -477,11 +462,9 @@ testthat::test_that("stac collection object", {
       object   = print((s_colid %>% get_request())),
       regexp   = "###STACCollection"
     )
-  })
 })
 
 testthat::test_that("stac object", {
-  vcr::use_cassette("stac_obj", {
     # skip cran check test
     testthat::skip_on_cran()
 
@@ -515,11 +498,9 @@ testthat::test_that("stac object", {
           get_request()),
       regexp   = "###STACCatalog"
     )
-  })
 })
 
 testthat::test_that("stac item object", {
-  vcr::use_cassette("stac_item_obj", {
     # skip cran check test
     testthat::skip_on_cran()
 
@@ -626,5 +607,4 @@ testthat::test_that("stac item object", {
       object   = items_length(items_fetch(stac_item)),
       expected = 1
     )
-  })
 })

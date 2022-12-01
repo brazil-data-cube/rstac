@@ -3,11 +3,11 @@
 json_quote <- function(x) paste0('"', x, '"')
 
 json_lst <- function(x)
-    paste0("[", paste0(lapply(x, to_json), collapse = ","), "]")
+  paste0("[", paste0(lapply(x, to_json), collapse = ","), "]")
 
 json_obj <- function(x)
-    paste0("{", paste0(json_quote(names(x)), ":",
-                        unname(lapply(x, to_json)), collapse = ","), "}")
+  paste0("{", paste0(json_quote(names(x)), ":",
+                     unname(lapply(x, to_json)), collapse = ","), "}")
 
 # ---- convert to json ----
 
@@ -18,48 +18,53 @@ to_json.character <- function(x) json_quote(x)
 
 #' @exportS3Method
 to_json.numeric <- function(x) {
-    if (length(x) == 1) {
-        paste0(x)
-    } else {
-        to_json(as.list(x))
-    }
+  if (length(x) == 1) {
+    format(x, scientific = FALSE)
+  } else {
+    to_json(as.list(x))
+  }
 }
 
 #' @exportS3Method
 to_json.integer <- function(x) {
-    if (length(x) == 1) {
-        paste0(x)
-    } else {
-        to_json(as.list(x))
-    }
+  if (length(x) == 1) {
+    paste0(x)
+  } else {
+    to_json(as.list(x))
+  }
 }
 
 #' @exportS3Method
 to_json.logical <- function(x)  {
-    if (length(x) == 1) {
-        if (x) "true" else "false"
-    } else {
-        to_json(as.list(x))
-    }
+  if (length(x) == 1) {
+    if (x) "true" else "false"
+  } else {
+    to_json(as.list(x))
+  }
 }
 
 #' @exportS3Method
 to_json.matrix <- function(x) {
-    to_json(apply(x, 1, c, simplify = FALSE))
+  to_json(apply(x, 1, c, simplify = FALSE))
 }
 
 #' @exportS3Method
 to_json.list <- function(x) {
-    if (is_lst(x))
-        json_lst(x)
-    else if (is_obj(x))
-        json_obj(x)
-    else
-        stop("cannot convert list value to a valid cql2 json", call. = FALSE)
+  if (is_lst(x))
+    json_lst(x)
+  else if (is_obj(x))
+    json_obj(x)
+  else
+    stop("cannot convert list value to a valid cql2 json", call. = FALSE)
 }
 
 #' @exportS3Method
-to_json.cql2_spatial <- function(x) json_obj(x)
+to_json.cql2_spatial <- function(x) {
+  if (is_str(x)) {
+    return(x)
+  }
+  return(json_obj(x))
+}
 
 #' @exportS3Method
 to_json.cql2_logic_op <- function(x) json_obj(x)
@@ -78,10 +83,10 @@ to_json.cql2_math_op <- function(x) json_obj(x)
 
 #' @exportS3Method
 to_json.cql2_minus_op <- function(x) {
-    if (length(x$args) == 1 && is_num(x$args[[1]]))
-        paste0(-x$args[[1]])
-    else
-        json_obj(x)
+  if (length(x$args) == 1 && is_num(x$args[[1]]))
+    paste0(-x$args[[1]])
+  else
+    json_obj(x)
 }
 
 #' @exportS3Method
@@ -116,7 +121,7 @@ to_json.cql2_interval <- function(x) json_obj(x)
 
 #' @exportS3Method
 to_json.default <- function(x)
-    stop(paste("cannot handle value of class ", class(x)), call. = FALSE)
+  stop(paste("cannot handle value of class ", class(x)), call. = FALSE)
 
 # ---- auxiliary functions ----
 
@@ -146,7 +151,7 @@ to_text <- function(x) UseMethod("to_text", x)
 to_text.character <- function(x) text_quote(escape(x))
 
 #' @exportS3Method
-to_text.numeric <- function(x) paste0(x)
+to_text.numeric <- function(x) format(x, scientific = FALSE)
 
 #' @exportS3Method
 to_text.integer <- function(x) paste0(x)
@@ -155,7 +160,12 @@ to_text.integer <- function(x) paste0(x)
 to_text.logical <- function(x) if (x) "true" else "false"
 
 #' @exportS3Method
-to_text.cql2_spatial <- function(x) to_wkt(x)
+to_text.cql2_spatial <- function(x) {
+  if (is_str(x)) {
+    return(x)
+  }
+  return(to_wkt(x))
+}
 
 #' @exportS3Method
 to_text.sf <- function(x) to_wkt(get_spatial(x))
@@ -170,6 +180,8 @@ to_text.sfg <- function(x) to_wkt(get_spatial(x))
 to_text.list <- function(x) {
   if (is_lst(x))
     text_lst(lapply(x, to_text))
+  else if (is_spatial(x))
+    to_wkt(get_spatial(x))
   else
     stop("cannot convert list object to cql2 text", call. = FALSE)
 }

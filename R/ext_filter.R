@@ -197,7 +197,11 @@ ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
   .check_lang(lang)
 
   # get expression
-  params <- cql2(expr, lang = lang, crs = crs, env_expr = environment())
+  expr <- unquote(
+    expr = substitute(expr = expr, env = environment()),
+    env = parent.frame()
+  )
+  params <- cql2(expr, lang = lang, crs = crs)
 
   RSTACQuery(version = q$version,
              base_url = q$base_url,

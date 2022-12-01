@@ -180,14 +180,11 @@ assets_download.STACItem <- function(items,
 #'  included in the URL of each asset. The following schemes are supported:
 #'  HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 #'
-#' @param ...          additional arguments. See details.
 #'
 #' @param filter_fn           a `function` that will be used to filter the
 #'  attributes listed in the properties.
 #'
-#'
-#' @param fn                 `r lifecycle::badge('deprecated')`
-#'  use `filter_fn` parameter instead.
+#' @param ...                 additional arguments.
 #'
 #' @return a `list` with the attributes of date, bands and paths.
 #'
@@ -244,7 +241,7 @@ assets_append_gdalvsi <- function(items,
 #' @rdname assets_function
 #'
 #' @export
-assets_select <- function(items, asset_names) {
+assets_select <- function(items, asset_names, ...) {
   UseMethod("assets_select", items)
 }
 
@@ -252,7 +249,7 @@ assets_select <- function(items, asset_names) {
 #'
 #' @export
 assets_select.STACItemCollection <- function(items,
-                                             asset_names = NULL,
+                                             asset_names = NULL, ...,
                                              filter_fn = NULL) {
   if (!is.null(asset_names)) {
     if (!all(asset_names %in% items_assets(items, simplify = TRUE)))
@@ -280,7 +277,7 @@ assets_select.STACItemCollection <- function(items,
 #'
 #' @export
 assets_select.STACItem <- function(items,
-                                   asset_names = NULL,
+                                   asset_names = NULL, ...,
                                    filter_fn = NULL) {
   if (!is.null(asset_names)) {
     if (!all(asset_names %in% items_assets(items)))

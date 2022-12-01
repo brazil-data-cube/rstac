@@ -1,5 +1,4 @@
 testthat::test_that("assets functions", {
-  vcr::use_cassette("assets_download", {
     # skip cran check test
     testthat::skip_on_cran()
 
@@ -7,7 +6,7 @@ testthat::test_that("assets functions", {
 
     # error - zero items
     testthat::expect_error(
-      rstac::stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(
           collections = "CB4_64_16D_STK-1",
           datetime    = "2019-09-01/2019-11-01",
@@ -19,14 +18,14 @@ testthat::test_that("assets functions", {
 
     # error - given another object
     testthat::expect_error(
-      stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         get_request(.) %>%
         assets_download(., asset_names = c("blue", "evi"))
     )
 
     # error - wrong path
     testthat::expect_error(
-      stac("http://brazildatacube.dpi.inpe.br/stac/") %>%
+      stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(
           collections = "CB4_64_16D_STK-1",
           datetime    = "2019-09-01/2019-11-01",
@@ -39,13 +38,13 @@ testthat::test_that("assets functions", {
     # verify output object
     testthat::expect_equal(
       object = {
-        x <- stac("http://brazildatacube.dpi.inpe.br/dev/bdc-stac/") %>%
+        x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           stac_search(
             collections = "CB4_64_16D_STK-1",
             datetime    = "2019-09-01/2019-11-01",
             limit       = 1) %>%
           get_request() %>%
-          assets_download(asset_names = c("thumbnail"), output_dir = ".")
+          assets_download(asset_names = c("thumbnail"), output_dir = tempdir())
         subclass(x)
       },
       expected = "STACItemCollection"
@@ -60,25 +59,9 @@ testthat::test_that("assets functions", {
             datetime    = "2019-09-01/2019-11-01",
             limit       = 1) %>%
           get_request() %>%
-          assets_download(assets_name = c("thumbnail"),
-                          output_dir = ".",
-                          overwrite = TRUE)
-      },
-      regexp = "deprecated"
-    )
-
-    # deprec param
-    testthat::expect_message(
-      object = {
-        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-          stac_search(
-            collections = "CB4_64_16D_STK-1",
-            datetime    = "2019-09-01/2019-11-01",
-            limit       = 1) %>%
-          get_request() %>%
           assets_download(asset_names = c("thumbnail"),
                           fn = function(x) { x },
-                          output_dir = ".",
+                          output_dir = tempdir(),
                           overwrite = TRUE)
       },
       regexp = "deprecated"
@@ -95,7 +78,7 @@ testthat::test_that("assets functions", {
           assets_download(asset_names = c("thumbnail"),
                           items_max = 2,
                           download_fn = function(x) { x },
-                          output_dir = ".",
+                          output_dir = tempdir(),
                           overwrite = TRUE)
         subclass(x)
       },
@@ -116,7 +99,7 @@ testthat::test_that("assets functions", {
                         asset_names = c("thumbnail"),
                         items_max = 2,
                         download_fn = function(x) { x },
-                        output_dir = ".",
+                        output_dir = tempdir(),
                         overwrite = TRUE)
       }
     )
@@ -128,27 +111,14 @@ testthat::test_that("assets functions", {
           items("CB4_64_16D_STK_v001_020024_2019-11-01_2019-11-16") %>%
           get_request() %>%
           assets_download(asset_names = c("thumbnail"),
-                          output_dir = ".",
+                          output_dir = tempdir(),
                           overwrite = TRUE)
         subclass(x)
       },
       expected = "STACItem"
     )
 
-    # deprec param
-    testthat::expect_message(
-      object = {
-        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-          collections("CB4_64_16D_STK-1") %>%
-          items("CB4_64_16D_STK_v001_020024_2019-11-01_2019-11-16") %>%
-          get_request() %>%
-          assets_download(assets_name = c("thumbnail"),
-                          output_dir = ".",
-                          overwrite = TRUE)
-      },
-      regexp = "deprecated"
-    )
-
+    # deprec fn param
     testthat::expect_message(
       object = {
         stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
@@ -157,7 +127,7 @@ testthat::test_that("assets functions", {
           get_request() %>%
           assets_download(asset_names = c("thumbnail"),
                           fn = function(x) {x},
-                          output_dir = ".",
+                          output_dir = tempdir(),
                           overwrite = TRUE)
       },
       regexp = "deprecated"
@@ -172,7 +142,7 @@ testthat::test_that("assets functions", {
           assets_download(asset_names = c("thumbnail"),
                           items_max = 2,
                           download_fn = function(x) {x},
-                          output_dir = ".",
+                          output_dir = tempdir(),
                           overwrite = TRUE)
         subclass(x)
       },
@@ -189,12 +159,10 @@ testthat::test_that("assets functions", {
           assets_download(asset_names = c("thumbnail"),
                           items_max = 2,
                           download_fn = function(x) {x},
-                          output_dir = ".",
+                          output_dir = tempdir(),
                           overwrite = FALSE)
       }
     )
-  })
-  vcr::use_cassette("assets_functions", {
 
     stac_items <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
       stac_search(collections = "CB4_64_16D_STK-1") %>%
@@ -312,91 +280,65 @@ testthat::test_that("assets functions", {
       expected = "httpdds://abc.com"
     )
 
+    # return the same object after filter?
+    testthat::expect_s3_class(
+      object = assets_select(stac_items, filter_fn = function(x) {
+        if ("eo:bands" %in% names(x))
+          return(x$`eo:bands` < 6)
+        return(FALSE)
+      }),
+      class = c("STACItemCollection", "RSTACDocument")
+    )
+
+    testthat::expect_s3_class(
+      object = assets_select(stac_item, filter_fn = function(x) {
+        if ("eo:bands" %in% names(x))
+          return(x$`eo:bands` < 6)
+        return(FALSE)
+      }),
+      class = c("STACItem", "RSTACDocument")
+    )
+
+    # return the same object after filter?
+    testthat::expect_s3_class(
+      object = assets_select(stac_items, filter_fn = function(x) {
+        if ("eo:bands" %in% names(x))
+          return(x$`eo:bands` < 6)
+        return(FALSE)
+      }),
+      class = c("STACItem", "RSTACDocument")
+    )
+
     # assets_filter-----------------------------------------------------------
-
-    # return the same object after filter?
-    testthat::expect_s3_class(
-      object = assets_filter(stac_items, `eo:bands` < 6),
-      class = c("STACItemCollection", "RSTACDocument")
+    # deprec function assets_filter
+    testthat::expect_equal(
+      object = {suppressWarnings(class(assets_filter(stac_items, `eo:bands` < 6)))},
+      expected = c("STACItemCollection", "RSTACDocument", "list")
     )
 
-    # return the same object after filter?
-    testthat::expect_s3_class(
-      object =  assets_filter(stac_item, `eo:bands` < 6),
-      class = c("STACItem", "RSTACDocument")
-    )
-
-    # return the same object after filter?
-    testthat::expect_s3_class(
-      object = assets_filter(stac_items, filter_fn = function(x) {
+    # deprec function assets_filter
+    testthat::expect_equal(
+      object = {suppressWarnings(class(assets_filter(stac_items, filter_fn = function(x) {
         if ("eo:bands" %in% names(x))
           return(x$`eo:bands` < 6)
         return(FALSE)
-      }),
-      class = c("STACItemCollection", "RSTACDocument")
+      })))},
+      expected = c("STACItemCollection", "RSTACDocument", "list")
     )
 
-    testthat::expect_s3_class(
-      object = assets_filter(stac_item, filter_fn = function(x) {
+    # deprec function assets_filter
+    testthat::expect_equal(
+      object = {suppressWarnings(class(assets_filter(stac_item, `eo:bands` < 6)))},
+      expected = c("STACItem", "RSTACDocument", "list")
+    )
+
+    # deprec function assets_filter
+    testthat::expect_equal(
+      object = {suppressWarnings(class(assets_filter(stac_item, filter_fn = function(x) {
         if ("eo:bands" %in% names(x))
           return(x$`eo:bands` < 6)
         return(FALSE)
-      }),
-      class = c("STACItem", "RSTACDocument")
+      })))},
+      expected = c("STACItem", "RSTACDocument", "list")
     )
-
-    # deprec param
-    testthat::expect_message(
-      object = assets_filter(stac_items, fn = function(x) {
-        if ("eo:bands" %in% names(x))
-          return(x$`eo:bands` < 6)
-        return(FALSE)
-      }),
-      regexp = "deprecated"
-    )
-
-    testthat::expect_message(
-      object = assets_filter(stac_item, fn = function(x) {
-        if ("eo:bands" %in% names(x))
-          return(x$`eo:bands` < 6)
-        return(FALSE)
-      }),
-      regexp = "deprecated"
-    )
-
-    # return the same object after filter?
-    testthat::expect_s3_class(
-      object = assets_filter(stac_items, filter_fn = function(x) {
-        if ("eo:bands" %in% names(x))
-          return(x$`eo:bands` < 6)
-        return(FALSE)
-      }),
-      class = c("STACItem", "RSTACDocument")
-    )
-
-    # return the same object after filter?
-    testthat::expect_message(
-      object = assets_filter(stac_items, fn = function(x) {
-        if ("eo:bands" %in% names(x))
-          return(x$`eo:bands` < 6)
-        return(FALSE)
-      }),
-      regexp = "deprecated"
-    )
-
-    # an error is expected if the ellipses is named
-    testthat::expect_error(
-      assets_filter(stac_items, j = "a" < 20)
-    )
-
-    # an error is expected if the ellipses is named
-    testthat::expect_error(
-      assets_filter(stac_item, j = "a" < 20)
-    )
-
-    # an error is expected if the ellipses is named
-    testthat::expect_error(
-      assets_filter(stac_item, j = "a" < 20)
-    )
-  })
 })

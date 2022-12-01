@@ -1,5 +1,4 @@
 testthat::test_that("items functions", {
-  vcr::use_cassette("items_functions", {
     # skip cran check test
     testthat::skip_on_cran()
 
@@ -75,7 +74,6 @@ testthat::test_that("items functions", {
         items_fetch(mock_obj)
       }
     )
-
 
     testthat::expect_equal(
       object = subclass(
@@ -209,12 +207,6 @@ testthat::test_that("items functions", {
       expected = "character"
     )
 
-    # items_bands---------------------------------------------------------------
-    testthat::expect_equal(
-      object = class(suppressWarnings(items_bands(item_stac))),
-      expected = "character"
-    )
-
     # items_next----------------------------------------------------------------
     testthat::expect_s3_class(
       object = items_next(item_stac),
@@ -254,7 +246,6 @@ testthat::test_that("items functions", {
         items_next(mock_obj)
       }
     )
-
 
     # items_reap----------------------------------------------------------------
     # STACItemCollection
@@ -391,5 +382,4 @@ testthat::test_that("items functions", {
           })
       )
     )
-  })
 })

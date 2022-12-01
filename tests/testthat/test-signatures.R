@@ -1,8 +1,5 @@
 testthat::test_that("signature functions", {
-  vcr::use_cassette("bdc_signatures",{
-
-    #--- BDC provider ----#
-
+    #---- BDC provider ----#
     # stac item collection from bdc
     stac_items <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       stac_search(collections = "CB4_64_16D_STK-1",
@@ -84,11 +81,8 @@ testthat::test_that("signature functions", {
     testthat::expect_error(
       items_sign(stac_item, sign_fn = sign_bdc())
     )
-  })
 
-  vcr::use_cassette("ms_signatures",{
-
-    #--- MS provider ----#
+    #---- MS provider ----#
 
     # stac item collection from ms
     stac_items <-
@@ -149,5 +143,4 @@ testthat::test_that("signature functions", {
                    sign_fn = sign_planetary_computer(token_url = "test"))
       )
     )
-  })
 })

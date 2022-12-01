@@ -4,7 +4,7 @@
 \alias{cql2}
 \title{Convert R expressions to CQL2}
 \usage{
-cql2(expr, lang = NULL, crs = NULL, env_expr = environment())
+cql2(expr, lang = NULL, crs = NULL)
 }
 \arguments{
 \item{expr}{An R expression to be represented in CQL2}
@@ -16,8 +16,6 @@ requests and \code{cql2-json} in \code{POST} requests.}
 
 \item{crs}{a character with coordinate reference systems.
 By default WGS84 is used, this parameter will rarely be used.}
-
-\item{env}{a environment to evaluate the expression}
 }
 \description{
 These functions convert R expressions to CQL2 standard (text or JSON).
