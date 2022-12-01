@@ -79,7 +79,7 @@ items_assets(items, ...)
 
 \method{items_assets}{STACItem}(items, ...)
 
-\method{items_assets}{STACItemCollection}(items, ..., simplify = FALSE)
+\method{items_assets}{STACItemCollection}(items, ..., simplify = TRUE)
 
 items_filter(items, ..., filter_fn = NULL)
 

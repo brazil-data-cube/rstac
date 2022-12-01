@@ -2,18 +2,22 @@
 % Please edit documentation in R/assets-funs.R
 \name{assets_function}
 \alias{assets_function}
+\alias{assets_url}
+\alias{assets_url.STACItemCollection}
+\alias{assets_url.STACItem}
 \alias{assets_append_gdalvsi}
 \alias{assets_select}
 \alias{assets_select.STACItemCollection}
 \alias{assets_select.STACItem}
 \title{Assets functions}
 \usage{
-assets_append_gdalvsi(
-  items,
-  asset_names = NULL,
-  sort = deprecated(),
-  gdal_vsi_resolution = deprecated()
-)
+assets_url(items, asset_names = NULL, append_gdalvsi = TRUE)
+
+\method{assets_url}{STACItemCollection}(items, append_gdalvsi = TRUE)
+
+\method{assets_url}{STACItem}(items, append_gdalvsi = TRUE)
+
+assets_append_gdalvsi(items, asset_names = NULL)
 
 assets_select(items, asset_names, ...)
 
@@ -28,17 +32,17 @@ the result of \verb{/stac/search}, \code{/collections/{collectionId}/items}.}
 \item{asset_names}{a \code{character} with the assets names to be
 filtered. If \code{NULL} (default) all assets will be returned..}
 
+\item{...}{additional arguments.}
+
+\item{filter_fn}{a \code{function} that will be used to filter the
+attributes listed in the properties.}
+
 \item{sort}{a \code{logical} if true the dates will be sorted
 in increasing order. By default, the dates are sorted.}
 
 \item{gdal_vsi_resolution}{a \code{logical}  if true, gdal drivers are
 included in the URL of each asset. The following schemes are supported:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
-
-\item{...}{additional arguments.}
-
-\item{filter_fn}{a \code{function} that will be used to filter the
-attributes listed in the properties.}
 }
 \value{
 a \code{list} with the attributes of date, bands and paths.
