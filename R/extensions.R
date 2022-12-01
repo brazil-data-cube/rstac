@@ -151,6 +151,8 @@ content_response <- function(res, status_codes, content_types) {
       message <- content
     else if (!is.null(content[["description"]]))
       message <- content[["description"]]
+    else if (!is.null(content[["detail"]]))
+      message <- content[["detail"]]
 
     .error("HTTP status '%s'. %s", status_code, message)
   }
