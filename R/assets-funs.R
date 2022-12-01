@@ -212,7 +212,7 @@ assets_url <- function(items, asset_names = NULL, append_gdalvsi = TRUE) {
 #' @export
 assets_url.STACItemCollection <- function(items, append_gdalvsi = TRUE) {
   url <- vapply(items_assets(items), function(asset_name) {
-    items_reap(items, "assets", asset_name, "href")
+    items_reap(items, field = c("assets", asset_name, "href"))
   }, character(1))
   if (append_gdalvsi) gdalvsi_append(url) else url
 }

@@ -86,10 +86,6 @@
 #' \item `items_filter()`: ellipsis is used to pass logical
 #' expressions using keys in `properties` field as filter criteria.
 #'
-#' \item `items_reap()`, `items_fields()`, and `items_group()`: ellipsis can
-#' be used to provide fields names to get the subfields values from
-#' the `STACItemCollection` objects.
-#'
 #' \item `items_sign()`: in a near future, ellipsis will be used to append
 #' key value pairs to url query string of an asset.
 #' }
@@ -581,7 +577,7 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #' @rdname items_functions
 #'
 #' @export
-items_reap <- function(items, ..., field = NULL) {
+items_reap <- function(items, field = NULL, ...) {
 
   if (items_length(items) == 0) return(NULL)
 
@@ -591,7 +587,7 @@ items_reap <- function(items, ..., field = NULL) {
 #' @rdname items_functions
 #'
 #' @export
-items_reap.STACItem <- function(items, ..., field = NULL) {
+items_reap.STACItem <- function(items, field = NULL, ...) {
 
   dots <- substitute(list(...), env = environment())[-1]
   if (!is.character(dots)) dots <- as.character(dots)
@@ -615,7 +611,7 @@ items_reap.STACItem <- function(items, ..., field = NULL) {
 #' @rdname items_functions
 #'
 #' @export
-items_reap.STACItemCollection <- function(items, ..., field = NULL) {
+items_reap.STACItemCollection <- function(items, field = NULL, ...) {
 
   dots <- substitute(list(...), env = environment())[-1]
   if (!is.character(dots)) dots <- as.character(dots)
