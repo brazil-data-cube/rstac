@@ -13,7 +13,7 @@
 #' @param asset_names a `character` with the assets names to be filtered.
 #'
 #' @param output_dir  a `character` directory in which the assets will be
-#'  saved.
+#'  saved. Default is the working directory (`getwd()`)
 #'
 #' @param overwrite   a `logical` if TRUE will replaced the existing file,
 #'  if FALSE a warning message is shown.
@@ -45,8 +45,7 @@
 #'               datetime = "2019-06-01/2019-08-01") %>%
 #'   stac_search() %>%
 #'   get_request() %>%
-#'   assets_download(assets_name = "thumbnail", output_dir = ".",
-#'   overwrite = FALSE)
+#'   assets_download(asset_names = "thumbnail", output_dir = tempdir())
 #' }
 #'
 #' @return The same `STACItemCollection` or `STACItem` object, with
@@ -55,7 +54,7 @@
 #' @export
 assets_download <- function(items,
                             asset_names = NULL,
-                            output_dir = ".",
+                            output_dir = getwd(),
                             overwrite = FALSE,
                             items_max = Inf,
                             progress = TRUE,
