@@ -656,99 +656,59 @@ items_reap.STACItemCollection <- function(items, field = NULL, ...) {
 #'         datetime = "2017-08-01/2018-03-01") %>%
 #'  get_request()
 #'
-#' stac_item %>% items_fields(field = c("properties"))
+#' stac_item %>% items_fields(field = "properties")
 #' }
 #'
 #' @rdname items_functions
 #'
 #' @export
-items_fields <- function(items, ..., field = NULL) {
+items_fields <- function(items, field = NULL, ...) {
   UseMethod("items_fields", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_fields.STACItemCollection <- function(items, ..., field = NULL) {
+items_fields.STACItemCollection <- function(items, field = NULL, ...) {
 
-  dots <- substitute(list(...), env = environment())[-1]
-  if (!is.character(dots)) dots <- as.character(dots)
-
-  if (length(field) > 0 && length(dots) > 0)
-    .error("Only one of the parameters '...' or 'field' must be supplied.")
-
-  if (length(field) == 0 && length(dots) == 0)
-    return(names(items$features[[1]]))
-  names(items$features[[1]][[c(dots, field)]])
-}
-
-#' @rdname items_functions
-#'
-#' @export
-items_fields.STACItem <- function(items, ..., field = NULL) {
-
-  dots <- substitute(list(...), env = environment())[-1]
-  if (!is.character(dots)) dots <- as.character(dots)
-
-  if (length(field) > 0 && length(dots) > 0)
-    .error("Only one of the parameters '...' or 'field' must be supplied.")
-
-  if (length(field) == 0 && length(dots) == 0)
-    return(names(items))
-  names(items[[c(dots, field)]])
-}
-
-#' @rdname items_functions
-#'
-#' @export
-items_group <- function(items, ..., field = NULL, index = NULL) {
-
-  # checks if the object is STACItemCollections
-  if (items_length(items) == 0) return(list(items))
-
-  dots <- substitute(list(...), env = environment())[-1]
-  if (!is.character(dots)) dots <- as.character(dots)
-
-  if (length(index) == 0 && length(field) == 0 &&  length(dots) == 0)
-    .error(paste("Either parameters 'index', 'field' or '...' parameters must",
-                 "be supplied."))
-
-  if (length(index) > 0 && (length(field) > 0 || length(dots) > 0))
-    .error(paste("Only one of the parameters '...','index' or 'field' should",
-                 "be supplied."))
-
-  if (is.null(index)) {
-    index <- items_reap(items, ..., field = field)
-
-    if (!is.atomic(index))
-      .error("The field must be atomic vector.")
-  } else {
-
-    if (items_matched(items) > items_length(items))
-      .warning(paste("The number of matched items is greater than the number",
-                     "of items length on your object. Considere to use",
-                     "the 'items_fetch()' function before this operation."))
+  dots <- list(...)
+  if (length(dots) > 0) {
+    deprec_parameter(
+      deprec_var = "...",
+      deprec_version = "0.9.2",
+      msg = "Please, use `field` parameter instead."
+    )
+    field = c(field, unlist(dots, use.names = FALSE))
   }
 
-  if (items_length(items) != length(index))
-    .error(paste("The length of the field provided for grouping must contain",
-                 "the same size as the length of the items."))
-
-  features <- unname(tapply(X = items$features,
-                            INDEX = index,
-                            FUN = c, simplify = FALSE))
-
-  lapply(features, function(x){
-    items$features <- x
-
-    items
-  })
+  if (length(field) == 0)
+    return(names(items$features[[1]]))
+  names(items$features[[1]][[field]])
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_sign <- function(items, ..., sign_fn = NULL) {
+items_fields.STACItem <- function(items, field = NULL, ...) {
+  dots <- list(...)
+  if (length(dots) > 0) {
+    deprec_parameter(
+      deprec_var = "...",
+      deprec_version = "0.9.2",
+      msg = "Please, use `field` parameter instead."
+    )
+    field = c(field, unlist(dots, use.names = FALSE))
+  }
+
+  if (length(field) == 0)
+    return(names(items))
+  names(items[[field]])
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_sign <- function(items, sign_fn = NULL) {
 
   UseMethod("items_sign", items)
 }
@@ -756,7 +716,7 @@ items_sign <- function(items, ..., sign_fn = NULL) {
 #' @rdname items_functions
 #'
 #' @export
-items_sign.STACItemCollection <- function(items, ..., sign_fn = NULL) {
+items_sign.STACItemCollection <- function(items, sign_fn = NULL) {
 
   if (is.null(sign_fn)) {
     return(items)
@@ -783,7 +743,7 @@ items_sign.STACItemCollection <- function(items, ..., sign_fn = NULL) {
 #' @rdname items_functions
 #'
 #' @export
-items_sign.STACItem <- function(items, ..., sign_fn = NULL) {
+items_sign.STACItem <- function(items, sign_fn = NULL) {
 
   if (is.null(sign_fn)) {
     return(items)
