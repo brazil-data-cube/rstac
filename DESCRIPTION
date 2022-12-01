@@ -24,11 +24,10 @@ Imports:
     crayon,
     utils,
     jsonlite,
-    lifecycle
+    lifecycle,
+    magrittr
 Suggests:
-    magrittr,
     testthat,
-    vcr,
     sf
 Collate:
     'cql2-expr-funs.R'
