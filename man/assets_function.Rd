@@ -15,11 +15,11 @@ assets_append_gdalvsi(
   gdal_vsi_resolution = deprecated()
 )
 
-assets_select(items, asset_names)
+assets_select(items, asset_names, ...)
 
-\method{assets_select}{STACItemCollection}(items, asset_names = NULL, filter_fn = NULL)
+\method{assets_select}{STACItemCollection}(items, asset_names = NULL, ..., filter_fn = NULL)
 
-\method{assets_select}{STACItem}(items, asset_names = NULL, filter_fn = NULL)
+\method{assets_select}{STACItem}(items, asset_names = NULL, ..., filter_fn = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
@@ -35,13 +35,10 @@ in increasing order. By default, the dates are sorted.}
 included in the URL of each asset. The following schemes are supported:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 
+\item{...}{additional arguments.}
+
 \item{filter_fn}{a \code{function} that will be used to filter the
 attributes listed in the properties.}
-
-\item{...}{additional arguments. See details.}
-
-\item{fn}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-use \code{filter_fn} parameter instead.}
 }
 \value{
 a \code{list} with the attributes of date, bands and paths.
