@@ -230,7 +230,7 @@ assets_append_gdalvsi <- function(items,
                                   asset_names = NULL) {
 
   if (is.null(asset_names))
-    asset_names <- items_fields(items, "assets")
+    asset_names <- items_fields(items, field = "assets")
 
   items_apply(items, field = "assets", apply_fn = function(assets) {
     stopifnot(all(asset_names %in% names(assets)))
