@@ -1,87 +1,89 @@
 #' @title Filter extension
 #'
 #' @description
-#' The filter extension expands the capabilities of the \code{/search} endpoint
-#' providing an expressive query language to construct more complex filter
-#' predicates. These filters are designed following the Common Query Language
-#' (CQL2). CQL2 supports filter predicates for standard data types like strings,
-#' numbers and boolean as well as for spatial geometries
-#' (point, lines, polygons) and temporal geometries (instants and intervals).
+#' `ext_filter()` implements Common Query Language (CQL2) filter extension
+#' on `rstac`. This extension expands the filter capabilities providing a
+#' query language to construct more complex expressions. CQL2 is an OGC
+#' standard and defines how filters can be constructed. It supports predicates
+#' for standard data types like strings, numbers, and boolean as well as
+#' for spatial geometries (point, lines, polygons) and temporal
+#' data (instants and intervals).
 #'
-#' Standard comparison operators in rstac:
-#' \itemize{
-#'  \item \code{==} corresponds to \code{=}
-#'  \item \code{>} corresponds to \code{>}
-#'  \item \code{>=} corresponds to \code{>=}
-#'  \item \code{<} corresponds to \code{<}
-#'  \item \code{<=} corresponds to \code{<=}
-#'  \item \code{is_null} corresponds to \code{IS NOT NULL}
-#' }
-#'
-#' Advanced operators in rstac:
-#' \itemize{
-#'  \item \code{\%like\%} corresponds to \code{LIKE}
-#'  \item \code{between()} corresponds to \code{BETWEEN}
-#'  \item \code{\%in\%} corresponds to \code{IN}
-#' }
-#'
-#' Spatial operators in rstac:
-#' \itemize{
-#'  \item \code{s_intersects} corresponds to \code{S_INTERSECTS}
-#'  \item \code{s_touches} corresponds to \code{S_TOUCHES}
-#'  \item \code{s_within} corresponds to \code{S_WITHIN}
-#'  \item \code{s_overlaps} corresponds to \code{S_OVERLAPS}
-#'  \item \code{s_crosses} corresponds to \code{S_CROSSES}
-#'  \item \code{s_contains} corresponds to \code{S_CONTAINS}
-#' }
-#'
-#' Temporal operators in rstac:
-#' \itemize{
-#'  \item \code{t_after} corresponds to \code{T_AFTER}
-#'  \item \code{t_before} corresponds to \code{T_BEFORE}
-#'  \item \code{t_contains} corresponds to \code{T_CONTAINS}
-#'  \item \code{t_disjoint} corresponds to \code{T_DISJOINT}
-#'  \item \code{t_during} corresponds to \code{T_DURING}
-#'  \item \code{t_equals} corresponds to \code{T_EQUALS}
-#'  \item \code{t_finishedby} corresponds to \code{T_FINISHEDBY}
-#'  \item \code{t_finishes} corresponds to \code{T_FINISHES}
-#'  \item \code{t_intersects} corresponds to \code{T_INTERSECTS}
-#'  \item \code{t_meets} corresponds to \code{T_MEETS}
-#'  \item \code{t_meet} corresponds to \code{T_MEET}
-#'  \item \code{t_metby} corresponds to \code{T_METBY}
-#'  \item \code{t_overlappedby} corresponds to \code{T_OVERLAPPEDBY}
-#'  \item \code{t_overlaps} corresponds to \code{T_OVERLAPS}
-#'  \item \code{t_startedby} corresponds to \code{T_STARTEDBY}
-#'  \item \code{t_starts} corresponds to \code{T_STARTS}
-#' }
-#'
-#' Array Operators in rstac:
-#' \itemize{
-#'  \item \code{a_equals} corresponds to \code{A_EQUALS}
-#'  \item \code{a_contains} corresponds to \code{A_CONTAINS}
-#'  \item \code{a_containedby} corresponds to \code{A_CONTAINEDBY}
-#'  \item \code{a_overlaps} corresponds to \code{A_OVERLAPS}
-#' }
+#' `rstac` translates R expressions to CQL2 allowing users to express their
+#' filter criteria using R language. For more details on how to create
+#' CQL2 expressions in `rstac`, see the details section.
 #'
 #' @param q    a `RSTACQuery` object expressing a STAC query
 #' criteria.
-#' @param expr a valid R expression following the filters supported by the
-#' CQL2 predicates.
-#' @param lang a character with the syntax used in the filter.
-#' It can be used in text format \code{cql2-text} or in JSON format
-#' \code{cql2-json}. By default, \code{cql2-text} is used in \code{GET}
-#' requests and \code{cql2-json} in \code{POST} requests.
-#' @param crs a character with coordinate reference systems.
-#' By default WGS84 is used, this parameter will rarely be used.
+#' @param expr a valid R expression to be translated to CQL2 (see details).
+#' @param lang a character value indicating which CQL2 representation
+#' to be used. It can be either `"cql2-text"` (for plain text) or
+#' `"cql2-json"` (for JSON format). If `NULL` (default), `"cql2-text"` is
+#' used for HTTP `GET` requests and `"cql2-json"` for `POST` requests.
+#' @param crs  an optional character value informing the coordinate reference
+#' system used by geometry objects. If `NULL` (default) STAC services assume
+#' `"WGS 84"`.
 #'
+#' @details
+#' To allow users to express filter criteria in R language, `rstac` takes
+#' advantage of the abstract syntax tree (AST) to translate R expressions
+#' to CQL2 expressions. The following topics describes the correspondences
+#' between `rstac` expressions and CQL2 operators.
 #'
-#' @details TODO: add how we implement spatial objects: sf objects and list
+#' ## Standard comparison operators
+#' - `==`, `>=`, `<=`, `>`, `<`, and `!=` operators correspond to
+#'   `=`, `>=`, `<=`, `>`, `<`, and `<>` in CQL2, respectively.
+#' - function `is_null(a)` and `!is_null(a)` corresponds to `a IS NULL` and
+#'   `a IS NOT NULL` CQL2 operators, respectively.
 #'
-#' @details The specification shows that double quoted should be interpreted as
-#' property. However, the R language does not distinguishes double quote
-#' from single quote. The right way to represent especification double
-#' quotes in R is to use the variable `name` without double quotes. For
-#' exemple, use `date` intead of `"date"`.
+#' ## Advanced comparison operators
+#' - `a %like% b` corresponds to CQL2 `a LIKE b`, `a` and `b` `strings` values.
+#' - `between(a, b, c)` corresponds to CQL2 `a BETWEEN b AND c`, where
+#'   `b` and `c` `integer` values.
+#' - `a %in% b` corresponds to CQL2 `a IN (b)`, where `b` should be
+#'   a list of values of same type as `a`.
+#'
+#' ## Spatial operators
+#' - functions `s_intersects(a, b)`, `s_touches(a, b)`, `s_within(a, b)`,
+#'   `s_overlaps(a, b)`, `s_crosses(a, b)`, and `s_contains(a, b)` corresponds
+#'   to CQL2 `S_INTERSECTS(a, b)`, `S_TOUCHES(a, b)`, `S_WITHIN(a, b)`,
+#'   `S_OVERLAPS(a, b)`, `S_CROSSES(a, b)`, and `S_CONTAINS(a, b)` operators,
+#'   respectively. Here, `a` and `b` should be `geometry` objects. `rstac`
+#'   accepts `sf`, `sfc`, `sfg`, or `geojson` objects.
+#'
+#' ## Temporal operators
+#' - functions `date(a)`, `timestamp(a)`, and `interval(a, b)` corresponds to
+#'   CQL2 `DATE(a)`, `TIMESTAMP(a)`, and `INTERVAL(a, b)` operators,
+#'   respectively. These functions creates literal `temporal` values.
+#'   The first two define an `instant` type, and the third an `interval` type.
+#' - functions `t_after(a, b)`, `t_before(a, b)`, `t_contains(a, b)`,
+#'   `t_disjoint(a, b)`, `t_during(a, b)`, `t_equals(a, b)`,
+#'   `t_finishedby(a, b)`, `t_finishes(a, b)`, `t_intersects(a, b)`,
+#'   `t_meets(a, b)`, `t_meet(a, b)`, `t_metby(a, b)`, `t_overlappedby(a, b)`,
+#'   `t_overlaps(a, b)`, `t_startedby(a, b)`, and `t_starts(a, b)` corresponds
+#'   to CQL2 `T_AFTER(a, b)`, `T_BEFORE(a, b)`, `T_CONTAINS(a, b)`,
+#'   `T_DISJOINT(a, b)`, `T_DURING(a, b)`, `T_EQUALS(a, b)`,
+#'   `T_FINISHEDBY(a, b)`, `T_FINISHES(a, b)`, `T_INTERSECTS(a, b)`,
+#'   `T_MEETS(a, b)`, `T_MEET(a, b)`, `T_METBY(a, b)`, `T_OVERLAPPEDBY(a, b)`,
+#'   `T_OVERLAPS(a, b)`, `T_STARTEDBY(a, b)`, and `T_STARTS(a, b)` operators,
+#'   respectively. Here, `a` and `b` are `temporal` values (`instant` or
+#'   `interval`, depending on function).
+#'
+#' ## Array Operators
+#' - R unnamed lists (or vectors of size > 1) are translated to arrays by
+#'   `rstac`. `list()` and `c()` functions always create `array` values
+#'   in CQL2 context, no matter the number of its arguments.
+#' - functions `a_equals(a, b)`, `a_contains(a, b)`, `a_containedby(a, b)`,
+#'   and `a_overlaps(a, b)` corresponds to CQL2 `A_EQUALS(a, b)`,
+#'   `A_CONTAINS(a, b)`, `A_CONTAINEDBY(a, b)`, and `A_OVERLAPS(a, b)`
+#'   operators, respectively. Here, `a` and `b` should be `arrays`.
+#'
+#' @note
+#' The specification states that double quoted identifiers should be
+#' interpreted as a properties. However, the R language does not distinguishes
+#' double quote from single quote strings. The right way to represent
+#' double quoted properties in R is to use the escape character (`),
+#' for example `"date"`.
 #'
 #' @seealso [ext_query()], [stac_search()], [post_request()],
 #' [endpoint()], [before_request()],

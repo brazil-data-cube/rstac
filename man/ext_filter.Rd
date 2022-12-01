@@ -10,16 +10,16 @@ ext_filter(q, expr, lang = NULL, crs = NULL)
 \item{q}{a \code{RSTACQuery} object expressing a STAC query
 criteria.}
 
-\item{expr}{a valid R expression following the filters supported by the
-CQL2 predicates.}
+\item{expr}{a valid R expression to be translated to CQL2 (see details).}
 
-\item{lang}{a character with the syntax used in the filter.
-It can be used in text format \code{cql2-text} or in JSON format
-\code{cql2-json}. By default, \code{cql2-text} is used in \code{GET}
-requests and \code{cql2-json} in \code{POST} requests.}
+\item{lang}{a character value indicating which CQL2 representation
+to be used. It can be either \code{"cql2-text"} (for plain text) or
+\code{"cql2-json"} (for JSON format). If \code{NULL} (default), \code{"cql2-text"} is
+used for HTTP \code{GET} requests and \code{"cql2-json"} for \code{POST} requests.}
 
-\item{crs}{a character with coordinate reference systems.
-By default WGS84 is used, this parameter will rarely be used.}
+\item{crs}{an optional character value informing the coordinate reference
+system used by geometry objects. If \code{NULL} (default) STAC services assume
+\code{"WGS 84"}.}
 }
 \value{
 A \code{RSTACQuery} object  with the subclass \code{ext_filter} containing
@@ -27,76 +27,91 @@ all request parameters to be passed to \code{get_request()} or
 \code{post_request()} function.
 }
 \description{
-The filter extension expands the capabilities of the \code{/search} endpoint
-providing an expressive query language to construct more complex filter
-predicates. These filters are designed following the Common Query Language
-(CQL2). CQL2 supports filter predicates for standard data types like strings,
-numbers and boolean as well as for spatial geometries
-(point, lines, polygons) and temporal geometries (instants and intervals).
+\code{ext_filter()} implements Common Query Language (CQL2) filter extension
+on \code{rstac}. This extension expands the filter capabilities providing a
+query language to construct more complex expressions. CQL2 is an OGC
+standard and defines how filters can be constructed. It supports predicates
+for standard data types like strings, numbers, and boolean as well as
+for spatial geometries (point, lines, polygons) and temporal
+data (instants and intervals).
 
-Standard comparison operators in rstac:
-\itemize{
-\item \code{==} corresponds to \code{=}
-\item \code{>} corresponds to \code{>}
-\item \code{>=} corresponds to \code{>=}
-\item \code{<} corresponds to \code{<}
-\item \code{<=} corresponds to \code{<=}
-\item \code{is_null} corresponds to \code{IS NOT NULL}
-}
-
-Advanced operators in rstac:
-\itemize{
-\item \code{\%like\%} corresponds to \code{LIKE}
-\item \code{between()} corresponds to \code{BETWEEN}
-\item \code{\%in\%} corresponds to \code{IN}
-}
-
-Spatial operators in rstac:
-\itemize{
-\item \code{s_intersects} corresponds to \code{S_INTERSECTS}
-\item \code{s_touches} corresponds to \code{S_TOUCHES}
-\item \code{s_within} corresponds to \code{S_WITHIN}
-\item \code{s_overlaps} corresponds to \code{S_OVERLAPS}
-\item \code{s_crosses} corresponds to \code{S_CROSSES}
-\item \code{s_contains} corresponds to \code{S_CONTAINS}
-}
-
-Temporal operators in rstac:
-\itemize{
-\item \code{t_after} corresponds to \code{T_AFTER}
-\item \code{t_before} corresponds to \code{T_BEFORE}
-\item \code{t_contains} corresponds to \code{T_CONTAINS}
-\item \code{t_disjoint} corresponds to \code{T_DISJOINT}
-\item \code{t_during} corresponds to \code{T_DURING}
-\item \code{t_equals} corresponds to \code{T_EQUALS}
-\item \code{t_finishedby} corresponds to \code{T_FINISHEDBY}
-\item \code{t_finishes} corresponds to \code{T_FINISHES}
-\item \code{t_intersects} corresponds to \code{T_INTERSECTS}
-\item \code{t_meets} corresponds to \code{T_MEETS}
-\item \code{t_meet} corresponds to \code{T_MEET}
-\item \code{t_metby} corresponds to \code{T_METBY}
-\item \code{t_overlappedby} corresponds to \code{T_OVERLAPPEDBY}
-\item \code{t_overlaps} corresponds to \code{T_OVERLAPS}
-\item \code{t_startedby} corresponds to \code{T_STARTEDBY}
-\item \code{t_starts} corresponds to \code{T_STARTS}
-}
-
-Array Operators in rstac:
-\itemize{
-\item \code{a_equals} corresponds to \code{A_EQUALS}
-\item \code{a_contains} corresponds to \code{A_CONTAINS}
-\item \code{a_containedby} corresponds to \code{A_CONTAINEDBY}
-\item \code{a_overlaps} corresponds to \code{A_OVERLAPS}
-}
+\code{rstac} translates R expressions to CQL2 allowing users to express their
+filter criteria using R language. For more details on how to create
+CQL2 expressions in \code{rstac}, see the details section.
 }
 \details{
-TODO: add how we implement spatial objects: sf objects and list
+To allow users to express filter criteria in R language, \code{rstac} takes
+advantage of the abstract syntax tree (AST) to translate R expressions
+to CQL2 expressions. The following topics describes the correspondences
+between \code{rstac} expressions and CQL2 operators.
+\subsection{Standard comparison operators}{
+\itemize{
+\item \code{==}, \code{>=}, \code{<=}, \code{>}, \code{<}, and \code{!=} operators correspond to
+\code{=}, \code{>=}, \code{<=}, \code{>}, \code{<}, and \verb{<>} in CQL2, respectively.
+\item function \code{is_null(a)} and \code{!is_null(a)} corresponds to \verb{a IS NULL} and
+\verb{a IS NOT NULL} CQL2 operators, respectively.
+}
+}
 
-The specification shows that double quoted should be interpreted as
-property. However, the R language does not distinguishes double quote
-from single quote. The right way to represent especification double
-quotes in R is to use the variable \code{name} without double quotes. For
-exemple, use \code{date} intead of \code{"date"}.
+\subsection{Advanced comparison operators}{
+\itemize{
+\item \code{a \%like\% b} corresponds to CQL2 \verb{a LIKE b}, \code{a} and \code{b} \code{strings} values.
+\item \code{between(a, b, c)} corresponds to CQL2 \verb{a BETWEEN b AND c}, where
+\code{b} and \code{c} \code{integer} values.
+\item \code{a \%in\% b} corresponds to CQL2 \verb{a IN (b)}, where \code{b} should be
+a list of values of same type as \code{a}.
+}
+}
+
+\subsection{Spatial operators}{
+\itemize{
+\item functions \code{s_intersects(a, b)}, \code{s_touches(a, b)}, \code{s_within(a, b)},
+\code{s_overlaps(a, b)}, \code{s_crosses(a, b)}, and \code{s_contains(a, b)} corresponds
+to CQL2 \code{S_INTERSECTS(a, b)}, \code{S_TOUCHES(a, b)}, \code{S_WITHIN(a, b)},
+\code{S_OVERLAPS(a, b)}, \code{S_CROSSES(a, b)}, and \code{S_CONTAINS(a, b)} operators,
+respectively. Here, \code{a} and \code{b} should be \code{geometry} objects. \code{rstac}
+accepts \code{sf}, \code{sfc}, \code{sfg}, or \code{geojson} objects.
+}
+}
+
+\subsection{Temporal operators}{
+\itemize{
+\item functions \code{date(a)}, \code{timestamp(a)}, and \code{interval(a, b)} corresponds to
+CQL2 \code{DATE(a)}, \code{TIMESTAMP(a)}, and \code{INTERVAL(a, b)} operators,
+respectively. These functions creates literal \code{temporal} values.
+The first two define an \code{instant} type, and the third an \code{interval} type.
+\item functions \code{t_after(a, b)}, \code{t_before(a, b)}, \code{t_contains(a, b)},
+\code{t_disjoint(a, b)}, \code{t_during(a, b)}, \code{t_equals(a, b)},
+\code{t_finishedby(a, b)}, \code{t_finishes(a, b)}, \code{t_intersects(a, b)},
+\code{t_meets(a, b)}, \code{t_meet(a, b)}, \code{t_metby(a, b)}, \code{t_overlappedby(a, b)},
+\code{t_overlaps(a, b)}, \code{t_startedby(a, b)}, and \code{t_starts(a, b)} corresponds
+to CQL2 \code{T_AFTER(a, b)}, \code{T_BEFORE(a, b)}, \code{T_CONTAINS(a, b)},
+\code{T_DISJOINT(a, b)}, \code{T_DURING(a, b)}, \code{T_EQUALS(a, b)},
+\code{T_FINISHEDBY(a, b)}, \code{T_FINISHES(a, b)}, \code{T_INTERSECTS(a, b)},
+\code{T_MEETS(a, b)}, \code{T_MEET(a, b)}, \code{T_METBY(a, b)}, \code{T_OVERLAPPEDBY(a, b)},
+\code{T_OVERLAPS(a, b)}, \code{T_STARTEDBY(a, b)}, and \code{T_STARTS(a, b)} operators,
+respectively. Here, \code{a} and \code{b} are \code{temporal} values (\code{instant} or
+\code{interval}, depending on function).
+}
+}
+
+\subsection{Array Operators}{
+\itemize{
+\item R unnamed lists (or vectors of size > 1) are translated to arrays by
+\code{rstac}. \code{list()} and \code{c()} functions always create \code{array} values
+in CQL2 context, no matter the number of its arguments.
+\item functions \code{a_equals(a, b)}, \code{a_contains(a, b)}, \code{a_containedby(a, b)},
+and \code{a_overlaps(a, b)} corresponds to CQL2 \code{A_EQUALS(a, b)},
+\code{A_CONTAINS(a, b)}, \code{A_CONTAINEDBY(a, b)}, and \code{A_OVERLAPS(a, b)}
+operators, respectively. Here, \code{a} and \code{b} should be \code{arrays}.
+}
+}
+}
+\note{
+The specification states that double quoted identifiers should be
+interpreted as a properties. However, the R language does not distinguishes
+double quote from single quote strings. The right way to represent
+double quoted properties in R is to use the escape character (\verb{), for example }"date"`.
 }
 \examples{
 \donttest{
