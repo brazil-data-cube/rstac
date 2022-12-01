@@ -126,6 +126,6 @@ testthat::test_that("examples rstac", {
                       limit = 10,
                       datetime = "2017-08-01/2018-03-01") %>%
           get_request() %>%
-          items_fields(field = c("properties"))),
+          items_fields(field = "properties")),
       expected = "character")
 })
