@@ -250,7 +250,6 @@ Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 \examples{
 
 \dontrun{
-
 x <- stac("https://brazildatacube.dpi.inpe.br/stac") \%>\%
     stac_search(collections = "CB4_64_16D_STK-1") \%>\%
     stac_search(limit = 500) \%>\%
@@ -264,9 +263,8 @@ x \%>\% items_fetch()
 }
 
 \dontrun{
-
 # Defining BDC token
-Sys.setenv("BDC_ACCESS_KEY" = <your_bdc_access_key>)
+Sys.setenv("BDC_ACCESS_KEY" = "token-123")
 
 # STACItem object
 stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
@@ -278,7 +276,6 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
 }
 
 \dontrun{
-
 # STACItemCollection object
 stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,

@@ -135,7 +135,6 @@
 #' @examples
 #'
 #' \dontrun{
-#'
 #' x <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
 #'     stac_search(collections = "CB4_64_16D_STK-1") %>%
 #'     stac_search(limit = 500) %>%
@@ -149,9 +148,8 @@
 #' }
 #'
 #' \dontrun{
-#'
 #' # Defining BDC token
-#' Sys.setenv("BDC_ACCESS_KEY" = <your_bdc_access_key>)
+#' Sys.setenv("BDC_ACCESS_KEY" = "token-123")
 #'
 #' # STACItem object
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
@@ -163,7 +161,6 @@
 #' }
 #'
 #' \dontrun{
-#'
 #' # STACItemCollection object
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
@@ -552,7 +549,7 @@ items_filter <- function(items, ..., filter_fn = NULL) {
   # check items parameter
   check_subclass(items, "STACItemCollection")
 
-  dots <- substitute(list(...))[-1]
+  dots <- substitute(list(...), env = environment())[-1]
 
   if (length(dots) > 0) {
 
@@ -596,7 +593,7 @@ items_reap <- function(items, ..., field = NULL) {
 #' @export
 items_reap.STACItem <- function(items, ..., field = NULL) {
 
-  dots <- substitute(list(...))[-1]
+  dots <- substitute(list(...), env = environment())[-1]
   if (!is.character(dots)) dots <- as.character(dots)
 
   if (length(dots) > 0 && length(field) > 0)
@@ -620,7 +617,7 @@ items_reap.STACItem <- function(items, ..., field = NULL) {
 #' @export
 items_reap.STACItemCollection <- function(items, ..., field = NULL) {
 
-  dots <- substitute(list(...))[-1]
+  dots <- substitute(list(...), env = environment())[-1]
   if (!is.character(dots)) dots <- as.character(dots)
 
   if (length(dots) > 0 && length(field) > 0)
@@ -678,7 +675,7 @@ items_fields <- function(items, ..., field = NULL) {
 #' @export
 items_fields.STACItemCollection <- function(items, ..., field = NULL) {
 
-  dots <- substitute(list(...))[-1]
+  dots <- substitute(list(...), env = environment())[-1]
   if (!is.character(dots)) dots <- as.character(dots)
 
   if (length(field) > 0 && length(dots) > 0)
@@ -694,7 +691,7 @@ items_fields.STACItemCollection <- function(items, ..., field = NULL) {
 #' @export
 items_fields.STACItem <- function(items, ..., field = NULL) {
 
-  dots <- substitute(list(...))[-1]
+  dots <- substitute(list(...), env = environment())[-1]
   if (!is.character(dots)) dots <- as.character(dots)
 
   if (length(field) > 0 && length(dots) > 0)
@@ -713,7 +710,7 @@ items_group <- function(items, ..., field = NULL, index = NULL) {
   # checks if the object is STACItemCollections
   if (items_length(items) == 0) return(list(items))
 
-  dots <- substitute(list(...))[-1]
+  dots <- substitute(list(...), env = environment())[-1]
   if (!is.character(dots)) dots <- as.character(dots)
 
   if (length(index) == 0 && length(field) == 0 &&  length(dots) == 0)

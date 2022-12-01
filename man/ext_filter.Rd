@@ -151,10 +151,10 @@ req \%>\% ext_filter(collection \%in\% c("modis-64A1-061",
   post_request()
 
 # Spatial operator
-# TODO: remove sf poly by list poly
-# Lets create a polygon with sf package
-polygon <- sf::st_polygon(
-  list(
+# Lets create a polygon with list
+polygon <- list(
+  type = "Polygon",
+  coordinates = list(
     matrix(c(-62.34499836, -8.57414572,
              -62.18858174, -8.57414572,
              -62.18858174, -8.15351185,
@@ -168,15 +168,17 @@ req \%>\% ext_filter(collection == "sentinel-2-l2a" &&
                    s_intersects(geometry, {{polygon}})) \%>\% post_request()
 
 # 'S_CONTAINS' spatial operator with point and geometry property
-point <- sf::st_point(c(-62.45792211, -8.61158488))
+point <- list(type = "Point", coordinates = c(-62.45792211, -8.61158488))
 req \%>\% ext_filter(collection == "landsat-c2-l2" &&
                    s_contains(geometry, {{point}})) \%>\% post_request()
 
 # 'S_CROSSES' spatial operator with linestring and geometry property
-linestring <- sf::st_linestring(
-  matrix(c(-62.55735320, -8.43329465,
-           -62.21791603, -8.36815014),
-         ncol = 2, byrow = TRUE)
+linestring <- list(
+  type = "LineString",
+  coordinates = matrix(
+         c(-62.55735320, -8.43329465, -62.21791603, -8.36815014),
+         ncol = 2, byrow = TRUE
+  )
 )
 req \%>\% ext_filter(collection == "landsat-c2-l2" &&
                    s_crosses(geometry, {{linestring}})) \%>\% post_request()
