@@ -46,7 +46,7 @@ casei <- function(a) {
             class = c("cql2_casei_op", "list"))
 }
 
-accenti <- function(a, b) {
+accenti <- function(a) {
   a <- cql2_eval(a)
   stopifnot(is_casei_expr(a))
   structure(list(accenti = a),
@@ -78,10 +78,15 @@ spatial_types <- c("Point", "MultiPoint", "LineString",
                    "GeometryCollection")
 
 #' @export
+get_spatial.character <- function(x) {
+  class(x) <- c("cql2_spatial", "character")
+  x
+}
+
+#' @export
 get_spatial.list <- function(x) {
     stopifnot(c("type", "coordinates") %in% names(x))
     stopifnot(x[["type"]] %in% spatial_types)
-    stopifnot(is.list(x[["coordinates"]]))
     class(x) <- c("cql2_spatial", "list")
     x
 }
