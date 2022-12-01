@@ -9,7 +9,7 @@
 assets_download(
   items,
   asset_names = NULL,
-  output_dir = ".",
+  output_dir = getwd(),
   overwrite = FALSE,
   items_max = Inf,
   progress = TRUE,
@@ -51,7 +51,7 @@ representing the result of \verb{/stac/search},
 \item{asset_names}{a \code{character} with the assets names to be filtered.}
 
 \item{output_dir}{a \code{character} directory in which the assets will be
-saved.}
+saved. Default is the working directory (\code{getwd()})}
 
 \item{overwrite}{a \code{logical} if TRUE will replaced the existing file,
 if FALSE a warning message is shown.}
@@ -88,8 +88,7 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
               datetime = "2019-06-01/2019-08-01") \%>\%
   stac_search() \%>\%
   get_request() \%>\%
-  assets_download(assets_name = "thumbnail", output_dir = ".",
-  overwrite = FALSE)
+  assets_download(asset_names = "thumbnail", output_dir = tempdir())
 }
 
 }
