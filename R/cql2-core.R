@@ -98,9 +98,9 @@ interval_lit <- function(start = "..", end = "..") {
     start <- cql2_eval(start)
     end <- cql2_eval(end)
     if (start != "..")
-        stopifnot(is_temporal(start))
+        stopifnot(is_instant_param(start))
     if (end != "..")
-        stopifnot(is_temporal(end))
+        stopifnot(is_instant_param(end))
     structure(list(interval = list(start, end)),
               class = c("cql2_interval", "cql2_filter", "list"))
 }
