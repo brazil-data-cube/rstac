@@ -646,7 +646,8 @@ items_fields.STACItemCollection <- function(items, field = NULL, ...) {
     )
     field = c(field, unlist(dots, use.names = FALSE))
   }
-
+  if (items_length(items) == 0)
+    return(NULL)
   if (length(field) == 0)
     return(names(items$features[[1]]))
   names(items$features[[1]][[field]])
