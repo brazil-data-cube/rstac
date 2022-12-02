@@ -30,7 +30,7 @@ geospatial information assets. The specification can be consulted in
 <https://stacspec.org/>.
 
 R client library for STAC (`rstac`) was designed to fully support STAC
-API v1.0.0. It also supports earlier versions (&gt;= v0.8.0).
+API v1.0.0. It also supports earlier versions (\>= v0.8.0).
 
 ## Installation
 
@@ -63,14 +63,14 @@ library(magrittr) # for pipe (%>%) in examples
 
 | **STAC** endpoints                           | `rstac` functions            | API version |
 |:---------------------------------------------|:-----------------------------|:------------|
-| `/`                                          | `stac()`                     | &gt;= 0.9.0 |
-| `/stac`                                      | `stac()`                     | &lt; 0.9.0  |
-| `/collections`                               | `collections()`              | &gt;= 0.9.0 |
-| `/collections/{collectionId}`                | `collections(collection_id)` | &gt;= 0.9.0 |
-| `/collections/{collectionId}/items`          | `items()`                    | &gt;= 0.9.0 |
-| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          | &gt;= 0.9.0 |
-| `/search`                                    | `stac_search()`              | &gt;= 0.9.0 |
-| `/stac/search`                               | `stac_search()`              | &lt; 0.9.0  |
+| `/`                                          | `stac()`                     | \>= 0.9.0   |
+| `/stac`                                      | `stac()`                     | \< 0.9.0    |
+| `/collections`                               | `collections()`              | \>= 0.9.0   |
+| `/collections/{collectionId}`                | `collections(collection_id)` | \>= 0.9.0   |
+| `/collections/{collectionId}/items`          | `items()`                    | \>= 0.9.0   |
+| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          | \>= 0.9.0   |
+| `/search`                                    | `stac_search()`              | \>= 0.9.0   |
+| `/stac/search`                               | `stac_search()`              | \< 0.9.0    |
 
 These functions can be used to retrieve information from a STAC API
 service. The code bellow creates a `stac` object and list the available
@@ -108,22 +108,35 @@ it_obj <- s_obj %>%
 
 it_obj
 #> ###STACItemCollection
-#> - matched feature(s): 264
-#> - features (10 item(s) / 254 not fetched):
-#>   - CB4_64_16D_STK_v001_022024_2021-09-14_2021-09-29
-#>   - CB4_64_16D_STK_v001_022025_2021-09-14_2021-09-29
-#>   - CB4_64_16D_STK_v001_022024_2021-08-29_2021-09-13
-#>   - CB4_64_16D_STK_v001_022025_2021-08-29_2021-09-13
-#>   - CB4_64_16D_STK_v001_022024_2021-08-13_2021-08-28
-#>   - CB4_64_16D_STK_v001_022025_2021-08-13_2021-08-28
-#>   - CB4_64_16D_STK_v001_022024_2021-07-28_2021-08-12
-#>   - CB4_64_16D_STK_v001_022025_2021-07-28_2021-08-12
-#>   - CB4_64_16D_STK_v001_022024_2021-07-12_2021-07-27
-#>   - CB4_64_16D_STK_v001_022025_2021-07-12_2021-07-27
+#> - matched feature(s): 306
+#> - features (10 item(s) / 296 not fetched):
+#>   - CB4_64_16D_STK_v001_022024_2022-08-13_2022-08-28
+#>   - CB4_64_16D_STK_v001_022025_2022-08-13_2022-08-28
+#>   - CB4_64_16D_STK_v001_022024_2022-07-28_2022-08-12
+#>   - CB4_64_16D_STK_v001_022025_2022-07-28_2022-08-12
+#>   - CB4_64_16D_STK_v001_022024_2022-07-12_2022-07-27
+#>   - CB4_64_16D_STK_v001_022025_2022-07-12_2022-07-27
+#>   - CB4_64_16D_STK_v001_022024_2022-06-26_2022-07-11
+#>   - CB4_64_16D_STK_v001_022025_2022-06-26_2022-07-11
+#>   - CB4_64_16D_STK_v001_022024_2022-06-10_2022-06-25
+#>   - CB4_64_16D_STK_v001_022025_2022-06-10_2022-06-25
 #> - assets: 
 #> EVI, NDVI, CMASK, BAND13, BAND14, BAND15, BAND16, CLEAROB, TOTALOB, thumbnail, PROVENANCE
 #> - other field(s): type, links, context, features
 ```
+
+`rstac` also supports advanced query filter using common query language
+(CQL2).
+
+req %\>% ext_filter(collection == “sentinel-2-l2a” &&
+`s2:vegetation_percentage` \>= 50 && `eo:cloud_cover` \<= 10) %\>%
+post_request()
+
+### CQL2 query filter
+
+rstac
+
+### HTTP requests
 
 The `rstac` uses the [httr](https://github.com/r-lib/httr) package to
 manage HTTP requests, allowing the use of tokens from the authorization
@@ -144,14 +157,14 @@ the assets.
 
 ### Items functions
 
-`rstac` provides some functions to facilitates the interaction with STAC
-data. In the example bellow, we get how many items matched the search
-criteria:
+`rstac` provides some functions that facilitates the interaction with
+STAC data. In the example bellow, we get how many items matched the
+search criteria:
 
 ``` r
 # it_obj variable from the last code example
 it_obj %>% items_matched()
-#> [1] 264
+#> [1] 306
 ```
 
 However, if we count how many items there are in `it_obj` variable, we
@@ -168,7 +181,7 @@ it_obj %>% items_length()
 # (but don't stored them back in it_obj)
 it_obj %>% items_fetch(progress = FALSE) %>%
     items_length()
-#> [1] 264
+#> [1] 306
 ```
 
 ### Download assets
@@ -207,7 +220,7 @@ based on the STAC API specifications.
     Using these S3 generics methods you can define how parameters must
     be submitted to the HTTP request and the types of the returned
     documents responses. See the implemented
-    [ext\_query](https://github.com/brazil-data-cube/rstac/blob/master/R/ext_query.R)
+    [ext_query](https://github.com/brazil-data-cube/rstac/blob/master/R/ext_query.R)
     API extension as an example.  
 4.  Make a [Pull
     Request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)
