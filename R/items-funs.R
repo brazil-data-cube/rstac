@@ -550,17 +550,20 @@ items_reap <- function(items, field = NULL, ...) {
 #'
 #' @export
 items_reap.STACItem <- function(items, field = NULL, ...) {
+  dots <- list(...)
+  if (length(dots) > 0) {
+    deprec_parameter(
+      deprec_var = "...",
+      deprec_version = "0.9.2",
+      msg = "Please, use `field` parameter instead."
+    )
+    field = c(field, unlist(dots, use.names = FALSE))
+  }
 
-  dots <- substitute(list(...), env = environment())[-1]
-  if (!is.character(dots)) dots <- as.character(dots)
-
-  if (length(dots) > 0 && length(field) > 0)
-    .error("Only one of the parameters '...' or 'field' must be supplied.")
-
-  if (length(field) == 0 && length(dots) == 0)
+  if (length(field) == 0)
     return(items)
 
-  values <- items[[c(dots, field)]]
+  values <- items[[field]]
 
   if (all(vapply(values, is.null, logical(1))))
     .error("The provided field does not exist.")
@@ -574,18 +577,20 @@ items_reap.STACItem <- function(items, field = NULL, ...) {
 #'
 #' @export
 items_reap.STACItemCollection <- function(items, field = NULL, ...) {
+  dots <- list(...)
+  if (length(dots) > 0) {
+    deprec_parameter(
+      deprec_var = "...",
+      deprec_version = "0.9.2",
+      msg = "Please, use `field` parameter instead."
+    )
+    field = c(field, unlist(dots, use.names = FALSE))
+  }
 
-  dots <- substitute(list(...), env = environment())[-1]
-  if (!is.character(dots)) dots <- as.character(dots)
-
-  if (length(dots) > 0 && length(field) > 0)
-    .error("Only one of the parameters '...' or 'field' must be supplied.")
-
-  if (length(field) == 0 && length(dots) == 0)
+  if (length(field) == 0)
     return(items$features)
 
-  values <- lapply(items$features, `[[`, c(dots, field))
-
+  values <- lapply(items$features, `[[`,  field)
   if (all(vapply(values, is.null, logical(1))))
     .error("The provided field does not exist.")
 
