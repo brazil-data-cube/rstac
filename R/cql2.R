@@ -52,28 +52,21 @@ as.character.cql2_filter <- function(x, ...) {
   to_text(x)
 }
 
-#' @exportS3Method
-print.cql2_json <- function(x, ...) {
-  if (!is.null(x[["filter-crs"]])) {
-    cat("<", x[["filter-crs"]], ">", sep = "", fill = TRUE)
-  }
-  cat(to_json(x[["filter"]]))
-}
-
-#' @exportS3Method
-print.cql2_text <- function(x, ...) {
-  if (!is.null(x[["filter-crs"]])) {
-    cat("<", x[["filter-crs"]], ">", sep = "", fill = TRUE)
-  }
-  cat(x[["filter"]])
-}
+# ---- getters and setters functions ----
 
 cql2_lang <- function(obj) {
   obj[["filter-lang"]]
 }
 
 `cql2_lang<-` <- function(obj, value) {
-  if (!is.null(value)) obj[["filter-lang"]] <- value
+  if (length(value) > 0) {
+    stopifnot(value[[1]] %in% c("cql2-json", "cql2-text"))
+    obj[["filter-lang"]] <- value[[1]]
+
+    if (value[[1]] == "cql2-text") {
+      cql2_filter(obj) <- to_text(cql2_filter(obj))
+    }
+  }
   obj
 }
 
@@ -82,7 +75,7 @@ cql2_crs <- function(obj) {
 }
 
 `cql2_crs<-` <- function(obj, value) {
-  if (!is.null(value)) obj[["filter-crs"]] <- value
+  if (length(value) > 0) obj[["filter-crs"]] <- value[[1]]
   obj
 }
 
