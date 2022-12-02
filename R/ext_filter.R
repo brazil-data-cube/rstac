@@ -125,10 +125,10 @@
 #' req %>% ext_filter(collection %like% "modis%") %>% post_request()
 #'
 #' # 'IN' operator
-#' req %>% ext_filter(collection %in% c("modis-64A1-061",
-#'                                      "landsat-c2-l2",
-#'                                      "sentinel-2-l2a") &&
-#'                    datetime == "2019-01-01") %>%
+#' req %>% ext_filter(
+#'   collection %in% c("landsat-c2-l2", "sentinel-2-l2a") &&
+#'     datetime > "2019-01-01" &&
+#'     datetime < "2019-06-01") %>%
 #'   post_request()
 #'
 #' # Spatial operator
