@@ -2,12 +2,21 @@
 title: "rstac CQL2 extension development report"
 author: "Gilberto Camara, Rolf Simoes, and Felipe Carvalho"
 date: "2022-12-01"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{cql2-report}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = TRUE
+)
 ```
+
 
 ## Introduction
 
@@ -63,31 +72,6 @@ Para ajudar
 
 CQL2 is an OGC standard that enables complex filter expressions on OAFeat3 or STAC web services. CQL2 standard states that expressions can be represented in JSON or TEXT formats. Our implementation intends to convert native R expressions into CQL2 valid expressions without needing cumbersome nested lists or dictionaries. Also, we can make CQL2 filter requisition in JSON or TEXT formats with the same filter representation.
 
-Before present the R translation to CQL2, lets define two helper functions to print out CQL2 expressions in JSON and in TEXT formats.
-
-```{r}
-library(rstac)
-
-# print CQL2 expression in JSON format
-cql2_json <- function(expr) {
-  expr <- rstac:::unquote(
-    substitute(expr, environment()),
-    parent.frame(1)
-  )
-  cat(rstac:::to_json(rstac:::cql2(expr)))
-}
-
-# print CQL2 expression in TEXT format
-cql2_text <- function(expr) {
-  expr <- rstac:::unquote(
-    substitute(expr, environment()),
-    parent.frame(1)
-  )
-  cat(rstac:::to_text(rstac:::cql2(expr)))
-}
-
-```
-
 ### Translating R expressions to CQL2 syntax
 
 To explain the difference between the TEXT and JSON CQL2 representation, lets start with a simple example. In the following code, we have a valid CQL2 expression (in TEXT format) which refers to two properties, `vehicle_height` and `bridge_clearance`.
@@ -117,6 +101,10 @@ This filter expression can be passed in the HTTP GET verb implemented by service
 Note how properties `vehicle_height` and `bridge_clearance` are represented in this format. They are elements of an object containing a `property` member. Also, they go as arguments of operators (in this case,`>` and `-` operators). 
 
 In the R language, the JSON above could be represented by nested lists, which would be somewhat cumbersome to write. To produce valid CQL2 filter expressions, we use the R abstract syntax tree (AST) from R expressions that can be converted to TEXT or JSON formats. Let us see the same previous example written in R CQL2: 
+
+```{r}
+library(rstac)
+```
 
 ```{r}
 cql2_text(vehicle_height > (bridge_clearance - 1)) # TEXT format
@@ -248,9 +236,10 @@ The supported spatial operators are: `S_INTERSECTS`, `S_EQUALS`, `S_DISJOINT`, `
 
 
 ```{R, message=FALSE}
-poly_sf <- sfheaders::sf_polygon(matrix(c(0,0,0,0,1,1), ncol = 2))
-cql2_text(s_intersects(geometry, {{poly_sf}}))
-cql2_json(s_intersects(geometry, {{poly_sf}}))
+poly <- list(type = "Polygon",
+             coordinates = list(matrix(c(0,0,0,0,1,1), ncol = 2)))
+cql2_text(s_intersects(geometry, {{poly}}))
+cql2_json(s_intersects(geometry, {{poly}}))
 ```
 
 > Note: We will use the `sfheaders` package to represent spatial geometries. The `sfheaders` package is backward compatible with the `sf` package.
