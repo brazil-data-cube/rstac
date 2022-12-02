@@ -74,16 +74,16 @@
 #'  service.
 #'
 #' @examples
-#' \donttest{
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   collections("CB4_64_16D_STK-1") %>%
-#'   items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
-#'   get_request()
+#' \dontrun{
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    collections("CB4_64_16D_STK-1") %>%
+#'    items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
+#'    get_request()
 #'
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   collections("CB4_64_16D_STK-1") %>%
-#'   items("CB4_64_16D_STK_v001_022023_2020-07-11_2020-07-26") %>%
-#'   get_request()
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    collections("CB4_64_16D_STK-1") %>%
+#'    items("CB4_64_16D_STK_v001_022023_2020-07-11_2020-07-26") %>%
+#'    get_request()
 #' }
 #'
 #' @export

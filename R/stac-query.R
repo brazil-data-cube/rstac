@@ -24,9 +24,9 @@
 #' request parameters to be provided to API service.
 #'
 #' @examples
-#' \donttest{
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   get_request()
+#' \dontrun{
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    get_request()
 #' }
 #'
 #' @rdname stac

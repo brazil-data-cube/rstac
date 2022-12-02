@@ -29,14 +29,14 @@
 #'  parameters to be provided to STAC API web service.
 #'
 #' @examples
-#' \donttest{
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   collections() %>%
-#'   get_request()
+#' \dontrun{
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    collections() %>%
+#'    get_request()
 #'
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   collections(collection_id = "CB4_64_16D_STK-1") %>%
-#'   get_request()
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    collections(collection_id = "CB4_64_16D_STK-1") %>%
+#'    get_request()
 #' }
 
 #' @export

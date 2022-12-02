@@ -95,7 +95,7 @@
 #'  `post_request()` function.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Standard comparison operators in rstac:
 #' # Creating a stac search query
 #' req <- rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
