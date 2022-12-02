@@ -189,7 +189,6 @@ NULL
 #'
 #' @export
 items_length <- function(items) {
-
   UseMethod("items_length", items)
 }
 
@@ -197,7 +196,6 @@ items_length <- function(items) {
 #'
 #' @export
 items_length.STACItem <- function(items) {
-
   return(1)
 }
 
@@ -205,44 +203,39 @@ items_length.STACItem <- function(items) {
 #'
 #' @export
 items_length.STACItemCollection <- function(items) {
-
   return(length(items$features))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_matched  <- function(items, ...) {
-
+items_matched  <- function(items, matched_field = NULL) {
   UseMethod("items_matched", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_matched.STACItem  <- function(items, ...) {
-
+items_matched.STACItem  <- function(items, matched_field = NULL) {
   return(1)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_matched.STACItemCollection <- function(items, ..., matched_field = NULL) {
+items_matched.STACItemCollection <- function(items, matched_field = NULL) {
 
   matched <- NULL
 
   # try by the matched_field provided by user. This allow users specify a
   # non-standard field for matched items.
   if (!is.null(matched_field)) {
-
     tryCatch({
       matched <- as.numeric(items[[matched_field]])
     },
     error = function(e) .warning(paste("The provided field was not found in",
                                        "items object.")))
   }
-
   if (is.null(matched)) {
 
     if (stac_version(items) < "0.9.0")
@@ -333,7 +326,6 @@ items_fetch.STACItemCollection <- function(items, ...,
 #'
 #' @export
 items_next <- function(items, ...) {
-
   UseMethod("items_next", items)
 }
 
@@ -341,7 +333,6 @@ items_next <- function(items, ...) {
 #'
 #' @export
 items_next.STACItem <- function(items, ...) {
-
   return(items)
 }
 
@@ -349,7 +340,6 @@ items_next.STACItem <- function(items, ...) {
 #'
 #' @export
 items_next.STACItemCollection <- function(items, ...) {
-
   matched <- items_matched(items)
 
   q <- doc_query(items)
@@ -453,7 +443,6 @@ items_next.STACItemCollection <- function(items, ...) {
 #'
 #' @export
 items_datetime <- function(items) {
-
   UseMethod("items_datetime", items)
 }
 
@@ -461,7 +450,6 @@ items_datetime <- function(items) {
 #'
 #' @export
 items_datetime.STACItem <- function(items) {
-
   return(items$properties[["datetime"]])
 }
 
@@ -469,7 +457,6 @@ items_datetime.STACItem <- function(items) {
 #'
 #' @export
 items_datetime.STACItemCollection <- function(items) {
-
   lapply(items$features, `[[`, c("properties", "datetime"))
 }
 
@@ -477,7 +464,6 @@ items_datetime.STACItemCollection <- function(items) {
 #'
 #' @export
 items_bbox <- function(items) {
-
   UseMethod("items_bbox", items)
 }
 
@@ -485,7 +471,6 @@ items_bbox <- function(items) {
 #'
 #' @export
 items_bbox.STACItem <- function(items) {
-
   return(items[["bbox"]])
 }
 
@@ -564,9 +549,7 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #'
 #' @export
 items_reap <- function(items, field = NULL, ...) {
-
   if (items_length(items) == 0) return(NULL)
-
   UseMethod("items_reap", items)
 }
 
@@ -656,7 +639,6 @@ items_fields <- function(items, field = NULL, ...) {
 #'
 #' @export
 items_fields.STACItemCollection <- function(items, field = NULL, ...) {
-
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -685,7 +667,6 @@ items_fields.STACItem <- function(items, field = NULL, ...) {
     )
     field = c(field, unlist(dots, use.names = FALSE))
   }
-
   if (length(field) == 0)
     return(names(items))
   names(items[[field]])
@@ -703,7 +684,6 @@ items_sign <- function(items, sign_fn = NULL) {
 #'
 #' @export
 items_sign.STACItemCollection <- function(items, sign_fn = NULL) {
-
   if (is.null(sign_fn)) {
     return(items)
   }
@@ -730,7 +710,6 @@ items_sign.STACItemCollection <- function(items, sign_fn = NULL) {
 #'
 #' @export
 items_sign.STACItem <- function(items, sign_fn = NULL) {
-
   if (is.null(sign_fn)) {
     return(items)
   }
