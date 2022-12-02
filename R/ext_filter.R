@@ -226,20 +226,16 @@ endpoint.ext_filter <- function(q) {
 #' @export
 before_request.ext_filter <- function(q) {
   check_query_verb(q, verbs = c("GET", "POST"))
-  params <- list()
-  if (is.null(q$params[["filter-lang"]])) {
+  if (is.null(cql2_lang(q$params))) {
      if (q$verb == "GET") {
-       params <- cql2_text(q$params)
+       cql2_lang(q$params) <- "cql2-text"
      } else {
-       params <- cql2_json(q$params)
+       cql2_lang(q$params) <- "cql2-json"
      }
-    q$params <- utils::modifyList(q$params, params)
   } else {
-    if (q$verb == "GET" && q$params[["filter-lang"]] == "cql2-json") {
-      json_params <- cql2_json(q$params)
-      params[["filter"]] <- to_json(json_params[["filter"]])
-      params[["filter-lang"]] <- to_json(json_params[["filter-lang"]])
-      q$params <- utils::modifyList(q$params, params)
+    if (q$verb == "GET" && cql2_lang(q$params) == "cql2-json") {
+      # transform list into string to provide as querystring in GET
+      cql2_filter(q$params) <- to_json(cql2_filter(q$params))
     }
   }
   if ("items" %in% subclass(q)) {
