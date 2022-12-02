@@ -204,50 +204,30 @@ NULL
 
 #' @rdname assets_function
 #' @export
-assets_url <- function(items, asset_names = NULL, append_gdalvsi = TRUE) {
+assets_url <- function(items, append_gdalvsi = TRUE) {
   UseMethod("assets_url", items)
 }
 
 #' @rdname assets_function
 #' @export
 assets_url.STACItemCollection <- function(items, append_gdalvsi = TRUE) {
-  url <- vapply(items_assets(items), function(asset_name) {
+  assets_url.STACItem(items = items, append_gdalvsi = append_gdalvsi)
+}
+
+#' @rdname assets_function
+#' @export
+assets_url.STACItem <- function(items, append_gdalvsi = TRUE) {
+  url <- lapply(items_assets(items), function(asset_name) {
     items_reap(items, field = c("assets", asset_name, "href"))
-  }, character(1))
-  if (append_gdalvsi) gdalvsi_append(url) else url
-}
-
-#' @rdname assets_function
-#' @export
-assets_url.STACItem <- function(items,
-                                append_gdalvsi = TRUE) {
-
-}
-
-#' @rdname assets_function
-#' @export
-assets_append_gdalvsi <- function(items,
-                                  asset_names = NULL) {
-
-  if (is.null(asset_names))
-    asset_names <- items_fields(items, field = "assets")
-
-  items_apply(items, field = "assets", apply_fn = function(assets) {
-    stopifnot(all(asset_names %in% names(assets)))
-    assets_filtered <- assets[asset_names]
-
-    assets_filtered <- lapply(assets_filtered, function(asset) {
-      asset[["href"]] <- gdalvsi_append(asset[["href"]])
-      asset
-    })
-    return(assets_filtered)
   })
+  url <- unlist(url)
+  if (append_gdalvsi) gdalvsi_append(url) else url
 }
 
 #' @rdname assets_function
 #'
 #' @export
-assets_select <- function(items, asset_names, ...) {
+assets_select <- function(items, asset_names = NULL, filter_fn = NULL) {
   UseMethod("assets_select", items)
 }
 
