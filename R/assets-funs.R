@@ -172,18 +172,13 @@ assets_download.STACItem <- function(items,
 #' @param asset_names         a `character` with the assets names to be
 #'  filtered. If `NULL` (default) all assets will be returned..
 #'
-#' @param sort                a `logical` if true the dates will be sorted
-#'  in increasing order. By default, the dates are sorted.
-#'
-#' @param gdal_vsi_resolution a `logical`  if true, gdal drivers are
+#' @param append_gdalvsi a `logical`  if true, gdal drivers are
 #'  included in the URL of each asset. The following schemes are supported:
 #'  HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 #'
 #'
 #' @param filter_fn           a `function` that will be used to filter the
 #'  attributes listed in the properties.
-#'
-#' @param ...                 additional arguments.
 #'
 #' @return a `list` with the attributes of date, bands and paths.
 #'
@@ -196,7 +191,7 @@ assets_download.STACItem <- function(items,
 #'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
 #'  get_request() %>% items_fetch(progress = FALSE)
 #'
-#' stac_item %>% assets_append_gdalvsi(asset_names = c("EVI", "NDVI"))
+#' stac_item %>% assets_url()
 #' }
 #'
 #' @name assets_function
@@ -204,43 +199,30 @@ NULL
 
 #' @rdname assets_function
 #' @export
-assets_append_gdalvsi <- function(items,
-                                  asset_names = NULL,
-                                  sort = deprecated(),
-                                  gdal_vsi_resolution = deprecated()) {
-  if (!missing(sort)) {
-    deprec_parameter(
-      deprec_var = "sort",
-      deprec_version = "0.9.1-6"
-    )
-  }
+assets_url <- function(items, append_gdalvsi = TRUE) {
+  UseMethod("assets_url", items)
+}
 
-  if (!missing(gdal_vsi_resolution)) {
-    deprec_parameter(
-      deprec_var = "gdal_vsi_resolution",
-      deprec_version = "0.9.1-6"
-    )
-  }
+#' @rdname assets_function
+#' @export
+assets_url.STACItemCollection <- function(items, append_gdalvsi = TRUE) {
+  assets_url.STACItem(items = items, append_gdalvsi = append_gdalvsi)
+}
 
-  if (is.null(asset_names))
-    asset_names <- items_fields(items, "assets")
-
-  items_apply(items, field = "assets", apply_fn = function(assets) {
-    stopifnot(all(asset_names %in% names(assets)))
-    assets_filtered <- assets[asset_names]
-
-    assets_filtered <- lapply(assets_filtered, function(asset) {
-      asset[["href"]] <- gdalvsi_append(asset[["href"]])
-      asset
-    })
-    return(assets_filtered)
+#' @rdname assets_function
+#' @export
+assets_url.STACItem <- function(items, append_gdalvsi = TRUE) {
+  url <- lapply(items_assets(items), function(asset_name) {
+    items_reap(items, field = c("assets", asset_name, "href"))
   })
+  url <- unlist(url)
+  if (append_gdalvsi) gdalvsi_append(url) else url
 }
 
 #' @rdname assets_function
 #'
 #' @export
-assets_select <- function(items, asset_names, ...) {
+assets_select <- function(items, asset_names = NULL, filter_fn = NULL) {
   UseMethod("assets_select", items)
 }
 
@@ -248,7 +230,7 @@ assets_select <- function(items, asset_names, ...) {
 #'
 #' @export
 assets_select.STACItemCollection <- function(items,
-                                             asset_names = NULL, ...,
+                                             asset_names = NULL,
                                              filter_fn = NULL) {
   if (!is.null(asset_names)) {
     if (!all(asset_names %in% items_assets(items, simplify = TRUE)))
@@ -256,7 +238,6 @@ assets_select.STACItemCollection <- function(items,
 
     items$features <- lapply(items$features, function(item) {
       item$assets <- item$assets[asset_names]
-
       item
     })
   }
@@ -276,7 +257,7 @@ assets_select.STACItemCollection <- function(items,
 #'
 #' @export
 assets_select.STACItem <- function(items,
-                                   asset_names = NULL, ...,
+                                   asset_names = NULL,
                                    filter_fn = NULL) {
   if (!is.null(asset_names)) {
     if (!all(asset_names %in% items_assets(items)))
@@ -315,7 +296,6 @@ assets_select.STACItem <- function(items,
 #'
 #' @noRd
 .asset_download <- function(item, output_dir, overwrite, ..., download_fn = NULL) {
-
   item[["assets"]] <- lapply(item[["assets"]], function(asset) {
 
     if (!is.null(download_fn))
@@ -337,6 +317,5 @@ assets_select.STACItem <- function(items,
 
     asset
   })
-
   return(item)
 }

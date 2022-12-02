@@ -1,6 +1,6 @@
 Package: rstac
 Title: Client Library for SpatioTemporal Asset Catalog
-Version: 0.9.1-6
+Version: 0.9.2
 Authors@R:
     c(person("Brazil Data Cube Team",
             email = "brazildatacube@inpe.br",
@@ -28,7 +28,9 @@ Imports:
     magrittr
 Suggests:
     testthat,
-    sf
+    sf,
+    knitr,
+    rmarkdown
 Collate:
     'cql2-expr-funs.R'
     'cql2-types.R'
@@ -61,3 +63,4 @@ Collate:
     'url-utils.R'
     'utils.R'
 Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr

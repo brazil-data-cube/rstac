@@ -72,13 +72,11 @@
 #' }
 NULL
 
-####RSTACQuery####
+# ---- RSTACQuery ----
 
-#' @title Printing functions
 #' @rdname print
 #' @export
 print.RSTACQuery <- function(x, ...) {
-
   cat(crayon::bold("###RSTACQuery"), fill = TRUE)
   cat("-", crayon::bold("url:"), x$base_url, fill = TRUE)
   cat("-", crayon::bold("params:"), fill = TRUE)
@@ -91,15 +89,11 @@ print.RSTACQuery <- function(x, ...) {
   invisible(x)
 }
 
+# ---- STACCatalog ----
 
-
-####STACCatalog####
-
-#' @title Printing functions
 #' @rdname print
 #' @export
 print.STACCatalog <- function(x, ...) {
-
   cat(crayon::bold("###STACCatalog"), fill = TRUE)
   cat("-", crayon::bold("id:"), x$id, fill = TRUE)
   if (!is.null(x$description) && x$description != "")
@@ -110,13 +104,11 @@ print.STACCatalog <- function(x, ...) {
   invisible(x)
 }
 
-####STACCollectionList####
+# ---- STACCollectionList ----
 
-#' @title Printing functions
 #' @rdname print
 #' @export
 print.STACCollectionList <- function(x, n = 10, ...) {
-
   cat(crayon::bold("###STACCollectionList"), fill = TRUE)
   cat("-", crayon::bold("collections"),
       sprintf("(%s item(s)):", length(x$collections)), fill = TRUE)
@@ -136,13 +128,11 @@ print.STACCollectionList <- function(x, n = 10, ...) {
   invisible(x)
 }
 
-####STACCollection####
+# ---- STACCollection ----
 
-#' @title Printing functions
 #' @rdname print
 #' @export
 print.STACCollection <- function(x, ...) {
-
   cat(crayon::bold("###STACCollection"), fill = TRUE)
   cat("-", crayon::bold("id:"), x$id, fill = TRUE)
   if (!is.null(x$title) && x$title != "")
@@ -154,13 +144,11 @@ print.STACCollection <- function(x, ...) {
   invisible(x)
 }
 
-####STACItemCollection####
+# ---- STACItemCollection ----
 
-#' @title Printing functions
 #' @rdname print
 #' @export
 print.STACItemCollection <- function(x, n = 10, ..., tail = FALSE) {
-
   cat(crayon::bold("###STACItemCollection"), fill = TRUE)
   matched <- suppressWarnings(items_matched(x))
   if (!is.null(matched))
@@ -198,13 +186,11 @@ print.STACItemCollection <- function(x, n = 10, ..., tail = FALSE) {
   invisible(x)
 }
 
-####STACItem####
+# ---- STACItem ----
 
-#' @title Printing functions
 #' @rdname print
 #' @export
 print.STACItem <- function(x, ...) {
-
   cat(crayon::bold("###STACItem"), fill = TRUE)
   cat("-", crayon::bold("id:"), x$id, fill = TRUE)
   cat("-", crayon::bold("collection:"), x$collection, fill = TRUE)

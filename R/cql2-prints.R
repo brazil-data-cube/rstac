@@ -120,6 +120,9 @@ to_json.cql2_date <- function(x) json_obj(x)
 to_json.cql2_interval <- function(x) json_obj(x)
 
 #' @exportS3Method
+to_json.cql2 <- function(x) to_json(cql2_filter(x))
+
+#' @exportS3Method
 to_json.default <- function(x)
   stop(paste("cannot handle value of class ", class(x)), call. = FALSE)
 
@@ -275,6 +278,10 @@ to_text.cql2_accenti_op <- function(x)
 to_text.cql2_interval <- function(x)
   paste0("INTERVAL(", to_text(x$interval[[1]]), ",",
          to_text(x$interval[[2]]), ")")
+
+#' @exportS3Method
+to_text.cql2 <- function(x) to_text(cql2_filter(x))
+
 
 #' @exportS3Method
 to_text.default <- function(x)

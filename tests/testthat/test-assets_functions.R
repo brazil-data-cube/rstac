@@ -209,74 +209,39 @@ testthat::test_that("assets functions", {
       expected = "BAND13"
     )
 
-    # assets_gdalvfs----------------------------------------------------------
-    testthat::expect_s3_class(
-      object =  assets_append_gdalvsi(stac_items),
-      class = c("STACItemCollection", "RSTACDocument")
-    )
-
-    testthat::expect_s3_class(
-      object =  assets_append_gdalvsi(stac_item),
-      class = c("STACItem", "RSTACDocument")
+    # assets_url----------------------------------------------------------
+    testthat::expect_equal(
+      object =  class(assets_url(stac_items)),
+      expected = "character"
     )
 
     testthat::expect_equal(
-      object =  {
+      object = class(assets_url(stac_item)),
+      expected = "character"
+    )
 
-        mock_s3_obj <- stac_item
-        mock_s3_obj[["assets"]][[1]][["href"]] <- "s3://abc.com"
-
-        x <- assets_append_gdalvsi(mock_s3_obj)
-        x[["assets"]][[1]][["href"]]
-      },
+    testthat::expect_equal(
+      object =  gdalvsi_append("s3://abc.com"),
       expected = "/vsis3/abc.com"
     )
 
     testthat::expect_equal(
-      object =  {
-
-        mock_gs_obj <- stac_item
-        mock_gs_obj[["assets"]][[1]][["href"]] <- "gs://abc.com"
-
-        x <- assets_append_gdalvsi(mock_gs_obj)
-        x[["assets"]][[1]][["href"]]
-      },
+      object =  gdalvsi_append("gs://abc.com"),
       expected = "/vsigs/abc.com"
     )
 
     testthat::expect_equal(
-      object =  {
-
-        mock_http_obj <- stac_item
-        mock_http_obj[["assets"]][[1]][["href"]] <- "http://abc.com"
-
-        x <- assets_append_gdalvsi(mock_http_obj)
-        x[["assets"]][[1]][["href"]]
-      },
+      object = gdalvsi_append("http://abc.com"),
       expected = "/vsicurl/http://abc.com"
     )
 
     testthat::expect_equal(
-      object =  {
-
-        mock_https_obj <- stac_item
-        mock_https_obj[["assets"]][[1]][["href"]] <- "https://abc.com"
-
-        x <- assets_append_gdalvsi(mock_https_obj)
-        x[["assets"]][[1]][["href"]]
-      },
+      object = gdalvsi_append("https://abc.com"),
       expected = "/vsicurl/https://abc.com"
     )
 
     testthat::expect_equal(
-      object =  {
-
-        mock_inv_obj <- stac_item
-        mock_inv_obj[["assets"]][[1]][["href"]] <- "httpdds://abc.com"
-
-        x <- assets_append_gdalvsi(mock_inv_obj)
-        x[["assets"]][[1]][["href"]]
-      },
+      object =  gdalvsi_append("httpdds://abc.com"),
       expected = "httpdds://abc.com"
     )
 

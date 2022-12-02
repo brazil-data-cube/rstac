@@ -1,49 +1,46 @@
 #' Convert R expressions to CQL2
 #'
 #' @description
-#' These functions convert R expressions to CQL2 standard (text or JSON).
-#'
-#' @name cql2
+#' These functions convert R expressions to CQL2 standard (`TEXT` or `JSON`).
 #'
 #' @param expr  An R expression to be represented in CQL2
-#' @param lang a character with the syntax used in the filter.
-#' It can be used in text format \code{cql2-text} or in JSON format
-#' \code{cql2-json}. By default, \code{cql2-text} is used in \code{GET}
-#' requests and \code{cql2-json} in \code{POST} requests.
-#' @param crs a character with coordinate reference systems.
-#' By default WGS84 is used, this parameter will rarely be used.
+#'
+#' @name cql2_functions
+NULL
+
 cql2 <- function(expr, lang = NULL, crs = NULL) {
   cql2_update_ident_env(expr)
   # create cql2 object
   obj <- structure(list(), class = c("cql2", "list"))
   cql2_filter(obj) <- cql2_eval(expr)
-  if (!is.null(lang)) {
-    obj <- switch(
-      lang,
-      "cql2-json" = cql2_json(obj),
-      "cql2-text" = cql2_text(obj)
-    )
-  }
+  cql2_lang(obj) <- lang
   cql2_crs(obj) <- crs
+
+  class(obj) <- c(lang[[1]], "cql2", "list")
   obj
 }
 
-cql2_text <- function(obj) {
-  x <- structure(list(), class = c("cql2_text", "cql2", "list"))
-  cql2_filter(x) <- cql2_filter(obj)
-  cql2_lang(x) <- "cql2-text"
-  cql2_crs(x) <- cql2_crs(obj)
-  x[["filter"]] <- to_text(x[["filter"]])
-  x
+#' @rdname cql2_functions
+#' @export
+cql2_json <- function(expr) {
+  expr <- unquote(
+    substitute(expr, environment()),
+    parent.frame(1)
+  )
+  cat(to_json(cql2(expr, lang = "cql2-json")))
 }
 
-cql2_json <- function(obj) {
-  x <- structure(list(), class = c("cql2_json", "cql2", "list"))
-  cql2_filter(x) <- cql2_filter(obj)
-  cql2_lang(x) <- "cql2-json"
-  cql2_crs(x) <- cql2_crs(obj)
-  x
+#' @rdname cql2_functions
+#' @export
+cql2_text <- function(expr) {
+  expr <- unquote(
+    substitute(expr, environment()),
+    parent.frame(1)
+  )
+  cat(cql2_filter(cql2(expr, lang = "cql2-text")))
 }
+
+# ---- cast functions ----
 
 #' @exportS3Method
 print.cql2_filter <- function(x, ...) {
@@ -55,28 +52,21 @@ as.character.cql2_filter <- function(x, ...) {
   to_text(x)
 }
 
-#' @exportS3Method
-print.cql2_json <- function(x, ...) {
-  if (!is.null(x[["filter-crs"]])) {
-    cat("<", x[["filter-crs"]], ">", sep = "", fill = TRUE)
-  }
-  cat(to_json(x[["filter"]]))
-}
-
-#' @exportS3Method
-print.cql2_text <- function(x, ...) {
-  if (!is.null(x[["filter-crs"]])) {
-    cat("<", x[["filter-crs"]], ">", sep = "", fill = TRUE)
-  }
-  cat(x[["filter"]])
-}
+# ---- getters and setters functions ----
 
 cql2_lang <- function(obj) {
   obj[["filter-lang"]]
 }
 
 `cql2_lang<-` <- function(obj, value) {
-  if (!is.null(value)) obj[["filter-lang"]] <- value
+  if (length(value) > 0) {
+    stopifnot(value[[1]] %in% c("cql2-json", "cql2-text"))
+    obj[["filter-lang"]] <- value[[1]]
+
+    if (value[[1]] == "cql2-text") {
+      cql2_filter(obj) <- to_text(cql2_filter(obj))
+    }
+  }
   obj
 }
 
@@ -85,7 +75,7 @@ cql2_crs <- function(obj) {
 }
 
 `cql2_crs<-` <- function(obj, value) {
-  if (!is.null(value)) obj[["filter-crs"]] <- value
+  if (length(value) > 0) obj[["filter-crs"]] <- value[[1]]
   obj
 }
 
