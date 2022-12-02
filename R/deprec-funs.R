@@ -107,7 +107,6 @@ assets_filter.STACItem <- function(items, ..., filter_fn = NULL) {
   items
 }
 
-
 #' @rdname items_functions
 #'
 #' @export
