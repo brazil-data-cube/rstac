@@ -478,67 +478,60 @@ items_bbox.STACItem <- function(items) {
 #'
 #' @export
 items_bbox.STACItemCollection <- function(items) {
-
   lapply(items$features, `[[`, c("bbox"))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets <- function(items, ...) {
-
+items_assets <- function(items, simplify = TRUE) {
   UseMethod("items_assets", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets.STACItem <- function(items, ...) {
-
+items_assets.STACItem <- function(items, simplify = TRUE) {
   return(items_fields(items, field = "assets"))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets.STACItemCollection <- function(items, ..., simplify = TRUE) {
+items_assets.STACItemCollection <- function(items, simplify = TRUE) {
   if (simplify)
     return(items_fields(items, field = "assets"))
   lapply(lapply(items$features, `[[`, c("assets")), names)
 }
 
-
 #' @rdname items_functions
 #'
 #' @export
 items_filter <- function(items, ..., filter_fn = NULL) {
-
   # check items parameter
   check_subclass(items, "STACItemCollection")
 
-  dots <- substitute(list(...), env = environment())[-1]
+  dots <- unquote(
+    expr = substitute(list(...), env = environment())[-1],
+    env =  parent.frame()
+  )
 
   if (length(dots) > 0) {
-
     if (!is.null(names(dots)))
       .error("Invalid filter arguments.")
 
     for (i in seq_along(dots)) {
-
       sel <- vapply(items$features, function(f) {
         eval(dots[[i]], envir = f$properties)
       }, logical(1))
-
       items$features <- items$features[sel]
     }
   }
 
   if (!is.null(filter_fn)) {
-
     sel <- vapply(items$features, function(f) {
       filter_fn(f$properties)
     }, logical(1))
-
     items$features <- items$features[sel]
   }
 
