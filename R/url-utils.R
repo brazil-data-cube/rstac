@@ -101,13 +101,15 @@ gdalvsi_switch <- function(url, ...) {
 }
 
 gdalvsi_append <- function(url) {
-  gdalvsi_switch(
-    url,
-    https = , http = paste("/vsicurl", url, sep = "/"),
-    s3 = paste("/vsis3", gsub("^s3://", "", url), sep = "/"),
-    gs = paste("/vsigs", gsub("^gs://", "", url), sep = "/"),
-    url
-  )
+  vapply(url, function(x) {
+    gdalvsi_switch(
+      x,
+      https = , http = paste("/vsicurl", x, sep = "/"),
+      s3 = paste("/vsis3", gsub("^s3://", "", x), sep = "/"),
+      gs = paste("/vsigs", gsub("^gs://", "", x), sep = "/"),
+      url
+    )
+  }, character(1), USE.NAMES = FALSE)
 }
 
 #' @title Utility functions
