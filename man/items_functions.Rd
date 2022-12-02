@@ -34,9 +34,6 @@
 \alias{items_sign}
 \alias{items_sign.STACItemCollection}
 \alias{items_sign.STACItem}
-\alias{items_apply}
-\alias{items_apply.STACItemCollection}
-\alias{items_apply.STACItem}
 \title{STACItemCollection functions}
 \usage{
 items_group(items, ..., field = NULL, index = NULL)
@@ -47,11 +44,11 @@ items_length(items)
 
 \method{items_length}{STACItemCollection}(items)
 
-items_matched(items, ...)
+items_matched(items, matched_field = NULL)
 
-\method{items_matched}{STACItem}(items, ...)
+\method{items_matched}{STACItem}(items, matched_field = NULL)
 
-\method{items_matched}{STACItemCollection}(items, ..., matched_field = NULL)
+\method{items_matched}{STACItemCollection}(items, matched_field = NULL)
 
 items_fetch(items, ...)
 
@@ -77,11 +74,11 @@ items_bbox(items)
 
 \method{items_bbox}{STACItemCollection}(items)
 
-items_assets(items, ...)
+items_assets(items, simplify = TRUE)
 
-\method{items_assets}{STACItem}(items, ...)
+\method{items_assets}{STACItem}(items, simplify = TRUE)
 
-\method{items_assets}{STACItemCollection}(items, ..., simplify = TRUE)
+\method{items_assets}{STACItemCollection}(items, simplify = TRUE)
 
 items_filter(items, ..., filter_fn = NULL)
 
@@ -102,12 +99,6 @@ items_sign(items, sign_fn = NULL)
 \method{items_sign}{STACItemCollection}(items, sign_fn = NULL)
 
 \method{items_sign}{STACItem}(items, sign_fn = NULL)
-
-items_apply(items, ..., field, apply_fn = NULL)
-
-\method{items_apply}{STACItemCollection}(items, ..., field, apply_fn = NULL)
-
-\method{items_apply}{STACItem}(items, ..., field, apply_fn = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
@@ -139,9 +130,6 @@ evaluate a \code{logical} value.}
 
 \item{sign_fn}{a \code{function} that receives an item as parameter
 and returns an item signed.}
-
-\item{apply_fn}{a \code{function} that is applicable for any property of
-an item.}
 }
 \value{
 \itemize{
@@ -298,17 +286,6 @@ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  get_request() \%>\% items_fetch(progress = FALSE)
 
 stac_item \%>\% items_reap(field = c("properties", "datetime"))
-}
-
-\dontrun{
-# STACItemCollection object
-stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
- stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
-        datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
- get_request() \%>\% items_fetch(progress = FALSE)
-
- stac_item \%>\% items_group(., field = c("properties", "bdc:tiles"))
 }
 
 \donttest{

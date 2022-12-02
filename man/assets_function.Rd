@@ -5,44 +5,36 @@
 \alias{assets_url}
 \alias{assets_url.STACItemCollection}
 \alias{assets_url.STACItem}
-\alias{assets_append_gdalvsi}
 \alias{assets_select}
 \alias{assets_select.STACItemCollection}
 \alias{assets_select.STACItem}
 \title{Assets functions}
 \usage{
-assets_url(items, asset_names = NULL, append_gdalvsi = TRUE)
+assets_url(items, append_gdalvsi = TRUE)
 
 \method{assets_url}{STACItemCollection}(items, append_gdalvsi = TRUE)
 
 \method{assets_url}{STACItem}(items, append_gdalvsi = TRUE)
 
-assets_append_gdalvsi(items, asset_names = NULL)
+assets_select(items, asset_names = NULL, filter_fn = NULL)
 
-assets_select(items, asset_names, ...)
+\method{assets_select}{STACItemCollection}(items, asset_names = NULL, filter_fn = NULL)
 
-\method{assets_select}{STACItemCollection}(items, asset_names = NULL, ..., filter_fn = NULL)
-
-\method{assets_select}{STACItem}(items, asset_names = NULL, ..., filter_fn = NULL)
+\method{assets_select}{STACItem}(items, asset_names = NULL, filter_fn = NULL)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
 the result of \verb{/stac/search}, \code{/collections/{collectionId}/items}.}
 
+\item{append_gdalvsi}{a \code{logical}  if true, gdal drivers are
+included in the URL of each asset. The following schemes are supported:
+HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
+
 \item{asset_names}{a \code{character} with the assets names to be
 filtered. If \code{NULL} (default) all assets will be returned..}
 
-\item{...}{additional arguments.}
-
 \item{filter_fn}{a \code{function} that will be used to filter the
 attributes listed in the properties.}
-
-\item{sort}{a \code{logical} if true the dates will be sorted
-in increasing order. By default, the dates are sorted.}
-
-\item{gdal_vsi_resolution}{a \code{logical}  if true, gdal drivers are
-included in the URL of each asset. The following schemes are supported:
-HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 }
 \value{
 a \code{list} with the attributes of date, bands and paths.
@@ -62,7 +54,7 @@ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
         bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
  get_request() \%>\% items_fetch(progress = FALSE)
 
-stac_item \%>\% assets_append_gdalvsi(asset_names = c("EVI", "NDVI"))
+stac_item \%>\% assets_url()
 }
 
 }
