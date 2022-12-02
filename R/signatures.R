@@ -14,16 +14,15 @@
 #'
 #' @examples
 #' \dontrun{
-#' # STACItemCollection object
-#' stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1",
-#'               datetime = "2019-06-01/2019-08-01") %>%
-#'   stac_search() %>%
-#'   get_request()
+#'  # STACItemCollection object
+#'  stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    stac_search(collections = "CB4_64_16D_STK-1",
+#'                datetime = "2019-06-01/2019-08-01") %>%
+#'    stac_search() %>%
+#'    get_request()
 #'
-#' # signing each item href
-#' stac_obj %>% items_sign(sign_fn = sign_bdc(access_token = "123"))
-#'
+#'  # signing each item href
+#'  stac_obj %>% items_sign(sign_fn = sign_bdc(access_token = "123"))
 #' }
 #'
 #' @export
@@ -115,15 +114,14 @@ sign_bdc <- function(access_token = NULL, ...) {
 #'
 #' @examples
 #' \dontrun{
-#' # STACItemCollection object
-#' stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
-#'  stac_search(collections = "sentinel-2-l2a",
-#'              bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
-#'  get_request()
+#'  # STACItemCollection object
+#'  stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
+#'   stac_search(collections = "sentinel-2-l2a",
+#'               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
+#'   get_request()
 #'
-#' # signing each item href
-#' stac_obj %>% items_sign(sign_fn = sign_planetary_computer())
-#'
+#'  # signing each item href
+#'  stac_obj %>% items_sign(sign_fn = sign_planetary_computer())
 #' }
 #'
 #' @export

@@ -114,7 +114,7 @@ double quote from single quote strings. The right way to represent
 double quoted properties in R is to use the escape character (\verb{), for example }"date"`.
 }
 \examples{
-\donttest{
+\dontrun{
 # Standard comparison operators in rstac:
 # Creating a stac search query
 req <- rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%

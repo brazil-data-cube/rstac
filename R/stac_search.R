@@ -72,18 +72,18 @@
 #' search field parameters to be provided to STAC API web service.
 #'
 #' @examples
-#' \donttest{
-#' # GET request
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-#'         datetime = "2017-08-01/2018-03-01") %>%
-#'  get_request()
+#' \dontrun{
+#'  # GET request
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'   stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
+#'          datetime = "2017-08-01/2018-03-01") %>%
+#'   get_request()
 #'
-#' # POST request
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1",
-#'         bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
-#'  post_request()
+#'  # POST request
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'   stac_search(collections = "CB4_64_16D_STK-1",
+#'          bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
+#'   post_request()
 #' }
 #'
 #' @export

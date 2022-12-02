@@ -66,29 +66,29 @@ Call \code{print()} function to print the rstac's objects.
 You can determine how many items will be printed using \code{n} parameter.
 }
 \examples{
-\donttest{
-# STACItemCollection object
-stac_item_collection <-
-  stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  stac_search(collections = "CB4_64_16D_STK-1",
-         bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
-         limit = 15) \%>\%
-  get_request()
+\dontrun{
+ # STACItemCollection object
+ stac_item_collection <-
+   stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+   stac_search(collections = "CB4_64_16D_STK-1",
+          bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
+          limit = 15) \%>\%
+   get_request()
 
-print(stac_item_collection, n = 10)
+ print(stac_item_collection, n = 10)
 
-# STACCollectionList object
-stac_collection <-
-    stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-    collections() \%>\%
-    get_request()
+ # STACCollectionList object
+ stac_collection <-
+     stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+     collections() \%>\%
+     get_request()
 
-print(stac_collection, n = 5)
+ print(stac_collection, n = 5)
 
-# RSTACQuery object
-obj_rstac <- stac("https://brazildatacube.dpi.inpe.br/stac/")
+ # RSTACQuery object
+ obj_rstac <- stac("https://brazildatacube.dpi.inpe.br/stac/")
 
-print(obj_rstac)
+ print(obj_rstac)
 }
 }
 \seealso{
