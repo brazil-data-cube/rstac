@@ -230,7 +230,7 @@ assets_select <- function(items, asset_names = NULL, filter_fn = NULL) {
 #'
 #' @export
 assets_select.STACItemCollection <- function(items,
-                                             asset_names = NULL, ...,
+                                             asset_names = NULL,
                                              filter_fn = NULL) {
   if (!is.null(asset_names)) {
     if (!all(asset_names %in% items_assets(items, simplify = TRUE)))
@@ -238,7 +238,6 @@ assets_select.STACItemCollection <- function(items,
 
     items$features <- lapply(items$features, function(item) {
       item$assets <- item$assets[asset_names]
-
       item
     })
   }
@@ -258,7 +257,7 @@ assets_select.STACItemCollection <- function(items,
 #'
 #' @export
 assets_select.STACItem <- function(items,
-                                   asset_names = NULL, ...,
+                                   asset_names = NULL,
                                    filter_fn = NULL) {
   if (!is.null(asset_names)) {
     if (!all(asset_names %in% items_assets(items)))
@@ -297,7 +296,6 @@ assets_select.STACItem <- function(items,
 #'
 #' @noRd
 .asset_download <- function(item, output_dir, overwrite, ..., download_fn = NULL) {
-
   item[["assets"]] <- lapply(item[["assets"]], function(asset) {
 
     if (!is.null(download_fn))
@@ -319,6 +317,5 @@ assets_select.STACItem <- function(items,
 
     asset
   })
-
   return(item)
 }
