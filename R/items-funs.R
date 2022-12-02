@@ -64,9 +64,6 @@
 #' @param sign_fn         a `function` that receives an item as parameter
 #' and returns an item signed.
 #'
-#' @param apply_fn         a `function` that is applicable for any property of
-#'  an item.
-#'
 #' @param filter_fn       a `function` that receives an item that should
 #' evaluate a `logical` value.
 #'
@@ -183,17 +180,6 @@
 #'  get_request() %>% items_fetch(progress = FALSE)
 #'
 #' stac_item %>% items_reap(field = c("properties", "datetime"))
-#' }
-#'
-#' \dontrun{
-#' # STACItemCollection object
-#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
-#'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
-#'  get_request() %>% items_fetch(progress = FALSE)
-#'
-#'  stac_item %>% items_group(., field = c("properties", "bdc:tiles"))
 #' }
 #'
 #' @name items_functions
