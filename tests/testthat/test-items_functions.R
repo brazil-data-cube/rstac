@@ -135,7 +135,7 @@ testthat::test_that("items functions", {
 
     # items_assets---------------------------------------------------------------
     # STACItemCollection
-    testthat::expect_length(items_assets(res), n = 10)
+    testthat::expect_length(items_assets(res, simplify = FALSE), n = 10)
 
     # STACItem
     testthat::expect_vector(items_assets(item_stac), ptype = character())
@@ -198,8 +198,13 @@ testthat::test_that("items functions", {
 
     # items_assets--------------------------------------------------------------
     testthat::expect_equal(
-      object = class(items_assets(res)),
+      object = class(items_assets(res, simplify = FALSE)),
       expected = "list"
+    )
+
+    testthat::expect_equal(
+      object = class(items_assets(res)),
+      expected = "character"
     )
 
     testthat::expect_equal(
@@ -288,98 +293,5 @@ testthat::test_that("items functions", {
     testthat::expect_equal(
       object = class(items_reap(res)),
       expected = "list"
-    )
-
-    # items_apply---------------------------------------------------------------
-    testthat::expect_equal(
-      object = subclass(items_apply(res)),
-      expected = "STACItemCollection"
-    )
-
-    testthat::expect_equal(
-      object = subclass(items_apply(res)),
-      expected = "STACItemCollection"
-    )
-
-    testthat::expect_error(
-      items_apply(res,
-                  field = c("properties", "datetime"),
-                  apply_fn = function(x) {x})
-    )
-
-    testthat::expect_error(
-      items_apply(res,
-                  field = c("propertiessdddd"),
-                  apply_fn = function(x) {x})
-    )
-
-    items_applied <- suppressMessages(
-      items_apply(
-        items = res,
-        field = c("properties"),
-        apply_fn = function(x) {
-          x[["eo:cloud_cover"]] <- x[["eo:cloud_cover"]] * 1.10
-          x
-        })
-    )
-
-    item_applied <- suppressMessages(
-      items_apply(
-        items = item_stac,
-        field = c("properties"),
-        apply_fn = function(x) {
-          x[["eo:cloud_cover"]] <- x[["eo:cloud_cover"]] * 1.10
-          x
-        })
-    )
-
-    testthat::expect_equal(
-      object = subclass(items_applied),
-      expected = "STACItemCollection"
-    )
-
-
-    testthat::expect_equal(
-      object = subclass(item_applied),
-      expected = "STACItem"
-    )
-
-    cc_origin <- items_reap(
-      items = item_stac,
-      field = c("properties", "eo:cloud_cover")
-    )
-
-    cc_applied <- items_reap(
-      items = item_applied,
-      field = c("properties", "eo:cloud_cover")
-    )
-
-    testthat::expect_equal(
-      object = cc_origin * 1.10,
-      expected = cc_applied
-    )
-
-    testthat::expect_error(
-      suppressMessages(
-        items_apply(
-          items = res,
-          field = c("properties"),
-          apply_fn = function(x) {
-            x[["eo:cloud_cover"]] <- x[["eo:cloud_cover"]] * 1.10
-            x[["eo:cloud_cover"]]
-          })
-      )
-    )
-
-    testthat::expect_error(
-      suppressMessages(
-        items_apply(
-          items = item_applied,
-          field = c("properties"),
-          apply_fn = function(x) {
-            x[["eo:cloud_cover"]] <- x[["eo:cloud_cover"]] * 1.10
-            x[["eo:cloud_cover"]]
-          })
-      )
     )
 })
