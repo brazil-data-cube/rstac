@@ -172,18 +172,13 @@ assets_download.STACItem <- function(items,
 #' @param asset_names         a `character` with the assets names to be
 #'  filtered. If `NULL` (default) all assets will be returned..
 #'
-#' @param sort                a `logical` if true the dates will be sorted
-#'  in increasing order. By default, the dates are sorted.
-#'
-#' @param gdal_vsi_resolution a `logical`  if true, gdal drivers are
+#' @param append_gdalvsi a `logical`  if true, gdal drivers are
 #'  included in the URL of each asset. The following schemes are supported:
 #'  HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 #'
 #'
 #' @param filter_fn           a `function` that will be used to filter the
 #'  attributes listed in the properties.
-#'
-#' @param ...                 additional arguments.
 #'
 #' @return a `list` with the attributes of date, bands and paths.
 #'
@@ -196,7 +191,7 @@ assets_download.STACItem <- function(items,
 #'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
 #'  get_request() %>% items_fetch(progress = FALSE)
 #'
-#' stac_item %>% assets_append_gdalvsi(asset_names = c("EVI", "NDVI"))
+#' stac_item %>% assets_url()
 #' }
 #'
 #' @name assets_function
