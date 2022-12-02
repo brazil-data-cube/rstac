@@ -27,9 +27,9 @@ endpoint should return a STAC Catalog document containing all published data
 catalogs.
 }
 \examples{
-\donttest{
-stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  get_request()
+\dontrun{
+ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+   get_request()
 }
 
 }

@@ -232,18 +232,17 @@ receives as argument an item and returns an signed item. \code{rstac} provides
 Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 }
 \examples{
-
 \dontrun{
-x <- stac("https://brazildatacube.dpi.inpe.br/stac") \%>\%
-    stac_search(collections = "CB4_64_16D_STK-1") \%>\%
-    stac_search(limit = 500) \%>\%
-    get_request()
+ x <- stac("https://brazildatacube.dpi.inpe.br/stac") \%>\%
+     stac_search(collections = "CB4_64_16D_STK-1") \%>\%
+     stac_search(limit = 500) \%>\%
+     get_request()
 
-x \%>\% items_length()
-x \%>\% items_matched()
-x \%>\% items_datetime()
-x \%>\% items_bbox()
-x \%>\% items_fetch()
+ x \%>\% items_length()
+ x \%>\% items_matched()
+ x \%>\% items_datetime()
+ x \%>\% items_bbox()
+ x \%>\% items_fetch()
 }
 
 \dontrun{
@@ -288,14 +287,14 @@ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
 stac_item \%>\% items_reap(field = c("properties", "datetime"))
 }
 
-\donttest{
-# STACItemCollection object
-stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
- stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-        datetime = "2017-08-01/2018-03-01") \%>\%
- get_request()
+\dontrun{
+ # STACItemCollection object
+ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
+         datetime = "2017-08-01/2018-03-01") \%>\%
+  get_request()
 
-stac_item \%>\% items_fields(field = "properties")
+ stac_item \%>\% items_fields(field = "properties")
 }
 
 }

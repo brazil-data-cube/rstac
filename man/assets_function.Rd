@@ -46,15 +46,15 @@ For the URL you can add the GDAL library drivers for the following schemes:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 }
 \examples{
-\donttest{
-# STACItemCollection object
-stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
- stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
-        datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
- get_request() \%>\% items_fetch(progress = FALSE)
+\dontrun{
+ # STACItemCollection object
+ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+         datetime = "2017-08-01/2018-03-01",
+         bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
+  get_request() \%>\% items_fetch(progress = FALSE)
 
-stac_item \%>\% assets_url()
+ stac_item \%>\% assets_url()
 }
 
 }
