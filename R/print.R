@@ -203,3 +203,49 @@ print.STACItem <- function(x, ...) {
       fill = TRUE)
   invisible(x)
 }
+
+# ---- Queryables ----
+
+#' @rdname print
+#' @export
+print.Queryables <- function(x, n = 10, ...) {
+  cat(crayon::bold("###Queryables"), fill = TRUE)
+
+  if (missing(n) && length(x$properties) < 2 * n) {
+    n <- length(x$properties)
+  }
+  n <- min(n, length(x$properties))
+  if (n > 0) {
+    seq_it <- seq_len(n)
+    cat("-", crayon::bold("properties"), fill = TRUE)
+    for (i in seq_it) {
+      e <- names(x$properties[i])
+      cat(paste0("  - ", e), fill = TRUE)
+    }
+  }
+  cat("-", crayon::bold("field(s):"),
+      paste0(names(x), collapse = ", "), fill = TRUE)
+  invisible(x)
+}
+
+# ---- Conformance ----
+
+#' @rdname print
+#' @export
+print.Conformance <- function(x, n = 5, ...) {
+  cat(crayon::bold("###Conformance"), fill = TRUE)
+
+  if (missing(n) && length(x$conformsTo) < 2 * n) {
+    n <- length(x$conformsTo)
+  }
+  n <- min(n, length(x$conformsTo))
+  if (n > 0) {
+    seq_it <- seq_len(n)
+    cat("-", crayon::bold("conformsTo: "), fill = TRUE)
+    for (i in seq_it) {
+      e <- x$conformsTo[[i]]
+      cat(paste0("  - ", e), fill = TRUE)
+    }
+  }
+  invisible(x)
+}
