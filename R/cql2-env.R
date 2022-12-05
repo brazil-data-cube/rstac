@@ -65,6 +65,7 @@ cql2_adv_comp_env <- new_env(
   s_overlaps =     spatial_op("s_overlaps"),
   s_touches =      spatial_op("s_touches"),
   s_within =       spatial_op("s_within"),
+  anyinteracts =   temporal_op("anyinteracts"),
   t_after =        temporal_op("t_after"),
   t_before =       temporal_op("t_before"),
   t_contains =     temporal_op("t_contains"),
