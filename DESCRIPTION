@@ -37,7 +37,6 @@ Collate:
     'parse-utils.R'
     'cql2-core.R'
     'cql2-prints.R'
-    'cql2-enhancements.R'
     'cql2-adv_comp.R'
     'cql2.R'
     'cql2-env.R'
@@ -57,12 +56,12 @@ Collate:
     'query-funs.R'
     'queryables-query.R'
     'request.R'
-    'rstac.R'
     'signatures.R'
     'stac-query.R'
     'stac_search.R'
     'stac_version.R'
     'url-utils.R'
     'utils.R'
+    'rstac.R'
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
