@@ -16,6 +16,33 @@ test_that("Conformance Test 7", {
     expected_number = 1
   )
 
+  req <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+      stac_search(limit = 5)
+
+  polygon <- list(
+    type = "Polygon",
+    coordinates = list(
+      matrix(c(-62.34499836, -8.57414572,
+               -62.18858174, -8.57414572,
+               -62.18858174, -8.15351185,
+               -62.34499836, -8.15351185,
+               -62.34499836, -8.57414572),
+             ncol = 2, byrow = TRUE)
+    )
+  )
+  # 'S_INTERSECTS' spatial operator with polygon and geometry property
+  res <- req %>%
+    ext_filter(collection == "sentinel-2-l2a" &&
+                 s_intersects(geometry, {{polygon}}) &&
+                 datetime > "2019-01-01" &&
+                 datetime < "2019-02-02")
+  res <- suppressWarnings(post_request(res))
+
+  expect_s3_class(res, "STACItemCollection")
+  res2 <- suppressWarnings(items_next(res))
+  expect_s3_class(res2, "STACItemCollection")
+  expect_gt(object = items_length(res2), expected = items_length(res))
+
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),

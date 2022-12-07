@@ -298,6 +298,26 @@ testthat::test_that("assets functions", {
     )
 
     # deprec function assets_filter
+    testthat::expect_error(
+      object = suppressWarnings(assets_filter(stac_item, a = `eo:bands` < 6)),
+    )
+
+    # deprec function assets_filter
+    testthat::expect_error(
+      object = suppressWarnings(assets_filter(stac_item, `eo:dbandsd` < 6)),
+    )
+
+    # deprec function assets_filter
+    testthat::expect_error(
+      object = suppressWarnings(assets_filter(stac_items, a = `eo:bands` < 6)),
+    )
+
+    # deprec function assets_filter
+    testthat::expect_error(
+      object = suppressWarnings(assets_filter(stac_items, `eo:dbandsd` < 6)),
+    )
+
+    # deprec function assets_filter
     testthat::expect_equal(
       object = {suppressWarnings(class(assets_filter(stac_item, filter_fn = function(x) {
         if ("eo:bands" %in% names(x))
