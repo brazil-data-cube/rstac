@@ -18,7 +18,7 @@
 #' \dontrun{
 #' # Catalog's queryables
 #' rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
-#'   rstac::conformance() %>% rstac::get_request()
+#'   rstac::queryables() %>% rstac::get_request()
 #'
 #' # Collection's queryables
 #' rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
