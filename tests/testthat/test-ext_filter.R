@@ -932,3 +932,53 @@ test_that("Conformance Test 45", {
     expected_number = 230
   )
 })
+
+test_that("scalar data types contructors", {
+  # "string": character strings
+  expect_output(cql2_text("string"), regexp = "'string'")
+  expect_output(cql2_json("string"), regexp = '"string"')
+
+  # "number": numbers including integers and floating point values
+  expect_output(cql2_json(3.14), regexp = '3.14')
+  expect_output(cql2_text(3.14), regexp = "3.14")
+
+  # integer
+  expect_output(cql2_json(3L), regexp = '3')
+  expect_output(cql2_text(3L), regexp = "3")
+
+  # "boolean": booleans
+  expect_output(cql2_json(TRUE), regexp = 'true')
+  expect_output(cql2_text(TRUE), regexp = 'true')
+  expect_output(cql2_json(T), regexp = 'true')
+  expect_output(cql2_text(T), regexp = 'true')
+  expect_output(cql2_json(FALSE), regexp = 'false')
+  expect_output(cql2_text(FALSE), regexp = 'false')
+
+  boolean4 <- cql2(F)
+  expect_output(cql2_json(F), regexp = 'false')
+  expect_output(cql2_text(F), regexp = 'false')
+
+  # "timestamp": an instant with a granularity of a second or smaller
+  expect_output(
+    cql2_json(timestamp("1985-07-16T05:32:00Z")),
+    regexp = '{"timestamp":"1985-07-16T05:32:00Z"}',
+    fixed = TRUE
+  )
+  expect_output(
+    cql2_text(timestamp("1985-07-16T05:32:00Z")),
+    regexp = "TIMESTAMP('1985-07-16T05:32:00Z')",
+    fixed = TRUE
+  )
+
+  # "date": an instant with a granularity of a day
+  expect_output(
+    cql2_json(date("1985-07-16")),
+    regexp = '{"date":"1985-07-16"}',
+    fixed = TRUE
+  )
+  expect_output(
+    cql2_text(date("1985-07-16")),
+    regexp = "DATE('1985-07-16')",
+    fixed = TRUE
+  )
+})
