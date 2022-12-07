@@ -93,7 +93,7 @@ all_calls_r <- function(x) {
 
 all_calls <- function(x) {
   setdiff(unique(all_calls_r(x)),
-          c(ls(cql2_core_env()), ls(cql2_adv_comp_env())))
+          c(ls(cql2_core_env), ls(cql2_adv_comp_env)))
 }
 
 # new env ----

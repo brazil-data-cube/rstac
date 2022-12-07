@@ -137,8 +137,7 @@ get_all_funcs <- function(expr) {
 # convert to cql2 ----
 cql2_update_ident_env <- function(expr, queryables = NULL, functions = NULL) {
   # update `cql2_ident_env` environment with all input properties
-  cql2_ident <- cql2_ident_env()
-  rm(list = ls(cql2_ident, all.names = TRUE), envir = cql2_ident)
-  list2env(get_all_props(expr), envir = cql2_ident)
-  list2env(get_all_funcs(expr), envir = cql2_ident)
+  rm(list = ls(cql2_ident_env, all.names = TRUE), envir = cql2_ident_env)
+  list2env(get_all_props(expr), envir = cql2_ident_env)
+  list2env(get_all_funcs(expr), envir = cql2_ident_env)
 }

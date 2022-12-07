@@ -60,8 +60,3 @@ NULL
 #' @importFrom jsonlite fromJSON
 #' @importFrom lifecycle deprecated
 NULL
-
-cql2_global_env <- NULL
-.onLoad <- function(lib, pkg) {
-  cql2_global_env <<- cql2_load()
-}
