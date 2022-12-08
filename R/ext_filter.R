@@ -195,7 +195,7 @@
 ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
 
   # check parameter
-  check_subclass(q, c("search", "items"))
+  check_subclass(q, c("stac", "search", "items"))
   .check_lang(lang)
 
   # get expression
@@ -218,7 +218,7 @@ ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
 #' @export
 endpoint.ext_filter <- function(q) {
   # using endpoint from search or items document
-  if ("search" %in% subclass(q))
+  if (any(c("stac", "search") %in% subclass(q)))
     return(endpoint.search(q))
   return(endpoint.items(q))
 }
