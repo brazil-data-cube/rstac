@@ -185,10 +185,10 @@ req \%>\% ext_filter(collection == "landsat-c2-l2" &&
 
 # Temporal operator
 # 'T_INTERSECTS' temporal operator with datetime property
-req \%>\%
- ext_filter(collection == "landsat-c2-l2" &&
-            t_intersects(datetime,
-            interval("1985-07-16T05:32:00Z", "1985-07-24T16:50:35Z"))) \%>\%
+req \%>\% ext_filter(
+  collection == "landsat-c2-l2" &&
+    t_intersects(datetime, interval("1985-07-16T05:32:00Z",
+                                    "1985-07-24T16:50:35Z"))) \%>\%
  post_request()
 
 # 'T_DURING' temporal operator with datetime property
