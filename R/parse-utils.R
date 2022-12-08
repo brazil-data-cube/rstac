@@ -93,11 +93,17 @@
 #' @noRd
 .parse_collections <- function(collections) {
 
-  if (is.character(collections))
+  if (is.list(collections))
+    for (e in collections)
+      stopifnot(is.character(e))
+  else
+    stopifnot(is.character(collections))
+
+  if (is.character(collections) && length(collections) == 1)
     collections <- strsplit(collections, ",")[[1]]
 
-  if (length(collections) == 1 && !is.list(collections))
-    collections <- list(collections)
+  if (is.character(collections))
+    collections <- as.list(collections)
 
   return(collections)
 }
