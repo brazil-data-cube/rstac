@@ -9,6 +9,10 @@ testthat::test_that("internals functions", {
     object = check_subclass(stac_obj, subclasses = c("stac"))
   )
 
+  testthat::expect_error(
+    object = .check_obj(stac_obj, "numeric")
+  )
+
   # check for query for wrong verb
   testthat::expect_error(
     check_query_verb(q = stac_obj, verbs = c("DDDDD"))

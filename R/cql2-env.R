@@ -1,24 +1,8 @@
-# cql2 environments ----
+# ---- cql2 environments stack ----
+# order of evaluation:
+# cql2_global_env --> cql2_ident_env --> cql2_adv_comp_env --> cql2_core_env
 
-# cql2
-cql2_global_env <- new_env(
-  # basic R functions and constants
-  `{` =     `{`,
-  `(` =     `(`,
-  `T` =     TRUE,
-  `TRUE` =  TRUE,
-  `F` =     FALSE,
-  `FALSE` = FALSE,
-  list =    list,
-  c =       list,
-  `:` =     function(from, to) {
-    stopifnot(is_num(from))
-    stopifnot(is_num(to))
-    as.list(seq(from, to))
-  }
-)
-
-# environment for cql2 core evaluation
+# 1st environment in stack - cql2 core
 cql2_core_env <- new_env(
   # cql2 basic expressions
   # Boolean expressions
@@ -45,12 +29,10 @@ cql2_core_env <- new_env(
   # temporal literals
   timestamp =  timestamp_lit,
   date =       date_lit,
-  interval =   interval_lit,
-  global_env = cql2_global_env
+  interval =   interval_lit
 )
 
-# ---- environment ----
-
+# 2nd environment in stack - cql2 advanced comparison
 cql2_adv_comp_env <- new_env(
   `%like%` =       like_op,
   `between` =      between_op,
@@ -65,6 +47,7 @@ cql2_adv_comp_env <- new_env(
   s_overlaps =     spatial_op("s_overlaps"),
   s_touches =      spatial_op("s_touches"),
   s_within =       spatial_op("s_within"),
+  anyinteracts =   temporal_op("anyinteracts"),
   t_after =        temporal_op("t_after"),
   t_before =       temporal_op("t_before"),
   t_contains =     temporal_op("t_contains"),
@@ -84,8 +67,28 @@ cql2_adv_comp_env <- new_env(
   a_contains =     array_op("a_contains"),
   a_containedby =  array_op("a_containedby"),
   a_overlaps =     array_op("a_overlaps"),
-  global_env =     cql2_global_env
+  parent_env =     cql2_core_env
 )
 
-# environment of expression's identifiers (i.e. properties and functions)
-cql2_ident_env <- new_env(global_env = cql2_global_env)
+# 3rd environment in stack - cql2 properties and functions
+cql2_ident_env <- new_env(parent_env = cql2_adv_comp_env)
+
+# 4th environment in stack - R functions
+cql2_global_env <- new_env(
+  # basic R functions and constants
+  `{` =     `{`,
+  `(` =     `(`,
+  `T` =     TRUE,
+  `TRUE` =  TRUE,
+  `F` =     FALSE,
+  `FALSE` = FALSE,
+  list =    list,
+  c =       list,
+  `:` =     function(from, to) {
+    stopifnot(is_num(from))
+    stopifnot(is_num(to))
+    as.list(seq(from, to))
+  },
+  parent_env = cql2_ident_env
+)
+

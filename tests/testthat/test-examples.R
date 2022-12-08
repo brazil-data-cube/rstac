@@ -107,6 +107,66 @@ testthat::test_that("examples rstac", {
           items_group(field = c("properties", "bdc:tiles"))),
       expected = "list")
 
+    # test items_group
+    testthat::expect_equal(
+      object = typeof(
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+          stac_search(collections = "LCC_C4_6dddd4_1M_STK_GO_PA-SPC-AC-NA-1",
+                      limit = 500,
+                      datetime = "2018-09-01/2019-08-31") %>%
+          get_request() %>%
+          items_fetch(progress = FALSE) %>%
+          items_group(field = c("properties", "bdc:tiles"))),
+      expected = "list")
+
+    # test items_group
+    testthat::expect_error(
+      object =
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+          stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
+                      limit = 500,
+                      datetime = "2018-09-01/2019-08-31") %>%
+          get_request() %>%
+          items_fetch() %>%
+          items_group()
+    )
+
+    # test items_group
+    testthat::expect_error(
+      object =
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+        stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
+                    limit = 500,
+                    datetime = "2018-09-01/2019-08-31") %>%
+        get_request() %>%
+        items_fetch() %>%
+        items_group()
+    )
+
+    # test items_group
+    testthat::expect_error(
+      object =
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+        stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
+                    limit = 500,
+                    datetime = "2018-09-01/2019-08-31") %>%
+        get_request() %>%
+        items_fetch() %>%
+        items_group(field = "test", index = "test")
+    )
+
+    # test items_group
+    testthat::expect_error(
+      object =
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+        stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
+                    limit = 500,
+                    datetime = "2018-09-01/2019-08-31") %>%
+        get_request() %>%
+        items_fetch() %>%
+        items_group(index = list(1, 2, 3))
+    )
+
     # test items_reap
     testthat::expect_equal(
       object = typeof(

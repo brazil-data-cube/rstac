@@ -8,6 +8,8 @@
 \alias{print.STACCollection}
 \alias{print.STACItemCollection}
 \alias{print.STACItem}
+\alias{print.Queryables}
+\alias{print.Conformance}
 \title{Printing functions}
 \usage{
 \method{print}{RSTACQuery}(x, ...)
@@ -21,6 +23,10 @@
 \method{print}{STACItemCollection}(x, n = 10, ..., tail = FALSE)
 
 \method{print}{STACItem}(x, ...)
+
+\method{print}{Queryables}(x, n = 10, ...)
+
+\method{print}{Conformance}(x, n = 5, ...)
 }
 \arguments{
 \item{x}{either a \code{RSTACQuery} object expressing a STAC query

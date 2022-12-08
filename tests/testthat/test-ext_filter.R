@@ -16,6 +16,33 @@ test_that("Conformance Test 7", {
     expected_number = 1
   )
 
+  req <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+      stac_search(limit = 5)
+
+  polygon <- list(
+    type = "Polygon",
+    coordinates = list(
+      matrix(c(-62.34499836, -8.57414572,
+               -62.18858174, -8.57414572,
+               -62.18858174, -8.15351185,
+               -62.34499836, -8.15351185,
+               -62.34499836, -8.57414572),
+             ncol = 2, byrow = TRUE)
+    )
+  )
+  # 'S_INTERSECTS' spatial operator with polygon and geometry property
+  res <- req %>%
+    ext_filter(collection == "sentinel-2-l2a" &&
+                 s_intersects(geometry, {{polygon}}) &&
+                 datetime > "2019-01-01" &&
+                 datetime < "2019-02-02")
+  res <- suppressWarnings(post_request(res))
+
+  expect_s3_class(res, "STACItemCollection")
+  res2 <- suppressWarnings(items_next(res))
+  expect_s3_class(res2, "STACItemCollection")
+  expect_gt(object = items_length(res2), expected = items_length(res))
+
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
@@ -903,5 +930,55 @@ test_that("Conformance Test 45", {
       name == nameascii
     ),
     expected_number = 230
+  )
+})
+
+test_that("scalar data types contructors", {
+  # "string": character strings
+  expect_output(cql2_text("string"), regexp = "'string'")
+  expect_output(cql2_json("string"), regexp = '"string"')
+
+  # "number": numbers including integers and floating point values
+  expect_output(cql2_json(3.14), regexp = '3.14')
+  expect_output(cql2_text(3.14), regexp = "3.14")
+
+  # integer
+  expect_output(cql2_json(3L), regexp = '3')
+  expect_output(cql2_text(3L), regexp = "3")
+
+  # "boolean": booleans
+  expect_output(cql2_json(TRUE), regexp = 'true')
+  expect_output(cql2_text(TRUE), regexp = 'true')
+  expect_output(cql2_json(T), regexp = 'true')
+  expect_output(cql2_text(T), regexp = 'true')
+  expect_output(cql2_json(FALSE), regexp = 'false')
+  expect_output(cql2_text(FALSE), regexp = 'false')
+
+  boolean4 <- cql2(F)
+  expect_output(cql2_json(F), regexp = 'false')
+  expect_output(cql2_text(F), regexp = 'false')
+
+  # "timestamp": an instant with a granularity of a second or smaller
+  expect_output(
+    cql2_json(timestamp("1985-07-16T05:32:00Z")),
+    regexp = '{"timestamp":"1985-07-16T05:32:00Z"}',
+    fixed = TRUE
+  )
+  expect_output(
+    cql2_text(timestamp("1985-07-16T05:32:00Z")),
+    regexp = "TIMESTAMP('1985-07-16T05:32:00Z')",
+    fixed = TRUE
+  )
+
+  # "date": an instant with a granularity of a day
+  expect_output(
+    cql2_json(date("1985-07-16")),
+    regexp = '{"date":"1985-07-16"}',
+    fixed = TRUE
+  )
+  expect_output(
+    cql2_text(date("1985-07-16")),
+    regexp = "DATE('1985-07-16')",
+    fixed = TRUE
   )
 })
