@@ -118,11 +118,17 @@
 #' @noRd
 .parse_ids <- function(ids) {
 
-  if (is.character(ids))
+  if (is.list(ids))
+    for (e in ids)
+      stopifnot(is.character(e) || is.numeric(e))
+  else
+    stopifnot(is.character(ids) || is.numeric(ids))
+
+  if (is.character(ids) && length(ids) == 1)
     ids <- strsplit(ids, ",")[[1]]
 
-  if (length(ids) == 1 && !is.list(ids))
-    ids <- list(ids)
+  if (is.character(ids) || is.numeric(ids))
+    ids <- as.list(ids)
 
   return(ids)
 }
