@@ -3,7 +3,25 @@ title: "rstac CQL2 extension development report"
 author: "Gilberto Camara, Rolf Simoes, and Felipe Carvalho"
 date: "2022-12-01"
 output: 
-  bookdown::html_document2: default
+  pdf_document:
+    toc: FALSE
+    df_print: tibble
+    dev: "cairo_pdf"
+    pandoc_args: "--listings"
+    latex_engine: "lualatex"
+    includes:
+      before_body: "./latex/before_body.tex"
+      in_header: "./latex/preamble.tex"
+  html_document:
+    df_print: tibble
+    theme:
+      base_font:
+        google: IBM Plex Serif
+      code_font:
+        google: IBM Plex Mono
+classoption: x11names
+fontsize: 10,5pt
+indent: yes
 bibliography: rstac-report.bib
 link-citations: yes
 vignette: >
@@ -65,8 +83,6 @@ Status: partial.
 This report describes the status of the CQL2 extention development in rstac package. The project enumerates four milestones that were concluded as described above. Current version of the rstac package can be accessed at [https://github.com/brazil-data-cube/rstac] under MIT license. The rstac package is open to the community and follow the ”Contributor Covenant - version 1.0.0” code of conduct. 
 
 To disseminate the new functionality implemented in the rstac package, we will create notebooks in the Planetary Computer Hub environment with examples of actual use of the Planetary Computer’s STAC catalog. In addition, we will maintain the software on The Comprehensive R Archive Network (CRAN). 
-
-Para ajudar
 
 
 # Appendix A - CQL2 examples{-}
