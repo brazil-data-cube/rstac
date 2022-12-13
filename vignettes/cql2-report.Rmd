@@ -3,15 +3,15 @@ title: "rstac CQL2 extension development report"
 author: "Gilberto Camara, Rolf Simoes, and Felipe Carvalho"
 date: "2022-12-01"
 output: 
-  pdf_document:
-    toc: FALSE
-    df_print: tibble
-    dev: "cairo_pdf"
-    pandoc_args: "--listings"
-    latex_engine: "lualatex"
-    includes:
-      before_body: "./latex/before_body.tex"
-      in_header: "./latex/preamble.tex"
+  # pdf_document:
+  #   toc: FALSE
+  #   df_print: tibble
+  #   dev: "cairo_pdf"
+  #   pandoc_args: "--listings"
+  #   latex_engine: "lualatex"
+  #   includes:
+  #     before_body: "./latex/before_body.tex"
+  #     in_header: "./latex/preamble.tex"
   html_document:
     df_print: tibble
     theme:
