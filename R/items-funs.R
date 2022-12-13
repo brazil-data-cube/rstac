@@ -249,9 +249,6 @@ items_matched.STACItemCollection <- function(items, matched_field = NULL) {
       matched <- items$numberMatched
   }
 
-  if (is.null(matched))
-    .warning("Items matched not provided.")
-
   return(matched)
 }
 
