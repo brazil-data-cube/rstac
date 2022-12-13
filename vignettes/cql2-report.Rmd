@@ -57,16 +57,14 @@ We pushed a pre-released version of rstac into its Github repository. This versi
 
 ## Milestone 4 - CRAN submission and tutorial creation for users and developers.
 
-Status: partial.
+Status: concluded.
+
+We have submitted `rstac` 0.9.2 version to Comprehensive R Archive Network (CRAN), now R users can install the package directly from CRAN. An important step to promote new `rstac` users is a well-documented package and tutorials. In this `rstac` version, we have updated the package documentation and write new tutorials. Firtly, we have prepared a new R notebook on how to create CQL2 expression using `rstac`. We plan to submit it to Microsoft Planetary Computer Examples repository [https://github.com/microsoft/PlanetaryComputerExamples] as soon as possible. We also prepared a new vignette in `rstac` to help R users to see actual examples on using CQL2 expressions.
 
 
 # Concluding remarks
 
-This report describes the status of the CQL2 extention development in rstac package. The project enumerates four milestones that were concluded as described above. Current version of the rstac package can be accessed at [https://github.com/brazil-data-cube/rstac] under MIT license. The rstac package is open to the community and follow the ”Contributor Covenant - version 1.0.0” code of conduct. 
-
-To disseminate the new functionality implemented in the rstac package, we will create notebooks in the Planetary Computer Hub environment with examples of actual use of the Planetary Computer’s STAC catalog. In addition, we will maintain the software on The Comprehensive R Archive Network (CRAN). 
-
-Para ajudar
+This report describes the results of the CQL2 extension development in `rstac` package. The project enumerated four milestones that were concluded as described above. Current version of the `rstac` package can be accessed at [https://github.com/brazil-data-cube/rstac] under MIT license. The `rstac` package is open to the community and follow the ”Contributor Covenant - version 1.0.0” code of conduct. We updated package's documentation and have prepared new tutorials on how to use `rstac` and its new CQL2 functionality.
 
 
 # Appendix A - CQL2 examples{-}
