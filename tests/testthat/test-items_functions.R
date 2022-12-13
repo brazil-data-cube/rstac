@@ -86,14 +86,6 @@ testthat::test_that("items functions", {
       expected = "STACItemCollection"
     )
 
-    testthat::expect_warning(
-      object = stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
-        stac_search(collections = "io-lulc", limit = 1) %>%
-        ext_query("io:tile_id" %in% "60W") %>%
-        post_request() %>%
-        items_fetch()
-    )
-
     # items_length--------------------------------------------------------------
     # error - given another object
     testthat::expect_error(items_length(list(res)))

@@ -54,7 +54,6 @@ Importing `rstac` package:
 
 ``` r
 library(rstac)
-library(magrittr) # for pipe (%>%) in examples
 ```
 
 ## Usage
@@ -101,15 +100,17 @@ implements the STAC `/search` endpoint. The returned document is a STAC
 Item Collection (a geojson containing a feature collection).
 
 ``` r
-it_obj <- s_obj %>% 
-    stac_search(collections = "CB4_64_16D_STK-1",
-                bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
-    get_request()
+
+it_obj <- s_obj |>
+  stac_search(collections = "CB4_64_16D_STK-1",
+              bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
+              limit = 100) |> 
+  get_request()
 
 it_obj
 #> ###STACItemCollection
 #> - matched feature(s): 306
-#> - features (10 item(s) / 296 not fetched):
+#> - features (100 item(s) / 206 not fetched):
 #>   - CB4_64_16D_STK_v001_022024_2022-08-13_2022-08-28
 #>   - CB4_64_16D_STK_v001_022025_2022-08-13_2022-08-28
 #>   - CB4_64_16D_STK_v001_022024_2022-07-28_2022-08-12
@@ -120,23 +121,11 @@ it_obj
 #>   - CB4_64_16D_STK_v001_022025_2022-06-26_2022-07-11
 #>   - CB4_64_16D_STK_v001_022024_2022-06-10_2022-06-25
 #>   - CB4_64_16D_STK_v001_022025_2022-06-10_2022-06-25
+#>   - ... with 90 more feature(s).
 #> - assets: 
 #> EVI, NDVI, CMASK, BAND13, BAND14, BAND15, BAND16, CLEAROB, TOTALOB, thumbnail, PROVENANCE
 #> - other field(s): type, links, context, features
 ```
-
-`rstac` also supports advanced query filter using common query language
-(CQL2).
-
-req %\>% ext_filter(collection == “sentinel-2-l2a” &&
-`s2:vegetation_percentage` \>= 50 && `eo:cloud_cover` \<= 10) %\>%
-post_request()
-
-### CQL2 query filter
-
-rstac
-
-### HTTP requests
 
 The `rstac` uses the [httr](https://github.com/r-lib/httr) package to
 manage HTTP requests, allowing the use of tokens from the authorization
@@ -145,10 +134,10 @@ the code below, we present an example of how to pass a parameter token
 on a HTTP request.
 
 ``` r
-it_obj <- s_obj %>% 
-    stac_search(collections = "CB4_64_16D_STK-1",
-                bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
-    get_request(add_headers("x-api-key" = "MY-TOKEN"))
+it_obj <- s_obj |>
+  stac_search(collections = "CB4_64_16D_STK-1",
+              bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) |>
+  get_request(add_headers("x-api-key" = "MY-TOKEN"))
 ```
 
 In addition to the functions mentioned above, the `rstac` package
@@ -158,12 +147,13 @@ the assets.
 ### Items functions
 
 `rstac` provides some functions that facilitates the interaction with
-STAC data. In the example bellow, we get how many items matched the
+STAC data. In the example below, we get how many items matched the
 search criteria:
 
 ``` r
 # it_obj variable from the last code example
-it_obj %>% items_matched()
+it_obj |> 
+  items_matched()
 #> [1] 306
 ```
 
@@ -172,15 +162,17 @@ get `10`, meaning that more items could be fetched from the STAC
 service:
 
 ``` r
-it_obj %>% items_length()
-#> [1] 10
+it_obj |> 
+  items_length()
+#> [1] 100
 ```
 
 ``` r
 # fetch all items from server 
 # (but don't stored them back in it_obj)
-it_obj %>% items_fetch(progress = FALSE) %>%
-    items_length()
+it_obj |> 
+  items_fetch(progress = FALSE) |>
+  items_length()
 #> [1] 306
 ```
 
@@ -194,8 +186,26 @@ assets. The code bellow downloads the `thumbnail` assets (.png files) of
 `10` items stored in `it_obj` variable.
 
 ``` r
-download_items <- it_obj %>% 
-    assets_download(assets_name = "thumbnail")
+download_items <- it_obj |>
+  assets_download(assets_name = "thumbnail")
+```
+
+### CQL2 query filter
+
+`rstac` also supports advanced query filter using common query language
+(CQL2). Users can write complex filter expressions using R code in an
+easy and natural way. For a complete
+
+``` r
+s_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1")
+
+it_obj <- s_obj |> 
+  ext_filter(
+    collection == "sentinel-2-l2a" && `s2:vegetation_percentage` >= 50 &&
+      `eo:cloud_cover` <= 10 && `s2:mgrs_tile` == "20LKP" && 
+      anyinteracts(datetime, interval("2020-06-01", "2020-09-30"))
+  ) |>
+  post_request()
 ```
 
 ## How to contribute?

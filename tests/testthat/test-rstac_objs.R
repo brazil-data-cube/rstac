@@ -594,14 +594,6 @@ testthat::test_that("stac item object", {
     expected = 1
   )
 
-  testthat::expect_warning(
-    {
-      mock_obj <- list(stac_version = "0.78.0")
-      class(mock_obj) <- c("STACItemCollection", "RSTACDocument", "list")
-      items_matched(mock_obj)
-    }
-  )
-
   # output test
   testthat::expect_equal(
     object   = items_length(items_fetch(stac_item)),

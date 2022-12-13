@@ -195,8 +195,8 @@
 ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
 
   # check parameter
-  check_subclass(q, c("search", "items"))
-  .check_lang(lang)
+  check_subclass(q, c("stac", "search", "items"))
+  check_lang(lang)
 
   # get expression
   expr <- unquote(
@@ -205,20 +205,26 @@ ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
   )
   params <- cql2(expr, lang = lang, crs = crs)
 
+  if (any(c("seach", "items") %in% subclass(q)))
+    class <- unique(c("ext_filter", subclass(q)))
+  else
+    class <- unique(c("ext_filter", "search", subclass(q)))
+
   RSTACQuery(version = q$version,
              base_url = q$base_url,
              params = modify_list(q$params, params),
-             subclass = unique(c("ext_filter", subclass(q))))
+             subclass = class)
 }
 
-.check_lang <- function(lang) {
-  lang
+check_lang <- function(lang) {
+  if (!is.null(lang))
+    stopifnot(lang %in% c("cql2-text", "cql2-json"))
 }
 
 #' @export
 endpoint.ext_filter <- function(q) {
   # using endpoint from search or items document
-  if ("search" %in% subclass(q))
+  if (any(c("stac", "search") %in% subclass(q)))
     return(endpoint.search(q))
   return(endpoint.items(q))
 }

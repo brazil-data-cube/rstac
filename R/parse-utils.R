@@ -93,11 +93,17 @@
 #' @noRd
 .parse_collections <- function(collections) {
 
-  if (is.character(collections))
+  if (is.list(collections))
+    for (e in collections)
+      stopifnot(is.character(e))
+  else
+    stopifnot(is.character(collections))
+
+  if (is.character(collections) && length(collections) == 1)
     collections <- strsplit(collections, ",")[[1]]
 
-  if (length(collections) == 1 && !is.list(collections))
-    collections <- list(collections)
+  if (is.character(collections))
+    collections <- as.list(collections)
 
   return(collections)
 }
@@ -112,11 +118,17 @@
 #' @noRd
 .parse_ids <- function(ids) {
 
-  if (is.character(ids))
+  if (is.list(ids))
+    for (e in ids)
+      stopifnot(is.character(e) || is.numeric(e))
+  else
+    stopifnot(is.character(ids) || is.numeric(ids))
+
+  if (is.character(ids) && length(ids) == 1)
     ids <- strsplit(ids, ",")[[1]]
 
-  if (length(ids) == 1 && !is.list(ids))
-    ids <- list(ids)
+  if (is.character(ids) || is.numeric(ids))
+    ids <- as.list(ids)
 
   return(ids)
 }
