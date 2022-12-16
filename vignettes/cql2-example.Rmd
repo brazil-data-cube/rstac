@@ -1,7 +1,7 @@
 ---
 title: "rstac CQL2 examples"
 author: "Gilberto Camara, Rolf Simoes, and Felipe Carvalho"
-date: "2022-12-01"
+date: "2022-12-16"
 output: 
   html_document:
     df_print: tibble
