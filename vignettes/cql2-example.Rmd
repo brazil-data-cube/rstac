@@ -13,7 +13,6 @@ output:
 classoption: x11names
 fontsize: 10,5pt
 indent: yes
-bibliography: rstac-report.bib
 link-citations: yes
 vignette: >
   %\VignetteIndexEntry{cql2-report}
