@@ -168,9 +168,19 @@
 <td align="left"><code><a href="reference/stac_search.html">stac_search()</a></code></td>
 <td align="left">&lt; 0.9.0</td>
 </tr>
+<tr class="odd">
+<td align="left"><code>/conformance</code></td>
+<td align="left"><code><a href="reference/stac_search.html">stac_search()</a></code></td>
+<td align="left">&gt;= 0.9.0</td>
+</tr>
+<tr class="even">
+<td align="left"><code>/collections/{collectionId}/queryables</code></td>
+<td align="left"><code><a href="reference/queryables.html">queryables()</a></code></td>
+<td align="left">&gt;= 1.0.0</td>
+</tr>
 </tbody>
 </table>
-<p>These functions can be used to retrieve information from a STAC API service. The code bellow creates a <code>stac</code> object and list the available collections of the STAC API of the <a href="http://brazildatacube.org/" class="external-link">Brazil Data Cube</a> project of the Brazilian National Space Research Institute <a href="http://www.inpe.br/" class="external-link">INPE</a>.</p>
+<p>These functions can be used to retrieve information from a STAC API service. The code below creates a <code>stac</code> object and list the available collections of the STAC API of the <a href="http://brazildatacube.org/" class="external-link">Brazil Data Cube</a> project of the Brazilian National Space Research Institute <a href="http://www.inpe.br/" class="external-link">INPE</a>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/stac.html">stac</a></span><span class="op">(</span><span class="st">"https://brazildatacube.dpi.inpe.br/stac/"</span><span class="op">)</span></span>
 <span></span>
@@ -180,7 +190,7 @@
 <span><span class="co">#&gt; - description: Brazil Data Cube Catalog</span></span>
 <span><span class="co">#&gt; - field(s): description, id, stac_version, links</span></span></code></pre></div>
 <p>The variable <code>s_obj</code> stores information to connect to the Brazil Data Cube STAC web service. The <code>get_request</code> method makes a HTTP GET connection to it and retrieves a STAC Catalog document from the server. Each <code>links</code> entry is an available collection that can be accessed via STAC API.</p>
-<p>In the code bellow, we get some STAC items of <code>CB4_64_16D_STK-1</code> collection that intersects the bounding box passed to the <code>bbox</code> parameter. To do this, we call the <code>stac_search</code> function that implements the STAC <code>/search</code> endpoint. The returned document is a STAC Item Collection (a geojson containing a feature collection).</p>
+<p>In the code below, we get some STAC items of <code>CB4_64_16D_STK-1</code> collection that intersects the bounding box passed to the <code>bbox</code> parameter. To do this, we call the <code>stac_search</code> function that implements the STAC <code>/search</code> endpoint. The returned document is a STAC Item Collection (a geojson containing a feature collection).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">it_obj</span> <span class="op">&lt;-</span> <span class="va">s_obj</span> <span class="op">|&gt;</span></span>
@@ -231,18 +241,20 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># fetch all items from server </span></span>
 <span><span class="co"># (but don't stored them back in it_obj)</span></span>
-<span><span class="va">it_obj</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/items_functions.html">items_fetch</a></span><span class="op">(</span>progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="va">it_obj</span> <span class="op">&lt;-</span> <span class="va">it_obj</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/items_functions.html">items_fetch</a></span><span class="op">(</span>progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="va">it_obj</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/items_functions.html">items_length</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 306</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="download-assets">Download assets<a class="anchor" aria-label="anchor" href="#download-assets"></a>
 </h3>
-<p>All we’ve got in previous example was metadata to STAC Items, including links to geospatial data called <code>assets</code>. To download all <code>assets</code> in a STAC Item Collection we can use <code><a href="reference/assets_download.html">assets_download()</a></code> function, that returns an update STAC Item Collection referring to the downloaded assets. The code bellow downloads the <code>thumbnail</code> assets (.png files) of <code>10</code> items stored in <code>it_obj</code> variable.</p>
+<p>All we’ve got in previous example was metadata to STAC Items, including links to geospatial data called <code>assets</code>. To download all <code>assets</code> in a STAC Item Collection we can use <code><a href="reference/assets_download.html">assets_download()</a></code> function, that returns an update STAC Item Collection referring to the downloaded assets. The code below downloads the <code>thumbnail</code> assets (.png files) of <code>10</code> items stored in <code>it_obj</code> variable.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">download_items</span> <span class="op">&lt;-</span> <span class="va">it_obj</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/assets_download.html">assets_download</a></span><span class="op">(</span>assets_name <span class="op">=</span> <span class="st">"thumbnail"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="reference/assets_download.html">assets_download</a></span><span class="op">(</span>assets_name <span class="op">=</span> <span class="st">"thumbnail"</span>, items_max <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="cql2-query-filter">CQL2 query filter<a class="anchor" aria-label="anchor" href="#cql2-query-filter"></a>
@@ -261,6 +273,26 @@
 </div>
 </div>
 <div class="section level2">
+<h2 id="getting-help">Getting help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
+</h2>
+<p>You can get a full explanation about each STAC (v1.0.0) endpoint at <a href="https://github.com/radiantearth/stac-api-spec/tree/master/ogcapi-features" class="external-link">STAC API spec</a>. A detailed documentation with examples on how to use each endpoint and other functions available in the <code>rstac</code> package can be obtained by typing <code><a href="reference/rstac.html">?rstac</a></code> in R console.</p>
+</div>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
+<p>To cite rstac in publications use:</p>
+<p>R. Simoes, F. C. de Souza, M. Zaglia, G. R. de Queiroz, R. D. C. dos Santos and K. R. Ferreira, “Rstac: An R Package to Access Spatiotemporal Asset Catalog Satellite Imagery,” 2021 IEEE International Geoscience and Remote Sensing Symposium IGARSS, 2021, pp. 7674-7677, doi: 10.1109/IGARSS47720.2021.9553518.</p>
+</div>
+<div class="section level2">
+<h2 id="acknowledgements-for-financial-support">Acknowledgements for financial support<a class="anchor" aria-label="anchor" href="#acknowledgements-for-financial-support"></a>
+</h2>
+<p>We acknowledge and thank the project funders that provided financial and material support:</p>
+<ul>
+<li><p>Amazon Fund, established by the Brazilian government with financial contribution from Norway, through the project contract between the Brazilian Development Bank (BNDES) and the Foundation for Science, Technology and Space Applications (FUNCATE), for the establishment of the Brazil Data Cube, process 17.2.0536.1.</p></li>
+<li><p>Radiant Earth Foundation and STAC Project Steering Committee for the advance of STAC ecosystem programme.</p></li>
+</ul>
+</div>
+<div class="section level2">
 <h2 id="how-to-contribute">How to contribute?<a class="anchor" aria-label="anchor" href="#how-to-contribute"></a>
 </h2>
 <p>The <code>rstac</code> package was implemented based on an extensible architecture, so feel free to contribute by implementing new STAC API <a href="https://github.com/radiantearth/stac-api-spec/tree/master/fragments" class="external-link">extensions/fragments</a> based on the STAC API specifications.</p>
@@ -271,17 +303,6 @@
 </li>
 <li>Make a <a href="https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request" class="external-link">Pull Request</a> on the branch <a href="https://github.com/OldLipe/rstac/tree/dev" class="external-link">dev</a>.</li>
 </ol>
-</div>
-<div class="section level2">
-<h2 id="getting-help">Getting help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
-</h2>
-<p>You can get a full explanation about each STAC (v1.0.0) endpoint at <a href="https://github.com/radiantearth/stac-api-spec/tree/master/ogcapi-features" class="external-link">STAC API spec</a>. A detailed documentation with examples on how to use each endpoint and other functions available in the <code>rstac</code> package can be obtained by typing <code><a href="reference/rstac.html">?rstac</a></code> in R console.</p>
-</div>
-<div class="section level2">
-<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
-</h2>
-<p>To cite rstac in publications use:</p>
-<p>R. Simoes, F. C. de Souza, M. Zaglia, G. R. de Queiroz, R. D. C. dos Santos and K. R. Ferreira, “Rstac: An R Package to Access Spatiotemporal Asset Catalog Satellite Imagery,” 2021 IEEE International Geoscience and Remote Sensing Symposium IGARSS, 2021, pp. 7674-7677, doi: 10.1109/IGARSS47720.2021.9553518.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -323,7 +344,6 @@
 <ul class="list-unstyled">
 <li><a href="https://github.com/brazil-data-cube/rstac/blob/master/LICENSE" class="external-link"><img src="https://img.shields.io/badge/license-MIT-green" alt="Software License"></a></li>
 <li><a href="https://cloud.drone.io/OldLipe/rstac" class="external-link"><img src="https://cloud.drone.io/api/badges/OldLipe/rstac/status.svg" alt="Build Status"></a></li>
-<li><a href="https://ci.appveyor.com/project/OldLipe/rstac" class="external-link"><img src="https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true" alt="Build status"></a></li>
 <li><a href="https://app.codecov.io/gh/brazil-data-cube/rstac" class="external-link"><img src="https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT" alt="codecov"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Software Life Cycle"></a></li>
 <li><a href="https://cran.r-project.org/package=rstac" class="external-link"><img src="https://www.r-pkg.org/badges/version/rstac" alt="CRAN status"></a></li>
