@@ -297,7 +297,11 @@ items_fetch.STACItemCollection <- function(items, ...,
       .error(paste("Length of returned items (%s) is different",
                    "from matched items (%s)."), items_length(items), matched)
 
-    content <- items_next(items, ...)
+    content <- tryCatch({
+      items_next(items, ...)
+    },
+    next_error = function(e) NULL
+    )
 
     if (!is.null(content))
       items <- content
@@ -340,12 +344,12 @@ items_next.STACItemCollection <- function(items, ...) {
 
   q <- doc_query(items)
   if (is.null(q))
-    return(NULL)
+    .error("Cannot get next link URL", class = "next_error")
 
   # get url of the next page
   next_url <- Filter(function(x) x$rel == "next", items$links)
   if (length(next_url) == 0)
-    return(NULL)
+    .error("Cannot get next link URL", class = "next_error")
 
   next_url <- next_url[[1]]
 
