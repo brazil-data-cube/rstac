@@ -12,8 +12,7 @@ License](https://img.shields.io/badge/license-MIT-green)](https://github.com/bra
 <!-- [![Build Status](https://drone.dpi.inpe.br/api/badges/brazil-data-cube/rstac/status.svg)](https://drone.dpi.inpe.br/brazil-data-cube/rstac) -->
 [![Build
 Status](https://cloud.drone.io/api/badges/OldLipe/rstac/status.svg)](https://cloud.drone.io/OldLipe/rstac)
-[![Build
-status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/rstac)
+<!-- [![Build status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/rstac) -->
 [![codecov](https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT)](https://app.codecov.io/gh/brazil-data-cube/rstac)
 [![Software Life
 Cycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
@@ -70,9 +69,11 @@ library(rstac)
 | `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          | \>= 0.9.0   |
 | `/search`                                    | `stac_search()`              | \>= 0.9.0   |
 | `/stac/search`                               | `stac_search()`              | \< 0.9.0    |
+| `/conformance`                               | `stac_search()`              | \>= 0.9.0   |
+| `/collections/{collectionId}/queryables`     | `queryables()`               | \>= 1.0.0   |
 
 These functions can be used to retrieve information from a STAC API
-service. The code bellow creates a `stac` object and list the available
+service. The code below creates a `stac` object and list the available
 collections of the STAC API of the [Brazil Data
 Cube](http://brazildatacube.org/) project of the Brazilian National
 Space Research Institute [INPE](http://www.inpe.br/).
@@ -93,7 +94,7 @@ connection to it and retrieves a STAC Catalog document from the server.
 Each `links` entry is an available collection that can be accessed via
 STAC API.
 
-In the code bellow, we get some STAC items of `CB4_64_16D_STK-1`
+In the code below, we get some STAC items of `CB4_64_16D_STK-1`
 collection that intersects the bounding box passed to the `bbox`
 parameter. To do this, we call the `stac_search` function that
 implements the STAC `/search` endpoint. The returned document is a STAC
@@ -170,8 +171,10 @@ it_obj |>
 ``` r
 # fetch all items from server 
 # (but don't stored them back in it_obj)
-it_obj |> 
-  items_fetch(progress = FALSE) |>
+it_obj <- it_obj |> 
+  items_fetch(progress = FALSE) 
+
+it_obj |>
   items_length()
 #> [1] 306
 ```
@@ -182,12 +185,12 @@ All we’ve got in previous example was metadata to STAC Items, including
 links to geospatial data called `assets`. To download all `assets` in a
 STAC Item Collection we can use `assets_download()` function, that
 returns an update STAC Item Collection referring to the downloaded
-assets. The code bellow downloads the `thumbnail` assets (.png files) of
+assets. The code below downloads the `thumbnail` assets (.png files) of
 `10` items stored in `it_obj` variable.
 
 ``` r
 download_items <- it_obj |>
-  assets_download(assets_name = "thumbnail")
+  assets_download(assets_name = "thumbnail", items_max = 10)
 ```
 
 ### CQL2 query filter
@@ -207,6 +210,39 @@ it_obj <- s_obj |>
   ) |>
   post_request()
 ```
+
+## Getting help
+
+You can get a full explanation about each STAC (v1.0.0) endpoint at
+[STAC API
+spec](https://github.com/radiantearth/stac-api-spec/tree/master/ogcapi-features).
+A detailed documentation with examples on how to use each endpoint and
+other functions available in the `rstac` package can be obtained by
+typing `?rstac` in R console.
+
+## Citation
+
+To cite rstac in publications use:
+
+R. Simoes, F. C. de Souza, M. Zaglia, G. R. de Queiroz, R. D. C. dos
+Santos and K. R. Ferreira, “Rstac: An R Package to Access Spatiotemporal
+Asset Catalog Satellite Imagery,” 2021 IEEE International Geoscience and
+Remote Sensing Symposium IGARSS, 2021, pp. 7674-7677, doi:
+10.1109/IGARSS47720.2021.9553518.
+
+## Acknowledgements for financial support
+
+We acknowledge and thank the project funders that provided financial and
+material support:
+
+-   Amazon Fund, established by the Brazilian government with financial
+    contribution from Norway, through the project contract between the
+    Brazilian Development Bank (BNDES) and the Foundation for Science,
+    Technology and Space Applications (FUNCATE), for the establishment
+    of the Brazil Data Cube, process 17.2.0536.1.
+
+-   Radiant Earth Foundation and STAC Project Steering Committee for the
+    advance of STAC ecosystem programme.
 
 ## How to contribute?
 
@@ -235,22 +271,3 @@ based on the STAC API specifications.
 4.  Make a [Pull
     Request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)
     on the branch [dev](https://github.com/OldLipe/rstac/tree/dev).
-
-## Getting help
-
-You can get a full explanation about each STAC (v1.0.0) endpoint at
-[STAC API
-spec](https://github.com/radiantearth/stac-api-spec/tree/master/ogcapi-features).
-A detailed documentation with examples on how to use each endpoint and
-other functions available in the `rstac` package can be obtained by
-typing `?rstac` in R console.
-
-## Citation
-
-To cite rstac in publications use:
-
-R. Simoes, F. C. de Souza, M. Zaglia, G. R. de Queiroz, R. D. C. dos
-Santos and K. R. Ferreira, “Rstac: An R Package to Access Spatiotemporal
-Asset Catalog Satellite Imagery,” 2021 IEEE International Geoscience and
-Remote Sensing Symposium IGARSS, 2021, pp. 7674-7677, doi:
-10.1109/IGARSS47720.2021.9553518.
