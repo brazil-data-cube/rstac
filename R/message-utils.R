@@ -4,9 +4,11 @@
 #'
 #' @param ...   values to be passed to `msg` parameter.
 #'
+#' @param class error class name
+#'
 #' @noRd
-.error <- function(msg, ...) {
-  stop(sprintf(msg, ...), call. = FALSE)
+.error <- function(msg, ..., class = NULL) {
+  stop(errorCondition(sprintf(msg, ...), class = class, call = FALSE))
 }
 
 #' @title Utility functions
