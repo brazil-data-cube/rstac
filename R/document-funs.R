@@ -29,10 +29,7 @@
 #' @return
 #' The `RSTACDocument()` function returns a `RSTACDocument` object
 #' with subclass defined by `subclass` parameter.
-#'
-#' @export
 RSTACDocument <- function(content, q, subclass) {
-
   structure(
     content,
     query = q,
@@ -49,7 +46,7 @@ subclass.RSTACDocument <- function(x) {
 #' @export
 check_subclass.RSTACDocument <- function(x, subclasses) {
 
-  if (!subclass(x) %in% subclasses)
+  if (!all(subclass(x) %in% subclasses))
     .error("Expecting %s document(s).",
            paste0("`", subclasses, "`", collapse = " or "))
 }
@@ -60,8 +57,6 @@ check_subclass.RSTACDocument <- function(x, subclasses) {
 #'
 #' @return a `RSTACQuery` object with the predecessor subclass with the
 #'  fields used in the request.
-#'
-#' @export
 doc_query <- function(d) {
 
   .check_obj(d, "RSTACDocument")

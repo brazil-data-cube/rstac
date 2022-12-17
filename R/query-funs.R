@@ -34,10 +34,7 @@
 #' @return
 #' The `RSTACQuery()` function returns a `STACQuery` object with
 #' subclass defined by `subclass` parameter.
-#'
-#' @export
 RSTACQuery <- function(version = NULL, base_url, params = list(), subclass) {
-
   structure(
     list(version = version,
          base_url = base_url,
@@ -55,7 +52,7 @@ stac_version.RSTACQuery <- function(x, ...) {
     return(x$version)
 
   # check in '/' endpoint
-  res <- httr::GET(url = .make_url(x$base_url, endpoint = "/"), ...)
+  res <- httr::GET(url = make_url(x$base_url, endpoint = "/"), ...)
 
   content <- tryCatch({content_response(res, "200", "application/json")},
                       error = function(e) NULL)
@@ -64,7 +61,7 @@ stac_version.RSTACQuery <- function(x, ...) {
   # if no version was found, try '/stac' endpoint
   if (is.null(version)) {
 
-    res <- httr::GET(url = .make_url(x$base_url, endpoint = "/stac"), ..., )
+    res <- httr::GET(url = make_url(x$base_url, endpoint = "/stac"), ..., )
     content <- tryCatch({content_response(res, "200", "application/json")},
                         error = function(e) NULL)
     version <- content[["stac_version"]]
@@ -78,13 +75,13 @@ stac_version.RSTACQuery <- function(x, ...) {
 #' @export
 subclass.RSTACQuery <- function(x) {
 
-  class(x)[[1]]
+  setdiff(class(x), "RSTACQuery")
 }
 
 #' @export
 check_subclass.RSTACQuery <- function(x, subclasses) {
 
-  if (!subclass(x) %in% subclasses)
+  if (!any(subclasses %in% subclass(x)))
     .error("Expecting %s query.",
            paste0("`", subclasses, "`", collapse = " or "))
 }
