@@ -144,7 +144,7 @@ sign_planetary_computer <- function(..., token_url = NULL) {
 
     # transform to a datetime object
     obj_req[["msft:expiry"]] <- strptime(obj_req[["msft:expiry"]],
-                                         "%Y-%m-%dT%H:%M:%SZ")
+                                         "%Y-%m-%dT%H:%M:%SZ", tz="UTC")
 
     token_str <- paste0("?", obj_req[["token"]])
     obj_req[["token_value"]] <- httr::parse_url(token_str)[["query"]]
