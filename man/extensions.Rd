@@ -158,7 +158,7 @@ section bellow that can help the extension development.
 }
 \section{Functions}{
 \itemize{
-\item \code{RSTACDocument}: The \code{RSTACDocument()} function is a constructor of
+\item \code{RSTACDocument()}: The \code{RSTACDocument()} function is a constructor of
 STAC documents. Currently, there are five STAC documents defined:
 \itemize{
 \item \code{STACCatalog}
@@ -174,27 +174,27 @@ classes can be created in the \code{rstac} package.
 
 Let \code{version} parameter \code{NULL} to detect version automatically.
 
-\item \code{content_response}: The \code{content_response} function checks if the request's
+\item \code{content_response()}: The \code{content_response} function checks if the request's
 response is in accordance with the allowed status codes and content-types.
 It returns the parsed content response.
 
-\item \code{check_query_verb}: The \code{check_query_verb()} function allows you to define which HTTP
+\item \code{check_query_verb()}: The \code{check_query_verb()} function allows you to define which HTTP
 verbs are allowed. It is useful for establishing which verbs will be
 supported by an extension.
 
-\item \code{check_subclass}: The \code{check_subclass()} function specifies which type of query
+\item \code{check_subclass()}: The \code{check_subclass()} function specifies which type of query
 objects (\code{RSTACQuery}) or document objects (\code{RSTACDocument})
 are expected in the function extension.
 
-\item \code{subclass}: The \code{subclass()} function returns a \code{character} representing the
+\item \code{subclass()}: The \code{subclass()} function returns a \code{character} representing the
 subclass name of either \code{RSTACQuery} or \code{RSTACDocument} S3 classes.
 
-\item \code{omit_query_params}: The \code{omit_query_params()} function was created to omit the paths that
+\item \code{omit_query_params()}: The \code{omit_query_params()} function was created to omit the paths that
 are defined as query parameters to simplify the creation of a query.
 Therefore, use this method only in endpoints that specify a parameter in
 their paths.
 
-\item \code{RSTACQuery}: The \code{RSTACQuery()} function is a constructor of \code{RSTACQuery}
+\item \code{RSTACQuery()}: The \code{RSTACQuery()} function is a constructor of \code{RSTACQuery}
 objects. Every extension must implement a subclass of \code{RSTACQuery} to
 represent its queries. This is done by informing to the \code{subclass}
 parameter the extension's subclass name.
@@ -212,8 +212,8 @@ In general, if you are implementing a new subclass, the parameters
 \code{version} and \code{url} will be the same as the previous query. The
 \code{params} parameter will be merged with previous query. And subclass
 is the extension's subclass name.
-}}
 
+}}
 \seealso{
 \code{\link[=ext_query]{ext_query()}}
 }

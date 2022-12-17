@@ -2,7 +2,7 @@
 % Please edit documentation in R/ext_query.R
 \name{ext_query}
 \alias{ext_query}
-\title{Extension functions}
+\title{Query extension}
 \usage{
 ext_query(q, ...)
 }
@@ -58,16 +58,16 @@ See source file \code{ext_query.R} for an example on how implement new
 extensions.
 }
 \examples{
-\donttest{
-stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  stac_search(collections = "CB4_64_16D_STK-1") \%>\%
-  ext_query("bdc:tile" \%in\% "022024") \%>\%
-  post_request()
+\dontrun{
+ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+   stac_search(collections = "CB4_64_16D_STK-1") \%>\%
+   ext_query("bdc:tile" \%in\% "022024") \%>\%
+   post_request()
 }
 
 }
 \seealso{
-\code{\link[=stac_search]{stac_search()}}, \code{\link[=post_request]{post_request()}},
+\code{\link[=ext_filter]{ext_filter()}}, \code{\link[=stac_search]{stac_search()}}, \code{\link[=post_request]{post_request()}},
 \code{\link[=endpoint]{endpoint()}}, \code{\link[=before_request]{before_request()}},
 \code{\link[=after_response]{after_response()}}, \code{\link[=content_response]{content_response()}}
 }

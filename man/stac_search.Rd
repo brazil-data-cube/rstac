@@ -59,9 +59,10 @@ Examples:
 Only features that have a \code{datetime} property that intersects the
 interval or date-time informed in \code{datetime} are selected.}
 
-\item{intersects}{a \code{character} value expressing GeoJSON geometries
+\item{intersects}{a \code{list} expressing GeoJSON geometries
 objects as specified in RFC 7946. Only returns items that intersect with
-the provided polygon.}
+the provided geometry. To turn a GeoJSON into a list the packages \code{geojsonsf}
+or \code{jsonlite} can be used.}
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed it defaults to the service implementation.}
@@ -84,18 +85,18 @@ returned by these requests is a \code{STACItemCollection} object, a regular R
 \code{list} representing a STAC Item Collection document.
 }
 \examples{
-\donttest{
-# GET request
-stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
- stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-        datetime = "2017-08-01/2018-03-01") \%>\%
- get_request()
+\dontrun{
+ # GET request
+ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
+         datetime = "2017-08-01/2018-03-01") \%>\%
+  get_request()
 
-# POST request
-stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
- stac_search(collections = "CB4_64_16D_STK-1",
-        bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) \%>\%
- post_request()
+ # POST request
+ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1",
+         bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
+  post_request()
 }
 
 }

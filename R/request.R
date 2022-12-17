@@ -32,13 +32,13 @@
 #' argument.
 #'
 #' @examples
-#' \donttest{
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  get_request()
+#' \dontrun{
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'   get_request()
 #'
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'  post_request()
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
+#'   post_request()
 #' }
 #' @export
 get_request <- function(q, ...) {
@@ -63,9 +63,8 @@ get_request <- function(q, ...) {
   q <- .do_omit_query_params(q)
 
   tryCatch({
-    res <- httr::GET(url = .make_url(q$base_url,
-                                     endpoint = q$endpoint,
-                                     params = q$params), ...)
+    res <- httr::GET(url = make_url(q$base_url, endpoint = q$endpoint),
+                     query = .querystrings_encode(q$params), ...)
   },
   error = function(e) {
 
@@ -112,7 +111,7 @@ post_request <- function(q, ..., encode = c("json", "multipart", "form")) {
   q <- .do_omit_query_params(q)
 
   tryCatch({
-    res <- httr::POST(url = .make_url(q$base_url, endpoint = q$endpoint), ...,
+    res <- httr::POST(url = make_url(q$base_url, endpoint = q$endpoint), ...,
                       body = q$params, encode = q$encode)
   },
   error = function(e) {

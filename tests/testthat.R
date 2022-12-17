@@ -1,4 +1,7 @@
 library(testthat)
 library(rstac)
+library(magrittr)
 
-test_check("rstac")
+if (Sys.getenv("RSTAC_TESTS", unset = 0) == 1) {
+  test_check("rstac")
+}

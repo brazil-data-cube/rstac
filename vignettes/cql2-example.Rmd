@@ -1,0 +1,219 @@
+---
+title: "rstac CQL2 examples"
+author: "Gilberto Camara, Rolf Simoes, and Felipe Carvalho"
+date: "2022-12-16"
+output: 
+  html_document:
+    df_print: tibble
+    theme:
+      base_font:
+        google: IBM Plex Serif
+      code_font:
+        google: IBM Plex Mono
+classoption: x11names
+fontsize: 10,5pt
+indent: yes
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{cql2-report}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction{-}
+
+CQL2 is an OGC standard that enables complex filter expressions on OAFeat3 or STAC web services. CQL2 standard states that expressions can be represented in JSON or TEXT formats. Our implementation intends to convert native R expressions into CQL2 valid expressions without needing cumbersome nested lists or dictionaries. Also, we can make CQL2 filter requisition in JSON or TEXT formats with the same filter representation.
+
+## Translating R expressions to CQL2 syntax{-}
+
+To explain the difference between the TEXT and JSON CQL2 representation, let's start with a simple example. In the following code, we have a valid CQL2 expression (in TEXT format) that refers to two properties, `vehicle_height` and `bridge_clearance`.
+
+```{verbatim}
+vehicle_height > (bridge_clearance - 1))
+```
+
+This filter expression can be passed in the HTTP GET verb implemented by the service to retrieve only those features that satisfy the condition. The same expression can be represented in JSON format, which is more suitable for HTTP POST requests:
+
+```{json}
+{
+  "op": ">",
+  "args": [
+    {"property":"vehicle_height"},
+    {
+      "op": "-",
+      "args": [
+        {"property":"bridge_clearance"},
+        1
+      ]
+    }
+  ]
+}
+```
+
+Note how properties `vehicle_height` and `bridge_clearance` are represented in this format. They are elements of an object containing a `property` member. Also, they go as arguments of operators (in this case,`>` and `-` operators). 
+
+In the R language, the JSON above could be represented by nested lists, which would be somewhat cumbersome to write. To produce valid CQL2 filter expressions, we use the R abstract syntax tree (AST) from R expressions that can be converted to TEXT or JSON formats. Let us see the same previous example written in R CQL2: 
+
+```{r}
+library(rstac)
+```
+
+```{r}
+cql2_text(vehicle_height > (bridge_clearance - 1)) # TEXT format
+```
+
+```{r}
+cql2_json(vehicle_height > (bridge_clearance - 1)) # JSON format
+```
+
+In both cases, the same CQL2 object representation is built from the expression using AST of R expression evaluation. Then, the object is converted into TEXT or JSON format.
+
+CQL2 filters in TEXT format are sometimes represented the same way as in the R expression. However, this should only sometimes be the case, as we can see in some examples provided below.
+
+### Data types and literal values{-}
+
+A literal value is any part of a CQL2 filter expression used the same as specified in the expression.
+
+The scalar data types are: `character string`, `number`, `boolean`, `timestamp`, and `date`. 
+
+**character string**
+```{r}
+cql2_text("Via dell'Avvento")
+cql2_json("Via dell'Avvento")
+```
+
+
+**number**
+```{r}
+cql2_text(3.1415)
+cql2_json(-100)
+```
+
+**boolean**
+```{r}
+cql2_text(TRUE)
+cql2_json(FALSE)
+```
+
+**timestamp**
+```{r}
+cql2_text(timestamp("1969-07-20T20:17:40Z"))
+cql2_json(timestamp("1969-07-20T20:17:40Z"))
+```
+
+**date**
+```{R}
+cql2_text(date("1969-07-20"))
+cql2_json(date("1969-07-20"))
+```
+
+### Property references{-}
+
+The property of an item can be evaluated in the CQL2 filter expression by its name.
+
+```{R}
+cql2_text(windSpeed > 1)
+cql2_json(windSpeed > 1)
+```
+
+### Standard comparison predicates{-}
+
+A comparison predicate evaluates if two scalar expressions satisfy the specified comparison operator.
+
+The standard comparison operators are: `=`, `!=`, `<`, `>`, `<=`, `>=`, and `IS NULL`.
+
+```{R}
+cql2_text(city == "Crato")
+cql2_json(city == "Jacareí")
+```
+
+```{R}
+cql2_text(avg(windSpeed) < 4)
+cql2_json(avg(windSpeed) < 4)
+```
+
+```{R}
+cql2_text(balance - 150.0 > 0)
+cql2_json(balance - 150.0 > 0)
+```
+
+```{R}
+cql2_text(updated >= date('1970-01-01'))
+cql2_json(updated >= date('1970-01-01'))
+```
+
+**`IS NULL` operator**
+
+```{R}
+cql2_text(!is_null(geometry))
+cql2_json(!is_null(geometry))
+```
+
+### Advanced comparison operators{-}
+
+A comparison predicate evaluates if two scalar expressions satisfy the specified comparison operator.
+
+Advanced comparison operators are: `LIKE`, `BETWEEN`, and `IN`.
+
+**`LIKE` operator**
+
+```{R}
+cql2_text(name %like% "Smith%")
+cql2_json(name %like% "Smith%")
+```
+
+**`BETWEEN` operator**
+
+```{R}
+cql2_text(between(depth, 100.0, 150.0))
+cql2_json(between(depth, 100.0, 150.0))
+```
+
+**`IN` operator**
+
+```{R}
+cql2_text(cityName %in% list('Toronto', 'Frankfurt', 'Tokyo', 'New York'))
+cql2_json(cityName %in% list('Toronto', 'Frankfurt', 'Tokyo', 'New York'))
+```
+```{R}
+cql2_text(!category %in% list(1, 2, 3, 4))
+cql2_json(!category %in% list(1, 2, 3, 4))
+```
+
+### Spatial operators{-}
+
+A spatial predicate evaluates if two spatial expressions satisfy the specified spatial operator.
+
+The supported spatial operators are: `S_INTERSECTS`, `S_EQUALS`, `S_DISJOINT`, `S_TOUCHES`, `S_WITHIN`, `S_OVERLAPS`, `S_CROSSES`, and `S_CONTAINS`. 
+
+
+```{R, message=FALSE}
+poly <- list(type = "Polygon",
+             coordinates = list(matrix(c(0,0,0,0,1,1), ncol = 2)))
+cql2_text(s_intersects(geometry, {{poly}}))
+cql2_json(s_intersects(geometry, {{poly}}))
+```
+
+> Note: We provide an escape to evaluate user variables using `{{` or `!!`. Both symbols are largely used in the R Data Science community.
+
+### Temporal operators{-}
+
+A temporal predicate evaluates if two temporal expressions satisfy the specified temporal operator.
+
+The supported temporal operators are: `T_AFTER`, `T_BEFORE`, `T_CONTAINS`, `T_DISJOINT`, `T_DURING`, `T_EQUALS`, `T_FINISHEDBY`, `T_FINISHES`, `T_INTERSECTS`, `T_MEETS`, `T_METBY`, `T_OVERLAPPEDBY`, `T_OVERLAPS`, `T_STARTEDBY`, and `T_STARTS`.
+
+```{R}
+cql2_text(t_intersects(event_date, interval("1969-07-16T05:32:00Z", "1969-07-24T16:50:35Z")))
+cql2_json(t_intersects(event_date, interval("1969-07-16T05:32:00Z", "1969-07-24T16:50:35Z")))
+```
+
+### Support for functions in CQL2{-}
+
+Functions allow implementations to extend the language.
+
+**Example of a function that returns a geometry value.**
+
+```{R}
+cql2_text(s_within(road, Buffer(geometry, 10, "m")))
+cql2_json(s_within(road, Buffer(geometry, 10, "m")))
+```

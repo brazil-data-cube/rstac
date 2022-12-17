@@ -20,8 +20,7 @@
 #' @param collection_id a `character` collection id to be retrieved.
 #'
 #' @seealso
-#' [get_request()], [post_request()],
-#'  [items()]
+#' [get_request()], [post_request()], [items()]
 #'
 #' @return
 #' A `RSTACQuery` object with the subclass `collections` for
@@ -30,14 +29,14 @@
 #'  parameters to be provided to STAC API web service.
 #'
 #' @examples
-#' \donttest{
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   collections() %>%
-#'   get_request()
+#' \dontrun{
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    collections() %>%
+#'    get_request()
 #'
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   collections(collection_id = "CB4_64_16D_STK-1") %>%
-#'   get_request()
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    collections(collection_id = "CB4_64_16D_STK-1") %>%
+#'    get_request()
 #' }
 
 #' @export

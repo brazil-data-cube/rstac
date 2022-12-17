@@ -31,17 +31,16 @@ Collection object
 }
 }
 \examples{
-\donttest{
-stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  collections() \%>\%
-  get_request()
+\dontrun{
+ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+   collections() \%>\%
+   get_request()
 
-stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  collections(collection_id = "CB4_64_16D_STK-1") \%>\%
-  get_request()
+ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+   collections(collection_id = "CB4_64_16D_STK-1") \%>\%
+   get_request()
 }
 }
 \seealso{
-\code{\link[=get_request]{get_request()}}, \code{\link[=post_request]{post_request()}},
-\code{\link[=items]{items()}}
+\code{\link[=get_request]{get_request()}}, \code{\link[=post_request]{post_request()}}, \code{\link[=items]{items()}}
 }

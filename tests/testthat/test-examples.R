@@ -1,7 +1,4 @@
-context("tests_examples_0.9.0")
-
 testthat::test_that("examples rstac", {
-  vcr::use_cassette("tests_examples",{
     # skip cran check test
     testthat::skip_on_cran()
 
@@ -59,7 +56,6 @@ testthat::test_that("examples rstac", {
         get_request(),
       class = c("STACCatalog", "RSTACDocument"))
 
-
     #### tests in extensions ####
 
     # test extension query
@@ -97,7 +93,7 @@ testthat::test_that("examples rstac", {
                     limit = 10) %>%
         get_request() %>%
         items_matched(),
-      expected = 5774)
+      expected = 7505)
 
     # test items_group
     testthat::expect_equal(
@@ -110,6 +106,66 @@ testthat::test_that("examples rstac", {
           items_fetch(progress = FALSE) %>%
           items_group(field = c("properties", "bdc:tiles"))),
       expected = "list")
+
+    # test items_group
+    testthat::expect_equal(
+      object = typeof(
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+          stac_search(collections = "LCC_C4_6dddd4_1M_STK_GO_PA-SPC-AC-NA-1",
+                      limit = 500,
+                      datetime = "2018-09-01/2019-08-31") %>%
+          get_request() %>%
+          items_fetch(progress = FALSE) %>%
+          items_group(field = c("properties", "bdc:tiles"))),
+      expected = "list")
+
+    # test items_group
+    testthat::expect_error(
+      object =
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+          stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
+                      limit = 500,
+                      datetime = "2018-09-01/2019-08-31") %>%
+          get_request() %>%
+          items_fetch() %>%
+          items_group()
+    )
+
+    # test items_group
+    testthat::expect_error(
+      object =
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+        stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
+                    limit = 500,
+                    datetime = "2018-09-01/2019-08-31") %>%
+        get_request() %>%
+        items_fetch() %>%
+        items_group()
+    )
+
+    # test items_group
+    testthat::expect_error(
+      object =
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+        stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
+                    limit = 500,
+                    datetime = "2018-09-01/2019-08-31") %>%
+        get_request() %>%
+        items_fetch() %>%
+        items_group(field = "test", index = "test")
+    )
+
+    # test items_group
+    testthat::expect_error(
+      object =
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+        stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
+                    limit = 500,
+                    datetime = "2018-09-01/2019-08-31") %>%
+        get_request() %>%
+        items_fetch() %>%
+        items_group(index = list(1, 2, 3))
+    )
 
     # test items_reap
     testthat::expect_equal(
@@ -130,18 +186,6 @@ testthat::test_that("examples rstac", {
                       limit = 10,
                       datetime = "2017-08-01/2018-03-01") %>%
           get_request() %>%
-          items_fields(field = c("properties"))),
+          items_fields(field = "properties")),
       expected = "character")
-
-    # test assets_list
-    testthat::expect_equal(
-      object = typeof(
-        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-          stac_search(collections = "CB4_64_16D_STK-1",
-                      limit = 10,
-                      datetime = "2017-08-01/2018-03-01") %>%
-          get_request() %>%
-          assets_list(assets_names = c("EVI", "NDVI"))),
-      expected = "list")
-  })
 })

@@ -14,16 +14,15 @@
 #'
 #' @examples
 #' \dontrun{
-#' # STACItemCollection object
-#' stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1",
-#'               datetime = "2019-06-01/2019-08-01") %>%
-#'   stac_search() %>%
-#'   get_request()
+#'  # STACItemCollection object
+#'  stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    stac_search(collections = "CB4_64_16D_STK-1",
+#'                datetime = "2019-06-01/2019-08-01") %>%
+#'    stac_search() %>%
+#'    get_request()
 #'
-#' # signing each item href
-#' stac_obj %>% items_sign(sign_fn = sign_bdc(access_token = "123"))
-#'
+#'  # signing each item href
+#'  stac_obj %>% items_sign(sign_fn = sign_bdc(access_token = "123"))
 #' }
 #'
 #' @export
@@ -52,7 +51,6 @@ sign_bdc <- function(access_token = NULL, ...) {
 
       token[["default"]] <<- list("token" = Sys.getenv("BDC_ACCESS_KEY"))
     }
-
     token[["default"]] <<- parse(token[["default"]])
   }
 
@@ -78,7 +76,7 @@ sign_bdc <- function(access_token = NULL, ...) {
     asset_url <- httr::parse_url(asset[["href"]])
 
     # if the href is already sign it will not be modified
-    asset_url$query <- .modify_list(asset_url$query, token)
+    asset_url$query <- modify_list(asset_url$query, token)
 
     asset[["href"]] <- httr::build_url(asset_url)
     asset
@@ -118,35 +116,64 @@ sign_bdc <- function(access_token = NULL, ...) {
 #'
 #' @examples
 #' \dontrun{
-#' # STACItemCollection object
-#' stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
-#'  stac_search(collections = "sentinel-2-l2a",
-#'              bbox = c(-47.02148, -42.53906, -12.98314, -17.35063)) %>%
-#'  get_request()
+#'  # STACItemCollection object
+#'  stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
+#'   stac_search(collections = "sentinel-2-l2a",
+#'               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
+#'   get_request()
 #'
-#' # signing each item href
-#' stac_obj %>% items_sign(sign_fn = sign_planetary_computer())
-#'
+#'  # signing each item href
+#'  stac_obj %>% items_sign(sign_fn = sign_planetary_computer())
 #' }
 #'
 #' @export
-sign_planetary_computer <- function(..., token_url = NULL, retry=FALSE) {
+sign_planetary_computer <- function(..., token_url = NULL, retries = 0) {
+  # general info
+  ms_token_endpoint <- "https://planetarycomputer.microsoft.com/api/sas/v1/token"
+  ms_max_timeleft <- 300
+  ms_blob_name <- ".blob.core.windows.net"
+  ms_public_assets <- "ai4edatasetspublicassets.blob.core.windows.net"
 
-  default_endpoint <- "https://planetarycomputer.microsoft.com/api/sas/v1/token"
-  if (!is.null(token_url))
+  get_ms_info <- function(asset) {
+    parsed_url <- httr::parse_url(asset[["href"]])
+    host_spplited <- strsplit(
+      x = parsed_url[["hostname"]], split = ".", fixed = TRUE
+    )
+    path_spplited <- strsplit(parsed_url[["path"]], split = "/", fixed = TRUE)
+
+    list(
+      account = host_spplited[[1]][[1]],
+      container = path_spplited[[1]][[1]]
+    )
+  }
+
+  get_ms_account <- function(ms_info) {
+    ms_info[["account"]]
+  }
+
+  get_ms_container <- function(ms_info) {
+    ms_info[["container"]]
+  }
+
+  is_public_assets <- function(parsed_url) {
+    !endsWith(parsed_url[["hostname"]], ms_blob_name) ||
+      parsed_url[["hostname"]] == ms_public_assets
+  }
+
+  default_endpoint <- ms_token_endpoint
+  if (!is.null(token_url)) {
     default_endpoint <- token_url
-
-  default_max_timeleft <- 300
+  }
 
   token <- list()
 
   # parse href to separate each query element, this will be used to dont
   # append the same token for an asset
   parse <- function(obj_req) {
-
     # transform to a datetime object
-    obj_req[["msft:expiry"]] <- strptime(obj_req[["msft:expiry"]],
-                                         "%Y-%m-%dT%H:%M:%SZ")
+    obj_req[["msft:expiry"]] <- strptime(
+      obj_req[["msft:expiry"]], "%Y-%m-%dT%H:%M:%SZ"
+    )
 
     token_str <- paste0("?", obj_req[["token"]])
     obj_req[["token_value"]] <- httr::parse_url(token_str)[["query"]]
@@ -154,14 +181,18 @@ sign_planetary_computer <- function(..., token_url = NULL, retry=FALSE) {
     obj_req
   }
 
+  new_token <- function(asset) {
+    ms_info <- get_ms_info(asset)
+    account <- get_ms_account(ms_info)
+    container <- get_ms_container(ms_info)
+    
+    url <- paste(
+      default_endpoint, account, container, sep = "/"
+    )
 
-  new_token <- function(item) {
-
-    url <- paste0(default_endpoint, "/", item$collection)
-
-    make_request <- function(.url){
+    make_request <- function(url) {
       tryCatch({
-        rc <- httr::content(httr::GET(.url, ...), encoding = "UTF-8")
+        rc <- httr::content(httr::GET(url, ...), encoding = "UTF-8")
       },
       error = function(e) {
         .error("Request error. %s", e$message)
@@ -171,68 +202,78 @@ sign_planetary_computer <- function(..., token_url = NULL, retry=FALSE) {
 
     res_content <- make_request(url)
 
-    if (isTRUE(retry))
+    if (retries > 0)
       if ("message" %in% names(res_content))
         res_content <- retry_mpc_request(
-          .f = make_request,
-          .url = url,
-          .req = res_content,
-          .n = 3,
-          .item = item
+          f = make_request,
+          url = url,
+          req = res_content,
+          retries = retries,
+          asset = asset
         )
 
-
-    if (!"token" %in% names(res_content)){
-      if ("message" %in% names(res_content)){
-        .error("%s", res_content$message)
-      } else {
-        .error("No collection found with id '%s'", item$collection)
+    if (!"token" %in% names(res_content)) {
+      msg <- sprintf("Cannot sign asset '%s'", asset$href)
+      if ("message" %in% names(res_content)) {
+         msg <- paste0(msg, "\n", res_content$message)
       }
+      .error(msg)
+    }
+    
+    token[[account]][[container]] <<- parse(res_content)
+  }
+
+  exists_token <- function(asset) {
+    ms_info <- get_ms_info(asset)
+    account <- get_ms_account(ms_info)
+    container <- get_ms_container(ms_info)
+    account %in% names(token) && container %in% names(token[[account]])
+  }
+
+  is_token_expired <- function(asset) {
+
+    get_token_expiry <- function(asset) {
+      ms_info <- get_ms_info(asset)
+      account <- get_ms_account(ms_info)
+      container <- get_ms_container(ms_info)
+      token[[account]][[container]][["msft:expiry"]]
     }
 
+    difftime_token <- difftime(
+      time1 = get_token_expiry(asset),
+      time2 = as.POSIXlt(Sys.time(), tz = "UTC"),
+      units = "secs"
+    )
 
-    token[[item$collection]] <<- parse(res_content)
+    difftime_token < ms_max_timeleft
   }
 
-  exists_token <- function(item) {
-    item$collection %in% names(token)
+  get_token_value <- function(asset) {
+    ms_info <- get_ms_info(asset)
+    account <- get_ms_account(ms_info)
+    container <- get_ms_container(ms_info)
+    token[[account]][[container]][["token_value"]]
   }
 
-  get_token_value <- function(item) {
-    token[[item$collection]][["token_value"]]
-  }
-
-  get_token_expiry <- function(item) {
-    token[[item$collection]][["msft:expiry"]]
-  }
-
-  is_token_expired <- function(item) {
-
-    difftime_token <- difftime(get_token_expiry(item),
-                               as.POSIXlt(Sys.time(), tz = "UTC"),
-                               units = "secs")
-
-    difftime_token < default_max_timeleft
-  }
-
-  sign_asset <- function(asset, token) {
-
-    asset_url <- httr::parse_url(asset[["href"]])
+  sign_asset <- function(asset) {
+    parsed_url <- httr::parse_url(asset[["href"]])
+    if (is_public_assets(parsed_url)) {
+      return(asset)
+    }
+    if (!exists_token(asset) || is_token_expired(asset)) {
+      new_token(asset)
+    }
+    token_value <- get_token_value(asset)
 
     # if the href is already sign it will not be modified
-    asset_url$query <- .modify_list(asset_url$query, token)
+    parsed_url$query <- modify_list(parsed_url[["query"]], token_value)
 
-    asset[["href"]] <- httr::build_url(asset_url)
+    asset[["href"]] <- httr::build_url(parsed_url)
     asset
   }
 
   sign_item <- function(item) {
-
-    if (!exists_token(item) || is_token_expired(item))
-      new_token(item)
-
-    item[["assets"]] <- lapply(item[["assets"]], sign_asset,
-                               get_token_value(item))
+    item[["assets"]] <- lapply(item[["assets"]], sign_asset)
 
     return(item)
   }
