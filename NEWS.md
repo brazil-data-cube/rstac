@@ -1,5 +1,13 @@
 # rstac (development version)
 
+# rstac 0.9.2 (Released 2022-12-17)
+
+* Add support to CQL2 filter extension
+* Add `conformance()` function
+* Add `queryables()` function
+* Other minor improvements
+* Deprecate functions: `assets_filter()` and `items_group()`
+
 # rstac 0.9.1-6 (Released 2021-11-05)
 
 * Fix examples and README where bbox parameter is in wrong order
