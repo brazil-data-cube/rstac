@@ -1,0 +1,120 @@
+---
+title: "Using CQL2 filter extension in rstac package"
+author: "Rolf Simoes, Felipe Carvalho, and Gilberto Camara"
+date: "2022-12-21"
+output: 
+  html_document:
+    df_print: tibble
+classoption: x11names
+indent: yes
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{cql2-report}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r}
+library(rstac)
+```
+
+
+## Consulting Supported Properties {.tabset}
+
+CQL2 expressions can be composed of properties referring to item attributes. A list of all properties supported by an API retrieved by `/queryables` endpoint. By default, filter expressions only can use properties listed in queryables. For example, to list all supported properties for the collection `sentinel-s2-l2a` in Planetary Computer, users can call the following command: 
+
+```{r queryables}
+stac("https://planetarycomputer.microsoft.com/api/stac/v1") |>  
+    collections("sentinel-2-l2a") |> 
+    queryables() |> 
+    get_request()
+```
+
+
+## Examples {.tabset}
+
+```{r default-code}
+search <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") |> 
+    stac_search()
+```
+
+
+#### Equal operator `=` with `collection` property
+
+```{r}
+search |> 
+    ext_filter(collection == "sentinel-2-l2a") |> 
+    post_request()
+```
+
+#### Less than operator `<` with `eo:cloud_cover` property
+
+```{r}
+search |> 
+    ext_filter(`eo:cloud_cover` < 10) |>
+    post_request()
+```
+
+#### Combining operators in filter expression
+
+```{r}
+search |> ext_filter(
+    collection == "sentinel-2-l2a" &&
+        `s2:vegetation_percentage` >= 50 &&
+        `s2:water_percentage` < 10 &&
+        `eo:cloud_cover` <= 10) |> 
+    post_request()
+```
+
+#### `LIKE` operator with `collection` property
+
+```{r}
+search |> 
+    ext_filter(collection %like% "modis%") |> 
+    post_request() 
+```
+
+#### `IN` operator with `collection` property
+
+```{r}
+search |> 
+    ext_filter(collection %in% c("io-lulc-9-class", "esa-worldcover")) |>
+    post_request()
+```
+
+
+### Spatial and Temporal 
+
+```{r}
+polygon <- list(
+  type = "Polygon",
+  coordinates = list(
+    matrix(c(-62.34499836, -8.57414572,
+             -62.18858174, -8.57414572,
+             -62.18858174, -8.15351185,
+             -62.34499836, -8.15351185,
+             -62.34499836, -8.57414572),
+           ncol = 2, byrow = TRUE)
+  )
+)
+
+search |> ext_filter(
+    collection == "landsat-c2-l2" &&
+        s_intersects(geometry, {{polygon}}) &&
+        anyinteracts(datetime, interval("1985-07-16T05:32:00Z", "1985-08-24T16:50:35Z"))) |> 
+    post_request()
+```
+
+
+### Learn more
+
+For more about the Planetary Computer's STAC API, see [Using tokens for data access](https://planetarycomputer.microsoft.com/docs/concepts/sas/) and the [STAC API reference](https://planetarycomputer.microsoft.com/docs/reference/stac/). 
+For more about CQL2 in rstac, type the command `?ext_filter`.
