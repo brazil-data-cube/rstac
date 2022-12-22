@@ -109,6 +109,8 @@ sign_bdc <- function(access_token = NULL, ...) {
 #'  in the Microsoft service.
 #'  By default is used:
 #'  `"https://planetarycomputer.microsoft.com/api/sas/v1/token"`
+#' @param retry a logical to determine if a signing request should be retried if
+#'  the rate limit of the API is exceeded.
 #'
 #' @return a `function` that signs each item assets.
 #'
@@ -125,7 +127,7 @@ sign_bdc <- function(access_token = NULL, ...) {
 #' }
 #'
 #' @export
-sign_planetary_computer <- function(..., token_url = NULL) {
+sign_planetary_computer <- function(..., token_url = NULL, retries = 0) {
   # general info
   ms_token_endpoint <- "https://planetarycomputer.microsoft.com/api/sas/v1/token"
   ms_max_timeleft <- 300
@@ -183,21 +185,41 @@ sign_planetary_computer <- function(..., token_url = NULL) {
     ms_info <- get_ms_info(asset)
     account <- get_ms_account(ms_info)
     container <- get_ms_container(ms_info)
-
+    
     url <- paste(
       default_endpoint, account, container, sep = "/"
     )
 
-    tryCatch({
-      res_content <- httr::content(httr::GET(url, ...), encoding = "UTF-8")
-    },
-    error = function(e) {
-      .error("Request error. %s", e$message)
-    })
+    make_request <- function(url) {
+      tryCatch({
+        rc <- httr::content(httr::GET(url, ...), encoding = "UTF-8")
+      },
+      error = function(e) {
+        .error("Request error. %s", e$message)
+      })
+      rc
+    }
 
-    if (!"token" %in% names(res_content))
-      .error("No collection found with id '%s'", asset$collection)
+    res_content <- make_request(url)
 
+    if (retries > 0)
+      if ("message" %in% names(res_content))
+        res_content <- retry_mpc_request(
+          f = make_request,
+          url = url,
+          req = res_content,
+          retries = retries,
+          asset = asset
+        )
+
+    if (!"token" %in% names(res_content)) {
+      msg <- sprintf("Cannot sign asset '%s'", asset$href)
+      if ("message" %in% names(res_content)) {
+         msg <- paste0(msg, "\n", res_content$message)
+      }
+      .error(msg)
+    }
+    
     token[[account]][[container]] <<- parse(res_content)
   }
 
