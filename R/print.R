@@ -194,7 +194,7 @@ print.STACItem <- function(x, ...) {
   cat(crayon::bold("###STACItem"), fill = TRUE)
   cat("-", crayon::bold("id:"), x$id, fill = TRUE)
   cat("-", crayon::bold("collection:"), x$collection, fill = TRUE)
-  cat("-", crayon::bold("bbox:"), .format_bbox(x$bbox), fill = TRUE)
+  cat("-", crayon::bold("bbox:"), format_bbox(x$bbox), fill = TRUE)
   cat("-", crayon::bold("datetime:"), x$properties$datetime, fill = TRUE)
   cat("-", crayon::bold("assets:"),
       paste0(items_assets(x, simplify = TRUE), collapse = ", "),

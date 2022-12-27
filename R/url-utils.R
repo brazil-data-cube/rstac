@@ -112,25 +112,12 @@ gdalvsi_append <- function(url) {
   }, character(1), USE.NAMES = FALSE)
 }
 
-#' @title Utility functions
-#'
-#' @param bbox a `numeric` vector with only features that have a
-#' geometry that intersects the bounding box are selected. The bounding box is
-#' provided as four or six numbers, depending on whether the coordinate
-#' reference system includes a vertical axis (elevation or depth):
-#' \itemize{ \item Lower left corner, coordinate axis 1
-#'           \item Lower left corner, coordinate axis 2
-#'           \item Lower left corner, coordinate axis 3 (optional)
-#'           \item Upper right corner, coordinate axis 1
-#'           \item Upper right corner, coordinate axis 2
-#'           \item Upper right corner, coordinate axis 3 (optional) }.
-#'
-#' @return A `character` with `bbox` formatted based on min and max
-#'  values.
-#'
-#' @noRd
-.format_bbox <- function(bbox) {
-
+# bbox is a numeric vector provided as four or six numbers, depending on
+# whether the coordinate reference system includes a vertical axis
+# (elevation or depth):
+# - xmin, ymin, zmin (optional)
+# - xmax, ymax, zmax (optional).
+format_bbox <- function(bbox) {
   if (!is.null(bbox) & length(bbox) == 4)
     return(paste(c("xmin:", "ymin:", "xmax:", "ymax:"),
                  sprintf("%.5f", bbox), collapse = ", "))
