@@ -105,12 +105,13 @@ sign_bdc <- function(access_token = NULL, ...) {
 #'
 #' @param ...       additional parameters can be supplied to the `GET` function
 #' of the `httr` package.
+#'
+#' @param headers   a named character vector with headers key-value content.
+#'
 #' @param token_url a `character` with the URL that generates the tokens
 #'  in the Microsoft service.
 #'  By default is used:
 #'  `"https://planetarycomputer.microsoft.com/api/sas/v1/token"`
-#' @param retry a logical to determine if a signing request should be retried if
-#'  the rate limit of the API is exceeded.
 #'
 #' @return a `function` that signs each item assets.
 #'
