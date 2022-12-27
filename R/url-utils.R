@@ -39,24 +39,20 @@ make_url <- function(url, endpoint = "", params = list()) {
   return(res)
 }
 
-#' @title Utility functions
-#'
-#' @param params a `list` of parameters received from stac objects.
-#'
-#' @return a `character` representing the encode parameters of the query.
-#'
-#' @noRd
+make_get_request <- function(url, ..., error_msg = "Error while requesting") {
+  tryCatch({
+    httr::GET(url, ...)
+  },
+  error = function(e) {
+    if (!is.null(error_msg))
+      .error(paste(error_msg, "'%s'. \n%s"), url, e$message)
+  })
+}
+
 .querystrings_encode <- function(params) {
   return(lapply(params, paste0, collapse = ","))
 }
 
-#' @title Utility functions
-#'
-#' @param querystring a `character` with the query to be decoded.
-#'
-#' @return a `list` with the query params.
-#'
-#' @noRd
 .querystring_decode <- function(querystring) {
   # first decode and remove all coded spaces
   querystring <- URLdecode(querystring)
