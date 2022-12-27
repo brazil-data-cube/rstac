@@ -142,105 +142,53 @@ sign_planetary_computer <- function(..., token_url = NULL, retries = 0) {
     path_spplited <- strsplit(parsed_url[["path"]], split = "/", fixed = TRUE)
 
     list(
-      account = host_spplited[[1]][[1]],
-      container = path_spplited[[1]][[1]]
+      acc = host_spplited[[1]][[1]],
+      cnt = path_spplited[[1]][[1]]
     )
   }
 
-  get_ms_account <- function(ms_info) {
-    ms_info[["account"]]
+  get_ms_acc <- function(ms_info) {
+    ms_info[["acc"]]
   }
 
-  get_ms_container <- function(ms_info) {
-    ms_info[["container"]]
+  get_ms_cnt <- function(ms_info) {
+    ms_info[["cnt"]]
   }
 
-  is_public_assets <- function(parsed_url) {
-    !endsWith(parsed_url[["hostname"]], ms_blob_name) ||
-      parsed_url[["hostname"]] == ms_public_assets
+  is_public_asset <- function(parsed_url) {
+    ms_blob_name <- ".blob.core.windows.net"
+    ms_public_assets <- "ai4edatasetspublicassets.blob.core.windows.net"
+    host <- parsed_url[["hostname"]]
+    !endsWith(host, ms_blob_name) || host == ms_public_assets
   }
 
-  default_endpoint <- ms_token_endpoint
   if (!is.null(token_url)) {
-    default_endpoint <- token_url
+    ms_token_endpoint <- token_url
   }
 
-  token <- list()
-
-  # parse href to separate each query element, this will be used to dont
+  # parse href to separate each query element, this will be used to don't
   # append the same token for an asset
-  parse <- function(obj_req) {
+  parse_token <- function(res) {
     # transform to a datetime object
-    obj_req[["msft:expiry"]] <- strptime(
-      obj_req[["msft:expiry"]], "%Y-%m-%dT%H:%M:%SZ"
+    res[["msft:expiry"]] <- strptime(
+      res[["msft:expiry"]], "%Y-%m-%dT%H:%M:%SZ"
     )
 
-    token_str <- paste0("?", obj_req[["token"]])
-    obj_req[["token_value"]] <- httr::parse_url(token_str)[["query"]]
+    token_str <- paste0("?", res[["token"]])
+    res[["token_value"]] <- httr::parse_url(token_str)[["query"]]
 
-    obj_req
+    res
   }
 
-  new_token <- function(asset) {
-    ms_info <- get_ms_info(asset)
-    account <- get_ms_account(ms_info)
-    container <- get_ms_container(ms_info)
-    
-    url <- paste(
-      default_endpoint, account, container, sep = "/"
-    )
-
-    make_request <- function(url) {
-      tryCatch({
-        rc <- httr::content(httr::GET(url, ...), encoding = "UTF-8")
-      },
-      error = function(e) {
-        .error("Request error. %s", e$message)
-      })
-      rc
-    }
-
-    res_content <- make_request(url)
-
-    if (retries > 0)
-      if ("message" %in% names(res_content))
-        res_content <- retry_mpc_request(
-          f = make_request,
-          url = url,
-          req = res_content,
-          retries = retries,
-          asset = asset
-        )
-
-    if (!"token" %in% names(res_content)) {
-      msg <- sprintf("Cannot sign asset '%s'", asset$href)
-      if ("message" %in% names(res_content)) {
-         msg <- paste0(msg, "\n", res_content$message)
-      }
-      .error(msg)
-    }
-    
-    token[[account]][[container]] <<- parse(res_content)
+  exists_token <- function(acc, cnt) {
+    acc %in% names(token) && cnt %in% names(token[[acc]])
   }
 
-  exists_token <- function(asset) {
-    ms_info <- get_ms_info(asset)
-    account <- get_ms_account(ms_info)
-    container <- get_ms_container(ms_info)
-    account %in% names(token) && container %in% names(token[[account]])
-  }
-
-  is_token_expired <- function(asset) {
-
-    get_token_expiry <- function(asset) {
-      ms_info <- get_ms_info(asset)
-      account <- get_ms_account(ms_info)
-      container <- get_ms_container(ms_info)
-      token[[account]][[container]][["msft:expiry"]]
-    }
+  is_token_expired <- function(acc, cnt) {
+    ms_max_timeleft <- 300
 
     difftime_token <- difftime(
-      time1 = get_token_expiry(asset),
+      time1 = token[[acc]][[cnt]][["msft:expiry"]],
       time2 = as.POSIXlt(Sys.time(), tz = "UTC"),
       units = "secs"
     )
@@ -248,23 +196,38 @@ sign_planetary_computer <- function(..., token_url = NULL, retries = 0) {
     difftime_token < ms_max_timeleft
   }
 
-  get_token_value <- function(asset) {
-    ms_info <- get_ms_info(asset)
-    account <- get_ms_account(ms_info)
-    container <- get_ms_container(ms_info)
-    token[[account]][[container]][["token_value"]]
+  new_token <- function(acc, cnt) {
+    if (exists_token(acc, cnt) && !is_token_expired(acc, cnt)) return(NULL)
+    res <- make_get_request(
+      url = paste(ms_token_endpoint, acc, cnt, sep = "/"),
+      httr::add_headers(.headers = headers), ...
+    )
+    res_content <- content_response(
+      res = res,
+      status_codes = "200",
+      content_types = "application/json"
+    )
+
+    token[[acc]][[cnt]] <<- parse_token(res_content)
+  }
+
+  get_token <- function(acc, cnt) {
+    new_token(acc, cnt)
+    # get token value from global variable
+    token[[acc]][[cnt]][["token_value"]]
   }
 
   sign_asset <- function(asset) {
+    # public assets do not require a signature
     parsed_url <- httr::parse_url(asset[["href"]])
-    if (is_public_assets(parsed_url)) {
+    if (is_public_asset(parsed_url)) {
       return(asset)
     }
-    if (!exists_token(asset) || is_token_expired(asset)) {
-      new_token(asset)
-    }
-    token_value <- get_token_value(asset)
-
+    ms_info <- get_ms_info(asset)
+    account <- get_ms_acc(ms_info)
+    container <- get_ms_cnt(ms_info)
+    # get an existing token or generate a new one
+    token_value <- get_token(account, container)
     # if the href is already sign it will not be modified
     parsed_url$query <- modify_list(parsed_url[["query"]], token_value)
 
@@ -274,9 +237,7 @@ sign_planetary_computer <- function(..., token_url = NULL, retries = 0) {
 
   sign_item <- function(item) {
     item[["assets"]] <- lapply(item[["assets"]], sign_asset)
-
     return(item)
   }
-
   return(sign_item)
 }

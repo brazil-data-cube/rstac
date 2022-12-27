@@ -170,39 +170,4 @@ links_filter <- function(x, ..., filter_fn = NULL) {
 
   x
 }
-
-#' A function to safely retry the signing of MPC URLs
-#'
-#' @param f      The signing function
-#' @param url url path for to be signed
-#' @param req the previous request response that was sent for signing
-#' @param retries the number of times a request should be tried
-#' @param asset the item collection value passed to `.error` on error
-#'
-#' @return The updated response content list
-#'
-#' @noRd
-retry_mpc_request <- function(f, url, req, retries, asset){
-
-  sleep_request <- function(s, f, c_url){
-      message(gsub("Try", "Trying", s, fixed = TRUE)) 
-      retry_time <- as.numeric(gsub(".*in (.+) seconds.*", "\\1", s)) + 1
-      Sys.sleep(retry_time)
-      f(c_url)
-  }
-
-  for (i in seq_len(retries)){
-    try({
-      req <- sleep_request(s = req$message, f = f, c_url = url)
-      if ("token" %in% names(req)){
-        return(req)
-      } else if ("message" %in% names(req)){
-        req$message <- req$message
-      } else {
-        .error("Cannot sign href '%s'", asset$href)
-      }
-    }, silent=FALSE)
-  }
-}
-
 # nocov end
