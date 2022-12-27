@@ -125,15 +125,28 @@ sign_bdc <- function(access_token = NULL, ...) {
 #'
 #'  # signing each item href
 #'  stac_obj %>% items_sign(sign_fn = sign_planetary_computer())
+#'
+#'
+#'  # example of access to collections that require authentication
+#'  stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+#'    stac_search(collections = c("sentinel-1-rtc"),
+#'                bbox = c(-64.8597, -10.4919, -64.79272527, -10.4473),
+#'                datetime = "2019-01-01/2019-01-28") %>%
+#'    post_request()
+#'
+#'  stac_obj %>% items_sign(
+#'    sign_fn = sign_planetary_computer(
+#'      headers = c("Ocp-Apim-Subscription-Key" = "your-mpc-token")
+#'    )
+#'  )
 #' }
 #'
 #' @export
-sign_planetary_computer <- function(..., token_url = NULL, retries = 0) {
+sign_planetary_computer <- function(..., headers = NULL, token_url = NULL) {
   # general info
   ms_token_endpoint <- "https://planetarycomputer.microsoft.com/api/sas/v1/token"
-  ms_max_timeleft <- 300
-  ms_blob_name <- ".blob.core.windows.net"
-  ms_public_assets <- "ai4edatasetspublicassets.blob.core.windows.net"
+
+  token <- list()
 
   get_ms_info <- function(asset) {
     parsed_url <- httr::parse_url(asset[["href"]])
