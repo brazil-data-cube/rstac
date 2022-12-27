@@ -1,32 +1,3 @@
-#' @title Utility functions
-#'
-#' @rdname http_request
-#'
-#' @description
-#' `make_url` is a helper function to generate url. The returned
-#' url is formed by appending `endpoint` at the end of base url
-#' informed by `url` parameter. If `endpoint` has multiple elements
-#' it will be collapsed using `'/'` character.
-#'
-#' Note that `make_url` function differs from standards of relative URI
-#' path resolution (RFC 3986). Any existing path in base url
-#' is maintained in the final url, and a simple string contatenation is made
-#' whithout including any character separator. For this reason, this function
-#' does not support the query and fragment URI components in the base url.
-#'
-#' @param url         a `character` informing the base url of a
-#' STAC web service.
-#'
-#' @param endpoint    a `character` a path to be appended in the final
-#' url.
-#'
-#' @param params      a named `list` with all url query parameters to be
-#' appended in the url.
-#'
-#' @return
-#' `make_url` returns an url to access STAC endpoints.
-#'
-#' @noRd
 make_url <- function(url, endpoint = "", params = list()) {
   # remove trailing '/' char
   if (substring(url, nchar(url)) == "/")
@@ -69,13 +40,6 @@ make_get_request <- function(url, ..., error_msg = "Error while requesting") {
   return(params)
 }
 
-#' @title Utility functions
-#'
-#' @param params a `list` with the parameters of query.
-#'
-#' @return a `list` with the query parameters.
-#'
-#' @noRd
 .validate_query <- function(params) {
 
   if (!is.null(params$query) && is.character(params$query)) {
