@@ -128,7 +128,10 @@ parse_params <- function(q, params) {
 #' @return
 #' The `content_response()` function returns a `list` data structure
 #' representing the JSON file received in HTTP response
-content_response <- function(res, status_codes, content_types) {
+content_response <- function(res,
+                             status_codes,
+                             content_types,
+                             key_message = c("message", "description", "detail")) {
 
   # convert any json extension
   content_type <- httr::http_type(res)
@@ -149,11 +152,9 @@ content_response <- function(res, status_codes, content_types) {
     message <- ""
     if (is.atomic(content))
       message <- content
-    else if (!is.null(content[["description"]]))
-      message <- content[["description"]]
-    else if (!is.null(content[["detail"]]))
-      message <- content[["detail"]]
-
+    else if (any(key_message %in% names(content))) {
+      message <- content[[which(names(content) %in% key_message)[[1]]]]
+    }
     .error("HTTP status '%s'. %s", status_code, message)
   }
 
