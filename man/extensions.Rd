@@ -25,7 +25,12 @@ after_response(q, res)
 
 parse_params(q, params)
 
-content_response(res, status_codes, content_types)
+content_response(
+  res,
+  status_codes,
+  content_types,
+  key_message = c("message", "description", "detail")
+)
 
 check_query_verb(q, verbs, msg = NULL)
 
