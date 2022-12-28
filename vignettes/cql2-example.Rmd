@@ -15,7 +15,7 @@ fontsize: 10,5pt
 indent: yes
 link-citations: yes
 vignette: >
-  %\VignetteIndexEntry{cql2-report}
+  %\VignetteIndexEntry{cql2-example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
