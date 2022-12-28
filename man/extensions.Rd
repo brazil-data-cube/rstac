@@ -62,6 +62,9 @@ status codes.}
 \item{content_types}{a \code{character} vector with all acceptable
 responses' content type.}
 
+\item{key_message}{a \code{character} vector with the JSON keys to show the
+requested API message.}
+
 \item{verbs}{a \code{character} vector with allowed HTTP request methods}
 
 \item{msg}{a \code{character} with a personalized error message}

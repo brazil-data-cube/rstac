@@ -2,6 +2,9 @@
 % Please edit documentation in R/assets-funs.R
 \name{assets_function}
 \alias{assets_function}
+\alias{assets_download}
+\alias{assets_download.STACItemCollection}
+\alias{assets_download.STACItem}
 \alias{assets_url}
 \alias{assets_url.STACItemCollection}
 \alias{assets_url.STACItem}
@@ -10,6 +13,42 @@
 \alias{assets_select.STACItem}
 \title{Assets functions}
 \usage{
+assets_download(
+  items,
+  asset_names = NULL,
+  output_dir = getwd(),
+  overwrite = FALSE,
+  items_max = Inf,
+  progress = TRUE,
+  download_fn = NULL,
+  ...,
+  fn = deprecated()
+)
+
+\method{assets_download}{STACItemCollection}(
+  items,
+  asset_names = NULL,
+  output_dir = ".",
+  overwrite = FALSE,
+  items_max = Inf,
+  progress = TRUE,
+  download_fn = NULL,
+  ...,
+  fn = deprecated()
+)
+
+\method{assets_download}{STACItem}(
+  items,
+  asset_names = NULL,
+  output_dir = ".",
+  overwrite = FALSE,
+  items_max = Inf,
+  progress = TRUE,
+  download_fn = NULL,
+  ...,
+  fn = deprecated()
+)
+
 assets_url(items, append_gdalvsi = TRUE)
 
 \method{assets_url}{STACItemCollection}(items, append_gdalvsi = TRUE)
@@ -23,31 +62,82 @@ assets_select(items, asset_names = NULL, filter_fn = NULL)
 \method{assets_select}{STACItem}(items, asset_names = NULL, filter_fn = NULL)
 }
 \arguments{
-\item{items}{a \code{STACItemCollection} object representing
-the result of \verb{/stac/search}, \code{/collections/{collectionId}/items}.}
+\item{items}{a \code{STACItem} or \code{STACItemCollection} object
+representing the result of \verb{/stac/search},
+\code{/collections/{collectionId}/items} or
+\code{/collections/{collectionId}/items/{itemId}} endpoints.}
+
+\item{asset_names}{a \code{character} vector with the assets names to be selected.}
+
+\item{output_dir}{a \code{character} directory in which the assets will be
+saved. Default is the working directory (\code{getwd()})}
+
+\item{overwrite}{a \code{logical} if TRUE will replaced the existing file,
+if FALSE a warning message is shown.}
+
+\item{items_max}{a \code{numeric} corresponding how many items will be
+downloaded.}
+
+\item{progress}{a \code{logical} indicating if a progress bar must be
+shown or not. Defaults to \code{TRUE}.}
+
+\item{download_fn}{a \code{function} to handle the list of assets for each item.
+Using this function you can change the hrefs for each asset, as well as use
+another request verb, such as POST.}
+
+\item{...}{config parameters to be passed to \link[httr:GET]{GET},
+such as \link[httr:add_headers]{add_headers} or
+\link[httr:set_cookies]{set_cookies}. Used in \code{assets_download} function.}
+
+\item{fn}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+use \code{download_fn} parameter instead.}
 
 \item{append_gdalvsi}{a \code{logical}  if true, gdal drivers are
 included in the URL of each asset. The following schemes are supported:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 
-\item{asset_names}{a \code{character} with the assets names to be
-filtered. If \code{NULL} (default) all assets will be returned..}
-
 \item{filter_fn}{a \code{function} that will be used to filter the
 attributes listed in the properties.}
 }
 \value{
-a \code{list} with the attributes of date, bands and paths.
+\itemize{
+\item \code{assets_download()}: returns the same object as the provided item
+(\code{STACItemCollection} or \code{STACItem}), however the \code{href} property points to
+the location where the asset was downloaded
+
+\item \code{assets_url()}: returns a list with \code{href} of each feature.
+
+\item \code{assets_select()}: returns the same object as the provided item
+(\code{STACItemCollection} or \code{STACItem}), however with the selected assets.
+}
 }
 \description{
-This function returns the \code{date}, \code{band} and
-\code{URL} fields for each assets of an \code{STACItemCollection} object.
+These functions provide support to work with \code{STACItemCollection} and
+\code{STACItem} objects.
+
+\itemize{
+\item \code{assets_download()}: Downloads the assets provided by the STAC API.
+
+\item \code{assets_url()}: Returns a list with href of each feature.
 For the URL you can add the GDAL library drivers for the following schemes:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
+
+\item \code{assets_select()}: Selects the assets of each feature by its name.
+}
 }
 \examples{
 \dontrun{
- # STACItemCollection object
+ # assets_download function
+ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+   stac_search(collections = "CB4_64_16D_STK-1",
+               datetime = "2019-06-01/2019-08-01") \%>\%
+   stac_search() \%>\%
+   get_request() \%>\%
+   assets_download(asset_names = "thumbnail", output_dir = tempdir())
+}
+
+\dontrun{
+ # assets_url function
  stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
   stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
          datetime = "2017-08-01/2018-03-01",
@@ -57,4 +147,18 @@ HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
  stac_item \%>\% assets_url()
 }
 
+\dontrun{
+ # assets_select function
+ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+         datetime = "2017-08-01/2018-03-01",
+         bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
+  get_request() \%>\% items_fetch(progress = FALSE)
+
+ stac_item \%>\% assets_select(asset_names = "NDVI")
+}
+
+}
+\seealso{
+\code{\link[=stac_search]{stac_search()}}, \code{\link[=items]{items()}}, \code{\link[=get_request]{get_request()}}
 }
