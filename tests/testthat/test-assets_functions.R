@@ -212,12 +212,12 @@ testthat::test_that("assets functions", {
     # assets_url----------------------------------------------------------
     testthat::expect_equal(
       object =  class(assets_url(stac_items)),
-      expected = "character"
+      expected = "list"
     )
 
     testthat::expect_equal(
       object = class(assets_url(stac_item)),
-      expected = "character"
+      expected = "list"
     )
 
     testthat::expect_equal(
