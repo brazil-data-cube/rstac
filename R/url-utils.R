@@ -86,3 +86,26 @@ format_bbox <- function(bbox) {
     return(paste(c("xmin:", "ymin:", "zmin:", "xmax:", "ymax:", "zmax:"),
                  sprintf("%.5f", bbox), collapse = ", "))
 }
+
+asset_download <- function(item, output_dir, overwrite, ..., download_fn = NULL) {
+  item[["assets"]] <- lapply(item[["assets"]], function(asset) {
+
+    if (!is.null(download_fn))
+      return(download_fn(asset))
+
+    # create a full path name
+    file_name <- gsub(".*/([^?]*)\\??.*$", "\\1", asset$href)
+    out_file <- paste0(output_dir, "/", file_name)
+
+    make_get_request(
+      url = asset$href,
+      httr::write_disk(path = out_file, overwrite = overwrite),
+      ...,
+      error_msg = "Error while downloading"
+    )
+    asset$href <- out_file
+
+    asset
+  })
+  return(item)
+}
