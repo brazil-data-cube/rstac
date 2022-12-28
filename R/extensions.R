@@ -125,6 +125,9 @@ parse_params <- function(q, params) {
 #' @param content_types a `character` vector with all acceptable
 #' responses' content type.
 #'
+#' @param key_message  a `character` vector with the JSON keys to show the
+#' requested API message.
+#'
 #' @return
 #' The `content_response()` function returns a `list` data structure
 #' representing the JSON file received in HTTP response
