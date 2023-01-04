@@ -34,9 +34,8 @@ token that will be used in the href.
               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
   get_request()
 
- # signing each item href
+ # signing each asset href
  stac_obj \%>\% items_sign(sign_fn = sign_planetary_computer())
-
 
  # example of access to collections that require authentication
  stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
@@ -45,6 +44,7 @@ token that will be used in the href.
                datetime = "2019-01-01/2019-01-28") \%>\%
    post_request()
 
+ # signing each asset href
  stac_obj \%>\% items_sign(
    sign_fn = sign_planetary_computer(
      headers = c("Ocp-Apim-Subscription-Key" = "your-mpc-token")
