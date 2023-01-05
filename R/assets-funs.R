@@ -280,8 +280,10 @@ assets_select.STACItem <- function(items,
                                    asset_names = NULL,
                                    filter_fn = NULL, ...) {
   if (!is.null(asset_names)) {
-    if (!all(asset_names %in% items_assets(items)))
-      .error("Invalid 'asset_names' parameter.")
+    assets_in_items <- asset_names %in% items_assets(items)
+    if (!all(assets_in_items))
+      .error("There is no item with asset(s) '%s'.",
+             paste(asset_names[!assets_in_items], collapse = ", "))
     items[["assets"]] <- items[["assets"]][asset_names]
   }
 
@@ -299,10 +301,12 @@ assets_select.STACItem <- function(items,
 assets_select.STACItemCollection <- function(items,
                                              asset_names = NULL,
                                              filter_fn = NULL,
-                                             empty_assets = TRUE) {
+                                             keep_empty_items = TRUE) {
   if (!is.null(asset_names)) {
-    if (!all(asset_names %in% items_assets(items)))
-      .error("Invalid 'asset_names' parameter.")
+    assets_in_items <- asset_names %in% items_assets(items)
+    if (!all(assets_in_items))
+      .error("There is no item with asset(s) '%s'.",
+             paste(asset_names[!assets_in_items], collapse = ", "))
 
     items[["features"]] <- lapply(items[["features"]], function(item) {
       asset_names <- intersect(names(item[["assets"]]), asset_names)
@@ -320,14 +324,15 @@ assets_select.STACItemCollection <- function(items,
   }
 
   if (!is.null(asset_names) || !is.null(filter_fn)) {
-    assets_empty <- vapply(items_reap(items, field = "assets"), length,
-           FUN.VALUE = integer(1), USE.NAMES = FALSE) == 0
+    empty_assets <- items_empty_assets(items)
 
-    if (!empty_assets) {
-      items[["features"]] <- items[["features"]][!assets_empty]
-    } else if (any(assets_empty)) {
-      message("Some items were left with empty assets. To remove them, ",
-              "set parameter `empty_assets = FALSE`.")
+    if (!keep_empty_items) {
+      items[["features"]] <- items[["features"]][!empty_assets]
+    } else if (any(empty_assets) && missing(keep_empty_items)) {
+      .warning(paste(
+        "Some items were left with empty assets. To remove them,",
+        "set parameter `keep_empty_items = FALSE`."
+      ))
     }
   }
   return(items)
@@ -401,4 +406,10 @@ assets_rename.STACItemCollection <- function(items, names_fn = NULL, ...) {
     })
   }
   return(items)
+}
+
+items_empty_assets <- function(items) {
+  return(vapply(items_reap(items, field = "assets"), length,
+                FUN.VALUE = integer(1), USE.NAMES = FALSE) == 0)
+
 }
