@@ -672,16 +672,18 @@ items_fields.STACItem <- function(items, field = NULL, ...) {
     )
     field = c(field, unlist(dots, use.names = FALSE))
   }
-  if (length(field) == 0)
-    return(names(items))
-  names(items[[field]])
+  if (length(field) == 0) {
+    fields <- names(items)
+  } else {
+    fields <- names(items[[field]])
+  }
+  return(sort(fields))
 }
 
 #' @rdname items_functions
 #'
 #' @export
 items_sign <- function(items, sign_fn = NULL) {
-
   UseMethod("items_sign", items)
 }
 
