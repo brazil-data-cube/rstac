@@ -281,44 +281,107 @@ assets_select.STACItem <- function(items,
 #' @export
 assets_select.STACItemCollection <- function(items,
                                              asset_names = NULL,
-                                             filter_fn = NULL) {
-  if (!is.null(asset_names)) {
-    if (!all(asset_names %in% items_assets(items, simplify = TRUE)))
-      .error("Invalid 'asset_names' parameter.")
-
-    items$features <- lapply(items$features, function(item) {
-      item$assets <- item$assets[asset_names]
-      item
-    })
-  }
-
-  if (!is.null(filter_fn)) {
-    items$features <- lapply(items$features, function(item) {
-      sel <- vapply(item$assets, filter_fn, logical(1))
-      item$assets <- item$assets[sel]
-      item
-    })
-  }
-
-  items
-}
-
-#' @rdname assets_function
-#'
-#' @export
-assets_select.STACItem <- function(items,
-                                   asset_names = NULL,
-                                   filter_fn = NULL) {
+                                             filter_fn = NULL,
+                                             empty_assets = TRUE) {
   if (!is.null(asset_names)) {
     if (!all(asset_names %in% items_assets(items)))
       .error("Invalid 'asset_names' parameter.")
-    items$assets <- items$assets[asset_names]
+
+    items[["features"]] <- lapply(items[["features"]], function(item) {
+      asset_names <- intersect(names(item[["assets"]]), asset_names)
+      item[["assets"]] <- item[["assets"]][asset_names]
+      return(item)
+    })
   }
 
   if (!is.null(filter_fn)) {
-    sel <- vapply(items$assets, filter_fn, logical(1))
-    items$assets <- items$assets[sel]
+    items[["features"]] <- lapply(items[["features"]], function(item) {
+      sel <- vapply(item[["assets"]], filter_fn, logical(1))
+      item[["assets"]] <- item[["assets"]][sel]
+      return(item)
+    })
   }
 
-  items
+  if (!is.null(asset_names) || !is.null(filter_fn)) {
+    assets_empty <- vapply(items_reap(items, field = "assets"), length,
+           FUN.VALUE = integer(1), USE.NAMES = FALSE) == 0
+
+    if (!empty_assets) {
+      items[["features"]] <- items[["features"]][!assets_empty]
+    } else if (any(assets_empty)) {
+      message("Some items were left with empty assets. To remove them, ",
+              "set parameter `empty_assets = FALSE`.")
+    }
+  }
+  return(items)
+}
+
+#' @export
+assets_rename <- function(items, names_fn = NULL, ...) {
+  if (!is.null(names_fn) && !is.function(names_fn)) {
+    .error("Parameter 'names_fn' must be a function.")
+  }
+  UseMethod("assets_rename", items)
+}
+
+#' @export
+assets_rename.STACItem <- function(items, names_fn = NULL, ...) {
+  dots <- c(...)
+  if (!all(nzchar(names(dots)))) {
+    .error("Renaming parameters must be named.")
+  }
+
+  if (length(dots) > 0) {
+    asset_names <- names(items[["assets"]])
+    asset_names[asset_names %in% names(dots)] <-
+      unname(dots[asset_names[asset_names %in% names(dots)]])
+    names(items[["assets"]]) <- asset_names
+  }
+
+  if (!is.null(names_fn)) {
+    asset_names <- names(items[["assets"]])
+
+    new_names <- vapply(items[["assets"]], names_fn,
+                        FUN.VALUE = character(1), USE.NAMES = TRUE)
+    new_names <- new_names[nzchar(new_names)]
+
+    asset_names[asset_names %in% names(new_names)] <-
+      unname(new_names[asset_names[asset_names %in% names(new_names)]])
+    names(items[["assets"]]) <- asset_names
+  }
+  return(items)
+}
+
+#' @export
+assets_rename.STACItemCollection <- function(items, names_fn = NULL, ...) {
+  dots <- c(...)
+  if (!all(nzchar(names(dots)))) {
+    .error("Renaming parameters must be named.")
+  }
+
+  if (length(dots) > 0) {
+    items[["features"]] <- lapply(items[["features"]], function(feature) {
+      asset_names <- names(feature[["assets"]])
+      asset_names[asset_names %in% names(dots)] <-
+        unname(dots[asset_names[asset_names %in% names(dots)]])
+      names(feature[["assets"]]) <- asset_names
+      return(feature)
+    })
+  }
+
+  if (!is.null(names_fn)) {
+    items[["features"]] <- lapply(items[["features"]], function(feature) {
+      asset_names <- names(feature[["assets"]])
+
+      new_names <- vapply(feature[["assets"]], names_fn,
+                          FUN.VALUE = character(1), USE.NAMES = TRUE)
+      new_names <- new_names[nzchar(new_names)]
+
+      asset_names[asset_names %in% names(new_names)] <-
+        unname(new_names[asset_names[asset_names %in% names(new_names)]])
+      names(feature[["assets"]]) <- asset_names
+      return(feature)
+    })
+  }
+  return(items)
 }
