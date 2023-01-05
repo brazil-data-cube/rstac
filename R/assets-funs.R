@@ -47,7 +47,13 @@
 #' @param filter_fn   a `function` that will be used to filter the
 #'  attributes listed in the properties.
 #'
-#' @param ...         config parameters to be passed to [GET][httr::GET],
+#' @param keep_empty_items a `logical` indicating if empty items should be
+#'  kept.
+#'
+#' @param names_fn a `function` used to produce assets names from an
+#'  asset object.
+#'
+#' @param ...      config parameters to be passed to [GET][httr::GET],
 #'  such as [add_headers][httr::add_headers] or
 #'  [set_cookies][httr::set_cookies]. Used in `assets_download` function.
 #'

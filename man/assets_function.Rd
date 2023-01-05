@@ -59,7 +59,12 @@ assets_select(items, asset_names = NULL, filter_fn = NULL, ...)
 
 \method{assets_select}{STACItem}(items, asset_names = NULL, filter_fn = NULL, ...)
 
-\method{assets_select}{STACItemCollection}(items, asset_names = NULL, filter_fn = NULL, empty_assets = TRUE)
+\method{assets_select}{STACItemCollection}(
+  items,
+  asset_names = NULL,
+  filter_fn = NULL,
+  keep_empty_items = TRUE
+)
 }
 \arguments{
 \item{items}{a \code{STACItem} or \code{STACItemCollection} object
@@ -98,6 +103,12 @@ HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 
 \item{filter_fn}{a \code{function} that will be used to filter the
 attributes listed in the properties.}
+
+\item{keep_empty_items}{a \code{logical} indicating if empty items should be
+kept.}
+
+\item{names_fn}{a \code{function} used to produce assets names from an
+asset object.}
 }
 \value{
 \itemize{
