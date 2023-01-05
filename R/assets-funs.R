@@ -245,8 +245,19 @@ assets_url.STACItem <- function(items,
 assets_url.STACItemCollection <- function(items,
                                           asset_names = NULL,
                                           append_gdalvsi = TRUE) {
-  items <- assets_select(items = items, asset_names = asset_names)
-  url <- unlist(lapply(items_assets(items), function(asset_name) {
+  if (is.null(asset_names)) {
+    asset_names <- items_assets(items)
+  }
+  url <- unlist(lapply(asset_names, function(asset_name) {
+    items <- assets_select(items = items,
+                           asset_names = asset_name,
+                           keep_empty_items = TRUE)
+
+    empty_items <- items_empty_assets(items)
+    if (any(empty_items)) {
+      items[["features"]] <- items[["features"]][!empty_items]
+      .warning("Some items does not have asset name '%s'.", asset_name)
+    }
     return(items_reap(items, field = c("assets", asset_name, "href")))
   }))
   if (append_gdalvsi) {
