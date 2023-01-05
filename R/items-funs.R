@@ -430,7 +430,7 @@ items_next.STACItemCollection <- function(items, ...) {
   # prepares next iteration
   items <- content
 
-  items
+  return(items)
 }
 
 #' @rdname items_functions
@@ -451,7 +451,7 @@ items_datetime.STACItem <- function(items) {
 #'
 #' @export
 items_datetime.STACItemCollection <- function(items) {
-  lapply(items$features, `[[`, c("properties", "datetime"))
+  return(lapply(items$features, `[[`, c("properties", "datetime")))
 }
 
 #' @rdname items_functions
@@ -472,30 +472,35 @@ items_bbox.STACItem <- function(items) {
 #'
 #' @export
 items_bbox.STACItemCollection <- function(items) {
-  lapply(items$features, `[[`, c("bbox"))
+  return(lapply(items$features, `[[`, c("bbox")))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets <- function(items, simplify = TRUE) {
+items_assets <- function(items, simplify = deprecated()) {
+  if (!missing(simplify)) {
+    deprec_parameter(
+      deprec_var = "simplify",
+      deprec_version = "0.9.2",
+      msg = "By default, the return will be simplified."
+    )
+  }
   UseMethod("items_assets", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets.STACItem <- function(items, simplify = TRUE) {
-  return(items_fields(items, field = "assets"))
+items_assets.STACItem <- function(items, simplify = deprecated()) {
+  return(items_assets.STACItemCollection(items))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets.STACItemCollection <- function(items, simplify = TRUE) {
-  if (simplify)
-    return(items_fields(items, field = "assets"))
-  lapply(lapply(items$features, `[[`, c("assets")), names)
+items_assets.STACItemCollection <- function(items, simplify = deprecated()) {
+  return(items_fields(items, field = "assets"))
 }
 
 #' @rdname items_functions
@@ -529,7 +534,7 @@ items_filter <- function(items, ..., filter_fn = NULL) {
     items$features <- items$features[sel]
   }
 
-  items
+  return(items)
 }
 
 #' @rdname items_functions
@@ -564,7 +569,7 @@ items_reap.STACItem <- function(items, field = NULL, ...) {
 
   if (all(vapply(values, is.atomic, logical(1))))
     return(unlist(values))
-  values
+  return(values)
 }
 
 #' @rdname items_functions
@@ -590,7 +595,7 @@ items_reap.STACItemCollection <- function(items, field = NULL, ...) {
 
   if (all(vapply(values, is.atomic, logical(1))))
     return(unlist(values))
-  values
+  return(values)
 }
 
 #' @title Utility functions
@@ -642,9 +647,16 @@ items_fields.STACItemCollection <- function(items, field = NULL, ...) {
   }
   if (items_length(items) == 0)
     return(NULL)
-  if (length(field) == 0)
-    return(names(items$features[[1]]))
-  names(items$features[[1]][[field]])
+  if (length(field) == 0) {
+    fields <- lapply(items[["features"]], function(feature) {
+      names(feature)
+    })
+  } else {
+    fields <- lapply(items[["features"]], function(feature) {
+      names(feature[[field]])
+    })
+  }
+  return(sort(unique(unlist(unname(fields)))))
 }
 
 #' @rdname items_functions
@@ -690,13 +702,9 @@ items_sign.STACItemCollection <- function(items, sign_fn = NULL) {
 
   # assign each item obj
   items[["features"]] <- lapply(items[["features"]], function(item){
-
-    item <- sign_fn(item)
-
-    item
+    return(sign_fn(item))
   })
-
-  items
+  return(items)
 }
 
 #' @rdname items_functions
@@ -706,8 +714,5 @@ items_sign.STACItem <- function(items, sign_fn = NULL) {
   if (is.null(sign_fn)) {
     return(items)
   }
-
-  items <- sign_fn(items)
-
-  items
+  return(sign_fn(items))
 }
