@@ -218,66 +218,62 @@ assets_download.STACItemCollection <- function(items,
 #' @rdname assets_function
 #'
 #' @export
-assets_download.STACItem <- function(items,
-                                     asset_names = NULL,
-                                     output_dir = ".",
-                                     overwrite = FALSE,
-                                     items_max = Inf,
-                                     progress  = TRUE,
-                                     download_fn = NULL, ...,
-                                     fn = deprecated()) {
-  if (!missing(fn)) {
-    deprec_parameter(
-      deprec_var = "fn",
-      deprec_version = "0.9.1-6",
-      msg = "Please, use `download_fn` parameter instead."
-    )
-    download_fn <- fn
-  }
-
-  if (!is.null(asset_names))
-    items <- assets_select(items = items, asset_names = asset_names)
-
-  items <- asset_download(
-    item = items,
-    output_dir = output_dir,
-    overwrite = overwrite,
-    fn = download_fn, ...
-  )
-
-  return(items)
-}
-
-#' @rdname assets_function
-#'
-#' @export
-assets_url <- function(items, append_gdalvsi = TRUE) {
+assets_url <- function(items, asset_names = NULL, append_gdalvsi = TRUE) {
   UseMethod("assets_url", items)
 }
 
 #' @rdname assets_function
 #'
 #' @export
-assets_url.STACItemCollection <- function(items, append_gdalvsi = TRUE) {
-  assets_url.STACItem(items = items, append_gdalvsi = append_gdalvsi)
+assets_url.STACItem <- function(items,
+                                asset_names = NULL,
+                                append_gdalvsi = TRUE) {
+  assets_url.STACItemCollection(items = items,
+                                asset_names = asset_names,
+                                append_gdalvsi = append_gdalvsi)
 }
 
 #' @rdname assets_function
 #'
 #' @export
-assets_url.STACItem <- function(items, append_gdalvsi = TRUE) {
-  lapply(items$features, function(feature) {
-    vapply(feature[["assets"]], function(f) {
-      if (append_gdalvsi) gdalvsi_append(f[["href"]]) else f[["href"]]
-    }, FUN.VALUE = character(1), USE.NAMES = FALSE)
-  })
+assets_url.STACItemCollection <- function(items,
+                                          asset_names = NULL,
+                                          append_gdalvsi = TRUE) {
+  items <- assets_select(items = items, asset_names = asset_names)
+  url <- unlist(lapply(items_assets(items), function(asset_name) {
+    return(items_reap(items, field = c("assets", asset_name, "href")))
+  }))
+  if (append_gdalvsi) {
+    url <- gdalvsi_append(url)
+  }
+  return(url)
 }
 
 #' @rdname assets_function
 #'
 #' @export
-assets_select <- function(items, asset_names = NULL, filter_fn = NULL) {
+assets_select <- function(items, asset_names = NULL, filter_fn = NULL, ...) {
   UseMethod("assets_select", items)
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_select.STACItem <- function(items,
+                                   asset_names = NULL,
+                                   filter_fn = NULL, ...) {
+  if (!is.null(asset_names)) {
+    if (!all(asset_names %in% items_assets(items)))
+      .error("Invalid 'asset_names' parameter.")
+    items[["assets"]] <- items[["assets"]][asset_names]
+  }
+
+  if (!is.null(filter_fn)) {
+    sel <- vapply(items[["assets"]], filter_fn, logical(1))
+    items[["assets"]] <- items[["assets"]][sel]
+  }
+
+  return(items)
 }
 
 #' @rdname assets_function
