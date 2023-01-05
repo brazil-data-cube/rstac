@@ -52,9 +52,7 @@
 #' @param progress        a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
-#' @param simplify        a `logical` should return only the assets name of the
-#'  first item? if not a `list` with all assets name will be returned. Default
-#'  is `FALSE`.
+#' @param simplify        `r lifecycle::badge('deprecated')` no side-effect
 #'
 #' @param field           a `character` with the names of the field to
 #'  get the subfields values.
@@ -223,7 +221,6 @@ items_matched.STACItem  <- function(items, matched_field = NULL) {
 #'
 #' @export
 items_matched.STACItemCollection <- function(items, matched_field = NULL) {
-
   matched <- NULL
 
   # try by the matched_field provided by user. This allow users specify a
@@ -248,7 +245,6 @@ items_matched.STACItemCollection <- function(items, matched_field = NULL) {
     if (is.null(matched))
       matched <- items$numberMatched
   }
-
   return(matched)
 }
 
@@ -256,7 +252,6 @@ items_matched.STACItemCollection <- function(items, matched_field = NULL) {
 #'
 #' @export
 items_fetch <- function(items, ...) {
-
   UseMethod("items_fetch", items)
 }
 
@@ -264,7 +259,6 @@ items_fetch <- function(items, ...) {
 #'
 #' @export
 items_fetch.STACItem <- function(items, ...) {
-
   return(items)
 }
 
