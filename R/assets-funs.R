@@ -126,6 +126,39 @@ assets_download <- function(items,
 #' @rdname assets_function
 #'
 #' @export
+assets_download.STACItem <- function(items,
+                                     asset_names = NULL,
+                                     output_dir = ".",
+                                     overwrite = FALSE,
+                                     items_max = Inf,
+                                     progress  = TRUE,
+                                     download_fn = NULL, ...,
+                                     fn = deprecated()) {
+  if (!missing(fn)) {
+    deprec_parameter(
+      deprec_var = "fn",
+      deprec_version = "0.9.1-6",
+      msg = "Please, use `download_fn` parameter instead."
+    )
+    download_fn <- fn
+  }
+
+  if (!is.null(asset_names))
+    items <- assets_select(items = items, asset_names = asset_names)
+
+  items <- asset_download(
+    item = items,
+    output_dir = output_dir,
+    overwrite = overwrite,
+    fn = download_fn, ...
+  )
+
+  return(items)
+}
+
+#' @rdname assets_function
+#'
+#' @export
 assets_download.STACItemCollection <- function(items,
                                                asset_names = NULL,
                                                output_dir = ".",
