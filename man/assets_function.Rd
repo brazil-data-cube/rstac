@@ -3,32 +3,20 @@
 \name{assets_function}
 \alias{assets_function}
 \alias{assets_download}
-\alias{assets_download.STACItemCollection}
 \alias{assets_download.STACItem}
+\alias{assets_download.STACItemCollection}
 \alias{assets_url}
-\alias{assets_url.STACItemCollection}
 \alias{assets_url.STACItem}
+\alias{assets_url.STACItemCollection}
 \alias{assets_select}
-\alias{assets_select.STACItemCollection}
 \alias{assets_select.STACItem}
+\alias{assets_select.STACItemCollection}
 \title{Assets functions}
 \usage{
 assets_download(
   items,
   asset_names = NULL,
   output_dir = getwd(),
-  overwrite = FALSE,
-  items_max = Inf,
-  progress = TRUE,
-  download_fn = NULL,
-  ...,
-  fn = deprecated()
-)
-
-\method{assets_download}{STACItemCollection}(
-  items,
-  asset_names = NULL,
-  output_dir = ".",
   overwrite = FALSE,
   items_max = Inf,
   progress = TRUE,
@@ -49,17 +37,29 @@ assets_download(
   fn = deprecated()
 )
 
-assets_url(items, append_gdalvsi = TRUE)
+\method{assets_download}{STACItemCollection}(
+  items,
+  asset_names = NULL,
+  output_dir = ".",
+  overwrite = FALSE,
+  items_max = Inf,
+  progress = TRUE,
+  download_fn = NULL,
+  ...,
+  fn = deprecated()
+)
 
-\method{assets_url}{STACItemCollection}(items, append_gdalvsi = TRUE)
+assets_url(items, asset_names = NULL, append_gdalvsi = TRUE)
 
-\method{assets_url}{STACItem}(items, append_gdalvsi = TRUE)
+\method{assets_url}{STACItem}(items, asset_names = NULL, append_gdalvsi = TRUE)
 
-assets_select(items, asset_names = NULL, filter_fn = NULL)
+\method{assets_url}{STACItemCollection}(items, asset_names = NULL, append_gdalvsi = TRUE)
 
-\method{assets_select}{STACItemCollection}(items, asset_names = NULL, filter_fn = NULL)
+assets_select(items, asset_names = NULL, filter_fn = NULL, ...)
 
-\method{assets_select}{STACItem}(items, asset_names = NULL, filter_fn = NULL)
+\method{assets_select}{STACItem}(items, asset_names = NULL, filter_fn = NULL, ...)
+
+\method{assets_select}{STACItemCollection}(items, asset_names = NULL, filter_fn = NULL, empty_assets = TRUE)
 }
 \arguments{
 \item{items}{a \code{STACItem} or \code{STACItemCollection} object

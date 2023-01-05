@@ -74,11 +74,11 @@ items_bbox(items)
 
 \method{items_bbox}{STACItemCollection}(items)
 
-items_assets(items, simplify = TRUE)
+items_assets(items, simplify = deprecated())
 
-\method{items_assets}{STACItem}(items, simplify = TRUE)
+\method{items_assets}{STACItem}(items, simplify = deprecated())
 
-\method{items_assets}{STACItemCollection}(items, simplify = TRUE)
+\method{items_assets}{STACItemCollection}(items, simplify = deprecated())
 
 items_filter(items, ..., filter_fn = NULL)
 
@@ -121,9 +121,7 @@ parameter \code{c("meta", "found")}.}
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
-\item{simplify}{a \code{logical} should return only the assets name of the
-first item? if not a \code{list} with all assets name will be returned. Default
-is \code{FALSE}.}
+\item{simplify}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} no side-effect}
 
 \item{filter_fn}{a \code{function} that receives an item that should
 evaluate a \code{logical} value.}
