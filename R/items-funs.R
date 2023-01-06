@@ -781,7 +781,7 @@ items_fields <- function(items, field = NULL, ...) {
 #' @rdname items_functions
 #'
 #' @export
-items_fields.STACItemCollection <- function(items, field = NULL, ...) {
+items_fields.STACItem <- function(items, field = NULL, ...) {
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -791,24 +791,18 @@ items_fields.STACItemCollection <- function(items, field = NULL, ...) {
     )
     field = c(field, unlist(dots, use.names = FALSE))
   }
-  if (items_length(items) == 0)
-    return(NULL)
   if (length(field) == 0) {
-    fields <- lapply(items[["features"]], function(feature) {
-      names(feature)
-    })
+    fields <- names(items)
   } else {
-    fields <- lapply(items[["features"]], function(feature) {
-      names(feature[[field]])
-    })
+    fields <- names(items[[field]])
   }
-  return(sort(unique(unlist(unname(fields)))))
+  return(sort(fields))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_fields.STACItem <- function(items, field = NULL, ...) {
+items_fields.STACItemCollection <- function(items, field = NULL, ...) {
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
