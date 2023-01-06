@@ -6,34 +6,43 @@
 \alias{items_length}
 \alias{items_length.STACItem}
 \alias{items_length.STACItemCollection}
+\alias{items_length.default}
 \alias{items_matched}
 \alias{items_matched.STACItem}
 \alias{items_matched.STACItemCollection}
+\alias{items_matched.default}
 \alias{items_fetch}
-\alias{items_fetch.STACItem}
 \alias{items_fetch.STACItemCollection}
 \alias{items_next}
-\alias{items_next.STACItem}
 \alias{items_next.STACItemCollection}
 \alias{items_datetime}
 \alias{items_datetime.STACItem}
 \alias{items_datetime.STACItemCollection}
+\alias{items_datetime.default}
 \alias{items_bbox}
 \alias{items_bbox.STACItem}
 \alias{items_bbox.STACItemCollection}
+\alias{items_bbox.default}
 \alias{items_assets}
 \alias{items_assets.STACItem}
 \alias{items_assets.STACItemCollection}
+\alias{items_assets.default}
 \alias{items_filter}
+\alias{items_filter.STACItemCollection}
+\alias{items_compact}
+\alias{items_compact.STACItemCollection}
 \alias{items_reap}
 \alias{items_reap.STACItem}
 \alias{items_reap.STACItemCollection}
+\alias{items_reap.default}
 \alias{items_fields}
-\alias{items_fields.STACItemCollection}
 \alias{items_fields.STACItem}
+\alias{items_fields.STACItemCollection}
+\alias{items_fields.default}
 \alias{items_sign}
-\alias{items_sign.STACItemCollection}
 \alias{items_sign.STACItem}
+\alias{items_sign.STACItemCollection}
+\alias{items_sign.default}
 \title{STACItemCollection functions}
 \usage{
 items_group(items, ..., field = NULL, index = NULL)
@@ -44,21 +53,21 @@ items_length(items)
 
 \method{items_length}{STACItemCollection}(items)
 
+\method{items_length}{default}(items)
+
 items_matched(items, matched_field = NULL)
 
 \method{items_matched}{STACItem}(items, matched_field = NULL)
 
 \method{items_matched}{STACItemCollection}(items, matched_field = NULL)
 
-items_fetch(items, ...)
+\method{items_matched}{default}(items, matched_field = NULL)
 
-\method{items_fetch}{STACItem}(items, ...)
+items_fetch(items, ...)
 
 \method{items_fetch}{STACItemCollection}(items, ..., progress = TRUE, matched_field = NULL)
 
 items_next(items, ...)
-
-\method{items_next}{STACItem}(items, ...)
 
 \method{items_next}{STACItemCollection}(items, ...)
 
@@ -68,11 +77,15 @@ items_datetime(items)
 
 \method{items_datetime}{STACItemCollection}(items)
 
+\method{items_datetime}{default}(items)
+
 items_bbox(items)
 
 \method{items_bbox}{STACItem}(items)
 
 \method{items_bbox}{STACItemCollection}(items)
+
+\method{items_bbox}{default}(items)
 
 items_assets(items, simplify = deprecated())
 
@@ -80,25 +93,39 @@ items_assets(items, simplify = deprecated())
 
 \method{items_assets}{STACItemCollection}(items, simplify = deprecated())
 
+\method{items_assets}{default}(items, simplify = deprecated())
+
 items_filter(items, ..., filter_fn = NULL)
 
-items_reap(items, field = NULL, ...)
+\method{items_filter}{STACItemCollection}(items, ..., filter_fn = NULL)
 
-\method{items_reap}{STACItem}(items, field = NULL, ...)
+items_compact(items)
 
-\method{items_reap}{STACItemCollection}(items, field = NULL, ...)
+\method{items_compact}{STACItemCollection}(items)
+
+items_reap(items, field, ...)
+
+\method{items_reap}{STACItem}(items, field, ...)
+
+\method{items_reap}{STACItemCollection}(items, field, ...)
+
+\method{items_reap}{default}(items, field, ...)
 
 items_fields(items, field = NULL, ...)
 
+\method{items_fields}{STACItem}(items, field = NULL, ...)
+
 \method{items_fields}{STACItemCollection}(items, field = NULL, ...)
 
-\method{items_fields}{STACItem}(items, field = NULL, ...)
+\method{items_fields}{default}(items, field = NULL, ...)
 
 items_sign(items, sign_fn = NULL)
 
+\method{items_sign}{STACItem}(items, sign_fn)
+
 \method{items_sign}{STACItemCollection}(items, sign_fn = NULL)
 
-\method{items_sign}{STACItem}(items, sign_fn = NULL)
+\method{items_sign}{default}(items, sign_fn)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
@@ -189,8 +216,8 @@ field of a \code{STACItemCollection} or an \code{STACItem} object.
 \item \code{item_assets()}: returns the assets name from
 \code{STACItemCollection} and \code{STACItem} objects.
 
-\item \code{items_filter()}: selects only items that match some
-criteria.
+\item \code{items_filter()}: selects only items that match some criteria
+(see details section).
 
 \item \code{items_reap()}: extract key values by traversing all items
 in an \code{STACItemCollection} object.
@@ -218,7 +245,19 @@ methods, such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.
 
 \item \code{items_filter()}: ellipsis is used to pass logical
-expressions using keys in \code{properties} field as filter criteria.
+expressions to be evaluated against a \code{STACItem} fields as filter criteria.
+
+\strong{WARNING:} the evaluation of filter expressions changed in \code{rstac} 0.9.2.
+Older versions of \code{rstac} used \code{properties} field to evaluate filter
+expressions. Below, there is an example on how to write expressions in new
+\code{rstac} version:
+
+\if{html}{\out{<div class="sourceCode R">}}\preformatted{# expression in older version
+items_filter(stac_obj, `eo:cloud_cover` < 10)
+# now expressions must refer to properties explicitly
+items_filter(stac_obj, properties$`eo:cloud_cover` < 10)
+items_filter(stac_obj, properties[["eo:cloud_cover"]] < 10)
+}\if{html}{\out{</div>}}
 
 \item \code{items_sign()}: in a near future, ellipsis will be used to append
 key value pairs to url query string of an asset.

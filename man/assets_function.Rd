@@ -8,9 +8,14 @@
 \alias{assets_url}
 \alias{assets_url.STACItem}
 \alias{assets_url.STACItemCollection}
+\alias{assets_url.default}
 \alias{assets_select}
 \alias{assets_select.STACItem}
 \alias{assets_select.STACItemCollection}
+\alias{assets_select.default}
+\alias{assets_rename}
+\alias{assets_rename.STACItem}
+\alias{assets_rename.STACItemCollection}
 \title{Assets functions}
 \usage{
 assets_download(
@@ -55,16 +60,21 @@ assets_url(items, asset_names = NULL, append_gdalvsi = TRUE)
 
 \method{assets_url}{STACItemCollection}(items, asset_names = NULL, append_gdalvsi = TRUE)
 
-assets_select(items, asset_names = NULL, filter_fn = NULL, ...)
+\method{assets_url}{default}(items, asset_names = NULL, append_gdalvsi = TRUE)
 
-\method{assets_select}{STACItem}(items, asset_names = NULL, filter_fn = NULL, ...)
+assets_select(items, asset_names = NULL, ..., select_fn = NULL)
 
-\method{assets_select}{STACItemCollection}(
-  items,
-  asset_names = NULL,
-  filter_fn = NULL,
-  keep_empty_items = TRUE
-)
+\method{assets_select}{STACItem}(items, asset_names = NULL, ..., select_fn = NULL)
+
+\method{assets_select}{STACItemCollection}(items, asset_names = NULL, ..., select_fn = NULL)
+
+\method{assets_select}{default}(items, asset_names = NULL, ..., select_fn = NULL)
+
+assets_rename(items, rename = NULL, names_fn = NULL, ...)
+
+\method{assets_rename}{STACItem}(items, mapper = NULL, ...)
+
+\method{assets_rename}{STACItemCollection}(items, mapper = NULL, ...)
 }
 \arguments{
 \item{items}{a \code{STACItem} or \code{STACItemCollection} object
@@ -101,14 +111,14 @@ use \code{download_fn} parameter instead.}
 included in the URL of each asset. The following schemes are supported:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 
+\item{names_fn}{a \code{function} used to produce assets names from an
+asset object.}
+
 \item{filter_fn}{a \code{function} that will be used to filter the
 attributes listed in the properties.}
 
 \item{keep_empty_items}{a \code{logical} indicating if empty items should be
 kept.}
-
-\item{names_fn}{a \code{function} used to produce assets names from an
-asset object.}
 }
 \value{
 \itemize{
@@ -116,10 +126,13 @@ asset object.}
 (\code{STACItemCollection} or \code{STACItem}), however the \code{href} property points to
 the location where the asset was downloaded
 
-\item \code{assets_url()}: returns a list with \code{href} of each feature.
+\item \code{assets_url()}: returns a character vector with \code{href} of each feature.
 
 \item \code{assets_select()}: returns the same object as the provided item
 (\code{STACItemCollection} or \code{STACItem}), however with the selected assets.
+
+\item \code{assets_rename()}: returns the same object as the provided item
+(\code{STACItemCollection} or \code{STACItem}), however with the assets renamed.
 }
 }
 \description{
@@ -129,11 +142,16 @@ These functions provide support to work with \code{STACItemCollection} and
 \itemize{
 \item \code{assets_download()}: Downloads the assets provided by the STAC API.
 
-\item \code{assets_url()}: Returns a list with href of each feature.
+\item \code{assets_url()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Returns a list
+with href of each feature.
 For the URL you can add the GDAL library drivers for the following schemes:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 
-\item \code{assets_select()}: Selects the assets of each feature by its name.
+\item \code{assets_select()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Selects the
+assets of each feature by its name.
+
+\item \code{assets_rename()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Rename each
+asset feature name by an expression or a function.
 }
 }
 \examples{
@@ -167,6 +185,27 @@ HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
   get_request() \%>\% items_fetch(progress = FALSE)
 
  stac_item \%>\% assets_select(asset_names = "NDVI")
+}
+
+\dontrun{
+items <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
+  stac_search(collections = c("landsat-8-c2-l2", "sentinel-2-l2a"),
+              bbox = c(xmin = -64.85976089, ymin = -10.49199395,
+                       xmax = -64.79272527, ymax =-10.44736091),
+              datetime = "2019-01-01/2019-06-28",
+              limit = 50) \%>\%
+  post_request()
+
+# Selects assets by name
+items <- assets_select(items, c("B02", "B03", "SR_B1", "SR_B2"))
+# Renames the landsat assets
+items <- assets_rename(items,
+                       SR_B1 = "blue",
+                       SR_B2 = "green",
+                       B02   = "blue",
+                       B03   = "green")
+# Get the assets url's
+assets_url(items)
 }
 
 }

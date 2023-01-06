@@ -27,6 +27,7 @@ all request parameters to be passed to \code{get_request()} or
 \code{post_request()} function.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 \code{ext_filter()} implements Common Query Language (CQL2) filter extension
 on \code{rstac}. This extension expands the filter capabilities providing a
 query language to construct more complex expressions. CQL2 is an OGC
