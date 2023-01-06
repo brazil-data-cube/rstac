@@ -282,9 +282,9 @@ assets_url.STACItemCollection <- function(items,
                            asset_names = asset_name,
                            keep_empty_items = TRUE)
 
-    empty_items <- items_empty_assets(items)
-    if (any(empty_items)) {
-      items[["features"]] <- items[["features"]][!empty_items]
+    not_empty <- has_assets(items)
+    if (!all(not_empty)) {
+      items$features <- items$features[not_empty]
       .warning("Some items does not have asset name '%s'.", asset_name)
     }
     return(items_reap(items, field = c("assets", asset_name, "href")))
@@ -298,7 +298,12 @@ assets_url.STACItemCollection <- function(items,
 #' @rdname assets_function
 #'
 #' @export
-assets_select <- function(items, asset_names = NULL, filter_fn = NULL, ...) {
+assets_url.default <- assets_url.STACItem
+
+#' @rdname assets_function
+#'
+#' @export
+assets_select <- function(items, asset_names = NULL, ..., select_fn = NULL) {
   UseMethod("assets_select", items)
 }
 
