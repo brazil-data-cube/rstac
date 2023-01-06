@@ -27,8 +27,8 @@
 #' \item `item_assets()`: returns the assets name from
 #' `STACItemCollection` and `STACItem` objects.
 #'
-#' \item `items_filter()`: selects only items that match some
-#' criteria.
+#' \item `items_filter()`: selects only items that match some criteria
+#'  (see details section).
 #'
 #' \item `items_reap()`: extract key values by traversing all items
 #' in an `STACItemCollection` object.
@@ -79,7 +79,19 @@
 #' [set_cookies][httr::set_cookies].
 #'
 #' \item `items_filter()`: ellipsis is used to pass logical
-#' expressions using keys in `properties` field as filter criteria.
+#' expressions to be evaluated against a `STACItem` fields as filter criteria.
+#'
+#' **WARNING:** the evaluation of filter expressions changed in `rstac` 0.9.2.
+#' Older versions of `rstac` used `properties` field to evaluate filter
+#' expressions. Below, there is an example on how to write expressions in new
+#' `rstac` version:
+#' ```R
+#' # expression in older version
+#' items_filter(stac_obj, `eo:cloud_cover` < 10)
+#' # now expressions must refer to properties explicitly
+#' items_filter(stac_obj, properties$`eo:cloud_cover` < 10)
+#' items_filter(stac_obj, properties[["eo:cloud_cover"]] < 10)
+#' ```
 #'
 #' \item `items_sign()`: in a near future, ellipsis will be used to append
 #' key value pairs to url query string of an asset.
