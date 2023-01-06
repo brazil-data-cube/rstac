@@ -1,6 +1,7 @@
 #' @title Filter extension
 #'
 #' @description
+#' `r lifecycle::badge('experimental')`
 #' `ext_filter()` implements Common Query Language (CQL2) filter extension
 #' on `rstac`. This extension expands the filter capabilities providing a
 #' query language to construct more complex expressions. CQL2 is an OGC
