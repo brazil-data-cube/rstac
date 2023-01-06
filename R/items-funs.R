@@ -565,11 +565,7 @@ items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
           ), deparse(dots[[i]]))
           show_warning <- FALSE
         }
-
-        sel <- vapply(
-          items$features, eval_filter_expr, expr = dots[[i]],
-          FUN.VALUE = logical(1), USE.NAMES = FALSE
-        )
+        sel <- map_lgl(items$features, eval_filter_expr, expr = dots[[i]])
       }
       items$features <- items$features[sel]
     }
@@ -587,11 +583,7 @@ items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
         "function."
       ))
     }
-
-    sel <- vapply(
-      items$features, eval_filter_fn, filter_fn = filter_fn,
-      FUN.VALUE = logical(1), USE.NAMES = FALSE
-    )
+    sel <- map_lgl(items$features, eval_filter_fn, filter_fn = filter_fn)
     items$features <- items$features[sel]
   }
   return(items)
@@ -663,7 +655,7 @@ eval_filter_fn <- function(f, filter_fn) {
 # NOTE: this function will be removed in next versions.
 # We will no longer support the old way of filter evaluation
 check_old_expression <- function(items, expr) {
-  val <- vapply(items$features, function(f) {
+  val <- map_lgl(items$features, function(f) {
     f$properties$properties <- NULL
     tryCatch({
       eval(expr, envir = f$properties,
@@ -672,14 +664,14 @@ check_old_expression <- function(items, expr) {
     }, error = function(e) {
       return(FALSE)
     })
-  }, FUN.VALUE = logical(1), USE.NAMES = FALSE)
+  })
   return(any(val))
 }
 
 # NOTE: this function will be removed in next versions.
 # We will no longer support the old way of filter evaluation
 check_old_fn <- function(items, fn) {
-  val <- vapply(items$features, function(f) {
+  val <- map_lgl(items$features, function(f) {
     f$properties$properties <- NULL
     tryCatch({
       fn(f$properties)
@@ -687,7 +679,7 @@ check_old_fn <- function(items, fn) {
     }, error = function(e) {
       return(FALSE)
     })
-  }, FUN.VALUE = logical(1), USE.NAMES = FALSE)
+  })
   return(any(val))
 }
 

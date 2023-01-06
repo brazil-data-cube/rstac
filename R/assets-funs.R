@@ -343,10 +343,6 @@ assets_select.STACItem <- function(items,
   return(items)
 }
 
-map_lgl <- function(x, fn, ...) {
-  vapply(x, fn, ..., FUN.VALUE = logical(1), USE.NAMES = FALSE)
-}
-
 #' @rdname assets_function
 #'
 #' @export
@@ -380,9 +376,7 @@ assets_rename <- function(items, rename = NULL, names_fn = NULL, ...) {
 assets_rename.STACItem <- function(items, mapper = NULL, ...) {
   dots <- list(...)
   if (is.function(mapper)) {
-    new_names <- as.list(vapply(
-      items$assets, mapper, FUN.VALUE = character(1), USE.NAMES = TRUE
-    ))
+    new_names <- as.list(map_chr(items$assets, mapper, use_names = TRUE))
   } else {
     new_names <- as.list(mapper)
   }
@@ -429,8 +423,7 @@ has_assets.STACItem <- function(items) {
 
 #' @export
 has_assets.STACItemCollection <- function(items) {
-  vapply(items$features, has_assets, FUN.VALUE = logical(1),
-         USE.NAMES = FALSE)
+  map_lgl(items$features, has_assets)
 }
 
 #' @export

@@ -34,6 +34,14 @@ foreach_item <- function(items, fn, ...) {
   return(items)
 }
 
+map_lgl <- function(x, fn, ..., use_names = FALSE) {
+  vapply(x, fn, FUN.VALUE = logical(1), ..., USE.NAMES = use_names)
+}
+
+map_chr <- function(x, fn, ..., use_names = FALSE) {
+  vapply(x, fn, FUN.VALUE = character(1), ..., USE.NAMES = use_names)
+}
+
 # nocov start
 links_filter <- function(x, ..., filter_fn = NULL) {
 
@@ -52,9 +60,9 @@ links_filter <- function(x, ..., filter_fn = NULL) {
 
     for (i in seq_along(dots)) {
 
-      sel <- vapply(x$links, function(l) {
+      sel <- map_lgl(x$links, function(l) {
         eval(dots[[i]], envir = l)
-      }, logical(1))
+      })
 
       x$links <- x$links[sel]
     }
@@ -62,16 +70,15 @@ links_filter <- function(x, ..., filter_fn = NULL) {
 
   if (!is.null(filter_fn)) {
 
-    sel <- vapply(x$links, function(l) {
+    sel <- map_lgl(x$links, function(l) {
       filter_fn(l$links)
-    }, logical(1))
+    })
 
     x$links <- x$links[sel]
   }
 
   x$links
 }
-
 
 .field_filter <- function(x, field, ..., filter_fn = NULL) {
 
@@ -89,9 +96,9 @@ links_filter <- function(x, ..., filter_fn = NULL) {
 
     for (i in seq_along(dots)) {
 
-      sel <- vapply(x, function(xi) {
+      sel <- map_lgl(x, function(xi) {
         eval(dots[[i]], envir = xi)
-      }, logical(1))
+      })
 
       x <- x[sel]
     }
@@ -99,9 +106,9 @@ links_filter <- function(x, ..., filter_fn = NULL) {
 
   if (!is.null(filter_fn)) {
 
-    sel <- vapply(x, function(xi) {
+    sel <- map_lgl(x, function(xi) {
       filter_fn(xi)
-    }, logical(1))
+    })
 
     x <- x[sel]
   }
@@ -141,10 +148,9 @@ links_filter <- function(x, ..., filter_fn = NULL) {
   }
 
   if (!is.null(apply_fn)) {
-
-    value_fn <- vapply(x, function(xi) {
+    value_fn <- map_lgl(x, function(xi) {
       apply_fn(xi)
-    }, logical(1))
+    })
 
     x <- x[value_fn]
   }

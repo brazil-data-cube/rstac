@@ -311,7 +311,7 @@ to_wkt <- function(x) {
 }
 
 wkt_collection <- function(x) {
-  paste0(vapply(x[["geometries"]], to_wkt, character(1)), collapse = ",")
+  paste0(map_chr(x[["geometries"]], to_wkt), collapse = ",")
 }
 
 wkt_coord0 <- function(x) {
@@ -325,22 +325,22 @@ wkt_coord1 <- function(x) {
 
 wkt_coord2 <- function(x) {
   paste0("(",
-         vapply(x[["coordinates"]], function(y) {
+         map_chr(x[["coordinates"]], function(y) {
            paste(apply(y, 1, paste, collapse = " ", simplify = TRUE),
                  collapse = ",")
-         }, character(1)), ")", collapse = ","
+         }), ")", collapse = ","
   )
 }
 
 wkt_coord3 <- function(x) {
   paste0("(",
-         vapply(x[["coordinates"]], function(p) {
+         map_chr(x[["coordinates"]], function(p) {
            paste0("(",
-                  vapply(p, function(y) {
+                  map_chr(p, function(y) {
                     paste(apply(y, 1, paste, collapse = " ", simplify = TRUE),
                           collapse = ",")
-                  }, character(1)), ")", collapse = ","
+                  }), ")", collapse = ","
            )
-         }, character(1)), ")", collapse = ",")
+         }), ")", collapse = ",")
 
 }

@@ -32,11 +32,8 @@ make_get_request <- function(url, ..., error_msg = "Error while requesting") {
   querystring_spplited <- querystring_spplited[nzchar(querystring_spplited)]
   values <- lapply(querystring_spplited,
                    function(x) regmatches(x, regexpr("=", x), invert = TRUE)[[1]])
-
-
   params <- lapply(values, `[[`, 2)
-  names(params) <- vapply(values, `[[`, 1, FUN.VALUE = character(1))
-
+  names(params) <- map_chr(values, `[[`, 1)
   return(params)
 }
 
@@ -61,7 +58,7 @@ gdalvsi_switch <- function(url, ...) {
 }
 
 gdalvsi_append <- function(url) {
-  vapply(url, function(x) {
+  map_chr(url, function(x) {
     gdalvsi_switch(
       x,
       https = , http = paste("/vsicurl", x, sep = "/"),
@@ -69,7 +66,7 @@ gdalvsi_append <- function(url) {
       gs = paste("/vsigs", gsub("^gs://", "", x), sep = "/"),
       url
     )
-  }, character(1), USE.NAMES = FALSE)
+  })
 }
 
 # bbox is a numeric vector provided as four or six numbers, depending on

@@ -36,10 +36,10 @@ is_literal <- function(x) {
   switch(typeof(x),
          character = , double = , integer = ,
          logical =   TRUE,
-         list = all(vapply(x, is_literal, TRUE)),
+         list = all(map_lgl(x, is_literal)),
          call =      {
            if (is_call_vec(x))
-             all(vapply(call_args(x), is_literal, TRUE))
+             all(map_lgl(call_args(x), is_literal, TRUE))
            else
              FALSE
          },
