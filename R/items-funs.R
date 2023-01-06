@@ -511,54 +511,190 @@ items_assets <- function(items, simplify = deprecated()) {
 #'
 #' @export
 items_assets.STACItem <- function(items, simplify = deprecated()) {
-  return(items_assets.STACItemCollection(items))
-}
-
-#' @rdname items_functions
-#'
-#' @export
-items_assets.STACItemCollection <- function(items, simplify = deprecated()) {
   return(items_fields(items, field = "assets"))
 }
 
 #' @rdname items_functions
 #'
 #' @export
+items_assets.STACItemCollection <- function(items, simplify = deprecated()) {
+  return(items_assets.STACItem(items))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_assets.default <- items_assets.STACItem
+
+#' @rdname items_functions
+#'
+#' @export
 items_filter <- function(items, ..., filter_fn = NULL) {
+  UseMethod("items_filter", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
   # check items parameter
   check_subclass(items, "STACItemCollection")
 
   dots <- unquote(
-    expr = substitute(list(...), env = environment())[-1],
-    env =  parent.frame()
+    expr = substitute(list(...), env = environment())[-1], env =  parent.frame()
   )
 
   if (length(dots) > 0) {
     if (!is.null(names(dots)))
-      .error("Invalid filter arguments.")
+      .error("Filter expressions cannot be named.")
 
+    show_warning <- TRUE
     for (i in seq_along(dots)) {
-      sel <- vapply(items$features, function(f) {
-        eval(dots[[i]], envir = f$properties)
-      }, logical(1))
+      if (is.logical(dots[[i]]) || is.numeric(dots[[i]])) {
+        sel <- dots[[i]]
+      } else if (is.call(dots[[i]]) || is.name(dots[[i]])) {
+        if (show_warning && check_old_expression(items, dots[[i]])) {
+          # NOTE: this warning will be removed in next versions. We will no
+          # longer support the old way of filter evaluation
+          .warning(paste(
+            "In version 0.9.2, rstac changed how filter expressions are",
+            "evaluated. In future versions, the expression '%s' will be",
+            "evaluated against each feature in items intead of `properties`",
+            "field.\nSee ?items_filter for more details on how to change",
+            "your expression."
+          ), deparse(dots[[i]]))
+          show_warning <- FALSE
+        }
+
+        sel <- vapply(
+          items$features, eval_filter_expr, expr = dots[[i]],
+          FUN.VALUE = logical(1), USE.NAMES = FALSE
+        )
+      }
       items$features <- items$features[sel]
     }
   }
 
   if (!is.null(filter_fn)) {
-    sel <- vapply(items$features, function(f) {
-      filter_fn(f$properties)
-    }, logical(1))
+    if (check_old_fn(items, filter_fn)) {
+      # NOTE: this warning will be removed in next versions. We will no
+      # longer support the old way of filter evaluation
+      .warning(paste(
+        "In version 0.9.2, rstac changed how filter function is",
+        "evaluated. In future versions, the `filter_fn` parameter will be",
+        "evaluated against each feature in items instead of `properties`",
+        "field.\nSee ?items_filter for more details on how to change your",
+        "function."
+      ))
+    }
+
+    sel <- vapply(
+      items$features, eval_filter_fn, filter_fn = filter_fn,
+      FUN.VALUE = logical(1), USE.NAMES = FALSE
+    )
     items$features <- items$features[sel]
   }
-
   return(items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_reap <- function(items, field = NULL, ...) {
+items_compact <- function(items) {
+  UseMethod("items_compact", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_compact.STACItemCollection <- function(items) {
+  items_filter(items, filter_fn = has_assets)
+}
+
+eval_filter_expr <- function(f, expr) {
+  # NOTE: this tryCatch will be removed in next versions.
+  # We will no longer support the old way of filter evaluation
+  val <- tryCatch({
+    f$properties$properties <- NULL
+    eval(expr, envir = f$properties,
+         enclos = parent.env(parent.frame()))
+  }, error = function(e) {
+    return(NULL)
+  })
+
+  if (length(val) == 0) {
+    val <- tryCatch({
+      eval(expr, envir = f, enclos = parent.env(parent.frame()))
+    }, error = function(e) {
+      return(FALSE)
+    })
+  }
+
+  if (length(val) == 0) {
+    val <- FALSE
+  }
+  return(val)
+}
+
+eval_filter_fn <- function(f, filter_fn) {
+  # NOTE: this tryCatch will be removed in next versions.
+  # We will no longer support the old way of filter evaluation
+  val <- tryCatch({
+    f$properties$properties <- NULL
+    filter_fn(f$properties)
+  }, error = function(e) {
+    return(NULL)
+  })
+
+  if (length(val) == 0) {
+    val <- tryCatch({
+      filter_fn(f)
+    }, error = function(e) {
+      return(FALSE)
+    })
+  }
+
+  if (length(val) == 0) {
+    val <- FALSE
+  }
+  return(val)
+}
+
+# NOTE: this function will be removed in next versions.
+# We will no longer support the old way of filter evaluation
+check_old_expression <- function(items, expr) {
+  val <- vapply(items$features, function(f) {
+    f$properties$properties <- NULL
+    tryCatch({
+      eval(expr, envir = f$properties,
+           enclos = parent.env(parent.frame()))
+      TRUE
+    }, error = function(e) {
+      return(FALSE)
+    })
+  }, FUN.VALUE = logical(1), USE.NAMES = FALSE)
+  return(any(val))
+}
+
+# NOTE: this function will be removed in next versions.
+# We will no longer support the old way of filter evaluation
+check_old_fn <- function(items, fn) {
+  val <- vapply(items$features, function(f) {
+    f$properties$properties <- NULL
+    tryCatch({
+      fn(f$properties)
+      TRUE
+    }, error = function(e) {
+      return(FALSE)
+    })
+  }, FUN.VALUE = logical(1), USE.NAMES = FALSE)
+  return(any(val))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_reap <- function(items, field, ...) {
   if (items_length(items) == 0) return(NULL)
   UseMethod("items_reap", items)
 }
