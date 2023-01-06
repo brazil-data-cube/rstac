@@ -341,13 +341,6 @@ items_next <- function(items, ...) {
 #' @rdname items_functions
 #'
 #' @export
-items_next.STACItem <- function(items, ...) {
-  return(items)
-}
-
-#' @rdname items_functions
-#'
-#' @export
 items_next.STACItemCollection <- function(items, ...) {
   matched <- items_matched(items)
 
