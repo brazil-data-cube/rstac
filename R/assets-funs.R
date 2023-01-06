@@ -7,11 +7,16 @@
 #' \itemize{
 #' \item `assets_download()`: Downloads the assets provided by the STAC API.
 #'
-#' \item `assets_url()`: Returns a list with href of each feature.
+#' \item `assets_url()`: `r lifecycle::badge('experimental')` Returns a list
+#'  with href of each feature.
 #'  For the URL you can add the GDAL library drivers for the following schemes:
 #'  HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 #'
-#' \item `assets_select()`: Selects the assets of each feature by its name.
+#' \item `assets_select()`: `r lifecycle::badge('experimental')` Selects the
+#'  assets of each feature by its name.
+#'
+#' \item `assets_rename()`: `r lifecycle::badge('experimental')` Rename each
+#'  asset feature name by an expression or a function.
 #' }
 #'
 #' @param items       a `STACItem` or `STACItemCollection` object
@@ -64,10 +69,13 @@
 #' (`STACItemCollection` or `STACItem`), however the `href` property points to
 #' the location where the asset was downloaded
 #'
-#' \item `assets_url()`: returns a list with `href` of each feature.
+#' \item `assets_url()`: returns a character vector with `href` of each feature.
 #'
 #' \item `assets_select()`: returns the same object as the provided item
 #' (`STACItemCollection` or `STACItem`), however with the selected assets.
+#'
+#' \item `assets_rename()`: returns the same object as the provided item
+#' (`STACItemCollection` or `STACItem`), however with the assets renamed.
 #' }
 #'
 #' @examples
@@ -101,6 +109,27 @@
 #'   get_request() %>% items_fetch(progress = FALSE)
 #'
 #'  stac_item %>% assets_select(asset_names = "NDVI")
+#' }
+#'
+#' \dontrun{
+#' items <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+#'   stac_search(collections = c("landsat-8-c2-l2", "sentinel-2-l2a"),
+#'               bbox = c(xmin = -64.85976089, ymin = -10.49199395,
+#'                        xmax = -64.79272527, ymax =-10.44736091),
+#'               datetime = "2019-01-01/2019-06-28",
+#'               limit = 50) %>%
+#'   post_request()
+#'
+#' # Selects assets by name
+#' items <- assets_select(items, c("B02", "B03", "SR_B1", "SR_B2"))
+#' # Renames the landsat assets
+#' items <- assets_rename(items,
+#'                        SR_B1 = "blue",
+#'                        SR_B2 = "green",
+#'                        B02   = "blue",
+#'                        B03   = "green")
+#' # Get the assets url's
+#' assets_url(items)
 #' }
 #'
 #' @seealso
