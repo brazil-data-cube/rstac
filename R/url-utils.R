@@ -88,7 +88,7 @@ format_bbox <- function(bbox) {
 }
 
 asset_download <- function(item, output_dir, overwrite, ..., download_fn = NULL) {
-  item[["assets"]] <- lapply(item[["assets"]], function(asset) {
+  item$assets <- lapply(item$assets, function(asset) {
 
     if (!is.null(download_fn))
       return(download_fn(asset))

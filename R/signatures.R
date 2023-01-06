@@ -87,7 +87,7 @@ sign_bdc <- function(access_token = NULL, ...) {
     if (!exists_token(item) || is_token_expired(item))
       new_token(item)
 
-    item[["assets"]] <- lapply(item[["assets"]], sign_asset,
+    item$assets <- lapply(item$assets, sign_asset,
                                get_token_value(item))
 
     return(item)
@@ -250,7 +250,7 @@ sign_planetary_computer <- function(..., headers = NULL, token_url = NULL) {
   }
 
   sign_item <- function(item) {
-    item[["assets"]] <- lapply(item[["assets"]], sign_asset)
+    item$assets <- lapply(item$assets, sign_asset)
     return(item)
   }
   return(sign_item)

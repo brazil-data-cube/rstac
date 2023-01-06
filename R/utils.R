@@ -29,6 +29,11 @@ deprec_parameter <- function(deprec_var, deprec_version, msg = NULL) {
   )
 }
 
+foreach_item <- function(items, fn, ...) {
+  items$features <- lapply(items$features, fn, ...)
+  return(items)
+}
+
 # nocov start
 links_filter <- function(x, ..., filter_fn = NULL) {
 
