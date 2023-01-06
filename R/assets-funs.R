@@ -311,20 +311,96 @@ assets_select <- function(items, asset_names = NULL, ..., select_fn = NULL) {
 #'
 #' @export
 assets_select.STACItem <- function(items,
-                                   asset_names = NULL,
-                                   filter_fn = NULL, ...) {
+                                   asset_names = NULL, ...,
+                                   select_fn = NULL) {
+  exprs <- unquote(
+    expr = substitute(list(...), env = environment())[-1],
+    env =  parent.frame()
+  )
+
   if (!is.null(asset_names)) {
-    assets_in_items <- asset_names %in% items_assets(items)
-    if (!all(assets_in_items))
-      .error("There is no item with asset(s) '%s'.",
-             paste(asset_names[!assets_in_items], collapse = ", "))
-    items[["assets"]] <- items[["assets"]][asset_names]
+    asset_names <- intersect(names(items$assets), asset_names)
+    items$assets <- items$assets[asset_names]
   }
 
-  if (!is.null(filter_fn)) {
-    sel <- vapply(items[["assets"]], filter_fn, logical(1))
-    items[["assets"]] <- items[["assets"]][sel]
+  if (length(exprs) > 0) {
+    if (!is.null(names(exprs)))
+      .error("Filter expressions cannot be named.")
+
+    for (i in seq_along(exprs)) {
+      sel <- map_lgl(items$assets, function(asset) {
+        eval(exprs[[i]], envir = asset)
+      })
+      items$assets <- items$assets[sel]
+    }
   }
+
+  if (!is.null(select_fn)) {
+    sel <- map_lgl(items$assets, select_fn)
+    items$assets <- items$assets[sel]
+  }
+
+  return(items)
+}
+
+map_lgl <- function(x, fn, ...) {
+  vapply(x, fn, ..., FUN.VALUE = logical(1), USE.NAMES = FALSE)
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_select.STACItemCollection <- function(items,
+                                             asset_names = NULL, ...,
+                                             select_fn = NULL) {
+  items <- foreach_item(
+    items, assets_select, asset_names = asset_names, ..., select_fn = select_fn
+  )
+  return(items)
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_select.default <- assets_select.STACItem
+
+#' @rdname assets_function
+#'
+#' @export
+assets_rename <- function(items, rename = NULL, names_fn = NULL, ...) {
+  if (!is.null(names_fn) && !is.function(names_fn)) {
+    .error("Parameter 'names_fn' must be a function.")
+  }
+  UseMethod("assets_rename", items)
+}
+
+#' @rdname assets_function
+#'
+#' @export
+assets_rename.STACItem <- function(items, mapper = NULL, ...) {
+  dots <- list(...)
+  if (is.function(mapper)) {
+    new_names <- as.list(vapply(
+      items$assets, mapper, FUN.VALUE = character(1), USE.NAMES = TRUE
+    ))
+  } else {
+    new_names <- as.list(mapper)
+  }
+  if (length(dots) > 0) {
+    new_names <- modify_list(new_names, dots)
+  }
+  new_names <- unlist(new_names)
+  if (length(new_names) == 0) {
+    .error("Parameters `mapper` or `...` must be informed.")
+  }
+  if (!all(nzchar(names(new_names)))) {
+    .error("Parameters `mapper` and `...` must contains named values.")
+  }
+  asset_names <- names(items$assets)
+  new_names <- new_names[nzchar(new_names)]
+  asset_names[asset_names %in% names(new_names)] <-
+    unname(new_names[asset_names[asset_names %in% names(new_names)]])
+  names(items$assets) <- asset_names
 
   return(items)
 }
@@ -332,118 +408,30 @@ assets_select.STACItem <- function(items,
 #' @rdname assets_function
 #'
 #' @export
-assets_select.STACItemCollection <- function(items,
-                                             asset_names = NULL,
-                                             filter_fn = NULL,
-                                             keep_empty_items = TRUE) {
-  if (!is.null(asset_names)) {
-    assets_in_items <- asset_names %in% items_assets(items)
-    if (!all(assets_in_items))
-      .error("There is no item with asset(s) '%s'.",
-             paste(asset_names[!assets_in_items], collapse = ", "))
-
-    items[["features"]] <- lapply(items[["features"]], function(item) {
-      asset_names <- intersect(names(item[["assets"]]), asset_names)
-      item[["assets"]] <- item[["assets"]][asset_names]
-      return(item)
-    })
-  }
-
-  if (!is.null(filter_fn)) {
-    items[["features"]] <- lapply(items[["features"]], function(item) {
-      sel <- vapply(item[["assets"]], filter_fn, logical(1))
-      item[["assets"]] <- item[["assets"]][sel]
-      return(item)
-    })
-  }
-
-  if (!is.null(asset_names) || !is.null(filter_fn)) {
-    empty_assets <- items_empty_assets(items)
-
-    if (!keep_empty_items) {
-      items[["features"]] <- items[["features"]][!empty_assets]
-    } else if (any(empty_assets) && missing(keep_empty_items)) {
-      .warning(paste(
-        "Some items were left with empty assets. To remove them,",
-        "set parameter `keep_empty_items = FALSE`."
-      ))
-    }
-  }
-  return(items)
+assets_rename.STACItemCollection <- function(items, mapper = NULL, ...) {
+  return(foreach_item(items, assets_rename, mapper = mapper, ...))
 }
 
 #' @export
-assets_rename <- function(items, names_fn = NULL, ...) {
-  if (!is.null(names_fn) && !is.function(names_fn)) {
-    .error("Parameter 'names_fn' must be a function.")
-  }
-  UseMethod("assets_rename", items)
+assets_rename.default <- assets_rename.STACItem
+
+#' @export
+has_assets <- function(items) {
+  UseMethod("has_assets", items)
 }
 
 #' @export
-assets_rename.STACItem <- function(items, names_fn = NULL, ...) {
-  dots <- c(...)
-  if (!all(nzchar(names(dots)))) {
-    .error("Renaming parameters must be named.")
-  }
-
-  if (length(dots) > 0) {
-    asset_names <- names(items[["assets"]])
-    asset_names[asset_names %in% names(dots)] <-
-      unname(dots[asset_names[asset_names %in% names(dots)]])
-    names(items[["assets"]]) <- asset_names
-  }
-
-  if (!is.null(names_fn)) {
-    asset_names <- names(items[["assets"]])
-
-    new_names <- vapply(items[["assets"]], names_fn,
-                        FUN.VALUE = character(1), USE.NAMES = TRUE)
-    new_names <- new_names[nzchar(new_names)]
-
-    asset_names[asset_names %in% names(new_names)] <-
-      unname(new_names[asset_names[asset_names %in% names(new_names)]])
-    names(items[["assets"]]) <- asset_names
-  }
-  return(items)
+has_assets.STACItem <- function(items) {
+  if (!"assets" %in% names(items))
+    .error("Parameter `items` is not a valid.")
+  return(length(items$assets) > 0)
 }
 
 #' @export
-assets_rename.STACItemCollection <- function(items, names_fn = NULL, ...) {
-  dots <- c(...)
-  if (!all(nzchar(names(dots)))) {
-    .error("Renaming parameters must be named.")
-  }
-
-  if (length(dots) > 0) {
-    items[["features"]] <- lapply(items[["features"]], function(feature) {
-      asset_names <- names(feature[["assets"]])
-      asset_names[asset_names %in% names(dots)] <-
-        unname(dots[asset_names[asset_names %in% names(dots)]])
-      names(feature[["assets"]]) <- asset_names
-      return(feature)
-    })
-  }
-
-  if (!is.null(names_fn)) {
-    items[["features"]] <- lapply(items[["features"]], function(feature) {
-      asset_names <- names(feature[["assets"]])
-
-      new_names <- vapply(feature[["assets"]], names_fn,
-                          FUN.VALUE = character(1), USE.NAMES = TRUE)
-      new_names <- new_names[nzchar(new_names)]
-
-      asset_names[asset_names %in% names(new_names)] <-
-        unname(new_names[asset_names[asset_names %in% names(new_names)]])
-      names(feature[["assets"]]) <- asset_names
-      return(feature)
-    })
-  }
-  return(items)
+has_assets.STACItemCollection <- function(items) {
+  vapply(items$features, has_assets, FUN.VALUE = logical(1),
+         USE.NAMES = FALSE)
 }
 
-items_empty_assets <- function(items) {
-  return(vapply(items_reap(items, field = "assets"), length,
-                FUN.VALUE = integer(1), USE.NAMES = FALSE) == 0)
-
-}
+#' @export
+has_assets.default <- has_assets.STACItem
