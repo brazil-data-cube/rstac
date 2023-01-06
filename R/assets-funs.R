@@ -350,7 +350,8 @@ assets_select.STACItemCollection <- function(items,
                                              asset_names = NULL, ...,
                                              select_fn = NULL) {
   items <- foreach_item(
-    items, assets_select, asset_names = asset_names, ..., select_fn = select_fn
+    items, assets_select, asset_names = asset_names, ...,
+    select_fn = select_fn
   )
   return(items)
 }
