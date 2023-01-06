@@ -127,7 +127,7 @@ testthat::test_that("items functions", {
 
     # items_assets---------------------------------------------------------------
     # STACItemCollection
-    testthat::expect_length(items_assets(res, simplify = FALSE), n = 10)
+    testthat::expect_length(items_assets(res), n = 11)
 
     # STACItem
     testthat::expect_vector(items_assets(item_stac), ptype = character())
@@ -190,13 +190,13 @@ testthat::test_that("items functions", {
 
     # items_assets--------------------------------------------------------------
     testthat::expect_equal(
-      object = class(items_assets(res, simplify = FALSE)),
-      expected = "list"
-    )
-
-    testthat::expect_equal(
       object = class(items_assets(res)),
       expected = "character"
+    )
+
+    testthat::expect_message(
+      items_assets(res, simplify = FALSE),
+      regexp = "deprecated"
     )
 
     testthat::expect_equal(
