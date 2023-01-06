@@ -702,7 +702,7 @@ items_reap <- function(items, field, ...) {
 #' @rdname items_functions
 #'
 #' @export
-items_reap.STACItem <- function(items, field = NULL, ...) {
+items_reap.STACItem <- function(items, field, ...) {
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -713,23 +713,14 @@ items_reap.STACItem <- function(items, field = NULL, ...) {
     field = c(field, unlist(dots, use.names = FALSE))
   }
 
-  if (length(field) == 0)
-    return(items)
-
   values <- items[[field]]
-
-  if (all(vapply(values, is.null, logical(1))))
-    .error("The provided field does not exist.")
-
-  if (all(vapply(values, is.atomic, logical(1))))
-    return(unlist(values))
   return(values)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_reap.STACItemCollection <- function(items, field = NULL, ...) {
+items_reap.STACItemCollection <- function(items, field, ...) {
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
