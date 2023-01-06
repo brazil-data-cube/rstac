@@ -263,9 +263,22 @@ assets_url <- function(items, asset_names = NULL, append_gdalvsi = TRUE) {
 assets_url.STACItem <- function(items,
                                 asset_names = NULL,
                                 append_gdalvsi = TRUE) {
-  assets_url.STACItemCollection(items = items,
-                                asset_names = asset_names,
-                                append_gdalvsi = append_gdalvsi)
+  if (is.null(asset_names)) {
+    asset_names <- items_assets(items)
+  }
+  url <- unlist(lapply(asset_names, function(asset_name) {
+    items <- assets_select(items = items, asset_names = asset_name)
+
+    is_empty <- !has_assets(items)
+    if (is_empty) {
+      .warning("Item does not have asset name '%s'.", asset_name)
+    }
+    return(items$assets[[asset_name]]$href)
+  }))
+  if (append_gdalvsi) {
+    url <- gdalvsi_append(url)
+  }
+  return(url)
 }
 
 #' @rdname assets_function
@@ -278,13 +291,11 @@ assets_url.STACItemCollection <- function(items,
     asset_names <- items_assets(items)
   }
   url <- unlist(lapply(asset_names, function(asset_name) {
-    items <- assets_select(items = items,
-                           asset_names = asset_name,
-                           keep_empty_items = TRUE)
+    items <- assets_select(items = items, asset_names = asset_name)
 
-    not_empty <- has_assets(items)
-    if (!all(not_empty)) {
-      items$features <- items$features[not_empty]
+    has_empty <- !all(has_assets(items))
+    if (has_empty) {
+      items <- items_compact(items)
       .warning("Some items does not have asset name '%s'.", asset_name)
     }
     return(items_reap(items, field = c("assets", asset_name, "href")))
