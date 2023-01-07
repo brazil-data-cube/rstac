@@ -144,10 +144,8 @@ NULL
 assets_download <- function(items,
                             asset_names = NULL,
                             output_dir = getwd(),
-                            overwrite = FALSE,
-                            items_max = Inf,
-                            progress = TRUE,
-                            download_fn = NULL, ...,
+                            overwrite = FALSE, ...,
+                            download_fn = NULL,
                             fn = deprecated()) {
 
   # check output dir
@@ -163,31 +161,41 @@ assets_download <- function(items,
 #' @export
 assets_download.STACItem <- function(items,
                                      asset_names = NULL,
-                                     output_dir = ".",
-                                     overwrite = FALSE,
-                                     items_max = Inf,
-                                     progress  = TRUE,
-                                     download_fn = NULL, ...,
+                                     output_dir = getwd(),
+                                     overwrite = FALSE, ...,
+                                     create_json = FALSE,
+                                     download_fn = NULL,
                                      fn = deprecated()) {
   if (!missing(fn)) {
     deprec_parameter(
       deprec_var = "fn",
-      deprec_version = "0.9.1-6",
+      deprec_version = "0.9.2",
       msg = "Please, use `download_fn` parameter instead."
     )
     download_fn <- fn
   }
 
-  if (!is.null(asset_names))
+  if (!is.null(asset_names)) {
+    in_assets <- asset_names %in% items_assets(items)
+    if (!all(asset_names %in% items_assets(items))) {
+      .warning("Item does not have asset(s) '%s'.",
+               paste(asset_names[!in_assets], collapse = ", "))
+    }
     items <- assets_select(items = items, asset_names = asset_names)
+  }
 
-  items <- asset_download(
-    item = items,
-    output_dir = output_dir,
-    overwrite = overwrite,
-    fn = download_fn, ...
+  items$assets <- lapply(
+    items$assets, asset_download, output_dir = output_dir,
+    overwrite = overwrite, ..., download_fn = download_fn
   )
 
+  if (create_json) {
+    file <- "item.json"
+    if ("id" %in% names(items)) {
+      file <- paste0(items$id, ".json")
+    }
+    cat(to_json(items), file = file.path(output_dir, file))
+  }
   return(items)
 }
 
@@ -196,59 +204,59 @@ assets_download.STACItem <- function(items,
 #' @export
 assets_download.STACItemCollection <- function(items,
                                                asset_names = NULL,
-                                               output_dir = ".",
-                                               overwrite = FALSE,
+                                               output_dir = getwd(),
+                                               overwrite = FALSE, ...,
+                                               download_fn = NULL,
+                                               create_json = TRUE,
                                                items_max = Inf,
                                                progress = TRUE,
-                                               download_fn = NULL, ...,
                                                fn = deprecated()) {
   if (!missing(fn)) {
     deprec_parameter(
       deprec_var = "fn",
-      deprec_version = "0.9.1-6",
+      deprec_version = "0.9.2",
       msg = "Please, use `download_fn` parameter instead."
     )
     download_fn <- fn
   }
 
-  if (!is.null(asset_names))
-    items <- assets_select(items = items, asset_names = asset_names)
-
-  # check if items length corresponds with items matched
-  if (!missing(items_max)) {
-
-    if (items_max > items_length(items))
-      items_max <- .parse_items_size(items)
-  } else {
-
-    items_max <- .parse_items_size(items)
-  }
+  # remove empty items
+  items <- items_compact(items)
+  items_max <- max(0, min(items_length(items), items_max))
 
   # verify if progress bar can be shown
-  progress <- progress && (!is.null(items_max)) && items_max > 1
+  progress <- progress && items_max > 1
 
-  if (progress)
-    pb <- utils::txtProgressBar(min = 0, max = items_max, style = 3, width = 50)
-
-  for (i in seq_len(items_max)) {
-
-    if (progress)
-      utils::setTxtProgressBar(pb, i)
-
-    items$features[[i]] <- asset_download(
-      item = items$features[[i]],
-      output_dir = output_dir,
-      overwrite = overwrite,
-      fn = download_fn, ...
-    )
+  if (progress) {
+    pb <- utils::txtProgressBar(max = items_max, style = 3)
   }
 
-  # close progress bar
-  if (progress)
-    close(pb)
+  items$features <- items$features[seq_len(items_max)]
+  for (i in seq_len(items_max)) {
+    if (progress) {
+      utils::setTxtProgressBar(pb, i)
+    }
 
+    items$features[[i]] <- assets_download(
+      items = items$features[[i]], asset_names = asset_names,
+      output_dir = output_dir, overwrite = overwrite,
+      create_json = FALSE, download_fn = download_fn, ...
+    )
+  }
+  # close progress bar
+  if (progress) {
+    close(pb)
+  }
+  if (create_json) {
+    cat(to_json(items), file = file.path(output_dir, "items.json"))
+  }
   return(items)
 }
+
+#' @rdname assets_function
+#'
+#' @export
+assets_download.default <- assets_download.STACItem
 
 #' @rdname assets_function
 #'
