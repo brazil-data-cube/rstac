@@ -344,18 +344,24 @@ assets_select.STACItem <- function(items,
 
   if (length(exprs) > 0) {
     if (!is.null(names(exprs)))
-      .error("Filter expressions cannot be named.")
+      .error("Select expressions cannot be named.")
 
     for (i in seq_along(exprs)) {
       sel <- map_lgl(items$assets, function(asset) {
-        eval(exprs[[i]], envir = asset)
+        val <- eval(exprs[[i]], envir = asset)
+        check_select_eval(val)
+        return(val)
       })
       items$assets <- items$assets[sel]
     }
   }
 
   if (!is.null(select_fn)) {
-    sel <- map_lgl(items$assets, select_fn)
+    sel <- map_lgl(items$assets, function(asset) {
+      val <- select_fn(asset)
+      check_select_eval(val)
+      return(val)
+    })
     items$assets <- items$assets[sel]
   }
 
