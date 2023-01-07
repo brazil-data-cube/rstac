@@ -11,7 +11,8 @@ testthat::test_that("assets functions", {
           bbox        = c(-47.02148, -12.98314, -42.53906, -17.35063),
           limit       = 0) %>%
         get_request() %>%
-        assets_download(asset_names = c("blue", "evi")) %>%
+        assets_download(asset_names = c("blue", "evi"),
+                        create_json = FALSE) %>%
         items_length(),
       expected = 0
     )
@@ -44,7 +45,9 @@ testthat::test_that("assets functions", {
             datetime    = "2019-09-01/2019-11-01",
             limit       = 1) %>%
           get_request() %>%
-          assets_download(asset_names = c("thumbnail"), output_dir = tempdir())
+          assets_download(asset_names = c("thumbnail"),
+                          output_dir = tempdir(),
+                          create_json = FALSE)
         subclass(x)
       },
       expected = "STACItemCollection"
@@ -62,6 +65,7 @@ testthat::test_that("assets functions", {
           assets_download(asset_names = c("thumbnail"),
                           fn = function(x) { x },
                           output_dir = tempdir(),
+                          create_json = FALSE,
                           overwrite = TRUE)
       },
       regexp = "deprecated"
@@ -79,6 +83,7 @@ testthat::test_that("assets functions", {
                           items_max = 2,
                           download_fn = function(x) { x },
                           output_dir = tempdir(),
+                          create_json = FALSE,
                           overwrite = TRUE)
         subclass(x)
       },
@@ -93,6 +98,7 @@ testthat::test_that("assets functions", {
           get_request() %>%
           assets_download(asset_names = c("thumbnail"),
                           output_dir = tempdir(),
+                          create_json = FALSE,
                           overwrite = TRUE)
         subclass(x)
       },
@@ -109,6 +115,7 @@ testthat::test_that("assets functions", {
           assets_download(asset_names = c("thumbnail"),
                           fn = function(x) {x},
                           output_dir = tempdir(),
+                          create_json = FALSE,
                           overwrite = TRUE)
       },
       regexp = "deprecated"
@@ -124,6 +131,7 @@ testthat::test_that("assets functions", {
                           items_max = 2,
                           download_fn = function(x) {x},
                           output_dir = tempdir(),
+                          create_json = FALSE,
                           overwrite = TRUE)
         subclass(x)
       },
