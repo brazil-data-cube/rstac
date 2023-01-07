@@ -2,80 +2,107 @@
 #'
 #' @description
 #' These functions provide support to work with `STACItemCollection` and
-#' `STACItem` objects.
+#' `STACItem` item objects.
 #'
 #' \itemize{
 #' \item `assets_download()`: Downloads the assets provided by the STAC API.
 #'
-#' \item `assets_url()`: `r lifecycle::badge('experimental')` Returns a list
-#'  with href of each feature.
+#' \item `assets_url()`: `r lifecycle::badge('experimental')` Returns a
+#'  character vector with each asset href.
 #'  For the URL you can add the GDAL library drivers for the following schemes:
 #'  HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 #'
 #' \item `assets_select()`: `r lifecycle::badge('experimental')` Selects the
-#'  assets of each feature by its name.
+#'  assets of each item by its name. Note: This function can produce items
+#'  with empty assets. In this case, users can use `items_compact()` function
+#'  to remove items with no assets.
 #'
 #' \item `assets_rename()`: `r lifecycle::badge('experimental')` Rename each
-#'  asset feature name by an expression or a function.
+#'  asset using a named list or a function.
 #' }
 #'
 #' @param items       a `STACItem` or `STACItemCollection` object
-#'  representing the result of `/stac/search`,
-#'  \code{/collections/{collectionId}/items} or
-#'  \code{/collections/{collectionId}/items/{itemId}} endpoints.
+#' representing the result of `/stac/search`,
+#' \code{/collections/{collectionId}/items} or
+#' \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
 #' @param asset_names a `character` vector with the assets names to be selected.
 #'
 #' @param output_dir  a `character` directory in which the assets will be
-#'  saved. Default is the working directory (`getwd()`)
+#' saved. Default is the working directory (`getwd()`)
 #'
 #' @param overwrite   a `logical` if TRUE will replaced the existing file,
-#'  if FALSE a warning message is shown.
+#' if FALSE a warning message is shown.
 #'
 #' @param items_max   a `numeric` corresponding how many items will be
-#'  downloaded.
+#' downloaded.
 #'
 #' @param progress    a `logical` indicating if a progress bar must be
-#'  shown or not. Defaults to `TRUE`.
+#' shown or not. Defaults to `TRUE`.
 #'
 #' @param download_fn a `function` to handle the list of assets for each item.
-#'  Using this function you can change the hrefs for each asset, as well as use
-#'  another request verb, such as POST.
+#' Using this function you can change the hrefs for each asset, as well as use
+#' another request verb, such as POST.
 #'
 #' @param fn          `r lifecycle::badge('deprecated')`
-#'  use `download_fn` parameter instead.
+#' use `download_fn` parameter instead.
 #'
-#' @param append_gdalvsi a `logical`  if true, gdal drivers are
-#'  included in the URL of each asset. The following schemes are supported:
-#'  HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
+#' @param append_gdalvsi a `logical` if true, gdal drivers are
+#' included in the URL of each asset. The following schemes are supported:
+#' HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 #'
-#' @param filter_fn   a `function` that will be used to filter the
-#'  attributes listed in the properties.
+#' @param create_json a `logical` indicating if a JSON file with item metadata
+#' (`STACItem` or `STACItemCollection`) must be created in the output
+#' directory.
 #'
-#' @param keep_empty_items a `logical` indicating if empty items should be
-#'  kept.
+#' @param select_fn a `function` to select assets an item
+#' (`STACItem` or `STACItemCollection`). This function receives as parameter
+#' each asset element stored in assets field. Asset elements contains metadata
+#' describing spatial temporal objects. Users can provide a function to select
+#' assets based on these metadata by returning a logical value where `TRUE`
+#' selects the asset and `FALSE` discards it.
 #'
-#' @param names_fn a `function` used to produce assets names from an
-#'  asset object.
+#' @param mapper    either a named `list` or a `function` to rename assets
+#' of an item (`STACItem` or `STACItemCollection`). In the case of a named
+#' list, use `<old name> = <new name>` to rename the assets. The function
+#' can be used to rename the assets by returning a `character` string using
+#' the metadata contained in the asset object.
 #'
-#' @param ...      config parameters to be passed to [GET][httr::GET],
-#'  such as [add_headers][httr::add_headers] or
-#'  [set_cookies][httr::set_cookies]. Used in `assets_download` function.
+#' @param ...             additional arguments. See details.
+#'
+#' @details
+#' Ellipsis argument (`...`) appears in different assets functions and
+#' has distinct purposes:
+#' \itemize{
+#' \item `assets_download()`: ellipsis is used to pass
+#' additional `httr` options to [GET][httr::GET] or [POST][httr::POST]
+#' methods, such as [add_headers][httr::add_headers] or
+#' [set_cookies][httr::set_cookies].
+#'
+#' \item `assets_select()`: ellipsis is used to pass expressions that will
+#' be evaluated against each asset metadata. Expressions must be evaluated as
+#' a logical value where `TRUE` selects the asset and `FALSE` discards it.
+#' Multiple expressions are combine with `AND` operator.
+#'
+#' \item `assets_rename()`: ellipsis is used to pass named parameters
+#' to be processed in the same way as named list in `mapper` argument.
+#' }
 #'
 #' @return
 #'
 #' \itemize{
-#' \item `assets_download()`: returns the same object as the provided item
-#' (`STACItemCollection` or `STACItem`), however the `href` property points to
-#' the location where the asset was downloaded
+#' \item `assets_download()`: returns the same input object item
+#' (`STACItem` or `STACItemCollection`) where `href` properties point to
+#' the download assets.
 #'
-#' \item `assets_url()`: returns a character vector with `href` of each feature.
+#' \item `assets_url()`: returns a character vector with all assets `href`
+#' of an item (`STACItem` or `STACItemCollection`).
 #'
-#' \item `assets_select()`: returns the same object as the provided item
-#' (`STACItemCollection` or `STACItem`), however with the selected assets.
+#' \item `assets_select()`: returns the same input object item
+#' (`STACItem` or `STACItemCollection`) with the selected assets.
 #'
-#' \item `assets_rename()`: returns the same object as the provided item
-#' (`STACItemCollection` or `STACItem`), however with the assets renamed.
+#' \item `assets_rename()`: returns the same input object item
+#' (`STACItemCollection` or `STACItem`) with the assets renamed.
 #' }
 #'
 #' @examples
@@ -135,10 +162,10 @@
 #' @seealso
 #' [stac_search()], [items()], [get_request()]
 #'
-#' @name assets_function
+#' @name assets_functions
 NULL
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_download <- function(items,
@@ -156,7 +183,7 @@ assets_download <- function(items,
   UseMethod("assets_download", items)
 }
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_download.STACItem <- function(items,
@@ -199,7 +226,7 @@ assets_download.STACItem <- function(items,
   return(items)
 }
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_download.STACItemCollection <- function(items,
@@ -253,19 +280,19 @@ assets_download.STACItemCollection <- function(items,
   return(items)
 }
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_download.default <- assets_download.STACItem
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_url <- function(items, asset_names = NULL, append_gdalvsi = TRUE) {
   UseMethod("assets_url", items)
 }
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_url.STACItem <- function(items,
@@ -289,7 +316,7 @@ assets_url.STACItem <- function(items,
   return(url)
 }
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_url.STACItemCollection <- function(items,
@@ -314,19 +341,19 @@ assets_url.STACItemCollection <- function(items,
   return(url)
 }
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_url.default <- assets_url.STACItem
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_select <- function(items, asset_names = NULL, ..., select_fn = NULL) {
   UseMethod("assets_select", items)
 }
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_select.STACItem <- function(items,
@@ -368,7 +395,7 @@ assets_select.STACItem <- function(items,
   return(items)
 }
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_select.STACItemCollection <- function(items,
@@ -381,22 +408,19 @@ assets_select.STACItemCollection <- function(items,
   return(items)
 }
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_select.default <- assets_select.STACItem
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
-assets_rename <- function(items, rename = NULL, names_fn = NULL, ...) {
-  if (!is.null(names_fn) && !is.function(names_fn)) {
-    .error("Parameter 'names_fn' must be a function.")
-  }
+assets_rename <- function(items, mapper = NULL, ...) {
   UseMethod("assets_rename", items)
 }
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_rename.STACItem <- function(items, mapper = NULL, ...) {
@@ -417,6 +441,7 @@ assets_rename.STACItem <- function(items, mapper = NULL, ...) {
     .error("Parameters `mapper` and `...` must contains named values.")
   }
   asset_names <- names(items$assets)
+  # remove empty names
   new_names <- new_names[nzchar(new_names)]
   asset_names[asset_names %in% names(new_names)] <-
     unname(new_names[asset_names[asset_names %in% names(new_names)]])
@@ -425,21 +450,27 @@ assets_rename.STACItem <- function(items, mapper = NULL, ...) {
   return(items)
 }
 
-#' @rdname assets_function
+#' @rdname assets_functions
 #'
 #' @export
 assets_rename.STACItemCollection <- function(items, mapper = NULL, ...) {
   return(foreach_item(items, assets_rename, mapper = mapper, ...))
 }
 
+#' @rdname assets_functions
+#'
 #' @export
 assets_rename.default <- assets_rename.STACItem
 
+#' @rdname assets_functions
+#'
 #' @export
 has_assets <- function(items) {
   UseMethod("has_assets", items)
 }
 
+#' @rdname assets_functions
+#'
 #' @export
 has_assets.STACItem <- function(items) {
   if (!"assets" %in% names(items))
@@ -447,10 +478,14 @@ has_assets.STACItem <- function(items) {
   return(length(items$assets) > 0)
 }
 
+#' @rdname assets_functions
+#'
 #' @export
 has_assets.STACItemCollection <- function(items) {
   map_lgl(items$features, has_assets)
 }
 
+#' @rdname assets_functions
+#'
 #' @export
 has_assets.default <- has_assets.STACItem
