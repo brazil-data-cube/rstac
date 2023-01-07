@@ -279,7 +279,7 @@ assets_url.STACItem <- function(items,
 
     is_empty <- !has_assets(items)
     if (is_empty) {
-      .warning("Item does not have asset name '%s'.", asset_name)
+      .warning("Item does not have asset '%s'.", asset_name)
     }
     return(items$assets[[asset_name]]$href)
   }))
