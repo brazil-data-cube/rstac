@@ -205,6 +205,9 @@ items_length <- function(items) {
 #'
 #' @export
 items_length.STACItem <- function(items) {
+  if (length(items) == 0) {
+    return(NULL)
+  }
   return(1)
 }
 
@@ -231,6 +234,9 @@ items_matched  <- function(items, matched_field = NULL) {
 #'
 #' @export
 items_matched.STACItem  <- function(items, matched_field = NULL) {
+  if (length(items) == 0) {
+    return(NULL)
+  }
   return(1)
 }
 
@@ -452,14 +458,17 @@ items_datetime <- function(items) {
 #'
 #' @export
 items_datetime.STACItem <- function(items) {
-  return(items_reap(items, c("properties", "datetime")))
+  if (!"datetime" %in% names(items$properties)) {
+    .error("Parameter `items` is invalid.")
+  }
+  return(items$properties$datetime)
 }
 
 #' @rdname items_functions
 #'
 #' @export
 items_datetime.STACItemCollection <- function(items) {
-  return(items_datetime.STACItem(items))
+  return(map_chr(items$features, items_datetime))
 }
 
 #' @rdname items_functions
@@ -478,14 +487,14 @@ items_bbox <- function(items) {
 #'
 #' @export
 items_bbox.STACItem <- function(items) {
-  return(items_reap(items, "bbox"))
+  return(items$bbox)
 }
 
 #' @rdname items_functions
 #'
 #' @export
 items_bbox.STACItemCollection <- function(items) {
-  items_bbox.STACItem(items)
+  return(items_reap(items, field = "bbox"))
 }
 
 #' @rdname items_functions
@@ -511,6 +520,9 @@ items_assets <- function(items, simplify = deprecated()) {
 #'
 #' @export
 items_assets.STACItem <- function(items, simplify = deprecated()) {
+  if (!"assets" %in% names(items)) {
+    .error("Parameter `items` is invalid.")
+  }
   return(items_fields(items, field = "assets"))
 }
 
@@ -518,7 +530,7 @@ items_assets.STACItem <- function(items, simplify = deprecated()) {
 #'
 #' @export
 items_assets.STACItemCollection <- function(items, simplify = deprecated()) {
-  return(items_assets.STACItem(items))
+  return(unique(unlist(lapply(items$features, items_assets.STACItem))))
 }
 
 #' @rdname items_functions
@@ -821,7 +833,7 @@ items_fields.default <- items_fields.STACItem
 #' @rdname items_functions
 #'
 #' @export
-items_sign <- function(items, sign_fn = NULL) {
+items_sign <- function(items, sign_fn) {
   UseMethod("items_sign", items)
 }
 
@@ -835,14 +847,7 @@ items_sign.STACItem <- function(items, sign_fn) {
 #' @rdname items_functions
 #'
 #' @export
-items_sign.STACItemCollection <- function(items, sign_fn = NULL) {
-  if (!is.null(items_matched(items)) &&
-      items_length(items) != items_matched(items)) {
-    message("The number of items in this object does not match the ",
-            "total number of items in the item. If you want to get ",
-            "all items, use `items_fetch()`")
-  }
-  # assign each item obj
+items_sign.STACItemCollection <- function(items, sign_fn) {
   return(foreach_item(items, sign_fn))
 }
 
