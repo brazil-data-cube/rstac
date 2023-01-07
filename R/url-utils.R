@@ -84,25 +84,52 @@ format_bbox <- function(bbox) {
                  sprintf("%.5f", bbox), collapse = ", "))
 }
 
-asset_download <- function(item, output_dir, overwrite, ..., download_fn = NULL) {
-  item$assets <- lapply(item$assets, function(asset) {
+asset_download <- function(asset,
+                           output_dir,
+                           overwrite, ...,
+                           download_fn = NULL) {
+  if (!is.null(download_fn))
+    return(download_fn(asset))
 
-    if (!is.null(download_fn))
-      return(download_fn(asset))
+  # create a full path name
+  path <- url_get_path(asset$href)
+  out_file <- path_normalize(output_dir, path)
+  dir_create(out_file)
 
-    # create a full path name
-    file_name <- gsub(".*/([^?]*)\\??.*$", "\\1", asset$href)
-    out_file <- paste0(output_dir, "/", file_name)
+  make_get_request(
+    url = asset$href,
+    httr::write_disk(path = out_file, overwrite = overwrite),
+    ...,
+    error_msg = "Error in downloading"
+  )
+  asset$href <- path
 
-    make_get_request(
-      url = asset$href,
-      httr::write_disk(path = out_file, overwrite = overwrite),
-      ...,
-      error_msg = "Error while downloading"
-    )
-    asset$href <- out_file
+  asset
+}
 
-    asset
-  })
-  return(item)
+path_normalize <- function(...) {
+  path <- file.path(...)
+  path <- gsub("\\\\", "/", path)
+  path <- gsub("/{2,}", "/", path)
+  path <- gsub("/+$", "", path)
+  return(path.expand(path))
+}
+
+url_get_path <- function(url) {
+  return(httr::parse_url(url)[["path"]])
+}
+
+dir_create <- function(path) {
+  path <- path_get_dir(path)
+  if (!dir.exists(path)) {
+    dir.create(path, recursive = TRUE)
+    if (!dir.exists(path)) {
+      .error("Cannot create directory '%s'", path)
+    }
+  }
+  return(path)
+}
+
+path_get_dir <- function(path) {
+  return(gsub("^\\.", "", dirname(path)))
 }
