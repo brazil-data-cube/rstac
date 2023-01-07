@@ -43,7 +43,7 @@
 \alias{items_sign.STACItem}
 \alias{items_sign.STACItemCollection}
 \alias{items_sign.default}
-\title{STACItemCollection functions}
+\title{Items functions}
 \usage{
 items_group(items, ..., field = NULL, index = NULL)
 
@@ -119,11 +119,11 @@ items_fields(items, field = NULL, ...)
 
 \method{items_fields}{default}(items, field = NULL, ...)
 
-items_sign(items, sign_fn = NULL)
+items_sign(items, sign_fn)
 
 \method{items_sign}{STACItem}(items, sign_fn)
 
-\method{items_sign}{STACItemCollection}(items, sign_fn = NULL)
+\method{items_sign}{STACItemCollection}(items, sign_fn)
 
 \method{items_sign}{default}(items, sign_fn)
 }

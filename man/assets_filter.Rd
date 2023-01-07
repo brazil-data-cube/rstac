@@ -4,7 +4,7 @@
 \alias{assets_filter}
 \alias{assets_filter.STACItemCollection}
 \alias{assets_filter.STACItem}
-\title{Assets filter}
+\title{Assets filter (Deprecated)}
 \usage{
 assets_filter(items, ..., filter_fn = NULL)
 
