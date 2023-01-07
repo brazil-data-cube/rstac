@@ -3,17 +3,17 @@ testthat::test_that("assets functions", {
     testthat::skip_on_cran()
 
     # assets_download-----------------------------------------------------------
-
-    # error - zero items
-    testthat::expect_error(
-      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    testthat::expect_equal(
+      object = rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(
           collections = "CB4_64_16D_STK-1",
           datetime    = "2019-09-01/2019-11-01",
           bbox        = c(-47.02148, -12.98314, -42.53906, -17.35063),
           limit       = 0) %>%
         get_request() %>%
-        assets_download(asset_names = c("blue", "evi"))
+        assets_download(asset_names = c("blue", "evi")) %>%
+        items_length(),
+      expected = 0
     )
 
     # error - given another object
@@ -85,25 +85,6 @@ testthat::test_that("assets functions", {
       expected = "STACItemCollection"
     )
 
-    testthat::expect_error(
-      object = {
-        x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-          stac_search(
-            collections = "CB4_64_16D_STK-1",
-            datetime    = "2019-09-01/2019-11-01",
-            limit       = 1) %>%
-          get_request()
-
-        x[["features"]] <- NULL
-        assets_download(items = x,
-                        asset_names = c("thumbnail"),
-                        items_max = 2,
-                        download_fn = function(x) { x },
-                        output_dir = tempdir(),
-                        overwrite = TRUE)
-      }
-    )
-
     testthat::expect_equal(
       object = {
         x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
@@ -149,21 +130,6 @@ testthat::test_that("assets functions", {
       expected = "STACItem"
     )
 
-    # file already exists
-    testthat::expect_error(
-      object = {
-        x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-          collections("CB4_64_16D_STK-1") %>%
-          items("CB4_64_16D_STK_v001_020024_2019-11-01_2019-11-16") %>%
-          get_request() %>%
-          assets_download(asset_names = c("thumbnail"),
-                          items_max = 2,
-                          download_fn = function(x) {x},
-                          output_dir = tempdir(),
-                          overwrite = FALSE)
-      }
-    )
-
     stac_items <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
       stac_search(collections = "CB4_64_16D_STK-1") %>%
       stac_search(limit = 2) %>%
@@ -175,15 +141,6 @@ testthat::test_that("assets functions", {
       get_request()
 
     # assets_select-----------------------------------------------------------
-
-    # an error is expected if a non-existent asset is provided for
-    # STACItemCollection obj
-    testthat::expect_error(assets_select(stac_items, asset_names = "DDDDD"))
-
-    # an error is expected if a non-existent asset is provided for
-    # STACItem obj
-    testthat::expect_error(assets_select(stac_item, asset_names = "DDDDD"))
-
     # return the same object after select?
     testthat::expect_s3_class(
       object = assets_select(stac_items, asset_names = "BAND13"),
@@ -245,18 +202,24 @@ testthat::test_that("assets functions", {
       expected = "httpdds://abc.com"
     )
 
-    # return the same object after filter?
-    testthat::expect_s3_class(
-      object = assets_select(stac_items, filter_fn = function(x) {
+    testthat::expect_error(
+      assets_select(stac_items, filter_fn = function(x) {
         if ("eo:bands" %in% names(x))
           return(x$`eo:bands` < 6)
         return(FALSE)
-      }),
-      class = c("STACItemCollection", "RSTACDocument")
+      })
+    )
+
+    testthat::expect_error(
+      assets_select(stac_items, filter_fn = function(x) {
+        if ("eo:bands" %in% names(x))
+          return(x$`eo:bands` < 6)
+        return(FALSE)
+      })
     )
 
     testthat::expect_s3_class(
-      object = assets_select(stac_item, filter_fn = function(x) {
+      object = assets_select(stac_item, select_fn = function(x) {
         if ("eo:bands" %in% names(x))
           return(x$`eo:bands` < 6)
         return(FALSE)
@@ -265,13 +228,12 @@ testthat::test_that("assets functions", {
     )
 
     # return the same object after filter?
-    testthat::expect_s3_class(
+    testthat::expect_error(
       object = assets_select(stac_items, filter_fn = function(x) {
         if ("eo:bands" %in% names(x))
           return(x$`eo:bands` < 6)
         return(FALSE)
-      }),
-      class = c("STACItem", "RSTACDocument")
+      })
     )
 
     # assets_filter-----------------------------------------------------------

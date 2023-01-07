@@ -13,10 +13,16 @@ json_obj <- function(x)
 
 to_json <- function(x) UseMethod("to_json", x)
 
-#' @exportS3Method
-to_json.character <- function(x) json_quote(x)
+#' @export
+to_json.character <- function(x) {
+  if (length(x) == 1) {
+    json_quote(x)
+  } else {
+    to_json(as.list(x))
+  }
+}
 
-#' @exportS3Method
+#' @export
 to_json.numeric <- function(x) {
   if (length(x) == 1) {
     format(x, scientific = FALSE)
@@ -25,7 +31,10 @@ to_json.numeric <- function(x) {
   }
 }
 
-#' @exportS3Method
+#' @export
+to_json.NULL <- function(x) "null"
+
+#' @export
 to_json.integer <- function(x) {
   if (length(x) == 1) {
     paste0(x)
@@ -34,7 +43,7 @@ to_json.integer <- function(x) {
   }
 }
 
-#' @exportS3Method
+#' @export
 to_json.logical <- function(x)  {
   if (length(x) == 1) {
     if (x) "true" else "false"
@@ -43,12 +52,12 @@ to_json.logical <- function(x)  {
   }
 }
 
-#' @exportS3Method
+#' @export
 to_json.matrix <- function(x) {
   to_json(apply(x, 1, c, simplify = FALSE))
 }
 
-#' @exportS3Method
+#' @export
 to_json.list <- function(x) {
   if (is_lst(x))
     json_lst(x)
@@ -58,7 +67,7 @@ to_json.list <- function(x) {
     stop("cannot convert list value to a valid cql2 json", call. = FALSE)
 }
 
-#' @exportS3Method
+#' @export
 to_json.cql2_spatial <- function(x) {
   if (is_str(x)) {
     return(x)
@@ -66,22 +75,22 @@ to_json.cql2_spatial <- function(x) {
   return(json_obj(x))
 }
 
-#' @exportS3Method
+#' @export
 to_json.cql2_logic_op <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_not_op <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_comp_op <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_isnull_op <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_math_op <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_minus_op <- function(x) {
   if (length(x$args) == 1 && is_num(x$args[[1]]))
     paste0(-x$args[[1]])
@@ -89,40 +98,40 @@ to_json.cql2_minus_op <- function(x) {
     json_obj(x)
 }
 
-#' @exportS3Method
+#' @export
 to_json.cql2_spatial_op <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.sf <- function(x) json_obj(get_spatial(x))
 
-#' @exportS3Method
+#' @export
 to_json.sfc <- function(x) json_obj(get_spatial(x))
 
-#' @exportS3Method
+#' @export
 to_json.sfg <- function(x) json_obj(get_spatial(x))
 
-#' @exportS3Method
+#' @export
 to_json.cql2_temporal_op <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_func <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_prop_ref <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_timestamp <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_date <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_interval <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2 <- function(x) to_json(cql2_filter(x))
 
-#' @exportS3Method
+#' @export
 to_json.default <- function(x)
   stop(paste("cannot handle value of class ", class(x)), call. = FALSE)
 
@@ -138,11 +147,11 @@ escape <- function(x) gsub("'", "''", x)
 
 text_not_op <- function(x) UseMethod("text_not_op", x$args[[1]])
 
-#' @exportS3Method
+#' @export
 text_not_op.cql2_isnull_op <- function(x)
   paste(to_text(x$args[[1]]$args[[1]]), "IS NOT NULL")
 
-#' @exportS3Method
+#' @export
 text_not_op.default <- function(x)
   paste("NOT", to_text(x$args[[1]]))
 
@@ -150,19 +159,19 @@ text_not_op.default <- function(x)
 
 to_text <- function(x) UseMethod("to_text", x)
 
-#' @exportS3Method
+#' @export
 to_text.character <- function(x) text_quote(escape(x))
 
-#' @exportS3Method
+#' @export
 to_text.numeric <- function(x) format(x, scientific = FALSE)
 
-#' @exportS3Method
+#' @export
 to_text.integer <- function(x) paste0(x)
 
-#' @exportS3Method
+#' @export
 to_text.logical <- function(x) if (x) "true" else "false"
 
-#' @exportS3Method
+#' @export
 to_text.cql2_spatial <- function(x) {
   if (is_str(x)) {
     return(x)
@@ -170,16 +179,16 @@ to_text.cql2_spatial <- function(x) {
   return(to_wkt(x))
 }
 
-#' @exportS3Method
+#' @export
 to_text.sf <- function(x) to_wkt(get_spatial(x))
 
-#' @exportS3Method
+#' @export
 to_text.sfc <- function(x) to_wkt(get_spatial(x))
 
-#' @exportS3Method
+#' @export
 to_text.sfg <- function(x) to_wkt(get_spatial(x))
 
-#' @exportS3Method
+#' @export
 to_text.list <- function(x) {
   if (is_lst(x))
     text_lst(lapply(x, to_text))
@@ -189,16 +198,16 @@ to_text.list <- function(x) {
     stop("cannot convert list object to cql2 text", call. = FALSE)
 }
 
-#' @exportS3Method
+#' @export
 to_text.cql2_logic_op <- function(x)
   paste(to_text(x$args[[1]]), toupper(x$op), to_text(x$args[[2]]))
 
-#' @exportS3Method
+#' @export
 to_text.cql2_not_op <- function(x) {
   text_not_op(x)
 }
 
-#' @exportS3Method
+#' @export
 to_text.cql2_spatial_op <- function(x) {
   paste0(
     toupper(x$op), "(",
@@ -208,7 +217,7 @@ to_text.cql2_spatial_op <- function(x) {
   )
 }
 
-#' @exportS3Method
+#' @export
 to_text.cql2_temporal_op <- function(x) {
   paste0(
     toupper(x$op), "(",
@@ -218,7 +227,7 @@ to_text.cql2_temporal_op <- function(x) {
   )
 }
 
-#' @exportS3Method
+#' @export
 to_text.cql2_array_op <- function(x) {
   paste0(
     toupper(x$op), "(",
@@ -228,25 +237,25 @@ to_text.cql2_array_op <- function(x) {
   )
 }
 
-#' @exportS3Method
+#' @export
 to_text.cql2_func <- function(x) {
   args <- paste0(lapply(x$`function`$args, to_text), collapse = ",")
   paste0(x$`function`$name, "(", args, ")")
 }
 
-#' @exportS3Method
+#' @export
 to_text.cql2_comp_op <- function(x)
   paste(to_text(x$args[[1]]), x$op, to_text(x$args[[2]]))
 
-#' @exportS3Method
+#' @export
 to_text.cql2_isnull_op <- function(x)
   paste(to_text(x$args[[1]]), "IS NULL")
 
-#' @exportS3Method
+#' @export
 to_text.cql2_math_op <- function(x)
   paste(to_text(x$args[[1]]), x$op, to_text(x$args[[2]]))
 
-#' @exportS3Method
+#' @export
 to_text.cql2_minus_op <- function(x) {
   if (length(x$args) == 1)
     paste0(x$op, to_text(x$args[[1]]))
@@ -254,36 +263,36 @@ to_text.cql2_minus_op <- function(x) {
     paste(to_text(x$args[[1]]), x$op, to_text(x$args[[2]]))
 }
 
-#' @exportS3Method
+#' @export
 to_text.cql2_prop_ref <- function(x)
   x$property[[1]]
 
-#' @exportS3Method
+#' @export
 to_text.cql2_timestamp <- function(x)
   paste0("TIMESTAMP(", to_text(x$timestamp), ")")
 
-#' @exportS3Method
+#' @export
 to_text.cql2_date <- function(x)
   paste0("DATE(", to_text(x$date), ")")
 
-#' @exportS3Method
+#' @export
 to_text.cql2_casei_op <- function(x)
   paste0("CASEI(", to_text(x$casei), ")")
 
-#' @exportS3Method
+#' @export
 to_text.cql2_accenti_op <- function(x)
   paste0("ACCENTI(", to_text(x$accenti), ")")
 
-#' @exportS3Method
+#' @export
 to_text.cql2_interval <- function(x)
   paste0("INTERVAL(", to_text(x$interval[[1]]), ",",
          to_text(x$interval[[2]]), ")")
 
-#' @exportS3Method
+#' @export
 to_text.cql2 <- function(x) to_text(cql2_filter(x))
 
 
-#' @exportS3Method
+#' @export
 to_text.default <- function(x)
   stop(paste("cannot handle value of class", class(x)), call. = FALSE)
 
@@ -311,36 +320,36 @@ to_wkt <- function(x) {
 }
 
 wkt_collection <- function(x) {
-  paste0(vapply(x[["geometries"]], to_wkt, character(1)), collapse = ",")
+  paste0(map_chr(x$geometries, to_wkt), collapse = ",")
 }
 
 wkt_coord0 <- function(x) {
-  paste(x[["coordinates"]], collapse = " ")
+  paste(x$coordinates, collapse = " ")
 }
 
 wkt_coord1 <- function(x) {
-  paste(apply(x[["coordinates"]], 1, paste, collapse = " ", simplify = TRUE),
+  paste(apply(x$coordinates, 1, paste, collapse = " ", simplify = TRUE),
         collapse = ",")
 }
 
 wkt_coord2 <- function(x) {
   paste0("(",
-         vapply(x[["coordinates"]], function(y) {
+         map_chr(x$coordinates, function(y) {
            paste(apply(y, 1, paste, collapse = " ", simplify = TRUE),
                  collapse = ",")
-         }, character(1)), ")", collapse = ","
+         }), ")", collapse = ","
   )
 }
 
 wkt_coord3 <- function(x) {
   paste0("(",
-         vapply(x[["coordinates"]], function(p) {
+         map_chr(x$coordinates, function(p) {
            paste0("(",
-                  vapply(p, function(y) {
+                  map_chr(p, function(y) {
                     paste(apply(y, 1, paste, collapse = " ", simplify = TRUE),
                           collapse = ",")
-                  }, character(1)), ")", collapse = ","
+                  }), ")", collapse = ","
            )
-         }, character(1)), ")", collapse = ",")
+         }), ")", collapse = ",")
 
 }

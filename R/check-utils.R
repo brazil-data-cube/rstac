@@ -42,3 +42,12 @@
     .error("Invalid %s value in `%s` param.",
            paste0("`", expected, "`", collapse = " or "), obj_name)
 }
+
+check_select_eval <- function(val) {
+  if (!is.logical(val)) {
+    .error("Select expressions must be evaluated as logical.")
+  }
+  if (length(val) > 1) {
+    .error("Select function must return a logical value of length 1.")
+  }
+}

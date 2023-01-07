@@ -62,14 +62,12 @@ get_request <- function(q, ...) {
   # process omitted params
   q <- .do_omit_query_params(q)
 
-  tryCatch({
-    res <- httr::GET(url = make_url(q$base_url, endpoint = q$endpoint),
-                     query = .querystrings_encode(q$params), ...)
-  },
-  error = function(e) {
-
-    .error("Request error. %s", e$message)
-  })
+  res <- make_get_request(
+    url = make_url(q$base_url, endpoint = q$endpoint),
+    query = .querystrings_encode(q$params),
+    ...,
+    error_msg = "Error while requesting"
+  )
 
   # restore omitted params
   q <- .undo_omit_query_params(q)

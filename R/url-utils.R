@@ -1,32 +1,3 @@
-#' @title Utility functions
-#'
-#' @rdname http_request
-#'
-#' @description
-#' `make_url` is a helper function to generate url. The returned
-#' url is formed by appending `endpoint` at the end of base url
-#' informed by `url` parameter. If `endpoint` has multiple elements
-#' it will be collapsed using `'/'` character.
-#'
-#' Note that `make_url` function differs from standards of relative URI
-#' path resolution (RFC 3986). Any existing path in base url
-#' is maintained in the final url, and a simple string contatenation is made
-#' whithout including any character separator. For this reason, this function
-#' does not support the query and fragment URI components in the base url.
-#'
-#' @param url         a `character` informing the base url of a
-#' STAC web service.
-#'
-#' @param endpoint    a `character` a path to be appended in the final
-#' url.
-#'
-#' @param params      a named `list` with all url query parameters to be
-#' appended in the url.
-#'
-#' @return
-#' `make_url` returns an url to access STAC endpoints.
-#'
-#' @noRd
 make_url <- function(url, endpoint = "", params = list()) {
   # remove trailing '/' char
   if (substring(url, nchar(url)) == "/")
@@ -39,24 +10,20 @@ make_url <- function(url, endpoint = "", params = list()) {
   return(res)
 }
 
-#' @title Utility functions
-#'
-#' @param params a `list` of parameters received from stac objects.
-#'
-#' @return a `character` representing the encode parameters of the query.
-#'
-#' @noRd
+make_get_request <- function(url, ..., error_msg = "Error while requesting") {
+  tryCatch({
+    httr::GET(url, ...)
+  },
+  error = function(e) {
+    if (!is.null(error_msg))
+      .error(paste(error_msg, "'%s'. \n%s"), url, e$message)
+  })
+}
+
 .querystrings_encode <- function(params) {
   return(lapply(params, paste0, collapse = ","))
 }
 
-#' @title Utility functions
-#'
-#' @param querystring a `character` with the query to be decoded.
-#'
-#' @return a `list` with the query params.
-#'
-#' @noRd
 .querystring_decode <- function(querystring) {
   # first decode and remove all coded spaces
   querystring <- URLdecode(querystring)
@@ -65,21 +32,11 @@ make_url <- function(url, endpoint = "", params = list()) {
   querystring_spplited <- querystring_spplited[nzchar(querystring_spplited)]
   values <- lapply(querystring_spplited,
                    function(x) regmatches(x, regexpr("=", x), invert = TRUE)[[1]])
-
-
   params <- lapply(values, `[[`, 2)
-  names(params) <- vapply(values, `[[`, 1, FUN.VALUE = character(1))
-
+  names(params) <- map_chr(values, `[[`, 1)
   return(params)
 }
 
-#' @title Utility functions
-#'
-#' @param params a `list` with the parameters of query.
-#'
-#' @return a `list` with the query parameters.
-#'
-#' @noRd
 .validate_query <- function(params) {
 
   if (!is.null(params$query) && is.character(params$query)) {
@@ -101,7 +58,7 @@ gdalvsi_switch <- function(url, ...) {
 }
 
 gdalvsi_append <- function(url) {
-  vapply(url, function(x) {
+  map_chr(url, function(x) {
     gdalvsi_switch(
       x,
       https = , http = paste("/vsicurl", x, sep = "/"),
@@ -109,28 +66,15 @@ gdalvsi_append <- function(url) {
       gs = paste("/vsigs", gsub("^gs://", "", x), sep = "/"),
       url
     )
-  }, character(1), USE.NAMES = FALSE)
+  })
 }
 
-#' @title Utility functions
-#'
-#' @param bbox a `numeric` vector with only features that have a
-#' geometry that intersects the bounding box are selected. The bounding box is
-#' provided as four or six numbers, depending on whether the coordinate
-#' reference system includes a vertical axis (elevation or depth):
-#' \itemize{ \item Lower left corner, coordinate axis 1
-#'           \item Lower left corner, coordinate axis 2
-#'           \item Lower left corner, coordinate axis 3 (optional)
-#'           \item Upper right corner, coordinate axis 1
-#'           \item Upper right corner, coordinate axis 2
-#'           \item Upper right corner, coordinate axis 3 (optional) }.
-#'
-#' @return A `character` with `bbox` formatted based on min and max
-#'  values.
-#'
-#' @noRd
-.format_bbox <- function(bbox) {
-
+# bbox is a numeric vector provided as four or six numbers, depending on
+# whether the coordinate reference system includes a vertical axis
+# (elevation or depth):
+# - xmin, ymin, zmin (optional)
+# - xmax, ymax, zmax (optional).
+format_bbox <- function(bbox) {
   if (!is.null(bbox) & length(bbox) == 4)
     return(paste(c("xmin:", "ymin:", "xmax:", "ymax:"),
                  sprintf("%.5f", bbox), collapse = ", "))
@@ -138,4 +82,54 @@ gdalvsi_append <- function(url) {
   if (!is.null(bbox) & length(bbox) == 6)
     return(paste(c("xmin:", "ymin:", "zmin:", "xmax:", "ymax:", "zmax:"),
                  sprintf("%.5f", bbox), collapse = ", "))
+}
+
+asset_download <- function(asset,
+                           output_dir,
+                           overwrite, ...,
+                           download_fn = NULL) {
+  if (!is.null(download_fn))
+    return(download_fn(asset))
+
+  # create a full path name
+  path <- url_get_path(asset$href)
+  out_file <- path_normalize(output_dir, path)
+  dir_create(out_file)
+
+  make_get_request(
+    url = asset$href,
+    httr::write_disk(path = out_file, overwrite = overwrite),
+    ...,
+    error_msg = "Error in downloading"
+  )
+  asset$href <- path
+
+  asset
+}
+
+path_normalize <- function(...) {
+  path <- file.path(...)
+  path <- gsub("\\\\", "/", path)
+  path <- gsub("/{2,}", "/", path)
+  path <- gsub("/+$", "", path)
+  return(path.expand(path))
+}
+
+url_get_path <- function(url) {
+  return(httr::parse_url(url)[["path"]])
+}
+
+dir_create <- function(path) {
+  path <- path_get_dir(path)
+  if (!dir.exists(path)) {
+    dir.create(path, recursive = TRUE)
+    if (!dir.exists(path)) {
+      .error("Cannot create directory '%s'", path)
+    }
+  }
+  return(path)
+}
+
+path_get_dir <- function(path) {
+  return(gsub("^\\.", "", dirname(path)))
 }

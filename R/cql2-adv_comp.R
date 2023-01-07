@@ -143,46 +143,46 @@ array_op <- function(op) {
 
 # ---- convert to json ----
 
-#' @exportS3Method
+#' @export
 to_json.cql2_like_op <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_between_op <- function(x) json_obj(x)
 
-#' @exportS3Method
+#' @export
 to_json.cql2_in_op <- function(x) json_obj(x)
 
 # ---- convert to text ----
 
 # is there infix NOT operator?
 # like_op
-#' @exportS3Method
+#' @export
 text_not_op.cql2_like_op <- function(x)
     paste(to_text(x$args[[1]]$args[[1]]), "NOT LIKE",
           to_text(x$args[[1]]$args[[2]]))
 
-#' @exportS3Method
+#' @export
 to_text.cql2_like_op <- function(x)
     paste(to_text(x$args[[1]]), toupper(x$op), to_text(x$args[[2]]))
 
 # between_op
-#' @exportS3Method
+#' @export
 text_not_op.cql2_between_op <- function(x)
     paste(to_text(x$args[[1]]$args[[1]]), "NOT BETWEEN",
           to_text(x$args[[1]]$args[[2]]), "AND",
           to_text(x$args[[1]]$args[[3]]))
 
-#' @exportS3Method
+#' @export
 to_text.cql2_between_op <- function(x)
     paste(to_text(x$args[[1]]), "BETWEEN",
           to_text(x$args[[2]]), "AND", to_text(x$args[[3]]))
 
 # in_op
-#' @exportS3Method
+#' @export
 text_not_op.cql2_in_op <- function(x)
     paste(to_text(x$args[[1]]$args[[1]]), "NOT IN",
           to_text(x$args[[1]]$args[[2]]))
 
-#' @exportS3Method
+#' @export
 to_text.cql2_in_op <- function(x)
     paste(to_text(x$args[[1]]), "IN", to_text(x$args[[2]]))

@@ -29,6 +29,19 @@ deprec_parameter <- function(deprec_var, deprec_version, msg = NULL) {
   )
 }
 
+foreach_item <- function(items, fn, ...) {
+  items$features <- lapply(items$features, fn, ...)
+  return(items)
+}
+
+map_lgl <- function(x, fn, ..., use_names = FALSE) {
+  vapply(x, fn, FUN.VALUE = logical(1), ..., USE.NAMES = use_names)
+}
+
+map_chr <- function(x, fn, ..., use_names = FALSE) {
+  vapply(x, fn, FUN.VALUE = character(1), ..., USE.NAMES = use_names)
+}
+
 # nocov start
 links_filter <- function(x, ..., filter_fn = NULL) {
 
@@ -47,9 +60,9 @@ links_filter <- function(x, ..., filter_fn = NULL) {
 
     for (i in seq_along(dots)) {
 
-      sel <- vapply(x$links, function(l) {
+      sel <- map_lgl(x$links, function(l) {
         eval(dots[[i]], envir = l)
-      }, logical(1))
+      })
 
       x$links <- x$links[sel]
     }
@@ -57,16 +70,15 @@ links_filter <- function(x, ..., filter_fn = NULL) {
 
   if (!is.null(filter_fn)) {
 
-    sel <- vapply(x$links, function(l) {
+    sel <- map_lgl(x$links, function(l) {
       filter_fn(l$links)
-    }, logical(1))
+    })
 
     x$links <- x$links[sel]
   }
 
   x$links
 }
-
 
 .field_filter <- function(x, field, ..., filter_fn = NULL) {
 
@@ -84,9 +96,9 @@ links_filter <- function(x, ..., filter_fn = NULL) {
 
     for (i in seq_along(dots)) {
 
-      sel <- vapply(x, function(xi) {
+      sel <- map_lgl(x, function(xi) {
         eval(dots[[i]], envir = xi)
-      }, logical(1))
+      })
 
       x <- x[sel]
     }
@@ -94,9 +106,9 @@ links_filter <- function(x, ..., filter_fn = NULL) {
 
   if (!is.null(filter_fn)) {
 
-    sel <- vapply(x, function(xi) {
+    sel <- map_lgl(x, function(xi) {
       filter_fn(xi)
-    }, logical(1))
+    })
 
     x <- x[sel]
   }
@@ -136,10 +148,9 @@ links_filter <- function(x, ..., filter_fn = NULL) {
   }
 
   if (!is.null(apply_fn)) {
-
-    value_fn <- vapply(x, function(xi) {
+    value_fn <- map_lgl(x, function(xi) {
       apply_fn(xi)
-    }, logical(1))
+    })
 
     x <- x[value_fn]
   }
@@ -170,39 +181,4 @@ links_filter <- function(x, ..., filter_fn = NULL) {
 
   x
 }
-
-#' A function to safely retry the signing of MPC URLs
-#'
-#' @param f      The signing function
-#' @param url url path for to be signed
-#' @param req the previous request response that was sent for signing
-#' @param retries the number of times a request should be tried
-#' @param asset the item collection value passed to `.error` on error
-#'
-#' @return The updated response content list
-#'
-#' @noRd
-retry_mpc_request <- function(f, url, req, retries, asset){
-
-  sleep_request <- function(s, f, c_url){
-      message(gsub("Try", "Trying", s, fixed = TRUE)) 
-      retry_time <- as.numeric(gsub(".*in (.+) seconds.*", "\\1", s)) + 1
-      Sys.sleep(retry_time)
-      f(c_url)
-  }
-
-  for (i in seq_len(retries)){
-    try({
-      req <- sleep_request(s = req$message, f = f, c_url = url)
-      if ("token" %in% names(req)){
-        return(req)
-      } else if ("message" %in% names(req)){
-        req$message <- req$message
-      } else {
-        .error("Cannot sign href '%s'", asset$href)
-      }
-    }, silent=FALSE)
-  }
-}
-
 # nocov end

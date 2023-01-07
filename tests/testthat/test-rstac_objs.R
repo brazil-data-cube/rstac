@@ -596,7 +596,7 @@ testthat::test_that("stac item object", {
 
   # output test
   testthat::expect_equal(
-    object   = items_length(items_fetch(stac_item)),
+    object   = items_length(stac_item),
     expected = 1
   )
 })

@@ -1,13 +1,13 @@
-#' @title Assets filter
+#' @title Assets filter (Deprecated)
 #'
 #' @description `r lifecycle::badge('deprecated')`
 #'
-#' @param items                a `STACItemCollection` object representing
+#' @param items     a `STACItemCollection` object representing
 #'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
 #'
 #' @param ...          additional arguments. See details.
 #'
-#' @param filter_fn           a `function` that will be used to filter the
+#' @param filter_fn a `function` that will be used to filter the
 #'  attributes listed in the properties.
 #'
 #' @return a `list` with the attributes of date, bands and paths.

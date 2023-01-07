@@ -15,8 +15,6 @@
 #' The `stac_version()` function returns a `character` STAC API
 #' version.
 #'
-#' @name utilities
-#'
 #' @export
 stac_version <- function(x, ...) {
 

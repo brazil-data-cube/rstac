@@ -134,5 +134,5 @@ is_array_expr <- function(x) {
 
 # check list of scalars (at least one element)
 is_scalar_lst <- function(x) {
-  is_lst(x) && length(x) > 0 && all(vapply(x, is_scalar, TRUE))
+  is_lst(x) && length(x) > 0 && all(map_lgl(x, is_scalar))
 }

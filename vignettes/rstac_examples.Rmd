@@ -1,0 +1,63 @@
+items <-
+  stac("https://planetarycomputer.microsoft.com/api/stac/v1") |>
+  stac_search(collections = c("landsat-8-c2-l2",
+                              "sentinel-2-l2a"),
+  bbox = c(xmin = -64.85976089, ymin = -10.49199395,
+           xmax = -64.79272527, ymax = -10.44736091),
+  datetime = "2019-01-01/2019-06-28",
+  limit = 250) |>
+  post_request()
+
+item <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") |>
+  collections(collection_id = "sentinel-2-l2a") |>
+  items(feature_id = "S2A_MSIL2A_20190608T143751_R096_T20LLP_20201005T233542") |>
+  get_request()
+
+# ---- items functions ----
+
+# items fields
+items_fields(items, field = "properties")
+items_fields(item, field = "properties")
+items_fields(items, field = "assets")
+items_fields(item, field = "assets")
+
+# items assets
+items_assets(items)
+items_assets(item)
+
+# items reap
+items_reap(items)
+items_reap(item)
+
+# items length
+
+# items matched
+
+# items next
+
+# items datetime
+
+# items bbox
+
+# items filter
+
+# items compact
+
+# items sign
+
+# ---- assets functions ----
+
+# assets_url
+
+# assets_select
+
+# assets_rename
+assets_rename(items, c(B01 = "B0111"), B02 = "B0222")
+assets_rename(items, c(B01 = "B0111"), B02 = "B0222")
+
+assets_rename(items, list(B01 = "B0111"))
+assets_rename(items, list(B01 = "B0111"))
+
+# has_assets
+
+

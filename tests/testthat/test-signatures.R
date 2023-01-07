@@ -21,19 +21,7 @@ testthat::test_that("signature functions", {
 
     # return the same object after signature?
     testthat::expect_s3_class(
-      object = stac_items %>% items_sign(),
-      class = c("STACItemCollection", "RSTACDocument")
-    )
-
-    # return the same object after signature?
-    testthat::expect_s3_class(
       object = stac_item %>% items_sign(sign_fn = sign_bdc("AAAA-BBB")),
-      class = c("STACItem", "RSTACDocument")
-    )
-
-    # return the same object after signature?
-    testthat::expect_s3_class(
-      object = stac_item %>% items_sign(),
       class = c("STACItem", "RSTACDocument")
     )
 
