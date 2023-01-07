@@ -541,7 +541,8 @@ items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
   check_subclass(items, "STACItemCollection")
 
   dots <- unquote(
-    expr = substitute(list(...), env = environment())[-1], env =  parent.frame()
+    expr = as.list(substitute(list(...), env = environment())[-1]),
+    env =  parent.frame()
   )
 
   if (length(dots) > 0) {

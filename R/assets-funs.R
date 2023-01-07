@@ -333,7 +333,7 @@ assets_select.STACItem <- function(items,
                                    asset_names = NULL, ...,
                                    select_fn = NULL) {
   exprs <- unquote(
-    expr = substitute(list(...), env = environment())[-1],
+    expr = as.list(substitute(list(...), env = environment())[-1]),
     env =  parent.frame()
   )
 
