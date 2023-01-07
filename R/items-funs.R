@@ -667,9 +667,9 @@ check_old_expression <- function(items, expr) {
   val <- map_lgl(items$features, function(f) {
     f$properties$properties <- NULL
     tryCatch({
-      eval(expr, envir = f$properties,
+      val <- eval(expr, envir = f$properties,
            enclos = parent.env(parent.frame()))
-      TRUE
+      is.logical(val) && length(val) > 0
     }, error = function(e) {
       return(FALSE)
     })
@@ -683,8 +683,8 @@ check_old_fn <- function(items, fn) {
   val <- map_lgl(items$features, function(f) {
     f$properties$properties <- NULL
     tryCatch({
-      fn(f$properties)
-      TRUE
+      val <- fn(f$properties)
+      is.logical(val) && length(val) > 0
     }, error = function(e) {
       return(FALSE)
     })
