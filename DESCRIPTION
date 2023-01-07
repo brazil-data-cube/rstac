@@ -9,14 +9,14 @@ Authors@R:
             role = c("cph")))
 Description: Provides functions to access, search and download spacetime earth
     observation data via SpatioTemporal Asset Catalog (STAC). This package 
-    supports the version 1.0.0 of the STAC specification
+    supports the version 1.0.0 (and older) of the STAC specification
     (<https://github.com/radiantearth/stac-spec>). 
     For further details see Simoes et al. (2021) <doi:10.1109/IGARSS47720.2021.9553518>.
 License: MIT + file LICENSE
-URL: https://github.com/brazil-data-cube/rstac
+URL: https://brazil-data-cube.github.io/rstac
 BugReports: https://github.com/brazil-data-cube/rstac/issues
 Encoding: UTF-8
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Depends:
     R (>= 3.5)
 Imports:
