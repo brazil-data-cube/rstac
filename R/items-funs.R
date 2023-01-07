@@ -563,25 +563,21 @@ items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
 
     show_warning <- TRUE
     for (i in seq_along(dots)) {
-      if (is.logical(dots[[i]]) || is.numeric(dots[[i]])) {
-        sel <- dots[[i]]
-      } else if (is.call(dots[[i]]) || is.name(dots[[i]])) {
-        if (show_warning && check_old_expression(items, dots[[i]])) {
-          # NOTE: this warning will be removed in next versions. We will no
-          # longer support the old way of filter evaluation
-          .warning(paste(
-            "In version 0.9.2, rstac changed how filter expressions are",
-            "evaluated. In future versions, the expression '%s' will be",
-            "evaluated against each feature in items intead of `properties`",
-            "field.\nSee ?items_filter for more details on how to change",
-            "your expression."
-          ), deparse(dots[[i]]))
-          show_warning <- FALSE
-        }
-        sel <- map_lgl(items$features, eval_filter_expr, expr = dots[[i]])
+      if (show_warning && check_old_expression(items, dots[[i]])) {
+        # NOTE: this warning will be removed in next versions. We will no
+        # longer support the old way of filter evaluation
+        .warning(paste(
+          "In version 0.9.2, rstac changed how filter expressions are",
+          "evaluated. In future versions, the expression '%s' will be",
+          "evaluated against each feature in items intead of `properties`",
+          "field.\nSee ?items_filter for more details on how to change",
+          "your expression."
+        ), deparse(dots[[i]]))
+        show_warning <- FALSE
       }
-      items$features <- items$features[sel]
+      sel <- map_lgl(items$features, eval_filter_expr, expr = dots[[i]])
     }
+    items$features <- items$features[sel]
   }
 
   if (!is.null(filter_fn)) {
