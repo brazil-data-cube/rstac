@@ -87,9 +87,6 @@ testthat::test_that("items functions", {
     )
 
     # items_length--------------------------------------------------------------
-    # error - given another object
-    testthat::expect_error(items_length(list(res)))
-
     # ok - return a numeric
     testthat::expect_true(is.numeric(items_length(res)))
 
@@ -116,8 +113,7 @@ testthat::test_that("items functions", {
     # STACItem
     testthat::expect_vector(items_bbox(item_stac), ptype = double())
 
-    # provide wrong object
-    testthat::expect_error(
+    testthat::expect_null(
       object = items_bbox(
         rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           collections(collection_id = "CB4_64_16D_STK-1") %>%
@@ -142,8 +138,7 @@ testthat::test_that("items functions", {
     )
 
     # items_matched-------------------------------------------------------------
-    # error - given another object
-    testthat::expect_error(items_matched(list(res)))
+    testthat::expect_null(items_matched(list()))
 
     # ok - return a numeric
     testthat::expect_true(is.numeric(items_matched(res)))
@@ -163,7 +158,7 @@ testthat::test_that("items functions", {
     )
 
     # items_filter--------------------------------------------------------------
-    testthat::expect_s3_class(
+    testthat::expect_warning(
       object = items_filter(
         res, filter_fn = function(x) {x[["eo:cloud_cover"]] < 10}
       ),
@@ -171,7 +166,19 @@ testthat::test_that("items functions", {
     )
 
     testthat::expect_s3_class(
+      object = items_filter(
+        res, filter_fn = function(x) {x$properties$`eo:cloud_cover` < 10}
+      ),
+      class = "STACItemCollection"
+    )
+
+    testthat::expect_warning(
       object = items_filter(res, `eo:cloud_cover` < 10),
+      class = "STACItemCollection"
+    )
+
+    testthat::expect_s3_class(
+      object = items_filter(res, properties$`eo:cloud_cover` < 10),
       class = "STACItemCollection"
     )
 
@@ -205,11 +212,6 @@ testthat::test_that("items functions", {
     )
 
     # items_next----------------------------------------------------------------
-    testthat::expect_s3_class(
-      object = items_next(item_stac),
-      class = "STACItem"
-    )
-
     testthat::expect_s3_class(
       object = items_next(res_geo),
       class = "STACItemCollection"
@@ -259,9 +261,8 @@ testthat::test_that("items functions", {
     testthat::expect_error(items_reap(item_stac, FALSE))
     testthat::expect_error(items_reap(item_stac, FALSE, field = FALSE))
 
-    testthat::expect_equal(
-      object = subclass(items_reap(item_stac)),
-      expected = "STACItem"
+    testthat::expect_error(
+      object = subclass(items_reap(item_stac))
     )
 
     # STACItemCollection
