@@ -42,16 +42,10 @@
 "_PACKAGE"
 NULL
 
-#' Pipe
-#'
-#' Magrittr compound assignment pipe-operator.
-#'
 #' @importFrom magrittr %>%
-#' @name %>%
-#' @rdname pipe
-#' @param lhs,rhs A visualization and a function to apply to it.
+#' @keywords internal
 #' @export
-NULL
+magrittr::`%>%`
 
 #' @importFrom httr GET POST write_disk add_headers content status_code
 #' http_type

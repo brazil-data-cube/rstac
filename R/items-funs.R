@@ -1,4 +1,4 @@
-#' @title STACItemCollection functions
+#' @title Items functions
 #'
 #' @description
 #' These functions provide support to work with
@@ -55,7 +55,7 @@
 #' @param simplify        `r lifecycle::badge('deprecated')` no side-effect
 #'
 #' @param field           a `character` with the names of the field to
-#'  get the subfields values.
+#' get the subfields values.
 #'
 #' @param index           an `atomic` vector with values as group index
 #'
