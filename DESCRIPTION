@@ -50,6 +50,7 @@ Collate:
     'ext_query.R'
     'extensions.R'
     'items-funs.R'
+    'items-utils.R'
     'items-query.R'
     'message-utils.R'
     'print.R'
