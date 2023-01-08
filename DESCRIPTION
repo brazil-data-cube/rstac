@@ -40,6 +40,7 @@ Collate:
     'cql2-adv_comp.R'
     'cql2.R'
     'cql2-env.R'
+    'cql2-utils.R'
     'assets-funs.R'
     'check-utils.R'
     'conformance-query.R'
