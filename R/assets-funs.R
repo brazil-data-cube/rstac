@@ -84,6 +84,9 @@
 #' a logical value where `TRUE` selects the asset and `FALSE` discards it.
 #' Multiple expressions are combine with `AND` operator.
 #'
+#' **WARNING:** Errors in the evaluation of expressions are
+#' considered as `FALSE`.
+#'
 #' \item `assets_rename()`: ellipsis is used to pass named parameters
 #' to be processed in the same way as named list in `mapper` argument.
 #' }

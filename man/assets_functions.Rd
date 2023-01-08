@@ -202,6 +202,9 @@ be evaluated against each asset metadata. Expressions must be evaluated as
 a logical value where \code{TRUE} selects the asset and \code{FALSE} discards it.
 Multiple expressions are combine with \code{AND} operator.
 
+\strong{WARNING:} Errors in the evaluation of expressions are
+considered as \code{FALSE}.
+
 \item \code{assets_rename()}: ellipsis is used to pass named parameters
 to be processed in the same way as named list in \code{mapper} argument.
 }
