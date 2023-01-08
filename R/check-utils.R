@@ -44,7 +44,7 @@
 }
 
 items_check <- function(items) {
-  if (is.list(items) && !"assets" %in% names(items)) {
+  if (!(is.list(items) && "assets" %in% names(items))) {
     .error("Parameter `items` is invalid.")
   }
 }
