@@ -301,16 +301,17 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
         datetime = "2017-08-01/2018-03-01",
         bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
-    get_request() \%>\% items_filter(`eo:cloud_cover` < 10)
+    get_request() \%>\%
+    items_filter(properties$`eo:cloud_cover` < 10)
 
 # Example with AWS STAC
 stac("https://earth-search.aws.element84.com/v0") \%>\%
-    stac_search(collections = "sentinel-s2-l2a-cogs",
+  stac_search(collections = "sentinel-s2-l2a-cogs",
               bbox = c(-48.206, -14.195, -45.067, -12.272),
               datetime = "2018-06-01/2018-06-30",
               limit = 500) \%>\%
-    post_request() \%>\%
-    items_filter(filter_fn = function(x) {x[["eo:cloud_cover"]] < 10})
+  post_request() \%>\%
+  items_filter(filter_fn = function(x) {x$properties$`eo:cloud_cover` < 10})
 }
 
 \dontrun{
