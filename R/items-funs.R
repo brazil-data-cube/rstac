@@ -206,6 +206,8 @@ items_length <- function(items) {
 #'
 #' @export
 items_length.STACItem <- function(items) {
+  items_check(items)
+
   if (length(items) == 0) {
     return(NULL)
   }
@@ -235,6 +237,8 @@ items_matched  <- function(items, matched_field = NULL) {
 #'
 #' @export
 items_matched.STACItem  <- function(items, matched_field = NULL) {
+  items_check(items)
+
   if (length(items) == 0) {
     return(NULL)
   }
@@ -257,7 +261,6 @@ items_matched.STACItemCollection <- function(items, matched_field = NULL) {
                                        "items object.")))
   }
   if (is.null(matched)) {
-
     if (stac_version(items) < "0.9.0")
       # STAC API < 0.9.0 extensions
       matched <- items$`search:metadata`$matched
@@ -459,6 +462,7 @@ items_datetime <- function(items) {
 #'
 #' @export
 items_datetime.STACItem <- function(items) {
+  items_check(items)
   if (!"datetime" %in% names(items$properties)) {
     .error("Parameter `items` is invalid.")
   }
@@ -488,6 +492,7 @@ items_bbox <- function(items) {
 #'
 #' @export
 items_bbox.STACItem <- function(items) {
+  items_check(items)
   return(items$bbox)
 }
 
@@ -521,9 +526,7 @@ items_assets <- function(items, simplify = deprecated()) {
 #'
 #' @export
 items_assets.STACItem <- function(items, simplify = deprecated()) {
-  if (!"assets" %in% names(items)) {
-    .error("Parameter `items` is invalid.")
-  }
+  items_check(items)
   return(items_fields(items, field = "assets"))
 }
 
@@ -705,6 +708,7 @@ items_reap <- function(items, field, ...) {
 #'
 #' @export
 items_reap.STACItem <- function(items, field, ...) {
+  items_check(items)
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -784,6 +788,7 @@ items_fields <- function(items, field = NULL, ...) {
 #'
 #' @export
 items_fields.STACItem <- function(items, field = NULL, ...) {
+  items_check(items)
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -838,6 +843,7 @@ items_sign <- function(items, sign_fn) {
 #'
 #' @export
 items_sign.STACItem <- function(items, sign_fn) {
+  items_check(items)
   return(sign_fn(items))
 }
 
