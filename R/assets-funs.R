@@ -375,8 +375,7 @@ assets_select.STACItem <- function(items,
 
     for (i in seq_along(exprs)) {
       sel <- map_lgl(items$assets, function(asset) {
-        val <- eval(exprs[[i]], envir = asset)
-        check_select_eval(val)
+        val <- select_eval(asset = asset, expr = exprs[[i]])
         return(val)
       })
       items$assets <- items$assets[sel]
@@ -385,8 +384,7 @@ assets_select.STACItem <- function(items,
 
   if (!is.null(select_fn)) {
     sel <- map_lgl(items$assets, function(asset) {
-      val <- select_fn(asset)
-      check_select_eval(val)
+      val <- select_exec(asset = asset, select_fn = select_fn)
       return(val)
     })
     items$assets <- items$assets[sel]
