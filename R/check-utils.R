@@ -44,8 +44,18 @@
 }
 
 check_items <- function(items) {
+  UseMethod("check_items", items)
+}
+
+check_items.STACItem <- function(items) {
   if (!(is.list(items) && "assets" %in% names(items))) {
-    .error("Parameter `items` is invalid.")
+    .error("Invalid STACItem object.")
+  }
+}
+
+check_items.STACItemCollection <- function(items) {
+  if (!(is.list(items) && "features" %in% names(items))) {
+    .error("Invalid STACItemCollection object.")
   }
 }
 
