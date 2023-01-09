@@ -43,6 +43,12 @@
            paste0("`", expected, "`", collapse = " or "), obj_name)
 }
 
+items_check <- function(items) {
+  if (!(is.list(items) && "assets" %in% names(items))) {
+    .error("Parameter `items` is invalid.")
+  }
+}
+
 select_check_eval <- function(val) {
   if (!is.logical(val)) {
     .error("Select expressions must be evaluated as logical.")

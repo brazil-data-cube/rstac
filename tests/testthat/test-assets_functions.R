@@ -17,7 +17,6 @@ testthat::test_that("assets functions", {
     expected = 0
   )
 
-  # error - given another object
   testthat::expect_error(
     stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       get_request(.) %>%

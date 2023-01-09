@@ -113,7 +113,7 @@ testthat::test_that("items functions", {
     # STACItem
     testthat::expect_vector(items_bbox(item_stac), ptype = double())
 
-    testthat::expect_null(
+    testthat::expect_error(
       object = items_bbox(
         rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           collections(collection_id = "CB4_64_16D_STK-1") %>%
@@ -138,7 +138,7 @@ testthat::test_that("items functions", {
     )
 
     # items_matched-------------------------------------------------------------
-    testthat::expect_null(items_matched(list()))
+    testthat::expect_error(items_matched(list()))
 
     # ok - return a numeric
     testthat::expect_true(is.numeric(items_matched(res)))

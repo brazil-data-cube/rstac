@@ -168,16 +168,17 @@
 #'     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
 #'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
-#'     get_request() %>% items_filter(`eo:cloud_cover` < 10)
+#'     get_request() %>%
+#'     items_filter(properties$`eo:cloud_cover` < 10)
 #'
 #' # Example with AWS STAC
 #' stac("https://earth-search.aws.element84.com/v0") %>%
-#'     stac_search(collections = "sentinel-s2-l2a-cogs",
+#'   stac_search(collections = "sentinel-s2-l2a-cogs",
 #'               bbox = c(-48.206, -14.195, -45.067, -12.272),
 #'               datetime = "2018-06-01/2018-06-30",
 #'               limit = 500) %>%
-#'     post_request() %>%
-#'     items_filter(filter_fn = function(x) {x[["eo:cloud_cover"]] < 10})
+#'   post_request() %>%
+#'   items_filter(filter_fn = function(x) {x$properties$`eo:cloud_cover` < 10})
 #' }
 #'
 #' \dontrun{
@@ -205,6 +206,8 @@ items_length <- function(items) {
 #'
 #' @export
 items_length.STACItem <- function(items) {
+  items_check(items)
+
   if (length(items) == 0) {
     return(NULL)
   }
@@ -234,6 +237,8 @@ items_matched  <- function(items, matched_field = NULL) {
 #'
 #' @export
 items_matched.STACItem  <- function(items, matched_field = NULL) {
+  items_check(items)
+
   if (length(items) == 0) {
     return(NULL)
   }
@@ -256,7 +261,6 @@ items_matched.STACItemCollection <- function(items, matched_field = NULL) {
                                        "items object.")))
   }
   if (is.null(matched)) {
-
     if (stac_version(items) < "0.9.0")
       # STAC API < 0.9.0 extensions
       matched <- items$`search:metadata`$matched
@@ -458,6 +462,7 @@ items_datetime <- function(items) {
 #'
 #' @export
 items_datetime.STACItem <- function(items) {
+  items_check(items)
   if (!"datetime" %in% names(items$properties)) {
     .error("Parameter `items` is invalid.")
   }
@@ -487,6 +492,7 @@ items_bbox <- function(items) {
 #'
 #' @export
 items_bbox.STACItem <- function(items) {
+  items_check(items)
   return(items$bbox)
 }
 
@@ -520,9 +526,7 @@ items_assets <- function(items, simplify = deprecated()) {
 #'
 #' @export
 items_assets.STACItem <- function(items, simplify = deprecated()) {
-  if (!"assets" %in% names(items)) {
-    .error("Parameter `items` is invalid.")
-  }
+  items_check(items)
   return(items_fields(items, field = "assets"))
 }
 
@@ -612,86 +616,6 @@ items_compact.STACItemCollection <- function(items) {
   items_filter(items, filter_fn = has_assets)
 }
 
-eval_filter_expr <- function(f, expr) {
-  # NOTE: this tryCatch will be removed in next versions.
-  # We will no longer support the old way of filter evaluation
-  val <- tryCatch({
-    f$properties$properties <- NULL
-    eval(expr, envir = f$properties,
-         enclos = parent.env(parent.frame()))
-  }, error = function(e) {
-    return(NULL)
-  })
-
-  if (length(val) == 0) {
-    val <- tryCatch({
-      eval(expr, envir = f, enclos = parent.env(parent.frame()))
-    }, error = function(e) {
-      return(FALSE)
-    })
-  }
-
-  if (length(val) == 0) {
-    val <- FALSE
-  }
-  return(val)
-}
-
-eval_filter_fn <- function(f, filter_fn) {
-  # NOTE: this tryCatch will be removed in next versions.
-  # We will no longer support the old way of filter evaluation
-  val <- tryCatch({
-    f$properties$properties <- NULL
-    filter_fn(f$properties)
-  }, error = function(e) {
-    return(NULL)
-  })
-
-  if (length(val) == 0) {
-    val <- tryCatch({
-      filter_fn(f)
-    }, error = function(e) {
-      return(FALSE)
-    })
-  }
-
-  if (length(val) == 0) {
-    val <- FALSE
-  }
-  return(val)
-}
-
-# NOTE: this function will be removed in next versions.
-# We will no longer support the old way of filter evaluation
-check_old_expression <- function(items, expr) {
-  val <- map_lgl(items$features, function(f) {
-    f$properties$properties <- NULL
-    tryCatch({
-      val <- eval(expr, envir = f$properties,
-           enclos = parent.env(parent.frame()))
-      is.logical(val) && length(val) > 0
-    }, error = function(e) {
-      return(FALSE)
-    })
-  })
-  return(any(val))
-}
-
-# NOTE: this function will be removed in next versions.
-# We will no longer support the old way of filter evaluation
-check_old_fn <- function(items, fn) {
-  val <- map_lgl(items$features, function(f) {
-    f$properties$properties <- NULL
-    tryCatch({
-      val <- fn(f$properties)
-      is.logical(val) && length(val) > 0
-    }, error = function(e) {
-      return(FALSE)
-    })
-  })
-  return(any(val))
-}
-
 #' @rdname items_functions
 #'
 #' @export
@@ -704,6 +628,7 @@ items_reap <- function(items, field, ...) {
 #'
 #' @export
 items_reap.STACItem <- function(items, field, ...) {
+  items_check(items)
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -783,6 +708,7 @@ items_fields <- function(items, field = NULL, ...) {
 #'
 #' @export
 items_fields.STACItem <- function(items, field = NULL, ...) {
+  items_check(items)
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -837,6 +763,7 @@ items_sign <- function(items, sign_fn) {
 #'
 #' @export
 items_sign.STACItem <- function(items, sign_fn) {
+  items_check(items)
   return(sign_fn(items))
 }
 

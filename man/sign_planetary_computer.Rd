@@ -45,11 +45,11 @@ token that will be used in the href.
    post_request()
 
  # signing each asset href
- stac_obj \%>\% items_sign(
-   sign_fn = sign_planetary_computer(
-     headers = c("Ocp-Apim-Subscription-Key" = "your-mpc-token")
-   )
- )
+ # stac_obj \%>\% items_sign(
+ #   sign_fn = sign_planetary_computer(
+ #     headers = c("Ocp-Apim-Subscription-Key" = <your-mpc-token>)
+ #   )
+ # )
 }
 
 }
