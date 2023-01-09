@@ -143,10 +143,7 @@
 #'
 #' @noRd
 .parse_intersects <- function(geom) {
-
-  if (!is.list(geom))
-    .error("The 'intersects' parameter must be a list.")
-  geom
+  get_spatial(geom)
 }
 
 #' @title Utility functions
