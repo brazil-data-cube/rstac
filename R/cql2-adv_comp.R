@@ -79,11 +79,14 @@ spatial_types <- c("Point", "MultiPoint", "LineString",
 
 #' @export
 get_spatial.character <- function(x) {
-  x <- jsonlite::fromJSON(x,
-                          simplifyVector = TRUE,
-                          simplifyDataFrame = FALSE,
-                          simplifyMatrix = FALSE)
-  class(x) <- c("cql2_spatial", "list")
+  x <- tryCatch({
+    get_spatial(jsonlite::fromJSON(
+      txt = x, simplifyVector = TRUE, simplifyDataFrame = FALSE,
+      simplifyMatrix = FALSE
+    ))
+  }, error = function(e) {
+    .error("Invalid GeoJSON geometry '%s'.", x)
+  })
   x
 }
 
@@ -96,15 +99,22 @@ get_spatial.list <- function(x) {
 }
 
 #' @export
-get_spatial.sf <- function(x) get_spatial.sfg(sf::st_geometry(x)[[1]])
+get_spatial.sf <- function(x) {
+  get_spatial.sfc(sf::st_geometry(x))
+}
 
 #' @export
-get_spatial.sfc <- function(x) get_spatial.sfg(x[[1]])
+get_spatial.sfc <- function(x) {
+  if (length(x) > 1) {
+    x <- x[[1]]
+    .warning("Informed geometry has multiple features. Using the first one.")
+  }
+  get_spatial.sfg(x)
+}
 
 #' @export
 get_spatial.sfg <- function(x) {
   names(spatial_types) <- toupper(spatial_types)
-
   geom_type <- spatial_types[[as.character(sf::st_geometry_type(x))]]
   structure(
     list(type = geom_type, coordinates = unclass(x)),
