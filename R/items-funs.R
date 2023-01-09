@@ -200,6 +200,16 @@
 #' @name items_functions
 NULL
 
+#' @exportS3Method
+length.STACItem <- function(x) {
+  return(1)
+}
+
+#' @exportS3Method
+length.STACItemCollection <- function(x) {
+  length(x$features)
+}
+
 #' @rdname items_functions
 #'
 #' @export
