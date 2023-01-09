@@ -43,6 +43,9 @@
 \alias{items_sign.STACItem}
 \alias{items_sign.STACItemCollection}
 \alias{items_sign.default}
+\alias{items_as_sf}
+\alias{items_as_sf.STACItem}
+\alias{items_as_sf.STACItemCollection}
 \title{Items functions}
 \usage{
 items_group(items, ..., field = NULL, index = NULL)
@@ -126,6 +129,12 @@ items_sign(items, sign_fn)
 \method{items_sign}{STACItemCollection}(items, sign_fn)
 
 \method{items_sign}{default}(items, sign_fn)
+
+items_as_sf(items)
+
+\method{items_as_sf}{STACItem}(items)
+
+\method{items_as_sf}{STACItemCollection}(items)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object representing
@@ -184,7 +193,10 @@ otherwise or a \code{list}.
 
 \item \code{items_group()}: a \code{list} of \code{STACItemCollection} objects.
 
-\item \code{items_sign()}: a \code{STACItemCollection} object with signed assets url
+\item \code{items_sign()}: a \code{STACItemCollection} object with signed assets url.
+
+\item \code{items_as_sf()}: a \code{sf} object.
+
 }
 
 A \code{character} with the subfields of the \code{feature} field.
@@ -228,6 +240,8 @@ in an \code{STACItemCollection} object.
 items as elements of a list using some criteria.
 
 \item \code{items_sign()}: allow access assets by preparing its url.
+
+\item \code{items_as_sf()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} convert items to \code{sf} object.
 }
 
 This function returns the subfields of the \code{feature}
