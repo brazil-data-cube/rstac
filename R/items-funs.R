@@ -39,6 +39,8 @@
 #' items as elements of a list using some criteria.
 #'
 #' \item `items_sign()`: allow access assets by preparing its url.
+#'
+#' \item `items_as_sf()`: `r lifecycle::badge('experimental')` convert items to `sf` object.
 #' }
 #'
 #' @param items           a `STACItemCollection` object.
@@ -131,7 +133,10 @@
 #'
 #' \item `items_group()`: a `list` of `STACItemCollection` objects.
 #'
-#' \item `items_sign()`: a `STACItemCollection` object with signed assets url
+#' \item `items_sign()`: a `STACItemCollection` object with signed assets url.
+#'
+#' \item `items_as_sf()`: a `sf` object.
+#'
 #' }
 #'
 #'
@@ -778,3 +783,24 @@ items_sign.STACItemCollection <- function(items, sign_fn) {
 #'
 #' @export
 items_sign.default <- items_sign.STACItem
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_sf <- function(items) {
+  UseMethod("items_as_sf", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_sf.STACItem <- function(items) {
+  geojsonsf::geojson_sf(to_json(items))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_sf.STACItemCollection <- function(items) {
+  geojsonsf::geojson_sf(to_json(items))
+}
