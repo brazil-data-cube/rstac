@@ -43,7 +43,7 @@
            paste0("`", expected, "`", collapse = " or "), obj_name)
 }
 
-items_check <- function(items) {
+check_items <- function(items) {
   if (!(is.list(items) && "assets" %in% names(items))) {
     .error("Parameter `items` is invalid.")
   }
