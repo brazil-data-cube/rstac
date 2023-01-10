@@ -59,6 +59,8 @@ check_items.STACItemCollection <- function(items) {
   }
 }
 
+check_items.default <- check_items.STACItem
+
 select_check_eval <- function(val) {
   if (!is.logical(val)) {
     .error("Select expressions must be evaluated as logical.")

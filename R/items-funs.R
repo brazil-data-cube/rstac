@@ -200,14 +200,14 @@
 #' @name items_functions
 NULL
 
-#' @exportS3Method
-length.STACItem <- function(x) {
-  return(1)
+#' @export
+`[.STACItemCollection` <- function(x, i, ...) {
+  x$features[i]
 }
 
-#' @exportS3Method
-length.STACItemCollection <- function(x) {
-  length(x$features)
+#' @export
+`[[.STACItemCollection` <- function(x, i, ...) {
+  x$features[[i]]
 }
 
 #' @rdname items_functions
@@ -270,7 +270,7 @@ items_matched.STACItemCollection <- function(items, matched_field = NULL) {
   # non-standard field for matched items.
   if (!is.null(matched_field)) {
     tryCatch({
-      matched <- as.numeric(items[[matched_field]])
+      matched <- as.numeric(unclass(items)[[matched_field]])
     },
     error = function(e) .warning(paste("The provided field was not found in",
                                        "items object.")))
