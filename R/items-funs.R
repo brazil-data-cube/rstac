@@ -469,6 +469,7 @@ items_datetime.STACItem <- function(items) {
 #'
 #' @export
 items_datetime.STACItemCollection <- function(items) {
+  check_items(items)
   return(map_chr(items$features, items_datetime))
 }
 
@@ -496,6 +497,7 @@ items_bbox.STACItem <- function(items) {
 #'
 #' @export
 items_bbox.STACItemCollection <- function(items) {
+  check_items(items)
   return(items_reap(items, field = "bbox"))
 }
 
@@ -530,6 +532,7 @@ items_assets.STACItem <- function(items, simplify = deprecated()) {
 #'
 #' @export
 items_assets.STACItemCollection <- function(items, simplify = deprecated()) {
+  check_items(items)
   return(unique(unlist(lapply(items$features, items_assets.STACItem))))
 }
 
@@ -549,9 +552,7 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #'
 #' @export
 items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
-  # check items parameter
-  check_subclass(items, "STACItemCollection")
-
+  check_items(items)
   dots <- unquote(
     expr = as.list(substitute(list(...), env = environment())[-1]),
     env =  parent.frame()
@@ -609,6 +610,7 @@ items_compact <- function(items) {
 #'
 #' @export
 items_compact.STACItemCollection <- function(items) {
+  check_items(items)
   items_filter(items, filter_fn = has_assets)
 }
 
@@ -616,7 +618,6 @@ items_compact.STACItemCollection <- function(items) {
 #'
 #' @export
 items_reap <- function(items, field, ...) {
-  if (items_length(items) == 0) return(NULL)
   UseMethod("items_reap", items)
 }
 
@@ -634,7 +635,6 @@ items_reap.STACItem <- function(items, field, ...) {
     )
     field = c(field, unlist(dots, use.names = FALSE))
   }
-
   values <- items[[field]]
   return(values)
 }
@@ -643,6 +643,8 @@ items_reap.STACItem <- function(items, field, ...) {
 #'
 #' @export
 items_reap.STACItemCollection <- function(items, field, ...) {
+  check_items(items)
+  if (items_length(items) == 0) return(NULL)
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -652,9 +654,7 @@ items_reap.STACItemCollection <- function(items, field, ...) {
     )
     field = c(field, unlist(dots, use.names = FALSE))
   }
-
   values <- lapply(items$features, items_reap.STACItem, field = field)
-
   if (all(vapply(values, function(x) is.atomic(x) && length(x) == 1,
                  logical(1))))
     return(unlist(values))
@@ -726,6 +726,7 @@ items_fields.STACItem <- function(items, field = NULL, ...) {
 #'
 #' @export
 items_fields.STACItemCollection <- function(items, field = NULL, ...) {
+  check_items(items)
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -767,6 +768,7 @@ items_sign.STACItem <- function(items, sign_fn) {
 #'
 #' @export
 items_sign.STACItemCollection <- function(items, sign_fn) {
+  check_items(items)
   return(foreach_item(items, sign_fn))
 }
 
