@@ -154,7 +154,8 @@ parse_params <- function(q, params) {
 content_response <- function(res,
                              status_codes,
                              content_types,
-                             key_message = c("message", "description", "detail")) {
+                             key_message = c("message", "description",
+                                             "detail")) {
 
   # convert any json extension
   content_type <- httr::http_type(res)
