@@ -240,10 +240,6 @@ items_matched  <- function(items, matched_field = NULL) {
 #' @export
 items_matched.STACItem  <- function(items, matched_field = NULL) {
   check_items(items)
-
-  if (length(items) == 0) {
-    return(NULL)
-  }
   return(1)
 }
 
@@ -251,16 +247,13 @@ items_matched.STACItem  <- function(items, matched_field = NULL) {
 #'
 #' @export
 items_matched.STACItemCollection <- function(items, matched_field = NULL) {
+  check_items(items)
   matched <- NULL
 
   # try by the matched_field provided by user. This allow users specify a
   # non-standard field for matched items.
-  if (!is.null(matched_field)) {
-    tryCatch({
-      matched <- as.numeric(unclass(items)[[matched_field]])
-    },
-    error = function(e) .warning(paste("The provided field was not found in",
-                                       "items object.")))
+  if (is.character(matched_field) && matched_field %in% names(items)) {
+      matched <- as.numeric(items[[matched_field]])
   }
   if (is.null(matched)) {
     if (stac_version(items) < "0.9.0")
