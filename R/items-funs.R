@@ -78,6 +78,9 @@
 #' methods, such as [add_headers][httr::add_headers] or
 #' [set_cookies][httr::set_cookies].
 #'
+#' \item `items_fields()`: ellipsis parameter is deprecated in version
+#' 0.9.2 of rstac. Please, use `field` parameter instead.
+#'
 #' \item `items_filter()`: ellipsis is used to pass logical
 #' expressions to be evaluated against a `STACItem` fields as filter criteria.
 #'
@@ -670,33 +673,6 @@ items_reap.STACItemCollection <- function(items, field, ...) {
 #' @export
 items_reap.default <- items_reap.STACItem
 
-#' @title Utility functions
-#'
-#' @description This function returns the subfields of the `feature`
-#' field of a `STACItemCollection` object.
-#'
-#' @param items a `STACItemCollection` object representing
-#'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
-#'
-#' @param ...   a named way to provide field names to get the subfields values
-#'  from the `RSTACDocument` objects.
-#'
-#' @param field a `character` with the names of the field to get the
-#'  subfields values from the `RSTACDocument` objects.
-#'
-#' @return A `character` with the subfields of the `feature` field.
-#'
-#' @examples
-#' \dontrun{
-#'  # STACItemCollection object
-#'  stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-#'          datetime = "2017-08-01/2018-03-01") %>%
-#'   get_request()
-#'
-#'  stac_item %>% items_fields(field = "properties")
-#' }
-#'
 #' @rdname items_functions
 #'
 #' @export

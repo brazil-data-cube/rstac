@@ -128,14 +128,12 @@ items_sign(items, sign_fn)
 \method{items_sign}{default}(items, sign_fn)
 }
 \arguments{
-\item{items}{a \code{STACItemCollection} object representing
-the result of \verb{/stac/search}, \code{/collections/{collectionId}/items}.}
+\item{items}{a \code{STACItemCollection} object.}
 
-\item{...}{a named way to provide field names to get the subfields values
-from the \code{RSTACDocument} objects.}
+\item{...}{additional arguments. See details.}
 
-\item{field}{a \code{character} with the names of the field to get the
-subfields values from the \code{RSTACDocument} objects.}
+\item{field}{a \code{character} with the names of the field to
+get the subfields values.}
 
 \item{index}{an \code{atomic} vector with values as group index}
 
@@ -186,8 +184,6 @@ otherwise or a \code{list}.
 
 \item \code{items_sign()}: a \code{STACItemCollection} object with signed assets url
 }
-
-A \code{character} with the subfields of the \code{feature} field.
 }
 \description{
 These functions provide support to work with
@@ -229,9 +225,6 @@ items as elements of a list using some criteria.
 
 \item \code{items_sign()}: allow access assets by preparing its url.
 }
-
-This function returns the subfields of the \code{feature}
-field of a \code{STACItemCollection} object.
 }
 \details{
 Ellipsis argument (\code{...}) appears in different items function and
@@ -243,6 +236,9 @@ has distinct purposes:
 additional \code{httr} options to \link[httr:GET]{GET} or \link[httr:POST]{POST}
 methods, such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.
+
+\item \code{items_fields()}: ellipsis parameter is deprecated in version
+0.9.2 of rstac. Please, use \code{field} parameter instead.
 
 \item \code{items_filter()}: ellipsis is used to pass logical
 expressions to be evaluated against a \code{STACItem} fields as filter criteria.
@@ -323,16 +319,6 @@ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  get_request() \%>\% items_fetch(progress = FALSE)
 
 stac_item \%>\% items_reap(field = c("properties", "datetime"))
-}
-
-\dontrun{
- # STACItemCollection object
- stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-         datetime = "2017-08-01/2018-03-01") \%>\%
-  get_request()
-
- stac_item \%>\% items_fields(field = "properties")
 }
 
 }
