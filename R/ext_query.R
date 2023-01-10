@@ -141,11 +141,7 @@ before_request.ext_query <- function(q) {
 
 #' @export
 after_response.ext_query <- function(q, res) {
-
-  content <- content_response(res, "200", c("application/geo+json",
-                                            "application/json"))
-
-  RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
+  after_response.items(q, res)
 }
 
 #' @export
