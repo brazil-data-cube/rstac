@@ -291,11 +291,9 @@ to_text.cql2_interval <- function(x)
 #' @export
 to_text.cql2 <- function(x) to_text(cql2_filter(x))
 
-
 #' @export
 to_text.default <- function(x)
   stop(paste("cannot handle value of class", class(x)), call. = FALSE)
-
 
 spatial_type <- function(x) {
   stopifnot(!is.null(x[["type"]]))
