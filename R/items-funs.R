@@ -347,6 +347,7 @@ items_next <- function(items, ...) {
 #'
 #' @export
 items_next.STACItemCollection <- function(items, ...) {
+  check_items(items)
   matched <- items_matched(items)
 
   q <- doc_query(items)
@@ -424,15 +425,15 @@ items_next.STACItemCollection <- function(items, ...) {
 
   # check pagination length
   if (!is.null(q$params[["limit"]]) &&
-      items_length(content) > as.numeric(q$params[["limit"]])) {
+      length(content) > as.numeric(q$params[["limit"]])) {
 
     .error("STAC invalid retrieved page length.")
   }
 
   # check if result length is valid
   if (!is.null(matched) && !is.null(q$params[["limit"]]) &&
-      (items_length(content) != as.numeric(q$params[["limit"]])) &&
-      (items_length(content) + items_length(items) != matched)) {
+      (length(content) != as.numeric(q$params[["limit"]])) &&
+      (length(content) + items_length(items) != matched)) {
 
     .error("STAC pagination error.")
   }
