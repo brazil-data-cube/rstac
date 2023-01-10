@@ -288,7 +288,7 @@ items_fetch <- function(items, ...) {
 items_fetch.STACItemCollection <- function(items, ...,
                                            progress = TRUE,
                                            matched_field = NULL) {
-
+  check_items(items)
   matched <- items_matched(items, matched_field)
 
   # verify if progress bar can be shown
@@ -324,7 +324,7 @@ items_fetch.STACItemCollection <- function(items, ...,
 
     # update progress bar
     if (progress)
-      utils::setTxtProgressBar(pb, items_length(content))
+      utils::setTxtProgressBar(pb, length(content))
   }
 
   # close progress bar
