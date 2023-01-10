@@ -200,16 +200,6 @@
 #' @name items_functions
 NULL
 
-#' @export
-`[.STACItemCollection` <- function(x, i, ...) {
-  x$features[i]
-}
-
-#' @export
-`[[.STACItemCollection` <- function(x, i, ...) {
-  x$features[[i]]
-}
-
 #' @rdname items_functions
 #'
 #' @export
@@ -222,10 +212,6 @@ items_length <- function(items) {
 #' @export
 items_length.STACItem <- function(items) {
   check_items(items)
-
-  if (length(items) == 0) {
-    return(NULL)
-  }
   return(1)
 }
 
@@ -233,6 +219,7 @@ items_length.STACItem <- function(items) {
 #'
 #' @export
 items_length.STACItemCollection <- function(items) {
+  check_items(items)
   return(length(items$features))
 }
 
