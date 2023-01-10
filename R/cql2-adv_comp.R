@@ -92,7 +92,7 @@ get_spatial.character <- function(x) {
 
 #' @export
 get_spatial.list <- function(x) {
-  stopifnot(c("type", "coordinates") %in% names(x))
+  stopifnot(all(c("type", "coordinates") %in% names(x)))
   stopifnot(x[["type"]] %in% spatial_types)
   class(x) <- c("cql2_spatial", "list")
   x
