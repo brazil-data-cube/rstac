@@ -148,26 +148,6 @@
 
 #' @title Utility functions
 #'
-#' @param items a `STACItemCollection` object representing the result
-#'  of `/stac/search` or \code{/collections/{collectionId}/items}.
-#'
-#' @return A `numeric` with the length of a `STACItemCollection`
-#'  object.
-#'
-#' @noRd
-.parse_items_size <- function(items) {
-  if (!is.null(items_matched(items)) &&
-      items_length(items) != items_matched(items))
-    message("The length of items in your object, does not correspond ",
-            "with the total of matched items. Consider using the ",
-            "function `items_fetch()`. By default, items_max = ",
-            items_length(items))
-
-  return(items_length(items))
-}
-
-#' @title Utility functions
-#'
 #' @description Auxiliary function to check whether the date time follows
 #' RFC 3339 standard.
 #'
