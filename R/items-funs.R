@@ -788,6 +788,7 @@ items_as_sf <- function(items) {
 #'
 #' @export
 items_as_sf.STACItem <- function(items) {
+  check_items(items)
   geojsonsf::geojson_sf(to_json(items))
 }
 
@@ -795,5 +796,6 @@ items_as_sf.STACItem <- function(items) {
 #'
 #' @export
 items_as_sf.STACItemCollection <- function(items) {
+  check_items(items)
   geojsonsf::geojson_sf(to_json(items))
 }
