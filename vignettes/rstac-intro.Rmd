@@ -59,9 +59,7 @@ data.frame(
 ) %>% knitr::kable(format = "markdown")
 ```
 
-The `rstac` package performs the requests explicitly. This way, 
-the pipeline of the `rstac` is composed of two steps.
-The first step consists of creating a query based on the concatenation of functions that builds an endpoint. The second step consists of requesting the constructed endpoint.
+The `rstac` package makes the requests explicitly. The `rstac` pipeline creates the endpoints with function concatenations and then requests them.
 
 ## Getting started
 
@@ -73,8 +71,7 @@ install.packages("rstac")
 
 ## Creating queries
 
-This tutorial use the STAC API made available by the [Brazil Data Cube (BDC)](http://www.brazildatacube.org/en/home-page-2/) project. BDC is a research, development, and technological innovation project of the National Institute for 
-Space Research (INPE), Brazil.
+This tutorial use the STAC API made available by the [Brazil Data Cube (BDC)](http://www.brazildatacube.org/en/home-page-2/) project. BDC is a research, development, and technological innovation project of the National Institute for Space Research (INPE), Brazil.
 
 Let's start by creating a query for the BDC catalog.
 
@@ -82,14 +79,13 @@ Let's start by creating a query for the BDC catalog.
 s_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
 s_obj
 ```
-The `RSTACQuery` class object stores the metadata of the created query.
+The `RSTACQuery` object stores the metadata of the created query.
 This metadata can be accessed as a list element during query creation.
 
 ```{r}
 s_obj$base_url
 ```
-To create the desired query, compose the queries with functions that implement the endpoint that is intended to be requested. 
-Some examples are shown below:
+Endpoints are constructed through function concatenations provided by `rstac`. Some examples are shown below:
 
 ```{r queries-2}
 s_obj |> collections()
@@ -119,7 +115,6 @@ s_obj |>
 
 ## Making requests
 
-The defined query can be requested after its creation. 
 `rstac` package supports **GET** and **POST** HTTP 
 methods. With future updates to the STAC specifications, it is intended to 
 support other methods such as **PUT** and **DELETE**. 
@@ -131,7 +126,7 @@ These options are available in the `httr` package documentation in the [`config`
 
 ```{r request-1}
 s_obj |>
-  collections(collection_id = "CB4_64_16D_STK") |>
+  collections(collection_id = "CB4_64_16D_STK-1") |>
   items() |>
   get_request() 
 ```
@@ -140,7 +135,7 @@ s_obj |>
 
 ```{r request-2}
 s_obj |>
-  stac_search(collections = c("CB4_64_16D_STK", "S2-16D-2")) |>
+  stac_search(collections = c("CB4_64_16D_STK-1", "S2-16D-2")) |>
   post_request()
 ```
 
@@ -148,13 +143,13 @@ Example of providing an additional argument to HTTP verb in a request:
 
 ```{r request-3}
 s_obj |> 
-  stac_search(collections = c("CB4_64_16D_STK", "S2-16D-2")) |>
+  stac_search(collections = c("CB4_64_16D_STK-1", "S2-16D-2")) |>
   post_request(config = c(httr::add_headers("x-api-key" = "MY-KEY")))
 ```
 
 ## Visualization of the documents
 
-Each `rstac` object is mapped in its class according to the endpoints of the STAC spec. In this way, each object has a different type of view. Another interesting feature is the format for viewing objects in **Markdown**.
+Each `rstac` object is mapped according to the endpoints of the STAC spec. In this way, each object has a different view. The format for viewing objects is in **Markdown**.
 
 #### `STACCatalog` object
 
@@ -188,23 +183,21 @@ s_obj |>
 ```
 
 
-Besides, the `rstac` package provides several auxiliary functions for `STACItem` and `STACItemCollection` objects. These auxiliary functions operate at the item or 
-asset level. Functions dedicated to items have the prefix `items_`. Otherwise, 
-asset-oriented functions have the prefix `assets_`
+Besides, the `rstac` package provides several auxiliary functions for `STACItem` and `STACItemCollection` objects. These auxiliary functions operate at the item or asset level. Functions dedicated to items have the prefix `items_`. Otherwise, asset-oriented functions have the prefix `assets_`
 
 ## Items functions
 
 The `STACItemCollection` object have some facilitating functions to manipulate/extract information, for example:
 
 - **`items_fields()`:** Lists fields names inside an item.
-- **`item_filter()`:** Performs a filter by items according to expressions operating on some s
-- **`item_fetch()`:** Performs the pagination of items
-- **`item_length()`:** Returns the number of items in an object
-- **`item_matched()`:** Returns the number of items matching the search criteria
+- **`item_filter()`:** Performs a filter by items according to expressions operating on the properties of a `STACItemCollection` object.
+- **`item_fetch()`:** Performs the pagination of items.
+- **`item_length()`:** Returns the number of items in an object.
+- **`item_matched()`:** Returns the number of items matching the search criteria.
 - **`item_assets()`:** Returns the assets name from `STACItemCollection` and `STACItem` objects.
 
 
-It is interesting to verify the fields of the items before filtering:
+It is interesting to verify the fields of items before filtering:
 
 ```{r}
 s_obj |>
@@ -321,12 +314,13 @@ renamed_assets
 ```
 
 In the `assets` field of the output it can be seen that the asset's name has changed.
+It is also possible to check the asset names using the `items_assets()` function.
 
 ```{r}
 items_assets(renamed_assets)
 ```
 
-It is also possible to check the asset names using the `items_assets()` function.
+
 
 ## References
 
