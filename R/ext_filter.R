@@ -10,9 +10,9 @@
 #' for spatial geometries (point, lines, polygons) and temporal
 #' data (instants and intervals).
 #'
-#' `rstac` translates R expressions to CQL2 allowing users to express their
+#' `rstac` translates R expressions to CQL2, allowing users to express their
 #' filter criteria using R language. For more details on how to create
-#' CQL2 expressions in `rstac`, see the details section.
+#' CQL2 expressions in `rstac`. See the details section.
 #'
 #' @param q    a `RSTACQuery` object expressing a STAC query
 #' criteria.
@@ -22,13 +22,13 @@
 #' `"cql2-json"` (for JSON format). If `NULL` (default), `"cql2-text"` is
 #' used for HTTP `GET` requests and `"cql2-json"` for `POST` requests.
 #' @param crs  an optional character value informing the coordinate reference
-#' system used by geometry objects. If `NULL` (default) STAC services assume
+#' system used by geometry objects. If `NULL` (default), STAC services assume
 #' `"WGS 84"`.
 #'
 #' @details
 #' To allow users to express filter criteria in R language, `rstac` takes
 #' advantage of the abstract syntax tree (AST) to translate R expressions
-#' to CQL2 expressions. The following topics describes the correspondences
+#' to CQL2 expressions. The following topics describe the correspondences
 #' between `rstac` expressions and CQL2 operators.
 #'
 #' ## Standard comparison operators
@@ -42,7 +42,7 @@
 #' - `between(a, b, c)` corresponds to CQL2 `a BETWEEN b AND c`, where
 #'   `b` and `c` `integer` values.
 #' - `a %in% b` corresponds to CQL2 `a IN (b)`, where `b` should be
-#'   a list of values of same type as `a`.
+#'   a list of values of the same type as `a`.
 #'
 #' ## Spatial operators
 #' - functions `s_intersects(a, b)`, `s_touches(a, b)`, `s_within(a, b)`,
@@ -55,7 +55,7 @@
 #' ## Temporal operators
 #' - functions `date(a)`, `timestamp(a)`, and `interval(a, b)` corresponds to
 #'   CQL2 `DATE(a)`, `TIMESTAMP(a)`, and `INTERVAL(a, b)` operators,
-#'   respectively. These functions creates literal `temporal` values.
+#'   respectively. These functions create literal `temporal` values.
 #'   The first two define an `instant` type, and the third an `interval` type.
 #' - functions `t_after(a, b)`, `t_before(a, b)`, `t_contains(a, b)`,
 #'   `t_disjoint(a, b)`, `t_during(a, b)`, `t_equals(a, b)`,
@@ -80,8 +80,8 @@
 #'   operators, respectively. Here, `a` and `b` should be `arrays`.
 #'
 #' @note
-#' The specification states that double quoted identifiers should be
-#' interpreted as a properties. However, the R language does not distinguishes
+#' The specification states that double-quoted identifiers should be
+#' interpreted as properties. However, the R language does not distinguish
 #' double quote from single quote strings. The right way to represent
 #' double quoted properties in R is to use the escape character (`),
 #' for example `"date"`.
