@@ -24,7 +24,7 @@ and \code{/collections/\{collectionId\}} endpoints.
 
 Each endpoint retrieves specific STAC objects:
 \itemize{
-\item \verb{/collections}: Returns a list of STAC Collection published in
+\item \verb{/collections}: Returns a list of STAC Collections published in
 the STAC service
 \item \code{/collections/\{collectionId\}}: Returns a single STAC
 Collection object
@@ -40,6 +40,7 @@ Collection object
    collections(collection_id = "CB4_64_16D_STK-1") \%>\%
    get_request()
 }
+
 }
 \seealso{
 \code{\link[=get_request]{get_request()}}, \code{\link[=post_request]{post_request()}}, \code{\link[=items]{items()}}

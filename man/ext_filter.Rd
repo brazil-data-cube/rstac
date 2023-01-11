@@ -18,7 +18,7 @@ to be used. It can be either \code{"cql2-text"} (for plain text) or
 used for HTTP \code{GET} requests and \code{"cql2-json"} for \code{POST} requests.}
 
 \item{crs}{an optional character value informing the coordinate reference
-system used by geometry objects. If \code{NULL} (default) STAC services assume
+system used by geometry objects. If \code{NULL} (default), STAC services assume
 \code{"WGS 84"}.}
 }
 \value{
@@ -36,14 +36,14 @@ for standard data types like strings, numbers, and boolean as well as
 for spatial geometries (point, lines, polygons) and temporal
 data (instants and intervals).
 
-\code{rstac} translates R expressions to CQL2 allowing users to express their
+\code{rstac} translates R expressions to CQL2, allowing users to express their
 filter criteria using R language. For more details on how to create
-CQL2 expressions in \code{rstac}, see the details section.
+CQL2 expressions in \code{rstac}. See the details section.
 }
 \details{
 To allow users to express filter criteria in R language, \code{rstac} takes
 advantage of the abstract syntax tree (AST) to translate R expressions
-to CQL2 expressions. The following topics describes the correspondences
+to CQL2 expressions. The following topics describe the correspondences
 between \code{rstac} expressions and CQL2 operators.
 \subsection{Standard comparison operators}{
 \itemize{
@@ -60,7 +60,7 @@ between \code{rstac} expressions and CQL2 operators.
 \item \code{between(a, b, c)} corresponds to CQL2 \verb{a BETWEEN b AND c}, where
 \code{b} and \code{c} \code{integer} values.
 \item \code{a \%in\% b} corresponds to CQL2 \verb{a IN (b)}, where \code{b} should be
-a list of values of same type as \code{a}.
+a list of values of the same type as \code{a}.
 }
 }
 
@@ -79,7 +79,7 @@ accepts \code{sf}, \code{sfc}, \code{sfg}, or \code{geojson} objects.
 \itemize{
 \item functions \code{date(a)}, \code{timestamp(a)}, and \code{interval(a, b)} corresponds to
 CQL2 \code{DATE(a)}, \code{TIMESTAMP(a)}, and \code{INTERVAL(a, b)} operators,
-respectively. These functions creates literal \code{temporal} values.
+respectively. These functions create literal \code{temporal} values.
 The first two define an \code{instant} type, and the third an \code{interval} type.
 \item functions \code{t_after(a, b)}, \code{t_before(a, b)}, \code{t_contains(a, b)},
 \code{t_disjoint(a, b)}, \code{t_during(a, b)}, \code{t_equals(a, b)},
@@ -109,8 +109,8 @@ operators, respectively. Here, \code{a} and \code{b} should be \code{arrays}.
 }
 }
 \note{
-The specification states that double quoted identifiers should be
-interpreted as a properties. However, the R language does not distinguishes
+The specification states that double-quoted identifiers should be
+interpreted as properties. However, the R language does not distinguish
 double quote from single quote strings. The right way to represent
 double quoted properties in R is to use the escape character (\verb{), for example }"date"`.
 }

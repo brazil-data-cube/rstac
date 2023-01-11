@@ -15,7 +15,7 @@ Only works if the \code{collection_id} is informed. This is equivalent to
 the endpoint \code{/collections/\{collectionId\}/items/\{featureId\}}.}
 
 \item{datetime}{a \code{character} with a date-time or an interval.
-Date and time strings needs to conform RFC 3339. Intervals are
+Date and time strings needs to conform to RFC 3339. Intervals are
 expressed by separating two date-time strings by \code{'/'} character.
 Open intervals are expressed by using \code{'..'} in place of date-time.
 
@@ -43,14 +43,14 @@ reference system includes a vertical axis (elevation or depth):
 
 The coordinate reference system of the values is WGS84
 longitude/latitude (\url{http://www.opengis.net/def/crs/OGC/1.3/CRS84}).
-The values are in most cases the sequence of minimum longitude,
-minimum latitude, maximum longitude and maximum latitude. However,
-in cases where the box spans the antimeridian the first value
+The values are, in most cases, the sequence of minimum longitude,
+minimum latitude, maximum longitude, and maximum latitude. However,
+in cases where the box spans the antimeridian, the first value
 (west-most box edge) is larger than the third value
 (east-most box edge).}
 
 \item{limit}{an \code{integer} defining the maximum number of results
-to return. If not informed it defaults to the service implementation.}
+to return. If not informed, it defaults to the service implementation.}
 }
 \value{
 A \code{RSTACQuery} object with the subclass \code{items} for
