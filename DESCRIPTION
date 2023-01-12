@@ -30,7 +30,18 @@ Suggests:
     testthat,
     sf,
     knitr,
-    rmarkdown
+    rmarkdown,
+    png,
+    jpeg,
+    tibble,
+    dplyr,
+    purrr,
+    slider,
+    leaflet,
+    tmap,
+    stars,
+    ggplot2,
+    geojsonsf
 Collate:
     'cql2-expr-funs.R'
     'cql2-types.R'
@@ -41,6 +52,7 @@ Collate:
     'cql2.R'
     'cql2-env.R'
     'cql2-utils.R'
+    'assets-utils.R'
     'assets-funs.R'
     'check-utils.R'
     'conformance-query.R'
@@ -54,6 +66,7 @@ Collate:
     'items-utils.R'
     'items-query.R'
     'message-utils.R'
+    'preview-utils.R'
     'print.R'
     'query-funs.R'
     'queryables-query.R'
