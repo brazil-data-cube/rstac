@@ -8,14 +8,15 @@
 #' \item `assets_download()`: Downloads the assets provided by the STAC API.
 #'
 #' \item `assets_url()`: `r lifecycle::badge('experimental')` Returns a
-#'  character vector with each asset href.
-#'  For the URL you can add the GDAL library drivers for the following schemes:
-#'  HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
+#'  character vector with each asset href. For the URL you can add the
+#'  GDAL library drivers for the following schemes: HTTP/HTTPS files,
+#'  S3 (AWS S3) and GS (Google Cloud Storage).
 #'
 #' \item `assets_select()`: `r lifecycle::badge('experimental')` Selects the
-#'  assets of each item by its name. Note: This function can produce items
-#'  with empty assets. In this case, users can use `items_compact()` function
-#'  to remove items with no assets.
+#'  assets of each item by its name (`asset_names` parameter), by expressions
+#'  (`...` parameter), or by a selection function (`select_fn` parameter).
+#'  Note: This function can produce items with empty assets. In this case,
+#'  users can use `items_compact()` function to remove items with no assets.
 #'
 #' \item `assets_rename()`: `r lifecycle::badge('experimental')` Rename each
 #'  asset using a named list or a function.
@@ -26,7 +27,8 @@
 #' \code{/collections/{collectionId}/items} or
 #' \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
-#' @param asset_names a `character` vector with the assets names to be selected.
+#' @param asset_names a `character` vector with the assets names to be
+#' selected.
 #'
 #' @param output_dir  a `character` directory in which the assets will be
 #' saved. Default is the working directory (`getwd()`)
@@ -40,9 +42,9 @@
 #' @param progress    a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
-#' @param download_fn a `function` to handle the list of assets for each item.
-#' Using this function you can change the hrefs for each asset, as well as use
-#' another request verb, such as POST.
+#' @param download_fn a `function` to handle the list of assets for each
+#' item. Using this function you can change the hrefs for each asset, as
+#' well as use another request verb, such as POST.
 #'
 #' @param fn          `r lifecycle::badge('deprecated')`
 #' use `download_fn` parameter instead.
@@ -51,24 +53,27 @@
 #' included in the URL of each asset. The following schemes are supported:
 #' HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 #'
-#' @param create_json a `logical` indicating if a JSON file with item metadata
-#' (`STACItem` or `STACItemCollection`) must be created in the output
-#' directory.
+#' @param create_json a `logical` indicating if a JSON file with item
+#' metadata (`STACItem` or `STACItemCollection`) must be created in the
+#' output directory.
 #'
 #' @param select_fn a `function` to select assets an item
-#' (`STACItem` or `STACItemCollection`). This function receives as parameter
-#' each asset element stored in assets field. Asset elements contains metadata
-#' describing spatial temporal objects. Users can provide a function to select
-#' assets based on these metadata by returning a logical value where `TRUE`
-#' selects the asset and `FALSE` discards it.
+#' (`STACItem` or `STACItemCollection`). This function receives as
+#' parameter each asset element stored in assets field. Asset elements
+#' contains metadata describing spatial temporal objects. Users can provide
+#' a function to select assets based on these metadata by returning a
+#' logical value where `TRUE` selects the asset and `FALSE` discards it.
 #'
-#' @param mapper    either a named `list` or a `function` to rename assets
+#' @param mapper      either a named `list` or a `function` to rename assets
 #' of an item (`STACItem` or `STACItemCollection`). In the case of a named
 #' list, use `<old name> = <new name>` to rename the assets. The function
 #' can be used to rename the assets by returning a `character` string using
 #' the metadata contained in the asset object.
 #'
-#' @param ...             additional arguments. See details.
+#' @param field       a `character` with the name of the asset field to
+#' return.
+#'
+#' @param ...         additional arguments. See details.
 #'
 #' @details
 #' Ellipsis argument (`...`) appears in different assets functions and
@@ -82,7 +87,9 @@
 #' \item `assets_select()`: ellipsis is used to pass expressions that will
 #' be evaluated against each asset metadata. Expressions must be evaluated as
 #' a logical value where `TRUE` selects the asset and `FALSE` discards it.
-#' Multiple expressions are combine with `AND` operator.
+#' Multiple expressions are combine with `AND` operator. Expressions can
+#' use `asset` helper functions (i.e. `asset_key()`, `asset_eo_bands()`,
+#' and `asset_raster_bands()`).
 #'
 #' **WARNING:** Errors in the evaluation of expressions are
 #' considered as `FALSE`.

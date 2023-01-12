@@ -59,6 +59,9 @@
 #' @param field           a `character` with the names of the field to
 #' get the subfields values.
 #'
+#' @param pick_fn         a `function` used to pick elements from items
+#' addressed by `field` parameter.
+#'
 #' @param index           an `atomic` vector with values as group index
 #'
 #' @param sign_fn         a `function` that receives an item as parameter
