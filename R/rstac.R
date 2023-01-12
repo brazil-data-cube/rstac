@@ -31,7 +31,8 @@
 #'   \item [items_fetch()]: fetches all matched items from service.
 #'   \item [items_filter()]: selects items according to some criteria.
 #'   \item [items_as_sf()]: converts items to a `sf` object.
-#'   \item [items_field()]: help explore fields inside items.
+#'   \item [items_fields()]: help explore fields inside items.
+#'   \item [items_compact()]: removes all items with empty assets.
 #'   \item [items_reap()]: extracts contents from items.
 #'   \item [items_length()]: informs how many items are fetched locally.
 #'   \item [items_sign()]: appends tokens to assets' URL and turn
