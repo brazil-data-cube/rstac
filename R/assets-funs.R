@@ -47,7 +47,7 @@
 #' @param fn          `r lifecycle::badge('deprecated')`
 #' use `download_fn` parameter instead.
 #'
-#' @param append_gdalvsi a `logical` if true, gdal drivers are
+#' @param append_gdalvsi a `logical` value. If true, gdal drivers are
 #' included in the URL of each asset. The following schemes are supported:
 #' HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 #'
@@ -151,7 +151,8 @@
 #'   post_request()
 #'
 #' # Selects assets by name
-#' items <- assets_select(items, c("B02", "B03", "SR_B1", "SR_B2"))
+#' items <- assets_select(items,
+#'                        asset_names = c("B02", "B03", "SR_B1", "SR_B2"))
 #' # Renames the landsat assets
 #' items <- assets_rename(items,
 #'                        SR_B1 = "blue",
