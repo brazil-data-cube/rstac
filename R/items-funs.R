@@ -723,7 +723,9 @@ items_fields.STACItem <- function(items, field = NULL, ...) {
   if (length(field) == 0) {
     fields <- names(items)
   } else {
-    fields <- names(items[[field]])
+    fields <- unique(unlist(apply_deeply(
+      items, i = field, fn = names
+    ), use.names = FALSE))
   }
   return(sort(fields))
 }
