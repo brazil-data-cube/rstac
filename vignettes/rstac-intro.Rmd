@@ -135,7 +135,9 @@ s_obj |>
 
 ```{r request-2}
 s_obj |>
-  stac_search(collections = c("CB4_64_16D_STK-1", "S2-16D-2")) |>
+  stac_search(collections = c("CB4_64_16D_STK-1", "S2-16D-2"),
+              datetime = "2021-01-01/2021-01-31",
+              limit = 400) |>
   post_request()
 ```
 
