@@ -181,8 +181,8 @@ print.STACItemCollection <- function(x, n = 10, ..., tail = FALSE) {
   cat("-", crayon::bold("assets:"),
       paste0(items_assets(x), collapse = ", "),
       fill = TRUE)
-  cat("-", crayon::bold("other field(s):"),
-      paste0(names(x), collapse = ", "), fill = TRUE)
+  cat("-", crayon::bold("item's fields:"),
+      paste0(items_fields(x), collapse = ", "), fill = TRUE)
   invisible(x)
 }
 
@@ -199,8 +199,8 @@ print.STACItem <- function(x, ...) {
   cat("-", crayon::bold("assets:"),
       paste0(items_assets(x), collapse = ", "),
       fill = TRUE)
-  cat("-", crayon::bold("other field(s):"), paste0(names(x), collapse = ", "),
-      fill = TRUE)
+  cat("-", crayon::bold("item's fields:"),
+      paste0(items_fields(x), collapse = ", "), fill = TRUE)
   invisible(x)
 }
 
