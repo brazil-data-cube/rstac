@@ -106,13 +106,13 @@ items_compact(items)
 
 \method{items_compact}{STACItemCollection}(items)
 
-items_reap(items, field, ...)
+items_reap(items, field, ..., pick_fn = identity)
 
-\method{items_reap}{STACItem}(items, field, ...)
+\method{items_reap}{STACItem}(items, field, ..., pick_fn = identity)
 
-\method{items_reap}{STACItemCollection}(items, field, ...)
+\method{items_reap}{STACItemCollection}(items, field, ..., pick_fn = identity)
 
-\method{items_reap}{default}(items, field, ...)
+\method{items_reap}{default}(items, field, ..., pick_fn = identity)
 
 items_fields(items, field = NULL, ...)
 
@@ -161,6 +161,9 @@ shown or not. Defaults to \code{TRUE}.}
 
 \item{filter_fn}{a \code{function} that receives an item that should
 evaluate a \code{logical} value.}
+
+\item{pick_fn}{a \code{function} used to pick elements from items
+addressed by \code{field} parameter.}
 
 \item{sign_fn}{a \code{function} that receives an item as parameter
 and returns an item signed.}

@@ -2,16 +2,16 @@
 % Please edit documentation in R/cql2-utils.R
 \name{cql2_temporal}
 \alias{cql2_temporal}
-\alias{cql2_date}
-\alias{cql2_timestamp}
-\alias{cql2_interval}
+\alias{date}
+\alias{timestamp}
+\alias{interval}
 \title{CQL2 temporal types}
 \usage{
-cql2_date(x)
+date(x)
 
-cql2_timestamp(x)
+timestamp(x)
 
-cql2_interval(start = "..", end = "..")
+interval(start = "..", end = "..")
 }
 \arguments{
 \item{x, start, end}{\code{character} string containing valid \code{date} or \code{timestamp}.}

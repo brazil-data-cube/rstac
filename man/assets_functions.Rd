@@ -22,6 +22,9 @@
 \alias{has_assets.STACItem}
 \alias{has_assets.STACItemCollection}
 \alias{has_assets.default}
+\alias{asset_key}
+\alias{asset_eo_bands}
+\alias{asset_raster_bands}
 \title{Assets functions}
 \usage{
 assets_download(
@@ -69,21 +72,21 @@ assets_download(
   fn = deprecated()
 )
 
-assets_url(items, asset_names = NULL, append_gdalvsi = TRUE)
+assets_url(items, asset_names = NULL, append_gdalvsi = FALSE)
 
-\method{assets_url}{STACItem}(items, asset_names = NULL, append_gdalvsi = TRUE)
+\method{assets_url}{STACItem}(items, asset_names = NULL, append_gdalvsi = FALSE)
 
-\method{assets_url}{STACItemCollection}(items, asset_names = NULL, append_gdalvsi = TRUE)
+\method{assets_url}{STACItemCollection}(items, asset_names = NULL, append_gdalvsi = FALSE)
 
-\method{assets_url}{default}(items, asset_names = NULL, append_gdalvsi = TRUE)
+\method{assets_url}{default}(items, asset_names = NULL, append_gdalvsi = FALSE)
 
-assets_select(items, asset_names = NULL, ..., select_fn = NULL)
+assets_select(items, ..., asset_names = NULL, select_fn = NULL)
 
-\method{assets_select}{STACItem}(items, asset_names = NULL, ..., select_fn = NULL)
+\method{assets_select}{STACItem}(items, ..., asset_names = NULL, select_fn = NULL)
 
-\method{assets_select}{STACItemCollection}(items, asset_names = NULL, ..., select_fn = NULL)
+\method{assets_select}{STACItemCollection}(items, ..., asset_names = NULL, select_fn = NULL)
 
-\method{assets_select}{default}(items, asset_names = NULL, ..., select_fn = NULL)
+\method{assets_select}{default}(items, ..., asset_names = NULL, select_fn = NULL)
 
 assets_rename(items, mapper = NULL, ...)
 
@@ -100,6 +103,12 @@ has_assets(items)
 \method{has_assets}{STACItemCollection}(items)
 
 \method{has_assets}{default}(items)
+
+asset_key()
+
+asset_eo_bands(field)
+
+asset_raster_bands(field)
 }
 \arguments{
 \item{items}{a \code{STACItem} or \code{STACItemCollection} object
@@ -134,7 +143,7 @@ downloaded.}
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
-\item{append_gdalvsi}{a \code{logical} if true, gdal drivers are
+\item{append_gdalvsi}{a \code{logical} value. If true, gdal drivers are
 included in the URL of each asset. The following schemes are supported:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 
@@ -252,7 +261,8 @@ items <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
   post_request()
 
 # Selects assets by name
-items <- assets_select(items, c("B02", "B03", "SR_B1", "SR_B2"))
+items <- assets_select(items,
+                       asset_names = c("B02", "B03", "SR_B1", "SR_B2"))
 # Renames the landsat assets
 items <- assets_rename(items,
                        SR_B1 = "blue",
