@@ -620,14 +620,14 @@ items_compact.STACItemCollection <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_reap <- function(items, field, ...) {
+items_reap <- function(items, field, ..., pick_fn = identity) {
   UseMethod("items_reap", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_reap.STACItem <- function(items, field, ...) {
+items_reap.STACItem <- function(items, field, ..., pick_fn = identity) {
   check_items(items)
   dots <- list(...)
   if (length(dots) > 0) {
@@ -638,14 +638,16 @@ items_reap.STACItem <- function(items, field, ...) {
     )
     field = c(field, unlist(dots, use.names = FALSE))
   }
-  values <- items[[field]]
+  values <- apply_deeply(items, i = field, fn = pick_fn)
   return(values)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_reap.STACItemCollection <- function(items, field, ...) {
+items_reap.STACItemCollection <- function(items,
+                                          field, ...,
+                                          pick_fn = identity) {
   check_items(items)
   if (items_length(items) == 0) return(NULL)
   dots <- list(...)
@@ -657,11 +659,12 @@ items_reap.STACItemCollection <- function(items, field, ...) {
     )
     field = c(field, unlist(dots, use.names = FALSE))
   }
-  values <- lapply(items$features, items_reap.STACItem, field = field)
-  if (all(vapply(values, function(x) is.atomic(x) && length(x) == 1,
-                 logical(1))))
-    return(unlist(values))
-  return(values)
+  val <- lapply(items$features, items_reap.STACItem, field = field,
+                pick_fn = pick_fn)
+  if (is.null(names(val)) &&
+      all(vapply(val, function(x) is.atomic(x) && length(x) == 1, logical(1))))
+    return(unlist(val))
+  return(val)
 }
 
 #' @rdname items_functions
