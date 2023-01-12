@@ -60,28 +60,3 @@ check_items.STACItemCollection <- function(items) {
 }
 
 check_items.default <- check_items.STACItem
-
-select_check_eval <- function(val) {
-  if (!is.logical(val)) {
-    .error("Select expressions must be evaluated as logical.")
-  }
-  if (length(val) > 1) {
-    .error("Select function must return a logical value of length 1.")
-  }
-}
-
-select_eval <- function(asset, expr) {
-  val <- tryCatch({
-    eval(expr, envir = asset, enclos = parent.env(parent.frame()))
-  }, error = function(e) {
-    return(FALSE)
-  })
-  select_check_eval(val)
-  return(val)
-}
-
-select_exec <- function(asset, select_fn) {
-  val <- select_fn(asset)
-  select_check_eval(val)
-  return(val)
-}
