@@ -292,7 +292,7 @@ assets_download.default <- assets_download.STACItem
 #' @rdname assets_functions
 #'
 #' @export
-assets_url <- function(items, asset_names = NULL, append_gdalvsi = TRUE) {
+assets_url <- function(items, asset_names = NULL, append_gdalvsi = FALSE) {
   UseMethod("assets_url", items)
 }
 
@@ -301,7 +301,7 @@ assets_url <- function(items, asset_names = NULL, append_gdalvsi = TRUE) {
 #' @export
 assets_url.STACItem <- function(items,
                                 asset_names = NULL,
-                                append_gdalvsi = TRUE) {
+                                append_gdalvsi = FALSE) {
   if (is.null(asset_names)) {
     asset_names <- items_assets(items)
   }
@@ -325,7 +325,7 @@ assets_url.STACItem <- function(items,
 #' @export
 assets_url.STACItemCollection <- function(items,
                                           asset_names = NULL,
-                                          append_gdalvsi = TRUE) {
+                                          append_gdalvsi = FALSE) {
   if (is.null(asset_names)) {
     asset_names <- items_assets(items)
   }
