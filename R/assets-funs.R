@@ -8,7 +8,7 @@
 #' \item `assets_download()`: Downloads the assets provided by the STAC API.
 #'
 #' \item `assets_url()`: `r lifecycle::badge('experimental')` Returns a
-#'  character vector with each asset href. For the URL you can add the
+#'  character vector with each asset href. For the URL, you can add the
 #'  GDAL library drivers for the following schemes: HTTP/HTTPS files,
 #'  S3 (AWS S3) and GS (Google Cloud Storage).
 #'
@@ -16,7 +16,8 @@
 #'  assets of each item by its name (`asset_names` parameter), by expressions
 #'  (`...` parameter), or by a selection function (`select_fn` parameter).
 #'  Note: This function can produce items with empty assets. In this case,
-#'  users can use `items_compact()` function to remove items with no assets.
+#'  users can use the `items_compact()` function to remove items with no
+#'  assets.
 #'
 #' \item `assets_rename()`: `r lifecycle::badge('experimental')` Rename each
 #'  asset using a named list or a function.
@@ -27,24 +28,24 @@
 #' \code{/collections/{collectionId}/items} or
 #' \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
-#' @param asset_names a `character` vector with the assets names to be
-#' selected.
+#' @param asset_names a `character` vector with the names of the assets
+#' to be selected.
 #'
 #' @param output_dir  a `character` directory in which the assets will be
 #' saved. Default is the working directory (`getwd()`)
 #'
-#' @param overwrite   a `logical` if TRUE will replaced the existing file,
-#' if FALSE a warning message is shown.
+#' @param overwrite   a `logical` if TRUE will replace the existing file,
+#' if FALSE, a warning message is shown.
 #'
-#' @param items_max   a `numeric` corresponding how many items will be
+#' @param items_max   a `numeric` corresponding to how many items will be
 #' downloaded.
 #'
 #' @param progress    a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
-#' @param download_fn a `function` to handle the list of assets for each
-#' item. Using this function you can change the hrefs for each asset, as
-#' well as use another request verb, such as POST.
+#' @param download_fn a `function` to handle download of assets for
+#' each item to be downloaded. Using this function, you can change the
+#' hrefs for each asset, as well as the way download is done.
 #'
 #' @param fn          `r lifecycle::badge('deprecated')`
 #' use `download_fn` parameter instead.
@@ -58,11 +59,11 @@
 #' output directory.
 #'
 #' @param select_fn a `function` to select assets an item
-#' (`STACItem` or `STACItemCollection`). This function receives as
-#' parameter each asset element stored in assets field. Asset elements
-#' contains metadata describing spatial temporal objects. Users can provide
-#' a function to select assets based on these metadata by returning a
-#' logical value where `TRUE` selects the asset and `FALSE` discards it.
+#' (`STACItem` or `STACItemCollection`). This function receives as parameter
+#' each asset element stored in the  field. Asset elements contain metadata
+#' describing spatial-temporal objects. Users can provide a function to select
+#' assets based on this metadata by returning a logical value where `TRUE`
+#' selects the asset, and `FALSE` discards it.
 #'
 #' @param mapper      either a named `list` or a `function` to rename assets
 #' of an item (`STACItem` or `STACItemCollection`). In the case of a named
@@ -89,13 +90,14 @@
 #' a logical value where `TRUE` selects the asset and `FALSE` discards it.
 #' Multiple expressions are combine with `AND` operator. Expressions can
 #' use `asset` helper functions (i.e. `asset_key()`, `asset_eo_bands()`,
-#' and `asset_raster_bands()`).
+#' and `asset_raster_bands()`). Multiple expressions are combined with
+#' `AND` operator.
 #'
 #' **WARNING:** Errors in the evaluation of expressions are
 #' considered as `FALSE`.
 #'
 #' \item `assets_rename()`: ellipsis is used to pass named parameters
-#' to be processed in the same way as named list in `mapper` argument.
+#' to be processed in the same way as the named list in `mapper` argument.
 #' }
 #'
 #' @return

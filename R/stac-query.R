@@ -2,11 +2,11 @@
 #'
 #' @description The `stac` function implements `/stac` API
 #' endpoint (>=0.8.0), and `/` for versions 0.9.0 or higher. It prepares
-#' search fields parameters to be provided to a STAC API web service. This
+#' search field parameters to be provided to a STAC API web service. This
 #' endpoint should return a STAC Catalog document containing all published data
 #' catalogs.
 #'
-#' @param base_url      a `character` informing the base url of a
+#' @param base_url      a `character` informing the base URL of a
 #'  STAC web service.
 #'
 #' @param force_version a `character` providing the version of the STAC

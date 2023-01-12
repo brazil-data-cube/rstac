@@ -17,12 +17,12 @@
 #'
 #' \item `items_next()`: fetches a new page from STAC service.
 #'
-#' \item `items_datetime()`: retrieves a the `datetime`
+#' \item `items_datetime()`: retrieves the `datetime`
 #' field in `properties` from `STACItemCollection` and
 #' `STACItem` objects.
 #'
-#' \item `items_bbox()`: retrieves a the `bbox`
-#' field of a `STACItemCollection` or an `STACItem` object.
+#' \item `items_bbox()`: retrieves the `bbox`
+#' field of a `STACItemCollection` or a `STACItem` object.
 #'
 #' \item `item_assets()`: returns the assets name from
 #' `STACItemCollection` and `STACItem` objects.
@@ -31,7 +31,7 @@
 #'  (see details section).
 #'
 #' \item `items_reap()`: extract key values by traversing all items
-#' in an `STACItemCollection` object.
+#' in a `STACItemCollection` object.
 #'
 #' \item `items_fields()`: lists field names inside an item.
 #'
@@ -46,10 +46,10 @@
 #' @param items           a `STACItemCollection` object.
 #'
 #' @param matched_field   a `character` vector with the path
-#' where the number of items returned in the named list is located starting from
-#' the initial node of the list. For example, if the information is at position
-#' `items$meta$found` of the object, it must be passed as the following
-#' parameter `c("meta", "found")`.
+#' where the number of items returned in the named list is located starting
+#' from the initial node of the list. For example, if the information is in a
+#' position `items$meta$found` of the object, it must be passed as the
+#' following parameter `c("meta", "found")`.
 #'
 #' @param progress        a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
@@ -62,9 +62,9 @@
 #' @param pick_fn         a `function` used to pick elements from items
 #' addressed by `field` parameter.
 #'
-#' @param index           an `atomic` vector with values as group index
+#' @param index           an `atomic` vector with values as the group index.
 #'
-#' @param sign_fn         a `function` that receives an item as parameter
+#' @param sign_fn         a `function` that receives an item as a parameter
 #' and returns an item signed.
 #'
 #' @param filter_fn       a `function` that receives an item that should
@@ -73,7 +73,7 @@
 #' @param ...             additional arguments. See details.
 #'
 #' @details
-#' Ellipsis argument (`...`) appears in different items function and
+#' Ellipsis argument (`...`) appears in different items functions and
 #' has distinct purposes:
 #' \itemize{
 #' \item `items_matched()` and `items_assets()`: ellipsis is not used.
@@ -83,12 +83,15 @@
 #' methods, such as [add_headers][httr::add_headers] or
 #' [set_cookies][httr::set_cookies].
 #'
+#' \item `items_fields()`: ellipsis parameter is deprecated in version
+#' 0.9.2 of rstac. Please, use `field` parameter instead.
+#'
 #' \item `items_filter()`: ellipsis is used to pass logical
-#' expressions to be evaluated against a `STACItem` fields as filter criteria.
+#' expressions to be evaluated against a `STACItem` field as filter criteria.
 #'
 #' **WARNING:** the evaluation of filter expressions changed in `rstac` 0.9.2.
 #' Older versions of `rstac` used `properties` field to evaluate filter
-#' expressions. Below, there is an example on how to write expressions in new
+#' expressions. Below, there is an example of how to write expressions in new
 #' `rstac` version:
 #' ```R
 #' # expression in older version
@@ -98,12 +101,12 @@
 #' items_filter(stac_obj, properties[["eo:cloud_cover"]] < 10)
 #' ```
 #'
-#' \item `items_sign()`: in a near future, ellipsis will be used to append
-#' key value pairs to url query string of an asset.
+#' \item `items_sign()`: in the near future, ellipsis will be used to append
+#' key-value pairs to the url query string of an asset.
 #' }
 #'
 #' `items_sign()` has `sign_fn` parameter that must be a function that
-#' receives as argument an item and returns an signed item. `rstac` provides
+#' receives as argument an item and returns a signed item. `rstac` provides
 #' `sign_bdc()` and `sign_planetary_computer()` functions to access Brazil
 #' Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 #'
@@ -112,10 +115,10 @@
 #' \itemize{
 #' \item `items_length()`: an `integer` value.
 #'
-#' \item `items_matched()`: returns an `integer` value if STAC web server does
-#' support this extension, otherwise returns `NULL`.
+#' \item `items_matched()`: returns an `integer` value if the STAC web server
+#' does support this extension. Otherwise returns `NULL`.
 #'
-#' \item `items_fetch()`: an `STACItemCollection` with all matched items.
+#' \item `items_fetch()`: a `STACItemCollection` with all matched items.
 #'
 #' \item `items_next()`: fetches a new page from STAC service.
 #'
@@ -123,9 +126,8 @@
 #'
 #' \item `items_bbox()`: returns a `list` with all items' bounding boxes.
 #'
-#' \item `item_assets()`: if simplify is `TRUE`, returns a `character`
-#' value with all assets names of the first item. Otherwise, returns a
-#' `list` with assets name for each item.
+#' \item `item_assets()`: Returns a `character` value with all assets names
+#' of the all items.
 #'
 #' \item `items_filter()`: a `STACItemCollection` object.
 #'
@@ -141,7 +143,6 @@
 #' \item `items_as_sf()`: a `sf` object.
 #'
 #' }
-#'
 #'
 #' @examples
 #' \dontrun{
@@ -672,33 +673,6 @@ items_reap.STACItemCollection <- function(items,
 #' @export
 items_reap.default <- items_reap.STACItem
 
-#' @title Utility functions
-#'
-#' @description This function returns the subfields of the `feature`
-#' field of a `STACItemCollection` object.
-#'
-#' @param items a `STACItemCollection` object representing
-#'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
-#'
-#' @param ...   a named way to provide field names to get the subfields values
-#'  from the `RSTACDocument` objects.
-#'
-#' @param field a `character` with the names of the field to get the
-#'  subfields values from the `RSTACDocument` objects.
-#'
-#' @return A `character` with the subfields of the `feature` field.
-#'
-#' @examples
-#' \dontrun{
-#'  # STACItemCollection object
-#'  stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-#'          datetime = "2017-08-01/2018-03-01") %>%
-#'   get_request()
-#'
-#'  stac_item %>% items_fields(field = "properties")
-#' }
-#'
 #' @rdname items_functions
 #'
 #' @export

@@ -137,22 +137,20 @@ items_as_sf(items)
 \method{items_as_sf}{STACItemCollection}(items)
 }
 \arguments{
-\item{items}{a \code{STACItemCollection} object representing
-the result of \verb{/stac/search}, \code{/collections/{collectionId}/items}.}
+\item{items}{a \code{STACItemCollection} object.}
 
-\item{...}{a named way to provide field names to get the subfields values
-from the \code{RSTACDocument} objects.}
+\item{...}{additional arguments. See details.}
 
-\item{field}{a \code{character} with the names of the field to get the
-subfields values from the \code{RSTACDocument} objects.}
+\item{field}{a \code{character} with the names of the field to
+get the subfields values.}
 
-\item{index}{an \code{atomic} vector with values as group index}
+\item{index}{an \code{atomic} vector with values as the group index.}
 
 \item{matched_field}{a \code{character} vector with the path
-where the number of items returned in the named list is located starting from
-the initial node of the list. For example, if the information is at position
-\code{items$meta$found} of the object, it must be passed as the following
-parameter \code{c("meta", "found")}.}
+where the number of items returned in the named list is located starting
+from the initial node of the list. For example, if the information is in a
+position \code{items$meta$found} of the object, it must be passed as the
+following parameter \code{c("meta", "found")}.}
 
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
@@ -165,17 +163,17 @@ evaluate a \code{logical} value.}
 \item{pick_fn}{a \code{function} used to pick elements from items
 addressed by \code{field} parameter.}
 
-\item{sign_fn}{a \code{function} that receives an item as parameter
+\item{sign_fn}{a \code{function} that receives an item as a parameter
 and returns an item signed.}
 }
 \value{
 \itemize{
 \item \code{items_length()}: an \code{integer} value.
 
-\item \code{items_matched()}: returns an \code{integer} value if STAC web server does
-support this extension, otherwise returns \code{NULL}.
+\item \code{items_matched()}: returns an \code{integer} value if the STAC web server
+does support this extension. Otherwise returns \code{NULL}.
 
-\item \code{items_fetch()}: an \code{STACItemCollection} with all matched items.
+\item \code{items_fetch()}: a \code{STACItemCollection} with all matched items.
 
 \item \code{items_next()}: fetches a new page from STAC service.
 
@@ -183,9 +181,8 @@ support this extension, otherwise returns \code{NULL}.
 
 \item \code{items_bbox()}: returns a \code{list} with all items' bounding boxes.
 
-\item \code{item_assets()}: if simplify is \code{TRUE}, returns a \code{character}
-value with all assets names of the first item. Otherwise, returns a
-\code{list} with assets name for each item.
+\item \code{item_assets()}: Returns a \code{character} value with all assets names
+of the all items.
 
 \item \code{items_filter()}: a \code{STACItemCollection} object.
 
@@ -201,8 +198,6 @@ otherwise or a \code{list}.
 \item \code{items_as_sf()}: a \code{sf} object.
 
 }
-
-A \code{character} with the subfields of the \code{feature} field.
 }
 \description{
 These functions provide support to work with
@@ -221,12 +216,12 @@ pagination.
 
 \item \code{items_next()}: fetches a new page from STAC service.
 
-\item \code{items_datetime()}: retrieves a the \code{datetime}
+\item \code{items_datetime()}: retrieves the \code{datetime}
 field in \code{properties} from \code{STACItemCollection} and
 \code{STACItem} objects.
 
-\item \code{items_bbox()}: retrieves a the \code{bbox}
-field of a \code{STACItemCollection} or an \code{STACItem} object.
+\item \code{items_bbox()}: retrieves the \code{bbox}
+field of a \code{STACItemCollection} or a \code{STACItem} object.
 
 \item \code{item_assets()}: returns the assets name from
 \code{STACItemCollection} and \code{STACItem} objects.
@@ -235,7 +230,7 @@ field of a \code{STACItemCollection} or an \code{STACItem} object.
 (see details section).
 
 \item \code{items_reap()}: extract key values by traversing all items
-in an \code{STACItemCollection} object.
+in a \code{STACItemCollection} object.
 
 \item \code{items_fields()}: lists field names inside an item.
 
@@ -246,12 +241,9 @@ items as elements of a list using some criteria.
 
 \item \code{items_as_sf()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} convert items to \code{sf} object.
 }
-
-This function returns the subfields of the \code{feature}
-field of a \code{STACItemCollection} object.
 }
 \details{
-Ellipsis argument (\code{...}) appears in different items function and
+Ellipsis argument (\code{...}) appears in different items functions and
 has distinct purposes:
 \itemize{
 \item \code{items_matched()} and \code{items_assets()}: ellipsis is not used.
@@ -261,12 +253,15 @@ additional \code{httr} options to \link[httr:GET]{GET} or \link[httr:POST]{POST}
 methods, such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.
 
+\item \code{items_fields()}: ellipsis parameter is deprecated in version
+0.9.2 of rstac. Please, use \code{field} parameter instead.
+
 \item \code{items_filter()}: ellipsis is used to pass logical
-expressions to be evaluated against a \code{STACItem} fields as filter criteria.
+expressions to be evaluated against a \code{STACItem} field as filter criteria.
 
 \strong{WARNING:} the evaluation of filter expressions changed in \code{rstac} 0.9.2.
 Older versions of \code{rstac} used \code{properties} field to evaluate filter
-expressions. Below, there is an example on how to write expressions in new
+expressions. Below, there is an example of how to write expressions in new
 \code{rstac} version:
 
 \if{html}{\out{<div class="sourceCode R">}}\preformatted{# expression in older version
@@ -276,12 +271,12 @@ items_filter(stac_obj, properties$`eo:cloud_cover` < 10)
 items_filter(stac_obj, properties[["eo:cloud_cover"]] < 10)
 }\if{html}{\out{</div>}}
 
-\item \code{items_sign()}: in a near future, ellipsis will be used to append
-key value pairs to url query string of an asset.
+\item \code{items_sign()}: in the near future, ellipsis will be used to append
+key-value pairs to the url query string of an asset.
 }
 
 \code{items_sign()} has \code{sign_fn} parameter that must be a function that
-receives as argument an item and returns an signed item. \code{rstac} provides
+receives as argument an item and returns a signed item. \code{rstac} provides
 \code{sign_bdc()} and \code{sign_planetary_computer()} functions to access Brazil
 Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 }
@@ -340,16 +335,6 @@ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  get_request() \%>\% items_fetch(progress = FALSE)
 
 stac_item \%>\% items_reap(field = c("properties", "datetime"))
-}
-
-\dontrun{
- # STACItemCollection object
- stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-         datetime = "2017-08-01/2018-03-01") \%>\%
-  get_request()
-
- stac_item \%>\% items_fields(field = "properties")
 }
 
 }

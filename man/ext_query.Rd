@@ -25,9 +25,9 @@ defined in \code{stac_search()} function be used to make a complex filter.
 The function accepts multiple filter criteria. Each filter entry is an
 expression formed by \verb{<field> <operator> <value>}, where
 \verb{<field>} refers to a valid item property. Supported \verb{<fields>}
-depends on STAC API service implementation. The users must rely on service
-providers' documentation to know which properties can be used by this
-extension.
+depends on STAC API service implementation. The users must rely on the
+service providers' documentation to know which properties can be used
+by this extension.
 
 The \code{ext_query()} function allows the following \verb{<operators>}
 \itemize{
@@ -54,7 +54,7 @@ to get things done for this extension:
 \item The \code{before_request()} for subclass \code{ext_query}
 \item The \code{after_response()} for subclass \code{ext_query}
 }
-See source file \code{ext_query.R} for an example on how implement new
+See source file \code{ext_query.R} for an example of how to implement new
 extensions.
 }
 \examples{
