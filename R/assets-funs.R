@@ -378,8 +378,9 @@ assets_select.STACItem <- function(items, ...,
       .error("Select expressions cannot be named.")
 
     for (i in seq_along(exprs)) {
-      sel <- map_lgl(items$assets, function(asset) {
-        val <- select_eval(asset = asset, expr = exprs[[i]])
+      sel <- map_lgl(names(items$assets), function(key) {
+        val <- select_eval(key = key, asset = items$assets[[key]],
+                           expr = exprs[[i]])
         return(val)
       })
       items$assets <- items$assets[sel]
@@ -387,8 +388,9 @@ assets_select.STACItem <- function(items, ...,
   }
 
   if (!is.null(select_fn)) {
-    sel <- map_lgl(items$assets, function(asset) {
-      val <- select_exec(asset = asset, select_fn = select_fn)
+    sel <- map_lgl(names(items$assets), function(key) {
+      val <- select_exec(key = key, asset = items$assets[[key]],
+                         select_fn = select_fn)
       return(val)
     })
     items$assets <- items$assets[sel]
