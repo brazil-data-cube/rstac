@@ -46,7 +46,8 @@ search criteria.
 \item \code{\link[=items_fetch]{items_fetch()}}: fetches all matched items from service.
 \item \code{\link[=items_filter]{items_filter()}}: selects items according to some criteria.
 \item \code{\link[=items_as_sf]{items_as_sf()}}: converts items to a \code{sf} object.
-\item \code{\link[=items_field]{items_field()}}: help explore fields inside items.
+\item \code{\link[=items_fields]{items_fields()}}: help explore fields inside items.
+\item \code{\link[=items_compact]{items_compact()}}: removes all items with empty assets.
 \item \code{\link[=items_reap]{items_reap()}}: extracts contents from items.
 \item \code{\link[=items_length]{items_length()}}: informs how many items are fetched locally.
 \item \code{\link[=items_sign]{items_sign()}}: appends tokens to assets' URL and turn

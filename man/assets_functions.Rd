@@ -116,7 +116,8 @@ representing the result of \verb{/stac/search},
 \code{/collections/{collectionId}/items} or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
 
-\item{asset_names}{a \code{character} vector with the assets names to be selected.}
+\item{asset_names}{a \code{character} vector with the assets names to be
+selected.}
 
 \item{output_dir}{a \code{character} directory in which the assets will be
 saved. Default is the working directory (\code{getwd()})}
@@ -126,16 +127,16 @@ if FALSE a warning message is shown.}
 
 \item{...}{additional arguments. See details.}
 
-\item{download_fn}{a \code{function} to handle the list of assets for each item.
-Using this function you can change the hrefs for each asset, as well as use
-another request verb, such as POST.}
+\item{download_fn}{a \code{function} to handle the list of assets for each
+item. Using this function you can change the hrefs for each asset, as
+well as use another request verb, such as POST.}
 
 \item{fn}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 use \code{download_fn} parameter instead.}
 
-\item{create_json}{a \code{logical} indicating if a JSON file with item metadata
-(\code{STACItem} or \code{STACItemCollection}) must be created in the output
-directory.}
+\item{create_json}{a \code{logical} indicating if a JSON file with item
+metadata (\code{STACItem} or \code{STACItemCollection}) must be created in the
+output directory.}
 
 \item{items_max}{a \code{numeric} corresponding how many items will be
 downloaded.}
@@ -148,17 +149,20 @@ included in the URL of each asset. The following schemes are supported:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 
 \item{select_fn}{a \code{function} to select assets an item
-(\code{STACItem} or \code{STACItemCollection}). This function receives as parameter
-each asset element stored in assets field. Asset elements contains metadata
-describing spatial temporal objects. Users can provide a function to select
-assets based on these metadata by returning a logical value where \code{TRUE}
-selects the asset and \code{FALSE} discards it.}
+(\code{STACItem} or \code{STACItemCollection}). This function receives as
+parameter each asset element stored in assets field. Asset elements
+contains metadata describing spatial temporal objects. Users can provide
+a function to select assets based on these metadata by returning a
+logical value where \code{TRUE} selects the asset and \code{FALSE} discards it.}
 
 \item{mapper}{either a named \code{list} or a \code{function} to rename assets
 of an item (\code{STACItem} or \code{STACItemCollection}). In the case of a named
 list, use \verb{<old name> = <new name>} to rename the assets. The function
 can be used to rename the assets by returning a \code{character} string using
 the metadata contained in the asset object.}
+
+\item{field}{a \code{character} with the name of the asset field to
+return.}
 }
 \value{
 \itemize{
@@ -184,14 +188,15 @@ These functions provide support to work with \code{STACItemCollection} and
 \item \code{assets_download()}: Downloads the assets provided by the STAC API.
 
 \item \code{assets_url()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Returns a
-character vector with each asset href.
-For the URL you can add the GDAL library drivers for the following schemes:
-HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
+character vector with each asset href. For the URL you can add the
+GDAL library drivers for the following schemes: HTTP/HTTPS files,
+S3 (AWS S3) and GS (Google Cloud Storage).
 
 \item \code{assets_select()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Selects the
-assets of each item by its name. Note: This function can produce items
-with empty assets. In this case, users can use \code{items_compact()} function
-to remove items with no assets.
+assets of each item by its name (\code{asset_names} parameter), by expressions
+(\code{...} parameter), or by a selection function (\code{select_fn} parameter).
+Note: This function can produce items with empty assets. In this case,
+users can use \code{items_compact()} function to remove items with no assets.
 
 \item \code{assets_rename()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Rename each
 asset using a named list or a function.
@@ -209,7 +214,9 @@ methods, such as \link[httr:add_headers]{add_headers} or
 \item \code{assets_select()}: ellipsis is used to pass expressions that will
 be evaluated against each asset metadata. Expressions must be evaluated as
 a logical value where \code{TRUE} selects the asset and \code{FALSE} discards it.
-Multiple expressions are combine with \code{AND} operator.
+Multiple expressions are combine with \code{AND} operator. Expressions can
+use \code{asset} helper functions (i.e. \code{asset_key()}, \code{asset_eo_bands()},
+and \code{asset_raster_bands()}).
 
 \strong{WARNING:} Errors in the evaluation of expressions are
 considered as \code{FALSE}.
