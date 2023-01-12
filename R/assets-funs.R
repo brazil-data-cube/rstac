@@ -500,3 +500,32 @@ has_assets.STACItemCollection <- function(items) {
 #'
 #' @export
 has_assets.default <- has_assets.STACItem
+
+#' @rdname assets_functions
+#'
+#' @export
+asset_key <- function() {
+  if (!"key" %in% names(asset_context))
+    .error("Must be used inside `assets_select()`")
+  asset_context$key
+}
+
+#' @rdname assets_functions
+#'
+#' @export
+asset_eo_bands <- function(field) {
+  val <- asset_get("eo:bands")[[1]]
+  if (missing(field))
+    return(val)
+  val[[field]]
+}
+
+#' @rdname assets_functions
+#'
+#' @export
+asset_raster_bands <- function(field) {
+  val <- asset_get("raster:bands")[[1]]
+  if (missing(field))
+    return(val)
+  val[[field]]
+}
