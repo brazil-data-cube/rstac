@@ -536,7 +536,7 @@ items_assets.STACItem <- function(items, simplify = deprecated()) {
 #' @export
 items_assets.STACItemCollection <- function(items, simplify = deprecated()) {
   check_items(items)
-  return(unique(unlist(lapply(items$features, items_assets.STACItem))))
+  return(sort(unique(unlist(lapply(items$features, items_assets.STACItem)))))
 }
 
 #' @rdname items_functions
@@ -556,18 +556,18 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #' @export
 items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
   check_items(items)
-  dots <- unquote(
+  exprs <- unquote(
     expr = as.list(substitute(list(...), env = environment())[-1]),
     env =  parent.frame()
   )
 
-  if (length(dots) > 0) {
-    if (!is.null(names(dots)))
+  if (length(exprs) > 0) {
+    if (!is.null(names(exprs)))
       .error("Filter expressions cannot be named.")
 
     show_warning <- TRUE
-    for (i in seq_along(dots)) {
-      if (show_warning && check_old_expression(items, dots[[i]])) {
+    for (i in seq_along(exprs)) {
+      if (show_warning && check_old_expression(items, exprs[[i]])) {
         # NOTE: this warning will be removed in next versions. We will no
         # longer support the old way of filter evaluation
         .warning(paste(
@@ -576,10 +576,10 @@ items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
           "evaluated against each feature in items intead of `properties`",
           "field.\nSee ?items_filter for more details on how to change",
           "your expression."
-        ), deparse(dots[[i]]))
+        ), deparse(exprs[[i]]))
         show_warning <- FALSE
       }
-      sel <- map_lgl(items$features, eval_filter_expr, expr = dots[[i]])
+      sel <- map_lgl(items$features, eval_filter_expr, expr = exprs[[i]])
     }
     items$features <- items$features[sel]
   }
