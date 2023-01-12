@@ -353,15 +353,15 @@ assets_url.default <- assets_url.STACItem
 #' @rdname assets_functions
 #'
 #' @export
-assets_select <- function(items, asset_names = NULL, ..., select_fn = NULL) {
+assets_select <- function(items, ..., asset_names = NULL, select_fn = NULL) {
   UseMethod("assets_select", items)
 }
 
 #' @rdname assets_functions
 #'
 #' @export
-assets_select.STACItem <- function(items,
-                                   asset_names = NULL, ...,
+assets_select.STACItem <- function(items, ...,
+                                   asset_names = NULL,
                                    select_fn = NULL) {
   exprs <- unquote(
     expr = as.list(substitute(list(...), env = environment())[-1]),
@@ -400,8 +400,8 @@ assets_select.STACItem <- function(items,
 #' @rdname assets_functions
 #'
 #' @export
-assets_select.STACItemCollection <- function(items,
-                                             asset_names = NULL, ...,
+assets_select.STACItemCollection <- function(items, ...,
+                                             asset_names = NULL,
                                              select_fn = NULL) {
   items <- foreach_item(
     items, assets_select, asset_names = asset_names, ...,
