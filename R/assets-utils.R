@@ -46,10 +46,9 @@ select_eval <- function(key, asset, expr) {
 }
 
 select_exec <- function(key, asset, select_fn) {
-  old <- asset_install(key, asset)
-  on.exit(asset_install(old$key, old$asset))
-  val <- do.call(select_fn, args = list(key, asset),
-                 envir = parent.env(parent.frame()))
+  args <- if (length(formals(select_fn)) >= 2)
+    list(asset, key) else list(asset)
+  val <- do.call(select_fn, args = args, envir = parent.env(parent.frame()))
   select_check_eval(val)
   return(val)
 }
