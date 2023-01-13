@@ -45,6 +45,13 @@ testthat::test_that("items functions", {
       items(feature_id = "CB4_64_16D_STK_v001_019022_2021-02-02_2021-02-17") %>%
       get_request()
 
+    expect_null(
+      tryCatch({
+        preview_plot(assets_url(item_stac, asset_names = "thumbnail"))
+      }, error = function(e) {e},
+      warning = function(w) {w}
+      ))
+
     items_ms <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
       stac_search(
         collections = "sentinel-2-l2a",

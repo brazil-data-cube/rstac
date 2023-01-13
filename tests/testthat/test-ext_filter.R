@@ -983,3 +983,22 @@ test_that("scalar data types contructors", {
     fixed = TRUE
   )
 })
+
+
+test_that("cql2 helper functions", {
+  bbox <- c(-122.2751, 47.5469, -121.9613, 47.7458)
+  time_range <- cql2_interval("2020-12-01", "2020-12-31")
+  area_of_interest <- cql2_bbox_as_geojson(bbox)
+  expect_equal(class(cql2_date("2020-01-01")), "call")
+  expect_equal(class(cql2_timestamp("2020-01-01T12:00:00Z")), "call")
+  expect_error(cql2_date("2020-01-55"))
+  expect_error(cql2_timestamp("2020-01-01"))
+  expect_output(
+    object = {cql2_json(
+      collection == "landsat-c2-l2" &&
+        t_intersects(datetime, !!time_range) &&
+        s_intersects(geometry, !!area_of_interest)
+    )},
+    regexp = "-121.9613"
+  )
+})
