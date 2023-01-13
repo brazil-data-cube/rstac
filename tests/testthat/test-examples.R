@@ -96,28 +96,16 @@ testthat::test_that("examples rstac", {
       expected = 7505)
 
     # test items_group
-    testthat::expect_equal(
-      object = typeof(
+    testthat::expect_warning(
+      object =
         stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
                     limit = 500,
                     datetime = "2018-09-01/2019-08-31") %>%
           get_request() %>%
           items_fetch(progress = FALSE) %>%
-          items_group(field = c("properties", "bdc:tiles"))),
-      expected = "list")
-
-    # test items_group
-    testthat::expect_equal(
-      object = typeof(
-        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-          stac_search(collections = "LCC_C4_6dddd4_1M_STK_GO_PA-SPC-AC-NA-1",
-                      limit = 500,
-                      datetime = "2018-09-01/2019-08-31") %>%
-          get_request() %>%
-          items_fetch(progress = FALSE) %>%
-          items_group(field = c("properties", "bdc:tiles"))),
-      expected = "list")
+          items_group(field = c("properties", "bdc:tiles"))
+    )
 
     # test items_group
     testthat::expect_error(
