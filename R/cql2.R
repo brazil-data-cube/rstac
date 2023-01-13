@@ -60,9 +60,8 @@ cql2_lang <- function(obj) {
 
 `cql2_lang<-` <- function(obj, value) {
   if (length(value) > 0) {
-    stopifnot(value[[1]] %in% c("cql2-json", "cql2-text"))
+    check_lang(value)
     obj[["filter-lang"]] <- value[[1]]
-
     if (value[[1]] == "cql2-text") {
       cql2_filter(obj) <- to_text(cql2_filter(obj))
     }

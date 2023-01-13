@@ -60,3 +60,9 @@ check_items.STACItemCollection <- function(items) {
 }
 
 check_items.default <- check_items.STACItem
+
+
+check_character <- function(x, msg, ...) {
+  if (!is.character(x))
+    .error(msg, ...)
+}

@@ -225,8 +225,8 @@ ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
 }
 
 check_lang <- function(lang) {
-  if (!is.null(lang))
-    stopifnot(lang %in% c("cql2-text", "cql2-json"))
+  if (!is.null(lang) && !lang[[1]] %in% c("cql2-json", "cql2-text"))
+    .error("Value '%s' lang is not supported", lang[[1]])
 }
 
 #' @export
