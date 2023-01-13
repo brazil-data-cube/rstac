@@ -14,7 +14,7 @@
 #' with subclass defined by `subclass` parameter.
 #'
 #' @keywords internal
-RSTACDocument <- function(content, q, subclass) {
+RSTACDocument <- function(content, q = NULL, subclass = NULL) {
   structure(
     content,
     query = q,

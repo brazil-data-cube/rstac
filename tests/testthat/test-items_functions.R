@@ -146,17 +146,6 @@ testthat::test_that("items functions", {
     # ok - return a null
     testthat::expect_null(suppressWarnings(items_matched(items_ms)))
 
-    # empty vector for invalid field
-    testthat::expect_length(
-      items_matched(items_ms, matched_field = "1232"),
-      n = 0
-    )
-
-    # invalid field
-    testthat::expect_warning(
-      items_matched(items_ms, matched_field = FALSE)
-    )
-
     # items_filter--------------------------------------------------------------
     testthat::expect_warning(
       object = items_filter(

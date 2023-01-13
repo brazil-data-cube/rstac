@@ -39,6 +39,8 @@
 #' items as elements of a list using some criteria.
 #'
 #' \item `items_sign()`: allow access assets by preparing its url.
+#'
+#' \item `items_as_sf()`: `r lifecycle::badge('experimental')` convert items to `sf` object.
 #' }
 #'
 #' @param items           a `STACItemCollection` object.
@@ -56,6 +58,9 @@
 #'
 #' @param field           a `character` with the names of the field to
 #' get the subfields values.
+#'
+#' @param pick_fn         a `function` used to pick elements from items
+#' addressed by `field` parameter.
 #'
 #' @param index           an `atomic` vector with values as the group index.
 #'
@@ -133,7 +138,10 @@
 #'
 #' \item `items_group()`: a `list` of `STACItemCollection` objects.
 #'
-#' \item `items_sign()`: a `STACItemCollection` object with signed assets url
+#' \item `items_sign()`: a `STACItemCollection` object with signed assets url.
+#'
+#' \item `items_as_sf()`: a `sf` object.
+#'
 #' }
 #'
 #' @examples
@@ -207,11 +215,7 @@ items_length <- function(items) {
 #'
 #' @export
 items_length.STACItem <- function(items) {
-  items_check(items)
-
-  if (length(items) == 0) {
-    return(NULL)
-  }
+  check_items(items)
   return(1)
 }
 
@@ -219,6 +223,7 @@ items_length.STACItem <- function(items) {
 #'
 #' @export
 items_length.STACItemCollection <- function(items) {
+  check_items(items)
   return(length(items$features))
 }
 
@@ -238,11 +243,7 @@ items_matched  <- function(items, matched_field = NULL) {
 #'
 #' @export
 items_matched.STACItem  <- function(items, matched_field = NULL) {
-  items_check(items)
-
-  if (length(items) == 0) {
-    return(NULL)
-  }
+  check_items(items)
   return(1)
 }
 
@@ -250,16 +251,13 @@ items_matched.STACItem  <- function(items, matched_field = NULL) {
 #'
 #' @export
 items_matched.STACItemCollection <- function(items, matched_field = NULL) {
+  check_items(items)
   matched <- NULL
 
   # try by the matched_field provided by user. This allow users specify a
   # non-standard field for matched items.
-  if (!is.null(matched_field)) {
-    tryCatch({
+  if (is.character(matched_field) && matched_field %in% names(items)) {
       matched <- as.numeric(items[[matched_field]])
-    },
-    error = function(e) .warning(paste("The provided field was not found in",
-                                       "items object.")))
   }
   if (is.null(matched)) {
     if (stac_version(items) < "0.9.0")
@@ -294,7 +292,7 @@ items_fetch <- function(items, ...) {
 items_fetch.STACItemCollection <- function(items, ...,
                                            progress = TRUE,
                                            matched_field = NULL) {
-
+  check_items(items)
   matched <- items_matched(items, matched_field)
 
   # verify if progress bar can be shown
@@ -330,7 +328,7 @@ items_fetch.STACItemCollection <- function(items, ...,
 
     # update progress bar
     if (progress)
-      utils::setTxtProgressBar(pb, items_length(content))
+      utils::setTxtProgressBar(pb, length(content))
   }
 
   # close progress bar
@@ -353,6 +351,7 @@ items_next <- function(items, ...) {
 #'
 #' @export
 items_next.STACItemCollection <- function(items, ...) {
+  check_items(items)
   matched <- items_matched(items)
 
   q <- doc_query(items)
@@ -430,15 +429,15 @@ items_next.STACItemCollection <- function(items, ...) {
 
   # check pagination length
   if (!is.null(q$params[["limit"]]) &&
-      items_length(content) > as.numeric(q$params[["limit"]])) {
+      length(content) > as.numeric(q$params[["limit"]])) {
 
     .error("STAC invalid retrieved page length.")
   }
 
   # check if result length is valid
   if (!is.null(matched) && !is.null(q$params[["limit"]]) &&
-      (items_length(content) != as.numeric(q$params[["limit"]])) &&
-      (items_length(content) + items_length(items) != matched)) {
+      (length(content) != as.numeric(q$params[["limit"]])) &&
+      (length(content) + items_length(items) != matched)) {
 
     .error("STAC pagination error.")
   }
@@ -463,7 +462,7 @@ items_datetime <- function(items) {
 #'
 #' @export
 items_datetime.STACItem <- function(items) {
-  items_check(items)
+  check_items(items)
   if (!"datetime" %in% names(items$properties)) {
     .error("Parameter `items` is invalid.")
   }
@@ -474,6 +473,7 @@ items_datetime.STACItem <- function(items) {
 #'
 #' @export
 items_datetime.STACItemCollection <- function(items) {
+  check_items(items)
   return(map_chr(items$features, items_datetime))
 }
 
@@ -493,7 +493,7 @@ items_bbox <- function(items) {
 #'
 #' @export
 items_bbox.STACItem <- function(items) {
-  items_check(items)
+  check_items(items)
   return(items$bbox)
 }
 
@@ -501,6 +501,7 @@ items_bbox.STACItem <- function(items) {
 #'
 #' @export
 items_bbox.STACItemCollection <- function(items) {
+  check_items(items)
   return(items_reap(items, field = "bbox"))
 }
 
@@ -527,7 +528,7 @@ items_assets <- function(items, simplify = deprecated()) {
 #'
 #' @export
 items_assets.STACItem <- function(items, simplify = deprecated()) {
-  items_check(items)
+  check_items(items)
   return(items_fields(items, field = "assets"))
 }
 
@@ -535,7 +536,8 @@ items_assets.STACItem <- function(items, simplify = deprecated()) {
 #'
 #' @export
 items_assets.STACItemCollection <- function(items, simplify = deprecated()) {
-  return(unique(unlist(lapply(items$features, items_assets.STACItem))))
+  check_items(items)
+  return(sort(unique(unlist(lapply(items$features, items_assets.STACItem)))))
 }
 
 #' @rdname items_functions
@@ -554,21 +556,19 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #'
 #' @export
 items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
-  # check items parameter
-  check_subclass(items, "STACItemCollection")
-
-  dots <- unquote(
+  check_items(items)
+  exprs <- unquote(
     expr = as.list(substitute(list(...), env = environment())[-1]),
     env =  parent.frame()
   )
 
-  if (length(dots) > 0) {
-    if (!is.null(names(dots)))
+  if (length(exprs) > 0) {
+    if (!is.null(names(exprs)))
       .error("Filter expressions cannot be named.")
 
     show_warning <- TRUE
-    for (i in seq_along(dots)) {
-      if (show_warning && check_old_expression(items, dots[[i]])) {
+    for (i in seq_along(exprs)) {
+      if (show_warning && check_old_expression(items, exprs[[i]])) {
         # NOTE: this warning will be removed in next versions. We will no
         # longer support the old way of filter evaluation
         .warning(paste(
@@ -577,10 +577,10 @@ items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
           "evaluated against each feature in items intead of `properties`",
           "field.\nSee ?items_filter for more details on how to change",
           "your expression."
-        ), deparse(dots[[i]]))
+        ), deparse(exprs[[i]]))
         show_warning <- FALSE
       }
-      sel <- map_lgl(items$features, eval_filter_expr, expr = dots[[i]])
+      sel <- map_lgl(items$features, eval_filter_expr, expr = exprs[[i]])
     }
     items$features <- items$features[sel]
   }
@@ -614,22 +614,22 @@ items_compact <- function(items) {
 #'
 #' @export
 items_compact.STACItemCollection <- function(items) {
+  check_items(items)
   items_filter(items, filter_fn = has_assets)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_reap <- function(items, field, ...) {
-  if (items_length(items) == 0) return(NULL)
+items_reap <- function(items, field, ..., pick_fn = identity) {
   UseMethod("items_reap", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_reap.STACItem <- function(items, field, ...) {
-  items_check(items)
+items_reap.STACItem <- function(items, field, ..., pick_fn = identity) {
+  check_items(items)
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -639,15 +639,18 @@ items_reap.STACItem <- function(items, field, ...) {
     )
     field = c(field, unlist(dots, use.names = FALSE))
   }
-
-  values <- items[[field]]
+  values <- apply_deeply(items, i = field, fn = pick_fn)
   return(values)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_reap.STACItemCollection <- function(items, field, ...) {
+items_reap.STACItemCollection <- function(items,
+                                          field, ...,
+                                          pick_fn = identity) {
+  check_items(items)
+  if (items_length(items) == 0) return(NULL)
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -657,13 +660,12 @@ items_reap.STACItemCollection <- function(items, field, ...) {
     )
     field = c(field, unlist(dots, use.names = FALSE))
   }
-
-  values <- lapply(items$features, items_reap.STACItem, field = field)
-
-  if (all(vapply(values, function(x) is.atomic(x) && length(x) == 1,
-                 logical(1))))
-    return(unlist(values))
-  return(values)
+  val <- lapply(items$features, items_reap.STACItem, field = field,
+                pick_fn = pick_fn)
+  if (is.null(names(val)) &&
+      all(vapply(val, function(x) is.atomic(x) && length(x) == 1, logical(1))))
+    return(unlist(val))
+  return(val)
 }
 
 #' @rdname items_functions
@@ -682,7 +684,7 @@ items_fields <- function(items, field = NULL, ...) {
 #'
 #' @export
 items_fields.STACItem <- function(items, field = NULL, ...) {
-  items_check(items)
+  check_items(items)
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -695,7 +697,9 @@ items_fields.STACItem <- function(items, field = NULL, ...) {
   if (length(field) == 0) {
     fields <- names(items)
   } else {
-    fields <- names(items[[field]])
+    fields <- unique(unlist(apply_deeply(
+      items, i = field, fn = names
+    ), use.names = FALSE))
   }
   return(sort(fields))
 }
@@ -704,6 +708,7 @@ items_fields.STACItem <- function(items, field = NULL, ...) {
 #'
 #' @export
 items_fields.STACItemCollection <- function(items, field = NULL, ...) {
+  check_items(items)
   dots <- list(...)
   if (length(dots) > 0) {
     deprec_parameter(
@@ -737,7 +742,7 @@ items_sign <- function(items, sign_fn) {
 #'
 #' @export
 items_sign.STACItem <- function(items, sign_fn) {
-  items_check(items)
+  check_items(items)
   return(sign_fn(items))
 }
 
@@ -745,6 +750,7 @@ items_sign.STACItem <- function(items, sign_fn) {
 #'
 #' @export
 items_sign.STACItemCollection <- function(items, sign_fn) {
+  check_items(items)
   return(foreach_item(items, sign_fn))
 }
 
@@ -752,3 +758,26 @@ items_sign.STACItemCollection <- function(items, sign_fn) {
 #'
 #' @export
 items_sign.default <- items_sign.STACItem
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_sf <- function(items) {
+  UseMethod("items_as_sf", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_sf.STACItem <- function(items) {
+  check_items(items)
+  geojsonsf::geojson_sf(to_json(items))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_sf.STACItemCollection <- function(items) {
+  check_items(items)
+  geojsonsf::geojson_sf(to_json(items))
+}

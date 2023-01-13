@@ -291,11 +291,9 @@ to_text.cql2_interval <- function(x)
 #' @export
 to_text.cql2 <- function(x) to_text(cql2_filter(x))
 
-
 #' @export
 to_text.default <- function(x)
   stop(paste("cannot handle value of class", class(x)), call. = FALSE)
-
 
 spatial_type <- function(x) {
   stopifnot(!is.null(x[["type"]]))
@@ -309,13 +307,27 @@ spatial_switch <- function(x, ...) {
 to_wkt <- function(x) {
   spatial_switch(
     x,
-    "Point" = paste0("POINT(", wkt_coord0(x), ")"),
-    "MultiPoint" = paste0("MULTIPOINT(", wkt_coord1(x) , ")"),
-    "LineString" = paste0("LINESTRING(", wkt_coord1(x) , ")"),
-    "MultiLineString" = paste0("MULTILINESTRING(", wkt_coord2(x) , ")"),
-    "Polygon" = paste0("POLYGON(", wkt_coord2(x) , ")"),
-    "MultiPolygon" = paste0("MULTIPOLYGON(", wkt_coord3(x) , ")"),
-    "GeometryCollection" = paste0("GEOMETRYCOLLECTION(", wkt_collection(x), ")")
+    "Point" = paste0(
+      "POINT(", wkt_coord0(x$coordinates), ")"
+    ),
+    "MultiPoint" = paste0(
+      "MULTIPOINT(", wkt_coord1(x$coordinates) , ")"
+    ),
+    "LineString" = paste0(
+      "LINESTRING(", wkt_coord1(x$coordinates) , ")"
+    ),
+    "MultiLineString" = paste0(
+      "MULTILINESTRING(", wkt_coord2(x$coordinates) , ")"
+    ),
+    "Polygon" = paste0(
+      "POLYGON(", wkt_coord2(x$coordinates) , ")"
+    ),
+    "MultiPolygon" = paste0(
+      "MULTIPOLYGON(", wkt_coord3(x$coordinates) , ")"
+    ),
+    "GeometryCollection" = paste0(
+      "GEOMETRYCOLLECTION(", wkt_collection(x$coordinates), ")"
+    )
   )
 }
 
@@ -323,33 +335,27 @@ wkt_collection <- function(x) {
   paste0(map_chr(x$geometries, to_wkt), collapse = ",")
 }
 
+wkt_coords_chr <- function(x) {
+  if (is.list(x)) {
+    x <- unlist(x, recursive = FALSE)
+    stopifnot(is.numeric(x))
+    x <- matrix(x, ncol = 2, byrow = TRUE)
+  }
+  paste(apply(x, 1, paste, collapse = " ", simplify = TRUE), collapse = ",")
+}
+
 wkt_coord0 <- function(x) {
-  paste(x$coordinates, collapse = " ")
+  paste(x, collapse = " ")
 }
 
 wkt_coord1 <- function(x) {
-  paste(apply(x$coordinates, 1, paste, collapse = " ", simplify = TRUE),
-        collapse = ",")
+  wkt_coords_chr(x)
 }
 
 wkt_coord2 <- function(x) {
-  paste0("(",
-         map_chr(x$coordinates, function(y) {
-           paste(apply(y, 1, paste, collapse = " ", simplify = TRUE),
-                 collapse = ",")
-         }), ")", collapse = ","
-  )
+  paste0("(", map_chr(x, wkt_coords_chr), ")", collapse = ",")
 }
 
 wkt_coord3 <- function(x) {
-  paste0("(",
-         map_chr(x$coordinates, function(p) {
-           paste0("(",
-                  map_chr(p, function(y) {
-                    paste(apply(y, 1, paste, collapse = " ", simplify = TRUE),
-                          collapse = ",")
-                  }), ")", collapse = ","
-           )
-         }), ")", collapse = ",")
-
+  paste0("(", map_chr(x, wkt_coord2), ")", collapse = ",")
 }

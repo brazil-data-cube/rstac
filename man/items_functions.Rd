@@ -43,6 +43,9 @@
 \alias{items_sign.STACItem}
 \alias{items_sign.STACItemCollection}
 \alias{items_sign.default}
+\alias{items_as_sf}
+\alias{items_as_sf.STACItem}
+\alias{items_as_sf.STACItemCollection}
 \title{Items functions}
 \usage{
 items_group(items, ..., field = NULL, index = NULL)
@@ -103,13 +106,13 @@ items_compact(items)
 
 \method{items_compact}{STACItemCollection}(items)
 
-items_reap(items, field, ...)
+items_reap(items, field, ..., pick_fn = identity)
 
-\method{items_reap}{STACItem}(items, field, ...)
+\method{items_reap}{STACItem}(items, field, ..., pick_fn = identity)
 
-\method{items_reap}{STACItemCollection}(items, field, ...)
+\method{items_reap}{STACItemCollection}(items, field, ..., pick_fn = identity)
 
-\method{items_reap}{default}(items, field, ...)
+\method{items_reap}{default}(items, field, ..., pick_fn = identity)
 
 items_fields(items, field = NULL, ...)
 
@@ -126,6 +129,12 @@ items_sign(items, sign_fn)
 \method{items_sign}{STACItemCollection}(items, sign_fn)
 
 \method{items_sign}{default}(items, sign_fn)
+
+items_as_sf(items)
+
+\method{items_as_sf}{STACItem}(items)
+
+\method{items_as_sf}{STACItemCollection}(items)
 }
 \arguments{
 \item{items}{a \code{STACItemCollection} object.}
@@ -150,6 +159,9 @@ shown or not. Defaults to \code{TRUE}.}
 
 \item{filter_fn}{a \code{function} that receives an item that should
 evaluate a \code{logical} value.}
+
+\item{pick_fn}{a \code{function} used to pick elements from items
+addressed by \code{field} parameter.}
 
 \item{sign_fn}{a \code{function} that receives an item as a parameter
 and returns an item signed.}
@@ -181,7 +193,10 @@ otherwise or a \code{list}.
 
 \item \code{items_group()}: a \code{list} of \code{STACItemCollection} objects.
 
-\item \code{items_sign()}: a \code{STACItemCollection} object with signed assets url
+\item \code{items_sign()}: a \code{STACItemCollection} object with signed assets url.
+
+\item \code{items_as_sf()}: a \code{sf} object.
+
 }
 }
 \description{
@@ -223,6 +238,8 @@ in a \code{STACItemCollection} object.
 items as elements of a list using some criteria.
 
 \item \code{items_sign()}: allow access assets by preparing its url.
+
+\item \code{items_as_sf()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} convert items to \code{sf} object.
 }
 }
 \details{

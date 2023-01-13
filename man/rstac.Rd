@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Provides functions to access, search and download spacetime earth observation data via SpatioTemporal Asset Catalog (STAC). This package supports the version 1.0.0 of the STAC specification (\url{https://github.com/radiantearth/stac-spec}). For further details see Simoes et al. (2021) \doi{10.1109/IGARSS47720.2021.9553518}.
+Provides functions to access, search and download spacetime earth observation data via SpatioTemporal Asset Catalog (STAC). This package supports the version 1.0.0 (and older) of the STAC specification (\url{https://github.com/radiantearth/stac-spec}). For further details see Simoes et al. (2021) \doi{10.1109/IGARSS47720.2021.9553518}.
 }
 \section{The \code{rstac} functions}{
 
@@ -21,30 +21,41 @@ API endpoints and data access and organization.
 \itemize{
 \item \code{\link[=stac]{stac()}}: implements STAC \verb{/stac} endpoint for version
 0.8.1 or below, and \code{/} for versions 0.9.0 or higher.
+\item \code{\link[=conformance]{conformance()}}: implements \verb{/conformance} endpoint.
 \item \code{\link[=collections]{collections()}}: implements \verb{/collections}
-and \code{/collections/\{collectionId\}} WFS3 endpoints.
+and \code{/collections/\{collectionId\}} endpoints.
 \item \code{\link[=items]{items()}}: implements
 \code{/collections/\{collectionId\}/items} and
-\code{/collections/\{collectionId\}/items/\{featureId\}} WFS3 endpoints.
+\code{/collections/\{collectionId\}/items/\{featureId\}} endpoints.
+\item \code{\link[=queryables]{queryables()}}: implements \verb{/queryables} and
+\code{/collections/\{collectionId\}/queryables} endpoints.
 \item \code{\link[=stac_search]{stac_search()}}: implements STAC \verb{/stac/search}
 endpoint for version 0.8.1 or below, and \verb{/search} endpoint for
 versions 0.9.0 or higher.
+\item \code{\link[=ext_filter]{ext_filter()}}: implements \verb{/filter} CQL2 endpoint.
 }
 }
 
 \section{Data access and organization functions}{
 
 \itemize{
-\item \code{\link[=get_request]{get_request()}}: makes HTTP GET requests to STAC web
-service.
-\item \code{\link[=post_request]{post_request()}}: makes HTTP POST requests to STAC web
-service.
+\item \code{\link[=get_request]{get_request()}}: makes HTTP GET requests to STAC web service.
+\item \code{\link[=post_request]{post_request()}}: makes HTTP POST requests to STAC web service.
 \item \code{\link[=items_matched]{items_matched()}}: returns how many items matched the
 search criteria.
-\item \code{\link[=items_length]{items_length()}}: informs how many items are
-stored locally.
 \item \code{\link[=items_fetch]{items_fetch()}}: fetches all matched items from service.
-\item \code{\link[=assets_download]{assets_download()}}: download all assets in batch.
+\item \code{\link[=items_filter]{items_filter()}}: selects items according to some criteria.
+\item \code{\link[=items_as_sf]{items_as_sf()}}: converts items to a \code{sf} object.
+\item \code{\link[=items_fields]{items_fields()}}: help explore fields inside items.
+\item \code{\link[=items_compact]{items_compact()}}: removes all items with empty assets.
+\item \code{\link[=items_reap]{items_reap()}}: extracts contents from items.
+\item \code{\link[=items_length]{items_length()}}: informs how many items are fetched locally.
+\item \code{\link[=items_sign]{items_sign()}}: appends tokens to assets' URL and turn
+them accessible.
+\item \code{\link[=assets_select]{assets_select()}}: select assets in items.
+\item \code{\link[=assets_rename]{assets_rename()}}: rename assets in items.
+\item \code{\link[=assets_url]{assets_url()}}: extract all URL to assets in items.
+\item \code{\link[=assets_download]{assets_download()}}: download assets in batch.
 }
 }
 
@@ -59,7 +70,7 @@ corresponding JSON STAC objects.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/brazil-data-cube/rstac}
+  \item \url{https://brazil-data-cube.github.io/rstac}
   \item Report bugs at \url{https://github.com/brazil-data-cube/rstac/issues}
 }
 

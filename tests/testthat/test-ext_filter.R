@@ -605,7 +605,7 @@ test_that("Conformance Test 34", {
     expected_number = 11
   )
 
-  point <- 'POINT(6.1300028 49.6116604)'
+  point <- "{\"type\":\"Point\",\"coordinates\":[6.1300028,49.6116604]}"
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
@@ -614,7 +614,7 @@ test_that("Conformance Test 34", {
     expected_number = 1
   )
 
-  polygon <- 'POLYGON((6.043073357781111 50.128051662794235,6.242751092156993 49.90222565367873,6.186320428094177 49.463802802114515,5.897759230176348 49.44266714130711,5.674051954784829 49.529483547557504,5.782417433300907 50.09032786722122,6.043073357781111 50.128051662794235))'
+  polygon <- "{\"type\":\"Polygon\",\"coordinates\":[[[6.043073357781111 50.128051662794235],[6.242751092156993,49.90222565367873],[6.186320428094177,49.463802802114515],[5.897759230176348,49.44266714130711],[5.674051954784829,49.529483547557504],[5.782417433300907,50.09032786722122],[6.043073357781111,50.128051662794235]]]}"
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
@@ -623,7 +623,7 @@ test_that("Conformance Test 34", {
     expected_number = 3
   )
 
-  point <- 'POINT(6.242751092156993 49.90222565367873)'
+  point <- "{\"type\":\"Point\",\"coordinates\":[6.242751092156993,49.90222565367873]}"
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
@@ -632,7 +632,7 @@ test_that("Conformance Test 34", {
     expected_number = 2
   )
 
-  linestring <- 'LINESTRING(6.043073357781111 50.128051662794235,6.242751092156993 49.90222565367873)'
+  linestring <- "{\"Type\":\"LineString\",\"coordinates\":[[6.043073357781111,50.128051662794235],[6.242751092156993,49.90222565367873]]"
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),

@@ -4,7 +4,7 @@
 \alias{RSTACDocument}
 \title{Document development functions}
 \usage{
-RSTACDocument(content, q, subclass)
+RSTACDocument(content, q = NULL, subclass = NULL)
 }
 \arguments{
 \item{content}{a \code{list} data structure representing the JSON file

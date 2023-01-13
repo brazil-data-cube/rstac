@@ -189,8 +189,10 @@ testthat::test_that("assets functions", {
   )
 
   # assets_rename-------------------------------------------------------------
-  selected_items <- assets_select(stac_items, c("BAND13", "BAND14"))
-  selected_item <- assets_select(stac_item, c("BAND13", "BAND14"))
+  selected_items <- assets_select(stac_items,
+                                  asset_names = c("BAND13", "BAND14"))
+  selected_item <- assets_select(stac_item,
+                                 asset_names = c("BAND13", "BAND14"))
 
   testthat::expect_error(
     assets_rename(selected_item)

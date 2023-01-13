@@ -22,6 +22,9 @@
 \alias{has_assets.STACItem}
 \alias{has_assets.STACItemCollection}
 \alias{has_assets.default}
+\alias{asset_key}
+\alias{asset_eo_bands}
+\alias{asset_raster_bands}
 \title{Assets functions}
 \usage{
 assets_download(
@@ -69,21 +72,21 @@ assets_download(
   fn = deprecated()
 )
 
-assets_url(items, asset_names = NULL, append_gdalvsi = TRUE)
+assets_url(items, asset_names = NULL, append_gdalvsi = FALSE)
 
-\method{assets_url}{STACItem}(items, asset_names = NULL, append_gdalvsi = TRUE)
+\method{assets_url}{STACItem}(items, asset_names = NULL, append_gdalvsi = FALSE)
 
-\method{assets_url}{STACItemCollection}(items, asset_names = NULL, append_gdalvsi = TRUE)
+\method{assets_url}{STACItemCollection}(items, asset_names = NULL, append_gdalvsi = FALSE)
 
-\method{assets_url}{default}(items, asset_names = NULL, append_gdalvsi = TRUE)
+\method{assets_url}{default}(items, asset_names = NULL, append_gdalvsi = FALSE)
 
-assets_select(items, asset_names = NULL, ..., select_fn = NULL)
+assets_select(items, ..., asset_names = NULL, select_fn = NULL)
 
-\method{assets_select}{STACItem}(items, asset_names = NULL, ..., select_fn = NULL)
+\method{assets_select}{STACItem}(items, ..., asset_names = NULL, select_fn = NULL)
 
-\method{assets_select}{STACItemCollection}(items, asset_names = NULL, ..., select_fn = NULL)
+\method{assets_select}{STACItemCollection}(items, ..., asset_names = NULL, select_fn = NULL)
 
-\method{assets_select}{default}(items, asset_names = NULL, ..., select_fn = NULL)
+\method{assets_select}{default}(items, ..., asset_names = NULL, select_fn = NULL)
 
 assets_rename(items, mapper = NULL, ...)
 
@@ -100,6 +103,12 @@ has_assets(items)
 \method{has_assets}{STACItemCollection}(items)
 
 \method{has_assets}{default}(items)
+
+asset_key()
+
+asset_eo_bands(field)
+
+asset_raster_bands(field)
 }
 \arguments{
 \item{items}{a \code{STACItem} or \code{STACItemCollection} object
@@ -107,7 +116,7 @@ representing the result of \verb{/stac/search},
 \code{/collections/{collectionId}/items} or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
 
-\item{asset_names}{a \code{character}vector with the names of the assets
+\item{asset_names}{a \code{character} vector with the names of the assets
 to be selected.}
 
 \item{output_dir}{a \code{character} directory in which the assets will be
@@ -118,16 +127,16 @@ if FALSE, a warning message is shown.}
 
 \item{...}{additional arguments. See details.}
 
-\item{download_fn}{a \code{function} to handle the vector of assets for
+\item{download_fn}{a \code{function} to handle download of assets for
 each item to be downloaded. Using this function, you can change the
-hrefs for each asset, as well as use another request verb, such as POST.}
+hrefs for each asset, as well as the way download is done.}
 
 \item{fn}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 use \code{download_fn} parameter instead.}
 
-\item{create_json}{a \code{logical} indicating if a JSON file with item metadata
-(\code{STACItem} or \code{STACItemCollection}) must be created in the output
-directory.}
+\item{create_json}{a \code{logical} indicating if a JSON file with item
+metadata (\code{STACItem} or \code{STACItemCollection}) must be created in the
+output directory.}
 
 \item{items_max}{a \code{numeric} corresponding to how many items will be
 downloaded.}
@@ -135,7 +144,7 @@ downloaded.}
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
-\item{append_gdalvsi}{a \code{logical} if true, gdal drivers are
+\item{append_gdalvsi}{a \code{logical} value. If true, gdal drivers are
 included in the URL of each asset. The following schemes are supported:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 
@@ -151,6 +160,9 @@ of an item (\code{STACItem} or \code{STACItemCollection}). In the case of a name
 list, use \verb{<old name> = <new name>} to rename the assets. The function
 can be used to rename the assets by returning a \code{character} string using
 the metadata contained in the asset object.}
+
+\item{field}{a \code{character} with the name of the asset field to
+return.}
 }
 \value{
 \itemize{
@@ -176,14 +188,16 @@ These functions provide support to work with \code{STACItemCollection} and
 \item \code{assets_download()}: Downloads the assets provided by the STAC API.
 
 \item \code{assets_url()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Returns a
-character vector with each asset href.
-For the URL, you can add the GDAL library drivers for the following
-schemes: HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
+character vector with each asset href. For the URL, you can add the
+GDAL library drivers for the following schemes: HTTP/HTTPS files,
+S3 (AWS S3) and GS (Google Cloud Storage).
 
 \item \code{assets_select()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Selects the
-assets of each item by its name. Note: This function can produce items
-with empty assets. In this case, users can use the \code{items_compact()}
-function to remove items with no assets.
+assets of each item by its name (\code{asset_names} parameter), by expressions
+(\code{...} parameter), or by a selection function (\code{select_fn} parameter).
+Note: This function can produce items with empty assets. In this case,
+users can use the \code{items_compact()} function to remove items with no
+assets.
 
 \item \code{assets_rename()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Rename each
 asset using a named list or a function.
@@ -201,7 +215,10 @@ methods, such as \link[httr:add_headers]{add_headers} or
 \item \code{assets_select()}: ellipsis is used to pass expressions that will
 be evaluated against each asset metadata. Expressions must be evaluated as
 a logical value where \code{TRUE} selects the asset and \code{FALSE} discards it.
-Multiple expressions are combined with \code{AND} operator.
+Multiple expressions are combine with \code{AND} operator. Expressions can
+use \code{asset} helper functions (i.e. \code{asset_key()}, \code{asset_eo_bands()},
+and \code{asset_raster_bands()}). Multiple expressions are combined with
+\code{AND} operator.
 
 \strong{WARNING:} Errors in the evaluation of expressions are
 considered as \code{FALSE}.
@@ -253,7 +270,8 @@ items <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
   post_request()
 
 # Selects assets by name
-items <- assets_select(items, c("B02", "B03", "SR_B1", "SR_B2"))
+items <- assets_select(items,
+                       asset_names = c("B02", "B03", "SR_B1", "SR_B2"))
 # Renames the landsat assets
 items <- assets_rename(items,
                        SR_B1 = "blue",

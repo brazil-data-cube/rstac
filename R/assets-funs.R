@@ -8,14 +8,16 @@
 #' \item `assets_download()`: Downloads the assets provided by the STAC API.
 #'
 #' \item `assets_url()`: `r lifecycle::badge('experimental')` Returns a
-#'  character vector with each asset href.
-#'  For the URL, you can add the GDAL library drivers for the following
-#'  schemes: HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
+#'  character vector with each asset href. For the URL, you can add the
+#'  GDAL library drivers for the following schemes: HTTP/HTTPS files,
+#'  S3 (AWS S3) and GS (Google Cloud Storage).
 #'
 #' \item `assets_select()`: `r lifecycle::badge('experimental')` Selects the
-#'  assets of each item by its name. Note: This function can produce items
-#'  with empty assets. In this case, users can use the `items_compact()`
-#'  function to remove items with no assets.
+#'  assets of each item by its name (`asset_names` parameter), by expressions
+#'  (`...` parameter), or by a selection function (`select_fn` parameter).
+#'  Note: This function can produce items with empty assets. In this case,
+#'  users can use the `items_compact()` function to remove items with no
+#'  assets.
 #'
 #' \item `assets_rename()`: `r lifecycle::badge('experimental')` Rename each
 #'  asset using a named list or a function.
@@ -26,7 +28,7 @@
 #' \code{/collections/{collectionId}/items} or
 #' \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
-#' @param asset_names a `character`vector with the names of the assets
+#' @param asset_names a `character` vector with the names of the assets
 #' to be selected.
 #'
 #' @param output_dir  a `character` directory in which the assets will be
@@ -41,20 +43,20 @@
 #' @param progress    a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
-#' @param download_fn a `function` to handle the vector of assets for
+#' @param download_fn a `function` to handle download of assets for
 #' each item to be downloaded. Using this function, you can change the
-#' hrefs for each asset, as well as use another request verb, such as POST.
+#' hrefs for each asset, as well as the way download is done.
 #'
 #' @param fn          `r lifecycle::badge('deprecated')`
 #' use `download_fn` parameter instead.
 #'
-#' @param append_gdalvsi a `logical` if true, gdal drivers are
+#' @param append_gdalvsi a `logical` value. If true, gdal drivers are
 #' included in the URL of each asset. The following schemes are supported:
 #' HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 #'
-#' @param create_json a `logical` indicating if a JSON file with item metadata
-#' (`STACItem` or `STACItemCollection`) must be created in the output
-#' directory.
+#' @param create_json a `logical` indicating if a JSON file with item
+#' metadata (`STACItem` or `STACItemCollection`) must be created in the
+#' output directory.
 #'
 #' @param select_fn a `function` to select assets an item
 #' (`STACItem` or `STACItemCollection`). This function receives as parameter
@@ -63,13 +65,16 @@
 #' assets based on this metadata by returning a logical value where `TRUE`
 #' selects the asset, and `FALSE` discards it.
 #'
-#' @param mapper    either a named `list` or a `function` to rename assets
+#' @param mapper      either a named `list` or a `function` to rename assets
 #' of an item (`STACItem` or `STACItemCollection`). In the case of a named
 #' list, use `<old name> = <new name>` to rename the assets. The function
 #' can be used to rename the assets by returning a `character` string using
 #' the metadata contained in the asset object.
 #'
-#' @param ...             additional arguments. See details.
+#' @param field       a `character` with the name of the asset field to
+#' return.
+#'
+#' @param ...         additional arguments. See details.
 #'
 #' @details
 #' Ellipsis argument (`...`) appears in different assets functions and
@@ -83,7 +88,10 @@
 #' \item `assets_select()`: ellipsis is used to pass expressions that will
 #' be evaluated against each asset metadata. Expressions must be evaluated as
 #' a logical value where `TRUE` selects the asset and `FALSE` discards it.
-#' Multiple expressions are combined with `AND` operator.
+#' Multiple expressions are combine with `AND` operator. Expressions can
+#' use `asset` helper functions (i.e. `asset_key()`, `asset_eo_bands()`,
+#' and `asset_raster_bands()`). Multiple expressions are combined with
+#' `AND` operator.
 #'
 #' **WARNING:** Errors in the evaluation of expressions are
 #' considered as `FALSE`.
@@ -152,7 +160,8 @@
 #'   post_request()
 #'
 #' # Selects assets by name
-#' items <- assets_select(items, c("B02", "B03", "SR_B1", "SR_B2"))
+#' items <- assets_select(items,
+#'                        asset_names = c("B02", "B03", "SR_B1", "SR_B2"))
 #' # Renames the landsat assets
 #' items <- assets_rename(items,
 #'                        SR_B1 = "blue",
@@ -292,7 +301,7 @@ assets_download.default <- assets_download.STACItem
 #' @rdname assets_functions
 #'
 #' @export
-assets_url <- function(items, asset_names = NULL, append_gdalvsi = TRUE) {
+assets_url <- function(items, asset_names = NULL, append_gdalvsi = FALSE) {
   UseMethod("assets_url", items)
 }
 
@@ -301,7 +310,7 @@ assets_url <- function(items, asset_names = NULL, append_gdalvsi = TRUE) {
 #' @export
 assets_url.STACItem <- function(items,
                                 asset_names = NULL,
-                                append_gdalvsi = TRUE) {
+                                append_gdalvsi = FALSE) {
   if (is.null(asset_names)) {
     asset_names <- items_assets(items)
   }
@@ -325,7 +334,7 @@ assets_url.STACItem <- function(items,
 #' @export
 assets_url.STACItemCollection <- function(items,
                                           asset_names = NULL,
-                                          append_gdalvsi = TRUE) {
+                                          append_gdalvsi = FALSE) {
   if (is.null(asset_names)) {
     asset_names <- items_assets(items)
   }
@@ -353,15 +362,15 @@ assets_url.default <- assets_url.STACItem
 #' @rdname assets_functions
 #'
 #' @export
-assets_select <- function(items, asset_names = NULL, ..., select_fn = NULL) {
+assets_select <- function(items, ..., asset_names = NULL, select_fn = NULL) {
   UseMethod("assets_select", items)
 }
 
 #' @rdname assets_functions
 #'
 #' @export
-assets_select.STACItem <- function(items,
-                                   asset_names = NULL, ...,
+assets_select.STACItem <- function(items, ...,
+                                   asset_names = NULL,
                                    select_fn = NULL) {
   exprs <- unquote(
     expr = as.list(substitute(list(...), env = environment())[-1]),
@@ -378,8 +387,9 @@ assets_select.STACItem <- function(items,
       .error("Select expressions cannot be named.")
 
     for (i in seq_along(exprs)) {
-      sel <- map_lgl(items$assets, function(asset) {
-        val <- select_eval(asset = asset, expr = exprs[[i]])
+      sel <- map_lgl(names(items$assets), function(key) {
+        val <- select_eval(key = key, asset = items$assets[[key]],
+                           expr = exprs[[i]])
         return(val)
       })
       items$assets <- items$assets[sel]
@@ -387,8 +397,9 @@ assets_select.STACItem <- function(items,
   }
 
   if (!is.null(select_fn)) {
-    sel <- map_lgl(items$assets, function(asset) {
-      val <- select_exec(asset = asset, select_fn = select_fn)
+    sel <- map_lgl(names(items$assets), function(key) {
+      val <- select_exec(key = key, asset = items$assets[[key]],
+                         select_fn = select_fn)
       return(val)
     })
     items$assets <- items$assets[sel]
@@ -400,8 +411,8 @@ assets_select.STACItem <- function(items,
 #' @rdname assets_functions
 #'
 #' @export
-assets_select.STACItemCollection <- function(items,
-                                             asset_names = NULL, ...,
+assets_select.STACItemCollection <- function(items, ...,
+                                             asset_names = NULL,
                                              select_fn = NULL) {
   items <- foreach_item(
     items, assets_select, asset_names = asset_names, ...,
@@ -491,3 +502,32 @@ has_assets.STACItemCollection <- function(items) {
 #'
 #' @export
 has_assets.default <- has_assets.STACItem
+
+#' @rdname assets_functions
+#'
+#' @export
+asset_key <- function() {
+  if (!"key" %in% names(asset_context))
+    .error("Must be used inside `assets_select()`")
+  asset_context$key
+}
+
+#' @rdname assets_functions
+#'
+#' @export
+asset_eo_bands <- function(field) {
+  val <- asset_get("eo:bands")[[1]]
+  if (missing(field))
+    return(val)
+  val[[field]]
+}
+
+#' @rdname assets_functions
+#'
+#' @export
+asset_raster_bands <- function(field) {
+  val <- asset_get("raster:bands")[[1]]
+  if (missing(field))
+    return(val)
+  val[[field]]
+}
