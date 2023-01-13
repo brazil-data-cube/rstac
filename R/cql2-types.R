@@ -142,95 +142,95 @@ is_scalar_lst <- function(x) {
 
 check_is_bool_expr <- function(x) {
   if (!is_bool_expr(x))
-    .error("Value '%s' is not a valid boolean expression", to_text(x))
+    .error("Value %s is not a valid boolean expression", to_text(x))
 }
 
 check_is_scalar <- function(x) {
   if (!is_scalar(x))
-    .error("Value '%s' is not a valid scalar value", to_text(x))
+    .error("Value %s is not a valid scalar value", to_text(x))
 }
 
 check_is_isnull_operand <- function(x) {
   if (!is_isnull_operand(x))
-    .error("Value '%s' is not a valid null operand", to_text(x))
+    .error("Value %s is not a valid null operand", to_text(x))
 }
 
 check_is_num_expr <- function(x) {
   if (!is_num_expr(x))
-    .error("Value '%s' is not a valid numeric expression", to_text(x))
+    .error("Value %s is not a valid numeric expression", to_text(x))
 }
 
 check_is_time <- function(x) {
   if (!is_time(x))
-    .error("Value '%s' is not a valid time value", to_text(x))
+    .error("Value %s is not a valid time value", to_text(x))
 }
 
 check_is_date <- function(x) {
   if (!is_date(x))
-    .error("Value '%s' is not a valid date value", to_text(x))
+    .error("Value %s is not a valid date value", to_text(x))
 }
 
 check_is_instant_param <- function(x) {
   if (!is_instant_param(x))
-    .error("Value '%s' is not a valid instant value", to_text(x))
+    .error("Value %s is not a valid instant value", to_text(x))
 }
 
 check_is_prop_name <- function(x) {
   if (!is_prop_name(x))
-    .error("Value '%s' is not a valid property name", to_text(x))
+    .error("Value %s is not a valid property name", to_text(x))
 }
 
 check_is_func_name <- function(x) {
   if (!is_func_name(x))
-    .error("Value '%s' is not a valid function name", to_text(x))
+    .error("Value %s is not a valid function name", to_text(x))
 }
 
 check_is_temporal_expr <- function(x) {
   if (!is_temporal_expr(x))
-    .error("Value '%s' is not a valid temporal expression", to_text(x))
+    .error("Value %s is not a valid temporal expression", to_text(x))
 }
 
 check_is_array_expr <- function(x) {
   if (!is_array_expr(x))
-    .error("Value '%s' is not a valid array expression", to_text(x))
+    .error("Value %s is not a valid array expression", to_text(x))
 }
 
 check_is_spatial_expr <- function(x) {
   if (!is_spatial_expr(x))
-    .error("Value '%s' is not a valid spatial expression", to_text(x))
+    .error("Value %s is not a valid spatial expression", to_text(x))
 }
 
 check_is_casei_expr <- function(x) {
   if (!is_casei_expr(x))
-    .error("Value '%s' is not a valid casei expression", to_text(x))
+    .error("Value %s is not a valid casei expression", to_text(x))
 }
 
 check_is_scalar_lst <- function(x) {
   if (!is_scalar_lst(x))
-    .error("Value '%s' is not a valid scalar list value", to_text(x))
+    .error("Value %s is not a valid scalar list value", to_text(x))
 }
 
 check_is_str_expr <- function(x) {
   if (!is_str_expr(x))
-    .error("Value '%s' is not a valid string expression", to_text(x))
+    .error("Value %s is not a valid string expression", to_text(x))
 }
 
 check_is_patt_expr <- function(x) {
   if (!is_patt_expr(x))
-    .error("Value '%s' is not a valid pattern expression", to_text(x))
+    .error("Value %s is not a valid pattern expression", to_text(x))
 }
 
 check_is_num <- function(x) {
   if (!is_num(x))
-    .error("Value '%s' is not a valid numeric value", to_text(x))
+    .error("Value %s is not a valid numeric value", to_text(x))
 }
 
 check_is_date <- function(x) {
   if (!is_date(x))
-    .error("Value '%s' is not a valid date value", to_text(x))
+    .error("Value %s is not a valid date value", to_text(x))
 }
 
 check_is_time <- function(x) {
   if (!is_time(x))
-    .error("Value '%s' is not a valid time value", to_text(x))
+    .error("Value %s is not a valid time value", to_text(x))
 }
