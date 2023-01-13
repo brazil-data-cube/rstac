@@ -50,7 +50,14 @@
 #'   to CQL2 `S_INTERSECTS(a, b)`, `S_TOUCHES(a, b)`, `S_WITHIN(a, b)`,
 #'   `S_OVERLAPS(a, b)`, `S_CROSSES(a, b)`, and `S_CONTAINS(a, b)` operators,
 #'   respectively. Here, `a` and `b` should be `geometry` objects. `rstac`
-#'   accepts `sf`, `sfc`, `sfg`, or `geojson` objects.
+#'   accepts `sf`, `sfc`, `sfg`, `list` (representing GeoJSON objects), or
+#'   `character` (representing either GeoJSON or WKT).
+#'   **NOTE**: All of the above spatial object types, except for the
+#'   `character`, representing a WKT, may lose precision due to numeric
+#'   truncations when R converts numbers to JSON text. WKT strings are
+#'   sent "as is" to the service. Therefore, the only way for users to
+#'   retain precision on spatial objects is to represent them as a WKT
+#'   string.
 #'
 #' ## Temporal operators
 #' - functions `date(a)`, `timestamp(a)`, and `interval(a, b)` corresponds to

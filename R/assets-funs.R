@@ -60,10 +60,10 @@
 #'
 #' @param select_fn a `function` to select assets an item
 #' (`STACItem` or `STACItemCollection`). This function receives as parameter
-#' each asset element stored in the  field. Asset elements contain metadata
-#' describing spatial-temporal objects. Users can provide a function to select
-#' assets based on this metadata by returning a logical value where `TRUE`
-#' selects the asset, and `FALSE` discards it.
+#' the asset element and, optionally, the asset name. Asset elements
+#' contain metadata describing spatial-temporal objects. Users can provide
+#' a function to select assets based on this metadata by returning a
+#' logical value where `TRUE` selects the asset, and `FALSE` discards it.
 #'
 #' @param mapper      either a named `list` or a `function` to rename assets
 #' of an item (`STACItem` or `STACItemCollection`). In the case of a named
