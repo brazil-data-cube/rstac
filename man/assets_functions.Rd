@@ -150,10 +150,10 @@ HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 
 \item{select_fn}{a \code{function} to select assets an item
 (\code{STACItem} or \code{STACItemCollection}). This function receives as parameter
-each asset element stored in the  field. Asset elements contain metadata
-describing spatial-temporal objects. Users can provide a function to select
-assets based on this metadata by returning a logical value where \code{TRUE}
-selects the asset, and \code{FALSE} discards it.}
+the asset element and, optionally, the asset name. Asset elements
+contain metadata describing spatial-temporal objects. Users can provide
+a function to select assets based on this metadata by returning a
+logical value where \code{TRUE} selects the asset, and \code{FALSE} discards it.}
 
 \item{mapper}{either a named \code{list} or a \code{function} to rename assets
 of an item (\code{STACItem} or \code{STACItemCollection}). In the case of a named

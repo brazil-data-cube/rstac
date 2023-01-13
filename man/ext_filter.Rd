@@ -71,7 +71,14 @@ a list of values of the same type as \code{a}.
 to CQL2 \code{S_INTERSECTS(a, b)}, \code{S_TOUCHES(a, b)}, \code{S_WITHIN(a, b)},
 \code{S_OVERLAPS(a, b)}, \code{S_CROSSES(a, b)}, and \code{S_CONTAINS(a, b)} operators,
 respectively. Here, \code{a} and \code{b} should be \code{geometry} objects. \code{rstac}
-accepts \code{sf}, \code{sfc}, \code{sfg}, or \code{geojson} objects.
+accepts \code{sf}, \code{sfc}, \code{sfg}, \code{list} (representing GeoJSON objects), or
+\code{character} (representing either GeoJSON or WKT).
+\strong{NOTE}: All of the above spatial object types, except for the
+\code{character}, representing a WKT, may lose precision due to numeric
+truncations when R converts numbers to JSON text. WKT strings are
+sent "as is" to the service. Therefore, the only way for users to
+retain precision on spatial objects is to represent them as a WKT
+string.
 }
 }
 
