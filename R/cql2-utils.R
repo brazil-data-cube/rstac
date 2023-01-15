@@ -68,7 +68,7 @@ cql2_bbox_as_geojson <- function(bbox) {
 #'
 #' @export
 cql2_date <- function(x) {
-  stopifnot(is_date(x))
+  check_is_date(x)
   unquote(quote(date({{x}})), environment())
 }
 
@@ -76,7 +76,7 @@ cql2_date <- function(x) {
 #'
 #' @export
 cql2_timestamp <- function(x) {
-  stopifnot(is_time(x))
+  check_is_time(x)
   unquote(quote(timestamp({{x}})), environment())
 }
 
@@ -85,8 +85,8 @@ cql2_timestamp <- function(x) {
 #' @export
 cql2_interval <- function(start = "..", end = "..") {
   if (start != "..")
-    stopifnot(is_instant_param(start))
+    check_is_instant_param(start)
   if (end != "..")
-    stopifnot(is_instant_param(end))
+    check_is_instant_param(end)
   unquote(quote(interval({{start}}, {{end}})), environment())
 }

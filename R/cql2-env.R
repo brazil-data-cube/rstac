@@ -85,10 +85,18 @@ cql2_global_env <- new_env(
   list =    list,
   c =       list,
   `:` =     function(from, to) {
-    stopifnot(is_num(from))
-    stopifnot(is_num(to))
+    check_is_num(from)
+    check_is_num(to)
     as.list(seq(from, to))
   },
   parent_env = cql2_ident_env
 )
 
+
+# ---- update cql2_ident_env ----
+cql2_update_ident_env <- function(expr) {
+  # update `cql2_ident_env` environment with all input properties
+  rm(list = ls(cql2_ident_env, all.names = TRUE), envir = cql2_ident_env)
+  list2env(get_all_props(expr), envir = cql2_ident_env)
+  list2env(get_all_funcs(expr), envir = cql2_ident_env)
+}

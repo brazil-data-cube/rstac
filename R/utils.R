@@ -1,9 +1,16 @@
+num_format <- function(x) {
+  digits <- options("stac_digits")[[1]]
+  if (is.null(digits)) digits <- 15
+  format(x, trim = TRUE, digits = digits, scientific = FALSE,
+         drop0trailing = TRUE)
+}
 
 modify_list <- function(x, y) {
   if (is.null(x))
     x <- list()
   stopifnot(is.list(x), is.list(y))
   ynames <- names(y)
+  ynames <- ynames[nzchar(ynames)]
   for (n in ynames) {
     x[[n]] <- y[[n]]
   }

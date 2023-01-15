@@ -45,6 +45,13 @@ testthat::test_that("items functions", {
       items(feature_id = "CB4_64_16D_STK_v001_019022_2021-02-02_2021-02-17") %>%
       get_request()
 
+    expect_null(
+      tryCatch({
+        preview_plot(assets_url(item_stac, asset_names = "thumbnail"))
+      }, error = function(e) {e},
+      warning = function(w) {w}
+      ))
+
     items_ms <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
       stac_search(
         collections = "sentinel-2-l2a",
@@ -247,8 +254,9 @@ testthat::test_that("items functions", {
       n = 1
     )
 
-    testthat::expect_error(items_reap(item_stac, FALSE))
-    testthat::expect_error(items_reap(item_stac, FALSE, field = FALSE))
+    testthat::expect_null(items_reap(item_stac, FALSE))
+    testthat::expect_message(items_reap(item_stac, FALSE, field = FALSE),
+                             regexp = "^The parameter \\.\\.\\.")
 
     testthat::expect_error(
       object = subclass(items_reap(item_stac))
@@ -265,15 +273,23 @@ testthat::test_that("items functions", {
       n = 10
     )
 
-    copy_res <- res
-    copy_res$features <- NULL
-    testthat::expect_null(items_reap(copy_res))
-
-    testthat::expect_error(items_reap(res, FALSE))
-    testthat::expect_error(items_reap(res, FALSE, field = FALSE))
-
+    # items_reap with pick_fn
     testthat::expect_equal(
-      object = class(items_reap(res)),
-      expected = "list"
+      object = class(items_reap(item_stac, field = c("properties"),
+                                pick_fn = function(x) x[["datetime"]])),
+      expected = "character"
     )
+
+    testthat::expect_length(
+      object = items_reap(item_stac, field = c("properties"),
+                          pick_fn = function(x) x[["datetime"]]),
+      n = 1
+    )
+
+    # items_reap with empty features
+    res$features <- list()
+    testthat::expect_null(items_reap(res))
+
+    testthat::expect_null(items_reap(res, FALSE))
+    testthat::expect_null(items_reap(res, FALSE, field = FALSE))
 })

@@ -36,10 +36,10 @@ test_that("Conformance Test 7", {
                  s_intersects(geometry, {{polygon}}) &&
                  datetime > "2019-01-01" &&
                  datetime < "2019-02-02")
-  res <- suppressWarnings(post_request(res))
+  res <- post_request(res)
 
   expect_s3_class(res, "STACItemCollection")
-  res2 <- suppressWarnings(items_next(res))
+  res2 <- items_next(res)
   expect_s3_class(res2, "STACItemCollection")
   expect_gt(object = items_length(res2), expected = items_length(res))
 
@@ -614,7 +614,7 @@ test_that("Conformance Test 34", {
     expected_number = 1
   )
 
-  polygon <- "{\"type\":\"Polygon\",\"coordinates\":[[[6.043073357781111 50.128051662794235],[6.242751092156993,49.90222565367873],[6.186320428094177,49.463802802114515],[5.897759230176348,49.44266714130711],[5.674051954784829,49.529483547557504],[5.782417433300907,50.09032786722122],[6.043073357781111,50.128051662794235]]]}"
+  polygon <- "POLYGON((6.043073357781111 50.128051662794235,6.242751092156993 49.90222565367873,6.186320428094177 49.463802802114515,5.897759230176348 49.44266714130711,5.674051954784829 49.529483547557504,5.782417433300907 50.09032786722122,6.043073357781111 50.128051662794235))"
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
@@ -623,6 +623,7 @@ test_that("Conformance Test 34", {
     expected_number = 3
   )
 
+  options(stac_digits = 16)
   point <- "{\"type\":\"Point\",\"coordinates\":[6.242751092156993,49.90222565367873]}"
   conformance_test(
     q = ext_filter(
@@ -632,7 +633,7 @@ test_that("Conformance Test 34", {
     expected_number = 2
   )
 
-  linestring <- "{\"Type\":\"LineString\",\"coordinates\":[[6.043073357781111,50.128051662794235],[6.242751092156993,49.90222565367873]]"
+  linestring <- "{\"type\":\"LineString\",\"coordinates\":[[6.043073357781111,50.128051662794235],[6.242751092156993,49.90222565367873]]}"
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
@@ -980,5 +981,24 @@ test_that("scalar data types contructors", {
     cql2_text(date("1985-07-16")),
     regexp = "DATE('1985-07-16')",
     fixed = TRUE
+  )
+})
+
+
+test_that("cql2 helper functions", {
+  bbox <- c(-122.2751, 47.5469, -121.9613, 47.7458)
+  time_range <- cql2_interval("2020-12-01", "2020-12-31")
+  area_of_interest <- cql2_bbox_as_geojson(bbox)
+  expect_equal(class(cql2_date("2020-01-01")), "call")
+  expect_equal(class(cql2_timestamp("2020-01-01T12:00:00Z")), "call")
+  expect_error(cql2_date("2020-01-55"))
+  expect_error(cql2_timestamp("2020-01-01"))
+  expect_output(
+    object = {cql2_json(
+      collection == "landsat-c2-l2" &&
+        t_intersects(datetime, !!time_range) &&
+        s_intersects(geometry, !!area_of_interest)
+    )},
+    regexp = "-121.9613"
   )
 })
