@@ -250,7 +250,8 @@ text_not_op.default <- function(x) {
 # ---- convert to wkt ----
 
 wkt_spatial_type <- function(x) {
-  if (!all(c("type", "coordinates") %in% names(x)))
+  if (!"type" %in% names(x) ||
+      !any(c("coordinates", "geometries") %in% names(x)))
     .error("Not a valid GeoJSON geometry.")
   x[["type"]]
 }

@@ -21,6 +21,7 @@ is_scalar <- function(x) {
 
 is_spatial <- function(x) {
   is.list(x) && all(c("type", "coordinates") %in% names(x)) ||
+    is.list(x) && all(c("type", "geometries") %in% names(x)) ||
     inherits(x, "sf")  && nrow(x) == 1 ||
     inherits(x, "sfc") && length(x) == 1 ||
     inherits(x, "sfg") ||
