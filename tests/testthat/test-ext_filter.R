@@ -984,11 +984,13 @@ test_that("scalar data types contructors", {
   )
 })
 
-
 test_that("cql2 helper functions", {
   bbox <- c(-122.2751, 47.5469, -121.9613, 47.7458)
   time_range <- cql2_interval("2020-12-01", "2020-12-31")
   area_of_interest <- cql2_bbox_as_geojson(bbox)
+
+  expect_equal(class(area_of_interest), "list")
+  expect_equal(class(time_range), "call")
   expect_equal(class(cql2_date("2020-01-01")), "call")
   expect_equal(class(cql2_timestamp("2020-01-01T12:00:00Z")), "call")
   expect_error(cql2_date("2020-01-55"))
@@ -1001,4 +1003,167 @@ test_that("cql2 helper functions", {
     )},
     regexp = "-121.9613"
   )
+})
+
+test_that("cql2 contructors", {
+  # ---- new logic op ----
+  logic_operator <- new_logic_op("and")
+  expect_error(logic_operator(FALSE, NULL))
+  expect_error(logic_operator(FALSE, "NULL"))
+  expect_error(logiSSSc_operator(FALSE, 3))
+  l_op <- logic_operator(TRUE, TRUE)
+  expect_s3_class(l_op, "cql2_logic_op")
+  expect_output(print(l_op), "true AND true")
+
+  # ---- not op ----
+  not_operator <- not_op(FALSE)
+  expect_s3_class(not_operator, "cql2_not_op")
+  expect_output(print(not_operator), "NOT false")
+
+  # ---- new comp op ----
+  new_comp_operator <- new_comp_op("=")
+  comp_op <- new_comp_operator(1, 2)
+  expect_s3_class(comp_op, "cql2_comp_op")
+  expect_output(print(comp_op), regexp = "1 = 2")
+
+  # ---- is null op ----
+  null_operator <- isnull_op(1)
+  expect_s3_class(null_operator, "cql2_isnull_op")
+  expect_output(print(null_operator), regexp = "1 IS NULL")
+
+  # ---- new math op ----
+  new_math_operator <- new_math_op("+")
+  expect_error(new_math_operator("a", 2))
+  expect_error(new_math_operator(NULL, 2))
+  math_op <- new_math_operator(1, 2)
+  expect_s3_class(math_op, "cql2_math_op")
+  expect_output(print(math_op), regexp = "1 + 2", fixed = TRUE)
+
+  # ---- minus op ----
+  expect_error(minus_op("ddd"))
+  expect_error(minus_op(NULL))
+  expect_error(minus_op(TRUE))
+  minus_operator1 <- minus_op(1)
+  minus_operator2 <- minus_op(1, 2)
+  expect_s3_class(minus_operator1, "cql2_minus_op")
+  expect_output(print(minus_operator1), "-1")
+
+  expect_s3_class(minus_operator2, "cql2_minus_op")
+  expect_output(print(minus_operator2), "1 - 2")
+
+  # ---- func def ----
+  function_definition <- func_def("test")
+  function_df <- function_definition(a = 1, b = 2)
+  expect_s3_class(function_df, "cql2_func")
+  expect_output(print(function_df), "test(1,2)", fixed = TRUE)
+
+  # ---- like op ----
+  expect_error(like_op("test", 2))
+  expect_error(like_op(2, "test"))
+  expect_error(like_op(NULL, "2"))
+  expect_error(like_op("2", NULL))
+  expect_error(like_op(TRUE, "2"))
+  expect_error(like_op("2", FALSE))
+  like_operator <- like_op("test1", "test2")
+  expect_s3_class(like_operator, "cql2_like_op")
+  expect_output(print(like_operator), "'test1' LIKE 'test2'")
+
+  # ---- between op ----
+  expect_error(between_op("test", 2, "test"))
+  expect_error(between_op(2, "test", 2))
+  expect_error(between_op("test", 2, 2))
+  expect_error(between_op("2", NULL, NULL))
+  expect_error(between_op(TRUE, "2", FALSE))
+  between_operator <- between_op(2, 1, 3)
+  expect_s3_class(between_operator, "cql2_between_op")
+  expect_output(print(between_operator), "2 BETWEEN 1 AND 3")
+
+  # ---- in op ----
+  expect_error(in_op("test", 2))
+  expect_error(in_op("test", 2))
+  expect_error(in_op(NULL, 2))
+  expect_error(in_op(TRUE, 2))
+  in_operator <- in_op(1, list(2, 3))
+  expect_s3_class(in_operator, "cql2_in_op")
+  expect_output(print(in_operator), "1 IN (2,3)", fixed = TRUE)
+
+  # ---- casei ----
+  expect_error(casei(2))
+  expect_error(casei(NULL))
+  expect_error(casei(TRUE))
+  casei_expr <- casei("test")
+  expect_s3_class(casei_expr, "cql2_casei_op")
+  expect_output(print(casei_expr), "CASEI('test')", fixed = TRUE)
+
+  # ---- accenti ----
+  expect_error(accenti(2))
+  expect_error(accenti(NULL))
+  expect_error(accenti(TRUE))
+  accenti_expr <- accenti("test")
+  expect_s3_class(accenti_expr, "cql2_accenti_op")
+  expect_output(print(accenti_expr), "ACCENTI('test')", fixed = TRUE)
+
+  # ---- spatial op ----
+  spatial_operator <- spatial_op("test")
+  expect_error(spatial_operator(NULL, NULL))
+  expect_error(spatial_operator(FALSE, TRUE))
+  expect_error(spatial_operator("test", TRUE))
+  expect_error(spatial_operator("test", 2))
+  expect_error(spatial_operator(
+    list(type = "Pointed", coordinates = c(1, 2)), "POINT(1,3)"
+  ))
+  sp1 <- spatial_operator(
+    list(type = "Point", coordinates = c(1, 2)), "POINT(1,3)"
+  )
+  expect_s3_class(sp1, "cql2_spatial_op")
+  expect_output(print(sp1), "TEST(POINT(1 2),POINT(1,3))", fixed = TRUE)
+
+  pt_sfg <- sf::st_point(c(1, 2))
+  ls_sfc <- sf::st_sfc(sf::st_linestring(matrix(seq_len(10), 5, 2)), crs = 4326)
+  outer <- matrix(c(0, 0, 10, 0, 10, 10, 0, 10, 0, 0), ncol = 2, byrow = TRUE)
+  hole1 <- matrix(c(1, 1, 1, 2, 2, 2, 2, 1, 1, 1), ncol = 2, byrow = TRUE)
+  hole2 <- matrix(c(5, 5, 5, 6, 6, 6, 6, 5, 5, 5), ncol = 2, byrow = TRUE)
+  poly_sf <- sf::st_sf(
+    geom = sf::st_sfc(sf::st_polygon(list(outer, hole1, hole2)), crs = 4326)
+  )
+  gc <- sf::st_geometrycollection(
+    list(sf::st_point(seq_len(2)), sf::st_linestring(matrix(seq_len(6), 3)))
+  )
+
+  sp2 <- spatial_operator(pt_sfg, ls_sfc)
+  expect_s3_class(sp2, "cql2_spatial_op")
+  expect_output(
+    print(sp2),
+    "TEST(POINT(1 2),LINESTRING(1 2,3 4,5 6,7 8,9 10))",
+    fixed = TRUE
+  )
+
+  sp3 <- spatial_operator(poly_sf, gc)
+  expect_s3_class(sp3, "cql2_spatial_op")
+  expect_output(
+    print(sp3),
+    "TEST(POLYGON((0 10,10 0,0 0,0 10,10 0,1 1,2 2,1 1,2 2,1 1,5 5,6 6,5 5,6 6,5 5)),GEOMETRYCOLLECTION(POINT(1 2),LINESTRING(1 4,2 5,3 6)))",
+    fixed = TRUE
+  )
+
+  # ---- temporal op ----
+  temporal_operator <- temporal_op("test")
+  expect_error(temporal_operator(FALSE, TRUE))
+  expect_error(temporal_operator(NULL, NULL))
+  expect_error(temporal_operator(1, 2))
+
+  temp <- temporal_operator("2019-01-01", "2019-02-01T01:01:01Z")
+  expect_s3_class(temp, "cql2_temporal_op")
+  expect_output(
+    print(temp), "TEST('2019-01-01','2019-02-01T01:01:01Z')", fixed = TRUE
+  )
+
+  # ---- array op ----
+  array_operator <- array_op("test")
+  expect_error(array_operator(mean, TRUE))
+  expect_error(array_operator("ddd", NULL))
+
+  array_obj <- array_operator(list(1, 2), c(TRUE, FALSE))
+  expect_s3_class(array_obj, "cql2_array_op")
+  expect_output(print(array_obj), "TEST((1,2),(true,false))", fixed = TRUE)
 })
