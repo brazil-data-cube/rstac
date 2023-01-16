@@ -14,7 +14,7 @@ like_op <- function(a, b) {
   check_is_str_expr(a)
   check_is_patt_expr(b)
   structure(list(op = "like", args = list(a, b)),
-            class = c("cql2_like_op", "list"))
+            class = c("cql2_like_op", "cql2_filter", "list"))
 }
 
 # between_op
@@ -26,7 +26,7 @@ between_op <- function(a, b, c) {
   check_is_num_expr(b)
   check_is_num_expr(c)
   structure(list(op = "between", args = list(a, b, c)),
-            class = c("cql2_between_op", "list"))
+            class = c("cql2_between_op", "cql2_filter", "list"))
 }
 
 # in_op
@@ -36,21 +36,21 @@ in_op <- function(a, b) {
   check_is_scalar(a)
   check_is_scalar_lst(b)
   structure(list(op = "in", args = list(a, b)),
-            class = c("cql2_in_op", "list"))
+            class = c("cql2_in_op", "cql2_filter", "list"))
 }
 
 casei <- function(a) {
   a <- cql2_eval(a)
   check_is_casei_expr(a)
   structure(list(casei = a),
-            class = c("cql2_casei_op", "list"))
+            class = c("cql2_casei_op", "cql2_filter", "list"))
 }
 
 accenti <- function(a) {
   a <- cql2_eval(a)
   check_is_casei_expr(a)
   structure(list(accenti = a),
-            class = c("cql2_accenti_op", "list"))
+            class = c("cql2_accenti_op", "cql2_filter", "list"))
 }
 
 # spatial_op
@@ -65,7 +65,7 @@ spatial_op <- function(op) {
     if (is_spatial(b))
       b <- get_spatial(b)
     structure(list(op = op, args = list(a, b)),
-              class = c("cql2_spatial_op", "list"))
+              class = c("cql2_spatial_op", "cql2_filter", "list"))
   }
 }
 
@@ -145,7 +145,7 @@ temporal_op <- function(op) {
     check_is_temporal_expr(a)
     check_is_temporal_expr(b)
     structure(list(op = op, args = list(a, b)),
-              class = c("cql2_temporal_op", "list"))
+              class = c("cql2_temporal_op", "cql2_filter", "list"))
   }
 }
 
@@ -157,6 +157,6 @@ array_op <- function(op) {
     check_is_array_expr(a)
     check_is_array_expr(b)
     structure(list(op = op, args = list(a, b)),
-              class = c("cql2_array_op", "list"))
+              class = c("cql2_array_op", "cql2_filter", "list"))
   }
 }
