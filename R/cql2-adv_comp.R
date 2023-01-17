@@ -113,7 +113,7 @@ get_spatial.sfc <- function(x) {
     x <- x[[1]]
     .warning("Informed geometry has multiple features. Using the first one.")
   }
-  get_spatial.sfg(x)
+  get_spatial.sfg(x[[1]])
 }
 
 #' @export
