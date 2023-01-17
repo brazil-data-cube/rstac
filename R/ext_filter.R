@@ -240,18 +240,22 @@ endpoint.ext_filter <- function(q) {
 #' @export
 before_request.ext_filter <- function(q) {
   check_query_verb(q, verbs = c("GET", "POST"))
-  if (is.null(cql2_lang(q$params))) {
-     if (q$verb == "GET") {
-       cql2_lang(q$params) <- "cql2-text"
-     } else {
-       cql2_lang(q$params) <- "cql2-json"
-     }
-  } else {
-    if (q$verb == "GET" && cql2_lang(q$params) == "cql2-json") {
-      # transform list into string to provide as querystring in GET
+  if (q$verb == "GET") {
+    # transform list into string to provide as querystring in GET
+    if (!is.null(cql2_lang(q$params)) && cql2_lang(q$params) == "cql2-json") {
       cql2_filter(q$params) <- to_json(cql2_filter(q$params))
+    } else {
+      cql2_lang(q$params) <- "cql2-text"
+      cql2_filter(q$params) <- to_text(cql2_filter(q$params))
+    }
+  } else {
+    if (!is.null(cql2_lang(q$params)) && cql2_lang(q$params) == "cql2-text") {
+      cql2_filter(q$params) <- to_text(cql2_filter(q$params))
+    } else {
+      cql2_lang(q$params) <- "cql2-json"
     }
   }
+
   if ("items" %in% subclass(q)) {
     # don't send 'collection_id' in url's query string or content body
     q <- omit_query_params(q, names = "collection_id")
