@@ -27,7 +27,9 @@ cql2_json <- function(expr) {
     substitute(expr, environment()),
     parent.frame(1)
   )
-  cat(to_json(cql2(expr, lang = "cql2-json")))
+  filter_expr <- to_json(cql2(expr, lang = "cql2-json"))
+  cat(filter_expr)
+  return(invisible(filter_expr))
 }
 
 #' @rdname cql2_functions
@@ -37,7 +39,9 @@ cql2_text <- function(expr) {
     substitute(expr, environment()),
     parent.frame(1)
   )
-  cat(cql2_filter(cql2(expr, lang = "cql2-text")))
+  filter_expr <- to_text(cql2(expr, lang = "cql2-text"))
+  cat(filter_expr)
+  return(invisible(filter_expr))
 }
 
 # ---- cast functions ----
@@ -62,9 +66,6 @@ cql2_lang <- function(obj) {
   if (length(value) > 0) {
     check_lang(value)
     obj[["filter-lang"]] <- value[[1]]
-    if (value[[1]] == "cql2-text") {
-      cql2_filter(obj) <- to_text(cql2_filter(obj))
-    }
   }
   obj
 }
