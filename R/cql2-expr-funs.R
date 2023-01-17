@@ -100,6 +100,8 @@ all_calls <- function(x) {
 
 # new env ----
 
+# nocov start
+
 new_env <- function(..., parent_env = NULL) {
   dots <- list(...)
   # default parent_env is taken from global parent env
@@ -109,3 +111,5 @@ new_env <- function(..., parent_env = NULL) {
   # register all elements in new env
   list2env(dots, envir = NULL, parent = parent_env, hash = TRUE)
 }
+
+# nocov end
