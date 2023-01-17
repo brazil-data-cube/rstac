@@ -1033,6 +1033,11 @@ test_that("cql2 contructors", {
   null_operator <- isnull_op(1)
   expect_s3_class(null_operator, "cql2_isnull_op")
   expect_output(print(null_operator), regexp = "1 IS NULL")
+  expect_output(
+    cat(to_json(null_operator)),
+    '{"op":"isNull","args":[1]}',
+    fixed = TRUE
+  )
 
   # ---- new math op ----
   new_math_operator <- new_math_op("+")
@@ -1041,6 +1046,11 @@ test_that("cql2 contructors", {
   math_op <- new_math_operator(1, 2)
   expect_s3_class(math_op, "cql2_math_op")
   expect_output(print(math_op), regexp = "1 + 2", fixed = TRUE)
+  expect_output(
+    cat(to_json(math_op)),
+    '{"op":"+","args":[1,2]}',
+    fixed = TRUE
+  )
 
   # ---- minus op ----
   expect_error(minus_op("ddd"))
@@ -1050,9 +1060,19 @@ test_that("cql2 contructors", {
   minus_operator2 <- minus_op(1, 2)
   expect_s3_class(minus_operator1, "cql2_minus_op")
   expect_output(print(minus_operator1), "-1")
+  expect_output(
+    cat(to_json(minus_operator1)),
+    '-1',
+    fixed = TRUE
+  )
 
   expect_s3_class(minus_operator2, "cql2_minus_op")
   expect_output(print(minus_operator2), "1 - 2")
+  expect_output(
+    cat(to_json(minus_operator2)),
+    '{"op":"-","args":[1,2]}',
+    fixed = TRUE
+  )
 
   # ---- timestamp literal ----
   expect_error(timestamp_lit("test"))
@@ -1098,6 +1118,11 @@ test_that("cql2 contructors", {
   function_df <- function_definition(a = 1, b = 2)
   expect_s3_class(function_df, "cql2_func")
   expect_output(print(function_df), "test(1,2)", fixed = TRUE)
+  expect_output(
+    cat(to_json(function_df)),
+    '{"function":{"name":"test","args":{"a":1,"b":2}}}',
+    fixed = TRUE
+  )
 
   # ---- like op ----
   expect_error(like_op("test", 2))
@@ -1109,6 +1134,11 @@ test_that("cql2 contructors", {
   like_operator <- like_op("test1", "test2")
   expect_s3_class(like_operator, "cql2_like_op")
   expect_output(print(like_operator), "'test1' LIKE 'test2'")
+  expect_output(
+    cat(to_json(like_operator)),
+    '{"op":"like","args":["test1","test2"]}',
+    fixed = TRUE
+  )
 
   # ---- between op ----
   expect_error(between_op("test", 2, "test"))
@@ -1119,6 +1149,11 @@ test_that("cql2 contructors", {
   between_operator <- between_op(2, 1, 3)
   expect_s3_class(between_operator, "cql2_between_op")
   expect_output(print(between_operator), "2 BETWEEN 1 AND 3")
+  expect_output(
+    cat(to_json(between_operator)),
+    '{"op":"between","args":[2,1,3]}',
+    fixed = TRUE
+  )
 
   # ---- in op ----
   expect_error(in_op("test", 2))
@@ -1128,6 +1163,11 @@ test_that("cql2 contructors", {
   in_operator <- in_op(1, list(2, 3))
   expect_s3_class(in_operator, "cql2_in_op")
   expect_output(print(in_operator), "1 IN (2,3)", fixed = TRUE)
+  expect_output(
+    cat(to_json(in_operator)),
+    '{"op":"in","args":[1,[2,3]]}',
+    fixed = TRUE
+  )
 
   # ---- casei ----
   expect_error(casei(2))
@@ -1337,6 +1377,20 @@ test_that("cql2 outputs functions", {
 
   )
   expect_error(to_text(list(a = 1, NULL)))
+  b <- structure(list(a = 1), class = "my-class")
+  expect_error(to_json(b))
+
+  # character
+  expect_output(
+    object = cat(to_json(get_spatial("POINT(1 2)"))),
+    "POINT(1 2)",
+    fixed = TRUE
+  )
+  expect_output(
+    object = cat(to_text(get_spatial("POINT(1 2)"))),
+    "POINT(1 2)",
+    fixed = TRUE
+  )
 
   # ---- cql2 ----
   expect_output(
