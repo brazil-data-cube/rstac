@@ -1019,6 +1019,9 @@ test_that("cql2 contructors", {
   not_operator <- not_op(FALSE)
   expect_s3_class(not_operator, "cql2_not_op")
   expect_output(print(not_operator), "NOT false")
+  expect_output(
+    cat(to_json(not_operator)), '{"op":"not","args":[false]}', fixed = TRUE
+  )
 
   # ---- new comp op ----
   new_comp_operator <- new_comp_op("=")
@@ -1050,6 +1053,45 @@ test_that("cql2 contructors", {
 
   expect_s3_class(minus_operator2, "cql2_minus_op")
   expect_output(print(minus_operator2), "1 - 2")
+
+  # ---- timestamp literal ----
+  expect_error(timestamp_lit("test"))
+  expect_error(timestamp_lit(NULL))
+  expect_error(timestamp_lit(TRUE))
+  expect_error(timestamp_lit(1.2))
+  expect_error(timestamp_lit("2019-01-01"))
+
+  ts_lit <- timestamp_lit("2019-01-01T01:00:00Z")
+  expect_s3_class(ts_lit, "cql2_timestamp")
+  expect_output(
+    print(ts_lit), "TIMESTAMP('2019-01-01T01:00:00Z')", fixed = TRUE
+  )
+
+  # ---- date literal ----
+  expect_error(date_lit("test"))
+  expect_error(date_lit(NULL))
+  expect_error(date_lit(TRUE))
+  expect_error(date_lit(1.2))
+  expect_error(date_lit("2019-01-01T01:00:00Z"))
+
+  dt_lit <- date_lit("2019-01-01")
+  expect_s3_class(dt_lit, "cql2_date")
+  expect_output(
+    print(dt_lit), "DATE('2019-01-01')", fixed = TRUE
+  )
+
+  # ---- interval literal ----
+  expect_error(interval_lit("test", ".."))
+  expect_error(interval_lit("..", "test"))
+  expect_error(interval_lit(NULL, NULL))
+  expect_error(interval_lit(TRUE, FALSE))
+  expect_error(interval_lit(1.2, 2.1))
+
+  int_lit <- interval_lit("2019-01-01")
+  expect_s3_class(int_lit, "cql2_interval")
+  expect_output(
+    print(int_lit), "INTERVAL('2019-01-01','..')", fixed = TRUE
+  )
 
   # ---- func def ----
   function_definition <- func_def("test")
@@ -1134,7 +1176,7 @@ test_that("cql2 contructors", {
   expect_s3_class(sp2, "cql2_spatial_op")
   expect_output(
     print(sp2),
-    "TEST(POINT(1 2),LINESTRING(1 2,3 4,5 6,7 8,9 10))",
+    "TEST(POINT(1 2),LINESTRING(1 6,2 7,3 8,4 9,5 10))",
     fixed = TRUE
   )
 
@@ -1142,7 +1184,7 @@ test_that("cql2 contructors", {
   expect_s3_class(sp3, "cql2_spatial_op")
   expect_output(
     print(sp3),
-    "TEST(POLYGON((0 10,10 0,0 0,0 10,10 0,1 1,2 2,1 1,2 2,1 1,5 5,6 6,5 5,6 6,5 5)),GEOMETRYCOLLECTION(POINT(1 2),LINESTRING(1 4,2 5,3 6)))",
+    "TEST(POLYGON((0 0,10 0,10 10,0 10,0 0),(1 1,1 2,2 2,2 1,1 1),(5 5,5 6,6 6,6 5,5 5)),GEOMETRYCOLLECTION(POINT(1 2),LINESTRING(1 4,2 5,3 6)))",
     fixed = TRUE
   )
 
@@ -1166,4 +1208,139 @@ test_that("cql2 contructors", {
   array_obj <- array_operator(list(1, 2), c(TRUE, FALSE))
   expect_s3_class(array_obj, "cql2_array_op")
   expect_output(print(array_obj), "TEST((1,2),(true,false))", fixed = TRUE)
+})
+
+test_that("cql2 outputs functions", {
+  # ---- null ----
+  expect_output(cat(to_json(NULL)), "null")
+
+  # ---- character ----
+  expect_output(cat(to_json("a")), "a")
+  expect_output(cat(to_json(c("a", "b"))), '["a","b"]', fixed = TRUE)
+
+  expect_output(cat(to_text("a")), "a")
+  expect_output(cat(to_text(c("a", "b"))), "('a','b')", fixed = TRUE)
+
+  # ---- numeric ----
+  expect_output(cat(to_json(1)), "1")
+  expect_output(cat(to_json(c(1, 2))), '[1,2]', fixed = TRUE)
+
+  expect_output(cat(to_text(1)), "1")
+  expect_output(cat(to_text(c(1, 2))), '(1,2)', fixed = TRUE)
+
+  # ---- logical ----
+  expect_output(cat(to_json(TRUE)), "true")
+  expect_output(cat(to_json(c(TRUE, FALSE))), '[true,false]', fixed = TRUE)
+
+  expect_output(cat(to_text(TRUE)), "true")
+  expect_output(cat(to_text(c(TRUE, FALSE))), '(true,false)', fixed = TRUE)
+
+  # ---- logical ----
+  expect_output(cat(to_json(TRUE)), "true")
+  expect_output(cat(to_json(c(TRUE, FALSE))), '[true,false]', fixed = TRUE)
+
+  expect_output(cat(to_text(TRUE)), "true")
+  expect_output(cat(to_text(c(TRUE, FALSE))), '(true,false)', fixed = TRUE)
+
+  # ---- list ----
+  expect_error(cat(to_json(to_json(list(2, a = 2)))))
+  expect_error(cat(to_json(to_text(list(2, a = 2)))))
+
+  pt <- list(type = "Point", coordinates = c(1, 2))
+  expect_output(cat(to_json(list(a = 2))), '{"a":2}', fixed = TRUE)
+  expect_output(cat(to_json(c(TRUE, FALSE))), '[true,false]', fixed = TRUE)
+  expect_output(cat(to_json(pt)), '{"type":"Point","coordinates":[1,2]}', fixed = TRUE)
+
+  expect_output(cat(to_text(TRUE)), "true")
+  expect_output(cat(to_text(c(TRUE, FALSE))), '(true,false)', fixed = TRUE)
+  expect_output(cat(to_text(pt)), 'POINT(1 2)', fixed = TRUE)
+
+  # ---- sfg, sfc sf ----
+  options(stac_digits = NULL)
+  pt_sfg <- sf::st_point(c(1, 2))
+  ls_sfc <- sf::st_sfc(sf::st_linestring(matrix(seq_len(10), 5, 2)), crs = 4326)
+  outer <- matrix(c(100.0, 0.0, 101.0, 0.0,
+                    101.0, 1.0, 100.0, 1.0,100.0, 0.0),
+                  ncol = 2, byrow = TRUE)
+  hole1 <- matrix(c(100.8, 0.8, 100.8, 0.2, 100.2, 0.2,
+                    100.2, 0.8, 100.8, 0.8),
+                  ncol = 2, byrow = TRUE)
+  poly_sf <- sf::st_sf(
+    geom = sf::st_sfc(sf::st_polygon(list(outer, hole1)), crs = 4326)
+  )
+
+  poly_sf1 <- sf::st_sf(
+    geom = sf::st_sfc(sf::st_polygon(list(hole1)), crs = 4326)
+  )
+
+  geom_col <- sf::st_geometrycollection(
+    list(sf::st_point(seq_len(2)), sf::st_linestring(matrix(seq_len(6), 3)))
+  )
+
+  # sfg
+  expect_output(
+    cat(to_json(pt_sfg)), '{"type":"Point","coordinates":[1,2]}', fixed = TRUE
+  )
+  expect_output(cat(to_text(pt_sfg)), 'POINT(1 2)', fixed = TRUE)
+
+  # sfc
+  expect_output(
+    cat(to_json(ls_sfc)),
+    '{"type":"LineString","coordinates":[[1,6],[2,7],[3,8],[4,9],[5,10]]}',
+    fixed = TRUE
+  )
+  expect_output(
+    cat(to_text(ls_sfc)), 'LINESTRING(1 6,2 7,3 8,4 9,5 10)', fixed = TRUE
+  )
+
+  # sf
+  expect_output(
+    cat(to_json(poly_sf)),
+    '{"type":"Polygon","coordinates":[[[100,0],[101,0],[101,1],[100,1],[100,0]],[[100.8,0.8],[100.8,0.2],[100.2,0.2],[100.2,0.8],[100.8,0.8]]]}',
+    fixed = TRUE
+  )
+  expect_output(
+    cat(to_text(poly_sf)),
+    'POLYGON((100 0,101 0,101 1,100 1,100 0),(100.8 0.8,100.8 0.2,100.2 0.2,100.2 0.8,100.8 0.8))',
+    fixed = TRUE
+  )
+
+  # geometry collection
+  expect_output(
+    cat(to_json(geom_col)),
+    '{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[1,2]},{"type":"LineString","coordinates":[[1,4],[2,5],[3,6]]}]}',
+    fixed = TRUE
+  )
+  expect_output(
+    cat(to_text(geom_col)),
+    'GEOMETRYCOLLECTION(POINT(1 2),LINESTRING(1 4,2 5,3 6))',
+    fixed = TRUE
+  )
+
+  # list
+  linestring <- list(
+    type = "LineString",
+    coordinates = matrix(
+      c(-62.5573, -8.4332, -62.2179, -8.3681),
+      ncol = 2, byrow = TRUE
+    )
+  )
+  expect_output(
+    cat(to_json(linestring)),
+    '{"type":"LineString","coordinates":[[-62.5573,-8.4332],[-62.2179,-8.3681]]}',
+    fixed = TRUE
+  )
+  expect_output(
+    cat(to_text(linestring)),
+    'LINESTRING(-62.5573 -8.4332,-62.2179 -8.3681)',
+    fixed = TRUE,
+
+  )
+  expect_error(to_text(list(a = 1, NULL)))
+
+  # ---- cql2 ----
+  expect_output(
+    print(to_text(cql2(quote(a > 1)))),
+    "a > 1"
+  )
 })
