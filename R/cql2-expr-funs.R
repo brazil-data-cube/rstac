@@ -1,5 +1,7 @@
 # eval ----
-cql2_eval <- function(x) {eval(x, envir = cql2_global_env)}
+cql2_eval <- function(x) {
+  eval(x, envir = cql2_global_env)
+}
 
 # unquote {{}} ----
 
