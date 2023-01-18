@@ -2,9 +2,15 @@
 % Please edit documentation in R/ext_filter.R
 \name{ext_filter}
 \alias{ext_filter}
+\alias{cql2_json}
+\alias{cql2_text}
 \title{Filter extension}
 \usage{
 ext_filter(q, expr, lang = NULL, crs = NULL)
+
+cql2_json(expr)
+
+cql2_text(expr)
 }
 \arguments{
 \item{q}{a \code{RSTACQuery} object expressing a STAC query
@@ -35,6 +41,11 @@ standard and defines how filters can be constructed. It supports predicates
 for standard data types like strings, numbers, and boolean as well as
 for spatial geometries (point, lines, polygons) and temporal
 data (instants and intervals).
+
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+\code{cql2_json()} and \code{cql2_text()} are helper functions that can be used
+to show how expressions are converted into CQL2 standard, either
+JSON or TEXT formats.
 
 \code{rstac} translates R expressions to CQL2, allowing users to express their
 filter criteria using R language. For more details on how to create
@@ -73,12 +84,13 @@ to CQL2 \code{S_INTERSECTS(a, b)}, \code{S_TOUCHES(a, b)}, \code{S_WITHIN(a, b)}
 respectively. Here, \code{a} and \code{b} should be \code{geometry} objects. \code{rstac}
 accepts \code{sf}, \code{sfc}, \code{sfg}, \code{list} (representing GeoJSON objects), or
 \code{character} (representing either GeoJSON or WKT).
-\strong{NOTE}: All of the above spatial object types, except for the
+\item \strong{NOTE}: All of the above spatial object types, except for the
 \code{character}, representing a WKT, may lose precision due to numeric
-truncations when R converts numbers to JSON text. WKT strings are
+truncation when R converts numbers to JSON text. WKT strings are
 sent "as is" to the service. Therefore, the only way for users to
 retain precision on spatial objects is to represent them as a WKT
-string.
+string. However, user can control numeric precision using the
+\code{options(stac_digits = ...)}. The default value is 15 digits.
 }
 }
 
@@ -217,7 +229,16 @@ req \%>\%
  ext_filter(collection == "landsat-c2-l2" &&
             t_after(datetime, timestamp("2022-07-16T05:32:00Z"))) \%>\%
   post_request()
+
+# Shows how CQL2 expression (TEXT format)
+cql2_text(collection == "landsat-c2-l2" &&
+  s_crosses(geometry, {{linestring}}))
+
+# Shows how CQL2 expression (JSON format)
+cql2_json(collection == "landsat-c2-l2" &&
+            t_after(datetime, timestamp("2022-07-16T05:32:00Z")))
 }
+
 }
 \seealso{
 \code{\link[=ext_query]{ext_query()}}, \code{\link[=stac_search]{stac_search()}}, \code{\link[=post_request]{post_request()}},

@@ -10,6 +10,11 @@
 #' for spatial geometries (point, lines, polygons) and temporal
 #' data (instants and intervals).
 #'
+#' `r lifecycle::badge('experimental')`
+#' `cql2_json()` and `cql2_text()` are helper functions that can be used
+#' to show how expressions are converted into CQL2 standard, either
+#' JSON or TEXT formats.
+#'
 #' `rstac` translates R expressions to CQL2, allowing users to express their
 #' filter criteria using R language. For more details on how to create
 #' CQL2 expressions in `rstac`. See the details section.
@@ -52,12 +57,14 @@
 #'   respectively. Here, `a` and `b` should be `geometry` objects. `rstac`
 #'   accepts `sf`, `sfc`, `sfg`, `list` (representing GeoJSON objects), or
 #'   `character` (representing either GeoJSON or WKT).
-#'   **NOTE**: All of the above spatial object types, except for the
+#'
+#' - **NOTE**: All of the above spatial object types, except for the
 #'   `character`, representing a WKT, may lose precision due to numeric
-#'   truncations when R converts numbers to JSON text. WKT strings are
+#'   truncation when R converts numbers to JSON text. WKT strings are
 #'   sent "as is" to the service. Therefore, the only way for users to
 #'   retain precision on spatial objects is to represent them as a WKT
-#'   string.
+#'   string. However, user can control numeric precision using the
+#'   `options(stac_digits = ...)`. The default value is 15 digits.
 #'
 #' ## Temporal operators
 #' - functions `date(a)`, `timestamp(a)`, and `interval(a, b)` corresponds to
@@ -198,7 +205,16 @@
 #'  ext_filter(collection == "landsat-c2-l2" &&
 #'             t_after(datetime, timestamp("2022-07-16T05:32:00Z"))) %>%
 #'   post_request()
+#'
+#' # Shows how CQL2 expression (TEXT format)
+#' cql2_text(collection == "landsat-c2-l2" &&
+#'   s_crosses(geometry, {{linestring}}))
+#'
+#' # Shows how CQL2 expression (JSON format)
+#' cql2_json(collection == "landsat-c2-l2" &&
+#'             t_after(datetime, timestamp("2022-07-16T05:32:00Z")))
 #' }
+#'
 #' @export
 ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
 
@@ -275,4 +291,29 @@ parse_params.ext_filter <- function(q, params) {
   params <- NextMethod("parse_params")
 
   params
+}
+
+
+#' @rdname ext_filter
+#' @export
+cql2_json <- function(expr) {
+  expr <- unquote(
+    substitute(expr, environment()),
+    parent.frame(1)
+  )
+  filter_expr <- to_json(cql2(expr, lang = "cql2-json"))
+  cat(filter_expr)
+  return(invisible(filter_expr))
+}
+
+#' @rdname ext_filter
+#' @export
+cql2_text <- function(expr) {
+  expr <- unquote(
+    substitute(expr, environment()),
+    parent.frame(1)
+  )
+  filter_expr <- to_text(cql2(expr, lang = "cql2-text"))
+  cat(filter_expr)
+  return(invisible(filter_expr))
 }

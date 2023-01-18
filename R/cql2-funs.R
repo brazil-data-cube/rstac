@@ -1,12 +1,3 @@
-#' Convert R expressions to CQL2
-#'
-#' @description
-#' These functions convert R expressions to CQL2 standard (`TEXT` or `JSON`).
-#'
-#' @param expr  An R expression to be represented in CQL2
-#'
-#' @name cql2_functions
-NULL
 
 cql2 <- function(expr, lang = NULL, crs = NULL) {
   cql2_update_ident_env(expr)
@@ -18,30 +9,6 @@ cql2 <- function(expr, lang = NULL, crs = NULL) {
 
   class(obj) <- c(lang[[1]], "cql2", "list")
   obj
-}
-
-#' @rdname cql2_functions
-#' @export
-cql2_json <- function(expr) {
-  expr <- unquote(
-    substitute(expr, environment()),
-    parent.frame(1)
-  )
-  filter_expr <- to_json(cql2(expr, lang = "cql2-json"))
-  cat(filter_expr)
-  return(invisible(filter_expr))
-}
-
-#' @rdname cql2_functions
-#' @export
-cql2_text <- function(expr) {
-  expr <- unquote(
-    substitute(expr, environment()),
-    parent.frame(1)
-  )
-  filter_expr <- to_text(cql2(expr, lang = "cql2-text"))
-  cat(filter_expr)
-  return(invisible(filter_expr))
 }
 
 # ---- cast functions ----

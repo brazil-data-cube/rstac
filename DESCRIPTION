@@ -2,11 +2,17 @@ Package: rstac
 Title: Client Library for SpatioTemporal Asset Catalog
 Version: 0.9.2
 Authors@R:
-    c(person("Brazil Data Cube Team",
-            email = "brazildatacube@inpe.br",
-            role = c("cre", "aut")),
-    person(given = "National Institute for Space Research (INPE)",
-            role = c("cph")))
+    c(person("Rolf", "Simoes",
+             email = "rolfsimoes@gmail.com",
+             role = c("aut")),
+      person("Felipe", "Carvalho",
+             email = "lipecaso@gmail.com",
+             role = c("aut", "cre")),
+      person("Brazil Data Cube Team",
+             email = "brazildatacube@inpe.br",
+             role = c("aut")),
+      person(given = "National Institute for Space Research (INPE)",
+             role = c("cph")))
 Description: Provides functions to access, search and download spacetime earth
     observation data via SpatioTemporal Asset Catalog (STAC). This package 
     supports the version 1.0.0 (and older) of the STAC specification
@@ -50,7 +56,7 @@ Collate:
     'cql2-json.R'
     'cql2-text.R'
     'cql2-adv_comp.R'
-    'cql2.R'
+    'cql2-funs.R'
     'cql2-env.R'
     'cql2-utils.R'
     'assets-utils.R'
