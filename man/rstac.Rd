@@ -76,7 +76,13 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Brazil Data Cube Team \email{brazildatacube@inpe.br}
+\strong{Maintainer}: Felipe Carvalho \email{lipecaso@gmail.com}
+
+Authors:
+\itemize{
+  \item Rolf Simoes \email{rolfsimoes@gmail.com}
+  \item Brazil Data Cube Team \email{brazildatacube@inpe.br}
+}
 
 Other contributors:
 \itemize{
