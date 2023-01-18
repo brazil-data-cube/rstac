@@ -24,6 +24,8 @@ preview_switch <- function(url, ...) {
   switch(type, ..., .error("File type '%s' not supported", type))
 }
 
+# nocov start
+
 preview_read_file <- function(url) {
   temp_file <- tempfile(fileext = paste0(".", preview_file_type(url)))
   on.exit(unlink(temp_file))
@@ -47,3 +49,5 @@ preview_read_file <- function(url) {
       jpeg::readJPEG(temp_file)
     })
 }
+
+# nocov end
