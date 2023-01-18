@@ -5,11 +5,13 @@
 \title{Signature in hrefs provided by the STAC from Microsoft's Planetary
 Computer.}
 \usage{
-sign_planetary_computer(..., token_url = NULL)
+sign_planetary_computer(..., headers = NULL, token_url = NULL)
 }
 \arguments{
 \item{...}{additional parameters can be supplied to the \code{GET} function
 of the \code{httr} package.}
+
+\item{headers}{a named character vector with headers key-value content.}
 
 \item{token_url}{a \code{character} with the URL that generates the tokens
 in the Microsoft service.
@@ -26,15 +28,28 @@ token that will be used in the href.
 }
 \examples{
 \dontrun{
-# STACItemCollection object
-stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") \%>\%
- stac_search(collections = "sentinel-2-l2a",
-             bbox = c(-47.02148, -42.53906, -12.98314, -17.35063)) \%>\%
- get_request()
+ # STACItemCollection object
+ stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") \%>\%
+  stac_search(collections = "sentinel-2-l2a",
+              bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
+  get_request()
 
-# signing each item href
-stac_obj \%>\% items_sign(sign_fn = sign_planetary_computer())
+ # signing each asset href
+ stac_obj \%>\% items_sign(sign_fn = sign_planetary_computer())
 
+ # example of access to collections that require authentication
+ stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
+   stac_search(collections = c("sentinel-1-rtc"),
+               bbox = c(-64.8597, -10.4919, -64.79272527, -10.4473),
+               datetime = "2019-01-01/2019-01-28") \%>\%
+   post_request()
+
+ # signing each asset href
+ # stac_obj \%>\% items_sign(
+ #   sign_fn = sign_planetary_computer(
+ #     headers = c("Ocp-Apim-Subscription-Key" = <your-mpc-token>)
+ #   )
+ # )
 }
 
 }

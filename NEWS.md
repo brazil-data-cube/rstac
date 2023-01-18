@@ -1,5 +1,22 @@
 # rstac (development version)
 
+# rstac 0.9.2 (Released 2023-01-10)
+
+* Add support to CQL2 filter extension by function `ext_filter()`
+* Add `conformance()` and `queryables()` endpoints functions
+* Add `assets_rename()` and `assets_url()` assets functions
+* Add `items_compact()` function
+* General improvements in items functions
+* Other minor improvements
+* Deprecated `assets_filter()` and `items_group()` functions
+
+# rstac 0.9.1-6 (Released 2021-11-05)
+
+* Fix examples and README where bbox parameter is in wrong order
+* Now items without the "match" property can be downloaded
+* Introduce a bbox checker
+* Fix appveyor bug
+
 # rstac 0.9.1-5 (Released 2021-11-01)
 
 * Add support to `lifecycle` package

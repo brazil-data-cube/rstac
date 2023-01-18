@@ -1,4 +1,4 @@
-#' @title STACItemCollection functions
+#' @title Items functions
 #'
 #' @description
 #' These functions provide support to work with
@@ -17,60 +17,63 @@
 #'
 #' \item `items_next()`: fetches a new page from STAC service.
 #'
-#' \item `items_datetime()`: retrieves a the `datetime`
+#' \item `items_datetime()`: retrieves the `datetime`
 #' field in `properties` from `STACItemCollection` and
 #' `STACItem` objects.
 #'
-#' \item `items_bbox()`: retrieves a the `bbox`
-#' field of a `STACItemCollection` or an `STACItem` object.
+#' \item `items_bbox()`: retrieves the `bbox`
+#' field of a `STACItemCollection` or a `STACItem` object.
 #'
 #' \item `item_assets()`: returns the assets name from
 #' `STACItemCollection` and `STACItem` objects.
 #'
-#' \item `items_filter()`: selects only items that match some
-#' criteria.
+#' \item `items_filter()`: selects only items that match some criteria
+#'  (see details section).
 #'
 #' \item `items_reap()`: extract key values by traversing all items
-#' in an `STACItemCollection` object.
+#' in a `STACItemCollection` object.
 #'
 #' \item `items_fields()`: lists field names inside an item.
 #'
-#' \item `items_group()`: organizes items as elements of a list using
-#' some criteria.
+#' \item `items_group()`: `r lifecycle::badge('deprecated')` organizes
+#' items as elements of a list using some criteria.
 #'
 #' \item `items_sign()`: allow access assets by preparing its url.
+#'
+#' \item `items_as_sf()`: `r lifecycle::badge('experimental')` convert items to `sf` object.
 #' }
 #'
 #' @param items           a `STACItemCollection` object.
 #'
 #' @param matched_field   a `character` vector with the path
-#' where the number of items returned in the named list is located starting from
-#' the initial node of the list. For example, if the information is at position
-#' `items$meta$found` of the object, it must be passed as the following
-#' parameter `c("meta", "found")`.
+#' where the number of items returned in the named list is located starting
+#' from the initial node of the list. For example, if the information is in a
+#' position `items$meta$found` of the object, it must be passed as the
+#' following parameter `c("meta", "found")`.
 #'
 #' @param progress        a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
-#' @param simplify        a `logical` should return only the assets name of the
-#'  first item? if not a `list` with all assets name will be returned. Default
-#'  is `FALSE`.
+#' @param simplify        `r lifecycle::badge('deprecated')` no side-effect
+#'
+#' @param field           a `character` with the names of the field to
+#' get the subfields values.
+#'
+#' @param pick_fn         a `function` used to pick elements from items
+#' addressed by `field` parameter.
+#'
+#' @param index           an `atomic` vector with values as the group index.
+#'
+#' @param sign_fn         a `function` that receives an item as a parameter
+#' and returns an item signed.
 #'
 #' @param filter_fn       a `function` that receives an item that should
 #' evaluate a `logical` value.
 #'
-#' @param field           a `character` with the names of the field to
-#'  get the subfields values.
-#'
-#' @param index           an `atomic` vector with values as group index
-#'
-#' @param sign_fn         a `function` that receives an item as parameter
-#' and returns an item signed.
-#'
 #' @param ...             additional arguments. See details.
 #'
 #' @details
-#' Ellipsis argument (`...`) appears in different items function and
+#' Ellipsis argument (`...`) appears in different items functions and
 #' has distinct purposes:
 #' \itemize{
 #' \item `items_matched()` and `items_assets()`: ellipsis is not used.
@@ -80,19 +83,30 @@
 #' methods, such as [add_headers][httr::add_headers] or
 #' [set_cookies][httr::set_cookies].
 #'
+#' \item `items_fields()`: ellipsis parameter is deprecated in version
+#' 0.9.2 of rstac. Please, use `field` parameter instead.
+#'
 #' \item `items_filter()`: ellipsis is used to pass logical
-#' expressions using keys in `properties` field as filter criteria.
+#' expressions to be evaluated against a `STACItem` field as filter criteria.
 #'
-#' \item `items_reap()`, `items_fields()`, and `items_group()`: ellipsis can
-#' be used to provide fields names to get the subfields values from
-#' the `STACItemCollection` objects.
+#' **WARNING:** the evaluation of filter expressions changed in `rstac` 0.9.2.
+#' Older versions of `rstac` used `properties` field to evaluate filter
+#' expressions. Below, there is an example of how to write expressions in new
+#' `rstac` version:
+#' ```R
+#' # expression in older version
+#' items_filter(stac_obj, `eo:cloud_cover` < 10)
+#' # now expressions must refer to properties explicitly
+#' items_filter(stac_obj, properties$`eo:cloud_cover` < 10)
+#' items_filter(stac_obj, properties[["eo:cloud_cover"]] < 10)
+#' ```
 #'
-#' \item `items_sign()`: in a near future, ellipsis will be used to append
-#' key value pairs to url query string of an asset.
+#' \item `items_sign()`: in the near future, ellipsis will be used to append
+#' key-value pairs to the url query string of an asset.
 #' }
 #'
 #' `items_sign()` has `sign_fn` parameter that must be a function that
-#' receives as argument an item and returns an signed item. `rstac` provides
+#' receives as argument an item and returns a signed item. `rstac` provides
 #' `sign_bdc()` and `sign_planetary_computer()` functions to access Brazil
 #' Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 #'
@@ -101,10 +115,10 @@
 #' \itemize{
 #' \item `items_length()`: an `integer` value.
 #'
-#' \item `items_matched()`: returns an `integer` value if STAC web server does
-#' support this extension, otherwise returns `NULL`.
+#' \item `items_matched()`: returns an `integer` value if the STAC web server
+#' does support this extension. Otherwise returns `NULL`.
 #'
-#' \item `items_fetch()`: an `STACItemCollection` with all matched items.
+#' \item `items_fetch()`: a `STACItemCollection` with all matched items.
 #'
 #' \item `items_next()`: fetches a new page from STAC service.
 #'
@@ -112,9 +126,8 @@
 #'
 #' \item `items_bbox()`: returns a `list` with all items' bounding boxes.
 #'
-#' \item `item_assets()`: if simplify is `TRUE`, returns a `character`
-#' value with all assets names of the first item. Otherwise, returns a
-#' `list` with assets name for each item.
+#' \item `item_assets()`: Returns a `character` value with all assets names
+#' of the all items.
 #'
 #' \item `items_filter()`: a `STACItemCollection` object.
 #'
@@ -125,57 +138,56 @@
 #'
 #' \item `items_group()`: a `list` of `STACItemCollection` objects.
 #'
-#' \item `items_sign()`: a `STACItemCollection` object with signed assets url
-#' }
+#' \item `items_sign()`: a `STACItemCollection` object with signed assets url.
 #'
+#' \item `items_as_sf()`: a `sf` object.
+#'
+#' }
 #'
 #' @examples
-#'
 #' \dontrun{
+#'  x <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
+#'      stac_search(collections = "CB4_64_16D_STK-1") %>%
+#'      stac_search(limit = 500) %>%
+#'      get_request()
 #'
-#' x <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
-#'     stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'     stac_search(limit = 500) %>%
-#'     get_request()
-#'
-#' x %>% items_length()
-#' x %>% items_matched()
-#' x %>% items_datetime()
-#' x %>% items_bbox()
-#' x %>% items_fetch()
+#'  x %>% items_length()
+#'  x %>% items_matched()
+#'  x %>% items_datetime()
+#'  x %>% items_bbox()
+#'  x %>% items_fetch()
 #' }
 #'
 #' \dontrun{
-#'
 #' # Defining BDC token
-#' Sys.setenv("BDC_ACCESS_KEY" = <your_bdc_access_key>)
+#' Sys.setenv("BDC_ACCESS_KEY" = "token-123")
 #'
 #' # STACItem object
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
 #'     get_request() %>% items_sign(sign_fn = sign_bdc())
 #'
 #' }
 #'
 #' \dontrun{
-#'
 #' # STACItemCollection object
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
-#'     get_request() %>% items_filter(`eo:cloud_cover` < 10)
+#'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
+#'     get_request() %>%
+#'     items_filter(properties$`eo:cloud_cover` < 10)
 #'
 #' # Example with AWS STAC
 #' stac("https://earth-search.aws.element84.com/v0") %>%
-#'     stac_search(collections = "sentinel-s2-l2a-cogs",
-#'               bbox = c(-48.206,-14.195,-45.067,-12.272),
+#'   stac_search(collections = "sentinel-s2-l2a-cogs",
+#'               bbox = c(-48.206, -14.195, -45.067, -12.272),
 #'               datetime = "2018-06-01/2018-06-30",
 #'               limit = 500) %>%
-#'     post_request() %>%
-#'     items_filter(filter_fn = function(x) {x[["eo:cloud_cover"]] < 10})
+#'   post_request() %>%
+#'   items_filter(filter_fn = function(x) {x$properties$`eo:cloud_cover` < 10})
 #' }
 #'
 #' \dontrun{
@@ -183,21 +195,10 @@
 #' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
+#'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
 #'  get_request() %>% items_fetch(progress = FALSE)
 #'
 #' stac_item %>% items_reap(field = c("properties", "datetime"))
-#' }
-#'
-#' \dontrun{
-#' # STACItemCollection object
-#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
-#'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
-#'  get_request() %>% items_fetch(progress = FALSE)
-#'
-#'  stac_item %>% items_group(., field = c("properties", "bdc:tiles"))
 #' }
 #'
 #' @name items_functions
@@ -207,7 +208,6 @@ NULL
 #'
 #' @export
 items_length <- function(items) {
-
   UseMethod("items_length", items)
 }
 
@@ -215,7 +215,7 @@ items_length <- function(items) {
 #'
 #' @export
 items_length.STACItem <- function(items) {
-
+  check_items(items)
   return(1)
 }
 
@@ -223,46 +223,43 @@ items_length.STACItem <- function(items) {
 #'
 #' @export
 items_length.STACItemCollection <- function(items) {
-
+  check_items(items)
   return(length(items$features))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_matched  <- function(items, ...) {
+items_length.default <- items_length.STACItem
 
+#' @rdname items_functions
+#'
+#' @export
+items_matched  <- function(items, matched_field = NULL) {
   UseMethod("items_matched", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_matched.STACItem  <- function(items, ...) {
-
+items_matched.STACItem  <- function(items, matched_field = NULL) {
+  check_items(items)
   return(1)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_matched.STACItemCollection <- function(items, ..., matched_field = NULL) {
-
+items_matched.STACItemCollection <- function(items, matched_field = NULL) {
+  check_items(items)
   matched <- NULL
 
   # try by the matched_field provided by user. This allow users specify a
   # non-standard field for matched items.
-  if (!is.null(matched_field)) {
-
-    tryCatch({
+  if (is.character(matched_field) && matched_field %in% names(items)) {
       matched <- as.numeric(items[[matched_field]])
-    },
-    error = function(e) .warning(paste("The provided field was not found in",
-                                       "items object.")))
   }
-
   if (is.null(matched)) {
-
     if (stac_version(items) < "0.9.0")
       # STAC API < 0.9.0 extensions
       matched <- items$`search:metadata`$matched
@@ -274,27 +271,19 @@ items_matched.STACItemCollection <- function(items, ..., matched_field = NULL) {
     if (is.null(matched))
       matched <- items$numberMatched
   }
-
-  if (is.null(matched))
-    .warning("Items matched not provided.")
-
   return(matched)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_fetch <- function(items, ...) {
-
-  UseMethod("items_fetch", items)
-}
+items_matched.default <- items_matched.STACItem
 
 #' @rdname items_functions
 #'
 #' @export
-items_fetch.STACItem <- function(items, ...) {
-
-  return(items)
+items_fetch <- function(items, ...) {
+  UseMethod("items_fetch", items)
 }
 
 #' @rdname items_functions
@@ -303,14 +292,17 @@ items_fetch.STACItem <- function(items, ...) {
 items_fetch.STACItemCollection <- function(items, ...,
                                            progress = TRUE,
                                            matched_field = NULL) {
-
+  check_items(items)
   matched <- items_matched(items, matched_field)
 
   # verify if progress bar can be shown
   progress <- progress & (!is.null(matched) && (items_length(items) < matched))
   if (progress)
-    pb <- utils::txtProgressBar(min = items_length(items), max = matched,
-                                style = 3)
+    pb <- utils::txtProgressBar(
+      min = items_length(items),
+      max = matched,
+      style = 3
+    )
 
   while (TRUE) {
 
@@ -323,7 +315,11 @@ items_fetch.STACItemCollection <- function(items, ...,
       .error(paste("Length of returned items (%s) is different",
                    "from matched items (%s)."), items_length(items), matched)
 
-    content <- items_next(items, ...)
+    content <- tryCatch({
+      items_next(items, ...)
+    },
+    next_error = function(e) NULL
+    )
 
     if (!is.null(content))
       items <- content
@@ -332,7 +328,7 @@ items_fetch.STACItemCollection <- function(items, ...,
 
     # update progress bar
     if (progress)
-      utils::setTxtProgressBar(pb, items_length(content))
+      utils::setTxtProgressBar(pb, length(content))
   }
 
   # close progress bar
@@ -348,33 +344,24 @@ items_fetch.STACItemCollection <- function(items, ...,
 #'
 #' @export
 items_next <- function(items, ...) {
-
   UseMethod("items_next", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_next.STACItem <- function(items, ...) {
-
-  return(items)
-}
-
-#' @rdname items_functions
-#'
-#' @export
 items_next.STACItemCollection <- function(items, ...) {
-
+  check_items(items)
   matched <- items_matched(items)
 
   q <- doc_query(items)
   if (is.null(q))
-    return(NULL)
+    .error("Cannot get next link URL", class = "next_error")
 
   # get url of the next page
   next_url <- Filter(function(x) x$rel == "next", items$links)
   if (length(next_url) == 0)
-    return(NULL)
+    .error("Cannot get next link URL", class = "next_error")
 
   next_url <- next_url[[1]]
 
@@ -410,7 +397,8 @@ items_next.STACItemCollection <- function(items, ...) {
 
     # get next link parameters from url
     params <- .querystring_decode(substring(
-      gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2))
+      gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2)
+    )
 
     # verify if query params is valid
     params <- .validate_query(params = params)
@@ -421,7 +409,7 @@ items_next.STACItemCollection <- function(items, ...) {
 
   next_stac <- RSTACQuery(version = q$version,
                           base_url = q$base_url,
-                          params = utils::modifyList(q$params, params),
+                          params = modify_list(q$params, params),
                           subclass = subclass(q))
 
   # call request
@@ -460,14 +448,13 @@ items_next.STACItemCollection <- function(items, ...) {
   # prepares next iteration
   items <- content
 
-  items
+  return(items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
 items_datetime <- function(items) {
-
   UseMethod("items_datetime", items)
 }
 
@@ -475,23 +462,30 @@ items_datetime <- function(items) {
 #'
 #' @export
 items_datetime.STACItem <- function(items) {
-
-  return(items$properties[["datetime"]])
+  check_items(items)
+  if (!"datetime" %in% names(items$properties)) {
+    .error("Parameter `items` is invalid.")
+  }
+  return(items$properties$datetime)
 }
 
 #' @rdname items_functions
 #'
 #' @export
 items_datetime.STACItemCollection <- function(items) {
-
-  lapply(items$features, `[[`, c("properties", "datetime"))
+  check_items(items)
+  return(map_chr(items$features, items_datetime))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_bbox <- function(items) {
+items_datetime.default <- items_datetime.STACItem
 
+#' @rdname items_functions
+#'
+#' @export
+items_bbox <- function(items) {
   UseMethod("items_bbox", items)
 }
 
@@ -499,267 +493,291 @@ items_bbox <- function(items) {
 #'
 #' @export
 items_bbox.STACItem <- function(items) {
-
-  return(items[["bbox"]])
+  check_items(items)
+  return(items$bbox)
 }
 
 #' @rdname items_functions
 #'
 #' @export
 items_bbox.STACItemCollection <- function(items) {
-
-  lapply(items$features, `[[`, c("bbox"))
+  check_items(items)
+  return(items_reap(items, field = "bbox"))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets <- function(items, ...) {
+items_bbox.default <- items_bbox.STACItem
 
+#' @rdname items_functions
+#'
+#' @export
+items_assets <- function(items, simplify = deprecated()) {
+  if (!missing(simplify)) {
+    deprec_parameter(
+      deprec_var = "simplify",
+      deprec_version = "0.9.2",
+      msg = "By default, the return will be simplified."
+    )
+  }
   UseMethod("items_assets", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets.STACItem <- function(items, ...) {
-
-  return(items_fields(items, "assets"))
+items_assets.STACItem <- function(items, simplify = deprecated()) {
+  check_items(items)
+  return(items_fields(items, field = "assets"))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets.STACItemCollection <- function(items, ..., simplify = FALSE) {
-
-  if (simplify)
-    return(items_fields(items, "assets"))
-  lapply(lapply(items$features, `[[`, c("assets")), names)
+items_assets.STACItemCollection <- function(items, simplify = deprecated()) {
+  check_items(items)
+  return(sort(unique(unlist(lapply(items$features, items_assets.STACItem)))))
 }
 
+#' @rdname items_functions
+#'
+#' @export
+items_assets.default <- items_assets.STACItem
 
 #' @rdname items_functions
 #'
 #' @export
 items_filter <- function(items, ..., filter_fn = NULL) {
+  UseMethod("items_filter", items)
+}
 
-  # check items parameter
-  check_subclass(items, "STACItemCollection")
+#' @rdname items_functions
+#'
+#' @export
+items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
+  check_items(items)
+  exprs <- unquote(
+    expr = as.list(substitute(list(...), env = environment())[-1]),
+    env =  parent.frame()
+  )
 
-  dots <- substitute(list(...))[-1]
+  if (length(exprs) > 0) {
+    if (!is.null(names(exprs)))
+      .error("Filter expressions cannot be named.")
 
-  if (length(dots) > 0) {
-
-    if (!is.null(names(dots)))
-      .error("Invalid filter arguments.")
-
-    for (i in seq_along(dots)) {
-
-      sel <- vapply(items$features, function(f) {
-        eval(dots[[i]], envir = f$properties)
-      }, logical(1))
-
-      items$features <- items$features[sel]
+    show_warning <- TRUE
+    for (i in seq_along(exprs)) {
+      if (show_warning && check_old_expression(items, exprs[[i]])) {
+        # NOTE: this warning will be removed in next versions. We will no
+        # longer support the old way of filter evaluation
+        .warning(paste(
+          "In version 0.9.2, rstac changed how filter expressions are",
+          "evaluated. In future versions, the expression '%s' will be",
+          "evaluated against each feature in items intead of `properties`",
+          "field.\nSee ?items_filter for more details on how to change",
+          "your expression."
+        ), deparse(exprs[[i]]))
+        show_warning <- FALSE
+      }
+      sel <- map_lgl(items$features, eval_filter_expr, expr = exprs[[i]])
     }
-  }
-
-  if (!is.null(filter_fn)) {
-
-    sel <- vapply(items$features, function(f) {
-      filter_fn(f$properties)
-    }, logical(1))
-
     items$features <- items$features[sel]
   }
 
-  items
+  if (!is.null(filter_fn)) {
+    if (check_old_fn(items, filter_fn)) {
+      # NOTE: this warning will be removed in next versions. We will no
+      # longer support the old way of filter evaluation
+      .warning(paste(
+        "In version 0.9.2, rstac changed how filter function is",
+        "evaluated. In future versions, the `filter_fn` parameter will be",
+        "evaluated against each feature in items instead of `properties`",
+        "field.\nSee ?items_filter for more details on how to change your",
+        "function."
+      ))
+    }
+    sel <- map_lgl(items$features, eval_filter_fn, filter_fn = filter_fn)
+    items$features <- items$features[sel]
+  }
+  return(items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_reap <- function(items, ..., field = NULL) {
+items_compact <- function(items) {
+  UseMethod("items_compact", items)
+}
 
-  # checks if the object is STACItemCollections
+#' @rdname items_functions
+#'
+#' @export
+items_compact.STACItemCollection <- function(items) {
+  check_items(items)
+  items_filter(items, filter_fn = has_assets)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_reap <- function(items, field, ..., pick_fn = identity) {
+  UseMethod("items_reap", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_reap.STACItem <- function(items, field, ..., pick_fn = identity) {
+  check_items(items)
+  dots <- list(...)
+  if (length(dots) > 0) {
+    deprec_parameter(
+      deprec_var = "...",
+      deprec_version = "0.9.2",
+      msg = "Please, use `field` parameter instead."
+    )
+    field = c(field, unlist(dots, use.names = FALSE))
+  }
+  values <- apply_deeply(items, i = field, fn = pick_fn)
+  return(values)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_reap.STACItemCollection <- function(items,
+                                          field, ...,
+                                          pick_fn = identity) {
+  check_items(items)
   if (items_length(items) == 0) return(NULL)
-
-  dots <- substitute(list(...))[-1]
-  if (!is.character(dots)) dots <- as.character(dots)
-
-  if (length(dots) > 0 && length(field) > 0)
-    .error("Only one of the parameters '...' or 'field' must be supplied.")
-
-  if (length(field) == 0 && length(dots) == 0)
-    return(items$features)
-
-  values <- lapply(items$features, `[[`, c(dots, field))
-
-  if (all(vapply(values, is.null, logical(1))))
-    .error("The provided field does not exist.")
-
-  if (all(vapply(values, is.atomic, logical(1))))
-    return(unlist(values))
-  values
+  dots <- list(...)
+  if (length(dots) > 0) {
+    deprec_parameter(
+      deprec_var = "...",
+      deprec_version = "0.9.2",
+      msg = "Please, use `field` parameter instead."
+    )
+    field = c(field, unlist(dots, use.names = FALSE))
+  }
+  val <- lapply(items$features, items_reap.STACItem, field = field,
+                pick_fn = pick_fn)
+  if (is.null(names(val)) &&
+      all(vapply(val, function(x) is.atomic(x) && length(x) == 1, logical(1))))
+    return(unlist(val))
+  return(val)
 }
 
-#' @title Utility functions
-#'
-#' @description This function returns the subfields of the `feature`
-#' field of a `STACItemCollection` object.
-#'
-#' @param items a `STACItemCollection` object representing
-#'  the result of `/stac/search`, \code{/collections/{collectionId}/items}.
-#'
-#' @param ...   a named way to provide field names to get the subfields values
-#'  from the `RSTACDocument` objects.
-#'
-#' @param field a `character` with the names of the field to get the
-#'  subfields values from the `RSTACDocument` objects.
-#'
-#' @return A `character` with the subfields of the `feature` field.
-#'
-#' @examples
-#' \donttest{
-#' # STACItemCollection object
-#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-#'         datetime = "2017-08-01/2018-03-01") %>%
-#'  get_request()
-#'
-#' stac_item %>% items_fields(field = c("properties"))
-#' }
-#'
 #' @rdname items_functions
 #'
 #' @export
-items_fields <- function(items, ..., field = NULL) {
+items_reap.default <- items_reap.STACItem
+
+#' @rdname items_functions
+#'
+#' @export
+items_fields <- function(items, field = NULL, ...) {
   UseMethod("items_fields", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_fields.STACItemCollection <- function(items, ..., field = NULL) {
-
-  dots <- substitute(list(...))[-1]
-  if (!is.character(dots)) dots <- as.character(dots)
-
-  if (length(field) > 0 && length(dots) > 0)
-    .error("Only one of the parameters '...' or 'field' must be supplied.")
-
-  if (length(field) == 0 && length(dots) == 0)
-    return(names(items$features[[1]]))
-  names(items$features[[1]][[c(dots, field)]])
-}
-
-#' @rdname items_functions
-#'
-#' @export
-items_fields.STACItem <- function(items, ..., field = NULL) {
-
-  dots <- substitute(list(...))[-1]
-  if (!is.character(dots)) dots <- as.character(dots)
-
-  if (length(field) > 0 && length(dots) > 0)
-    .error("Only one of the parameters '...' or 'field' must be supplied.")
-
-  if (length(field) == 0 && length(dots) == 0)
-    return(names(items))
-  names(items[[c(dots, field)]])
-}
-
-#' @rdname items_functions
-#'
-#' @export
-items_group <- function(items, ..., field = NULL, index = NULL) {
-
-  # checks if the object is STACItemCollections
-  if (items_length(items) == 0) return(list(items))
-
-  dots <- substitute(list(...))[-1]
-  if (!is.character(dots)) dots <- as.character(dots)
-
-  if (length(index) == 0 && length(field) == 0 &&  length(dots) == 0)
-    .error(paste("Either parameters 'index', 'field' or '...' parameters must",
-                 "be supplied."))
-
-  if (length(index) > 0 && (length(field) > 0 || length(dots) > 0))
-    .error(paste("Only one of the parameters '...','index' or 'field' should",
-                 "be supplied."))
-
-  if (is.null(index)) {
-    index <- items_reap(items, ..., field = field)
-
-    if (!is.atomic(index))
-      .error("The field must be atomic vector.")
-  } else {
-
-    if (items_matched(items) > items_length(items))
-      .warning(paste("The number of matched items is greater than the number",
-                     "of items length on your object. Considere to use",
-                     "the 'items_fetch()' function before this operation."))
+items_fields.STACItem <- function(items, field = NULL, ...) {
+  check_items(items)
+  dots <- list(...)
+  if (length(dots) > 0) {
+    deprec_parameter(
+      deprec_var = "...",
+      deprec_version = "0.9.2",
+      msg = "Please, use `field` parameter instead."
+    )
+    field = c(field, unlist(dots, use.names = FALSE))
   }
-
-  if (items_length(items) != length(index))
-    .error(paste("The length of the field provided for grouping must contain",
-                 "the same size as the length of the items."))
-
-  features <- unname(tapply(X = items$features,
-                            INDEX = index,
-                            FUN = c, simplify = FALSE))
-
-  lapply(features, function(x){
-    items$features <- x
-
-    items
-  })
+  if (length(field) == 0) {
+    fields <- names(items)
+  } else {
+    fields <- unique(unlist(apply_deeply(
+      items, i = field, fn = names
+    ), use.names = FALSE))
+  }
+  return(sort(fields))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_sign <- function(items, ..., sign_fn = NULL) {
+items_fields.STACItemCollection <- function(items, field = NULL, ...) {
+  check_items(items)
+  dots <- list(...)
+  if (length(dots) > 0) {
+    deprec_parameter(
+      deprec_var = "...",
+      deprec_version = "0.9.2",
+      msg = "Please, use `field` parameter instead."
+    )
+    field = c(field, unlist(dots, use.names = FALSE))
+  }
+  if (items_length(items) == 0)
+    return(NULL)
 
+  fields <- lapply(items$features, items_fields.STACItem, field = field)
+
+  return(sort(unique(unlist(unname(fields)))))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_fields.default <- items_fields.STACItem
+
+#' @rdname items_functions
+#'
+#' @export
+items_sign <- function(items, sign_fn) {
   UseMethod("items_sign", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_sign.STACItemCollection <- function(items, ..., sign_fn = NULL) {
-
-  if (is.null(sign_fn)) {
-    return(items)
-  }
-
-  if (!is.null(items_matched(items))) {
-    if (items_length(items) != items_matched(items))
-      .message(paste("The number of items in this object does not match the",
-                     "total number of items in the item. If you want to get",
-                     "all items, use `items_fetch()`"))
-  }
-
-  # assign each item obj
-  items[["features"]] <- lapply(items[["features"]], function(item){
-
-    item <- sign_fn(item)
-
-    item
-  })
-
-  items
+items_sign.STACItem <- function(items, sign_fn) {
+  check_items(items)
+  return(sign_fn(items))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_sign.STACItem <- function(items, ..., sign_fn = NULL) {
+items_sign.STACItemCollection <- function(items, sign_fn) {
+  check_items(items)
+  return(foreach_item(items, sign_fn))
+}
 
-  if (is.null(sign_fn)) {
-    return(items)
-  }
+#' @rdname items_functions
+#'
+#' @export
+items_sign.default <- items_sign.STACItem
 
-  items <- sign_fn(items)
+#' @rdname items_functions
+#'
+#' @export
+items_as_sf <- function(items) {
+  UseMethod("items_as_sf", items)
+}
 
-  items
+#' @rdname items_functions
+#'
+#' @export
+items_as_sf.STACItem <- function(items) {
+  check_items(items)
+  geojsonsf::geojson_sf(to_json(items))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_sf.STACItemCollection <- function(items) {
+  check_items(items)
+  geojsonsf::geojson_sf(to_json(items))
 }
