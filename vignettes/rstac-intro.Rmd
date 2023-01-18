@@ -23,7 +23,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  cache = TRUE
 )
 ```
 
@@ -295,7 +296,7 @@ selected_assets <- s_obj |>
               datetime = "2019-01-01/2019-12-31",
               limit = 10) |>
   post_request() |>
-  assets_select(c("BAND14", "NDVI"))
+  assets_select(asset_names = c("BAND14", "NDVI"))
 ```
 
 ```{r}
