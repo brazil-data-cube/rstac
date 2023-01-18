@@ -8,7 +8,7 @@
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{
-#'   \item `/collections`: Returns a list of STAC Collection published in
+#'   \item `/collections`: Returns a list of STAC Collections published in
 #'     the STAC service
 #'   \item \code{/collections/\{collectionId\}}: Returns a single STAC
 #'     Collection object
@@ -38,7 +38,7 @@
 #'    collections(collection_id = "CB4_64_16D_STK-1") %>%
 #'    get_request()
 #' }
-
+#'
 #' @export
 collections <- function(q, collection_id = NULL) {
 

@@ -1,20 +1,16 @@
-#' @title Utility functions
-#'
-#' @description Function similar to modifyList of utils, however it is checked
-#'  if the left parameter is null.
-#'
-#' @param x   a `list` to be compared in left side.
-#'
-#' @param y   a `list` to be compared in right side.
-#'
-#' @return a `list` with modified values.
-#'
-#' @noRd
+num_format <- function(x) {
+  digits <- options("stac_digits")[[1]]
+  if (is.null(digits)) digits <- 15
+  format(x, trim = TRUE, digits = digits, scientific = FALSE,
+         drop0trailing = TRUE)
+}
+
 modify_list <- function(x, y) {
   if (is.null(x))
     x <- list()
   stopifnot(is.list(x), is.list(y))
   ynames <- names(y)
+  ynames <- ynames[nzchar(ynames)]
   for (n in ynames) {
     x[[n]] <- y[[n]]
   }
@@ -29,180 +25,37 @@ deprec_parameter <- function(deprec_var, deprec_version, msg = NULL) {
   )
 }
 
-# nocov start
-links_filter <- function(x, ..., filter_fn = NULL) {
+foreach_item <- function(items, fn, ...) {
+  items$features <- lapply(items$features, fn, ...)
+  return(items)
+}
 
-  stopifnot("links" %in% names(x))
+map_lgl <- function(x, fn, ..., use_names = FALSE) {
+  vapply(x, fn, FUN.VALUE = logical(1), ..., USE.NAMES = use_names)
+}
 
-  # check items parameter
-  check_subclass(x, c("STACItem", "STACItemCollection", "STACCatalog",
-                      "STACCollection", "STACCollectionList"))
+map_chr <- function(x, fn, ..., use_names = FALSE) {
+  vapply(x, fn, FUN.VALUE = character(1), ..., USE.NAMES = use_names)
+}
 
-  dots <- substitute(list(...))[-1]
-
-  if (length(dots) > 0) {
-
-    if (!is.null(names(dots)))
-      .error("Invalid filter arguments.")
-
-    for (i in seq_along(dots)) {
-
-      sel <- vapply(x$links, function(l) {
-        eval(dots[[i]], envir = l)
-      }, logical(1))
-
-      x$links <- x$links[sel]
+apply_deeply <- function(x, i = NULL, fn = identity, ...) {
+  val <- if (length(i) == 0) {
+    fn(x, ...)
+  } else {
+    star <- which(i == "*")
+    if (length(star) == 0) {
+      x <- tryCatch(x[[i]], error = function(e) NULL)
+      if (is.null(x)) NULL else fn(x, ...)
+    } else if (star[[1]] == 1) {
+      lapply(x, apply_deeply, i = i[-1], fn = fn)
+    } else {
+      x <- tryCatch(x[[i[seq_len(star[[1]] - 1)]]], error = function(e) NULL)
+      if (is.null(x)) NULL
+      else lapply(x, apply_deeply, i = i[-seq(star[[1]])], fn = fn)
     }
   }
-
-  if (!is.null(filter_fn)) {
-
-    sel <- vapply(x$links, function(l) {
-      filter_fn(l$links)
-    }, logical(1))
-
-    x$links <- x$links[sel]
-  }
-
-  x$links
+  if (is.null(names(val)) &&
+      all(vapply(val, function(x) is.atomic(x) && length(x) == 1, logical(1))))
+    return(unlist(val, recursive = FALSE))
+  return(val)
 }
-
-
-.field_filter <- function(x, field, ..., filter_fn = NULL) {
-
-  stopifnot(field %in% names(x))
-
-  x <- x[[field]]
-  stopifnot(!is.atomic(x))
-
-  dots <- .check_unnamed(.capture_dots(...))
-
-  if (length(dots) > 0) {
-
-    if (!is.null(names(dots)))
-      .error("Invalid filter arguments.")
-
-    for (i in seq_along(dots)) {
-
-      sel <- vapply(x, function(xi) {
-        eval(dots[[i]], envir = xi)
-      }, logical(1))
-
-      x <- x[sel]
-    }
-  }
-
-  if (!is.null(filter_fn)) {
-
-    sel <- vapply(x, function(xi) {
-      filter_fn(xi)
-    }, logical(1))
-
-    x <- x[sel]
-  }
-
-  x
-}
-
-.field_apply <- function(x, field, apply_fn, ...) {
-
-  stopifnot(field %in% names(x))
-
-  x <- x[[field]]
-  stopifnot(!is.atomic(x))
-
-  lapply(x, apply_fn, ...)
-}
-
-.field_mutate <- function(x, field, ..., apply_fn = NULL) {
-
-  stopifnot(field %in% names(x))
-
-  x <- x[[field]]
-  stopifnot(!is.atomic(x))
-
-  dots <- .check_named(.capture_dots(...))
-  stopifnot(length(dots) > 0 && is.null(apply_fn))
-
-  if (length(dots) > 0) {
-
-    if (!is.null(names(dots)))
-      .error("Invalid filter arguments.")
-
-    value_d <- lapply(dots, function(di) {
-
-      lapply(x, function(xi) eval(di, envir = xi))
-    })
-  }
-
-  if (!is.null(apply_fn)) {
-
-    value_fn <- vapply(x, function(xi) {
-      apply_fn(xi)
-    }, logical(1))
-
-    x <- x[value_fn]
-  }
-
-  x
-}
-
-.capture_dots <- function(...) {
-
-  lapply(substitute(list(...), env = environment()), unlist, recursive = F)[-1]
-}
-
-.is_named <- function(x) {
-
-  !is.null(names(x)) && all(nzchar(names(x)))
-}
-
-.check_named <- function(x) {
-
-  stopifnot(.is_named(x))
-
-  x
-}
-
-.check_unnamed <- function(x) {
-
-  stopifnot(!.is_named(x))
-
-  x
-}
-
-#' A function to safely retry the signing of MPC URLs
-#'
-#' @param f      The signing function
-#' @param url url path for to be signed
-#' @param req the previous request response that was sent for signing
-#' @param retries the number of times a request should be tried
-#' @param asset the item collection value passed to `.error` on error
-#'
-#' @return The updated response content list
-#'
-#' @noRd
-retry_mpc_request <- function(f, url, req, retries, asset){
-
-  sleep_request <- function(s, f, c_url){
-      message(gsub("Try", "Trying", s, fixed = TRUE)) 
-      retry_time <- as.numeric(gsub(".*in (.+) seconds.*", "\\1", s)) + 1
-      Sys.sleep(retry_time)
-      f(c_url)
-  }
-
-  for (i in seq_len(retries)){
-    try({
-      req <- sleep_request(s = req$message, f = f, c_url = url)
-      if ("token" %in% names(req)){
-        return(req)
-      } else if ("message" %in% names(req)){
-        req$message <- req$message
-      } else {
-        .error("Cannot sign href '%s'", asset$href)
-      }
-    }, silent=FALSE)
-  }
-}
-
-# nocov end

@@ -70,7 +70,7 @@ library(rstac)
 | `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          | \>= 0.9.0   |
 | `/search`                                    | `stac_search()`              | \>= 0.9.0   |
 | `/stac/search`                               | `stac_search()`              | \< 0.9.0    |
-| `/conformance`                               | `stac_search()`              | \>= 0.9.0   |
+| `/conformance`                               | `conformance()`              | \>= 0.9.0   |
 | `/collections/{collectionId}/queryables`     | `queryables()`               | \>= 1.0.0   |
 
 These functions can be used to retrieve information from a STAC API
@@ -125,7 +125,7 @@ it_obj
 #>   - CB4_64_16D_STK_v001_022025_2022-06-10_2022-06-25
 #>   - ... with 90 more feature(s).
 #> - assets: 
-#> EVI, NDVI, CMASK, BAND13, BAND14, BAND15, BAND16, CLEAROB, TOTALOB, thumbnail, PROVENANCE
+#> BAND13, BAND14, BAND15, BAND16, CLEAROB, CMASK, EVI, NDVI, PROVENANCE, thumbnail, TOTALOB
 #> - other field(s): type, links, context, features
 ```
 

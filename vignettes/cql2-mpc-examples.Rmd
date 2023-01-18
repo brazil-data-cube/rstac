@@ -1,0 +1,293 @@
+---
+title: "Reading Planetary Computer Data using CQL2 filter extension"
+date: "2022-12-21"
+output: 
+  html_document:
+    df_print: tibble
+classoption: x11names
+indent: yes
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{cql2-mpc-examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = TRUE
+)
+```
+
+
+```{r}
+library(rstac)
+```
+
+### Introduction
+
+This tutorial will use the open-source package rstac to search data in Planetary Computer's SpatioTemporal Asset Catalog (STAC) service. STAC services can be accessed through STAC API endpoints, which allow users to search datasets using various parameters such as space and time. In addition to demonstrating the use of rstac, the tutorial will explain the Common Query Language (CQL2) filter extension to narrow the search results and find datasets that meet specific criteria in the STAC API.
+
+This tutorial is based on [reading STAC API data in Python](https://planetarycomputer.microsoft.com/docs/quickstarts/reading-stac/).
+
+### Reading data from STAC API
+
+To access Planetary Computer STAC API, we'll create a `rstac` query.
+
+```{r connection}
+planetary_computer <- stac("https://planetarycomputer.microsoft.com/api/stac/v1")
+```
+
+#### Listing supported properties in CQL2
+
+CQL2 expressions can be constructed using properties that refer to attributes of items. A list of all properties supported by a collection can be obtained by accessing the `/collections/<collection_id>/queryables` endpoint. Filter expressions can use properties listed in this endpoint. 
+
+In this example, we will search for [Landsat Collection 2 Level-2](https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2) imagery of the Microsoft main campus from December 2020. The name of this collection in STAC service is `landsat-c2-l2`. Here we'll prepare a query to retrieve its queriables and make a `GET` request to the service.
+
+```{r queryables}
+planetary_computer |>
+  collections("landsat-c2-l2") |> 
+  queryables() |> 
+  get_request()
+```
+
+#### Searching with CQL2
+
+Now we can use `rstac` to make a search query with CQL2 filter extension to obtain the items.
+
+```{r cql2-search}
+time_range <- cql2_interval("2020-12-01", "2020-12-31")
+bbox <- c(-122.2751, 47.5469, -121.9613, 47.7458)
+area_of_interest = cql2_bbox_as_geojson(bbox)
+
+stac_items <- planetary_computer |>
+  ext_filter(
+    collection == "landsat-c2-l2" &&
+      t_intersects(datetime, {{time_range}}) &&
+      s_intersects(geometry, {{area_of_interest}})
+  ) |>
+  post_request()
+```
+
+In that example, our filter expression used a temporal (`t_intersects`) and a spatial (`s_intersects`) operators. `t_intersects()` only accepts interval as it second argument, which we created using function `cql2_interval()`. `s_intersects()` spatial operator only accepts GeoJSON objects as its arguments. This is why we had to convert the bounding box vector (`bbox`) into a structure representing a GeoJSON object using the function `cql2_bbox_as_geojson()`. We embrace the arguments using `{{` to evaluate them before make the request.
+
+`items` is a `STACItemCollection` object containing `r items_length(stac_items)` items that matched our search criteria.
+
+```{r items-length}
+stac_items
+```
+
+#### Exploring data
+
+A `STACItemCollection` is a regular GeoJSON object. It is a collection of `STACItem` entries that stores metadata on assets. Users can convert a `STACItemCollection` to a `sf` object containing the properties field as columns. Here we depict the items footprint.
+
+```{r geojson-to-sf}
+sf <- items_as_sf(stac_items)
+
+# create a function to plot a map
+plot_map <- function(x) {
+  library(tmap)
+  library(leaflet)
+  current.mode <- tmap_mode("view")
+  tm_basemap(providers[["Stamen.Watercolor"]]) +
+    tm_shape(x) + 
+    tm_borders()
+}
+
+plot_map(sf)
+```
+
+Some collections use the `eo` extension, which allows us to sort items by attributes like cloud coverage. The next example selects the item with lowest cloud_cover attribute:
+
+```{r lowest-cloud-cover}
+cloud_cover <- stac_items |>
+  items_reap(field = c("properties", "eo:cloud_cover"))
+selected_item <- stac_items$features[[which.min(cloud_cover)]]
+```
+
+We use function `items_reap()` to extract cloud cover values from all features.
+
+Each STAC item have an `assets` field which describes files and provides link to access them.
+
+```{r assets-list}
+items_assets(selected_item)
+
+purrr::map_dfr(items_assets(selected_item), function(key) {
+  tibble::tibble(asset = key, description = selected_item$assets[[key]]$title)
+})
+```
+
+Here, we’ll inspect the `rendered_preview` asset. To plot this asset, we can use the helper function `preview_plot()` and provide a URL to be plotted. We use the function `assets_url()` to get the URL. This function extracts all available URLs in items.
+
+```{r asset-preview}
+selected_item$assets[["rendered_preview"]]$href
+
+selected_item |> 
+  assets_url(asset_names = "rendered_preview") |>
+  preview_plot()
+```
+
+The `rendered_preview` asset is generated dynamically by Planetary Computer API using raw data. We can access the raw data, stored as Cloud Optimized GeoTIFFs (COG) in Azure Blob Storage, using the other assets. These assets are in private Azure Blob Storage containers and is necessary to sign them to have access to the data, otherwise, you’ll get a 404 (forbidden) status code. 
+
+#### Signing items
+
+To sign URL in `rstac`, we can use `items_sign()` function.
+
+```{r sign-item}
+selected_item <- selected_item |>
+  items_sign(sign_fn = sign_planetary_computer())
+
+selected_item |> 
+  assets_url(asset_names = "blue") |>
+  substr(1, 255)
+```
+
+Everything after the `?` in that URL is a [SAS token](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview) grants access to the data. See https://planetarycomputer.microsoft.com/docs/concepts/sas/ for more on using tokens to access data.
+
+```{r url-check}
+library(httr)
+selected_item |> 
+  assets_url(asset_names = "blue") |>
+  httr::HEAD() |>
+  httr::status_code()
+```
+
+The 200 status code means that we were able to access the data using the signed URL with the SAS token included.
+
+#### Reading files
+
+We can load up that single COG file using packages like [stars](https://github.com/r-spatial/stars) or [terra](https://github.com/rspatial/terra).
+
+```{r read-file}
+library(stars)
+selected_item |> 
+  assets_url(asset_names = "blue", append_gdalvsi = TRUE) |>
+  stars::read_stars() |>
+  plot(main = "blue")
+```
+
+We used the `assets_url()` method with the `append_gdalvsi = TRUE` parameter to insert `/vsicurl` in the URL. This allows the GDAL VSI driver to access the data using HTTP.
+
+### Searching on additional properties
+
+In the previous step of this tutorial, we learned how to search for items by specifying the space and time parameters. However, the Planetary Computer's STAC API offers even more flexibility by allowing you to search for items based on additional properties.
+
+For instance, collections like `sentinel-2-l2a` and `landsat-c2-l2` both implement the [eo](https://github.com/stac-extensions/eo) STAC extension and include an `eo:cloud_cover` property. To filter your search results to only return items that have a cloud coverage of less than 20%, you can use:
+
+```{r cql2-search-cloud}
+stac_items <- planetary_computer |>
+  ext_filter(
+    collection %in% c("sentinel-2-l2a", "landsat-c2-l2") &&
+      t_intersects(datetime, {{time_range}}) &&
+      s_intersects(geometry, {{area_of_interest}}) &&
+      `eo:cloud_cover` < 20
+  ) |>
+  post_request()
+```
+
+Here we search for `sentinel-2-l2a` and `landsat-c2-l2` assets. As a result, we have images from both collections in our search results. Users can rename the assets to have a common name in both collections.
+
+```{r assets-rename}
+stac_items <- stac_items |>
+  assets_select(asset_names = c("B11", "swir16")) |>
+  assets_rename(B11 = "swir16")
+
+stac_items |>
+  items_assets()
+```
+
+`assets_rename()` uses parameter mapper that is used to rename asset names. The parameter can be either a named list or a function that is called against each asset metadata. A last parameter was included to force band renaming.
+
+#### Analyzing STAC Metadata
+
+`STACItem` objects are features of `STACItemCollection` and store information about assets.
+
+```{r }
+stac_items <- planetary_computer |>
+  ext_filter(
+    collection == "sentinel-2-l2a" &&
+      t_intersects(datetime, interval("2020-01-01", "2020-12-31")) &&
+      s_intersects(geometry, {{
+        cql2_bbox_as_geojson(c(-124.2751, 45.5469, -123.9613, 45.7458))
+      }})
+  ) |>
+  post_request()
+
+stac_items <- items_fetch(stac_items)
+```
+
+We can use the metadata to plot cloud cover of a region over time, for example.
+
+```{r cloud-cover-ts-plot}
+library(dplyr)
+library(slider)
+library(ggplot2)
+
+df <- items_as_sf(stac_items)  |>
+  dplyr::mutate(datetime = as.Date(datetime)) |>
+  dplyr::group_by(datetime) |>
+  dplyr::summarise(`eo:cloud_cover` = mean(`eo:cloud_cover`)) |>
+  dplyr::mutate(
+    `eo:cloud_cover` = slider::slide_mean(
+      `eo:cloud_cover`, before = 3, after = 3
+    )
+  )
+
+df |> 
+  ggplot2::ggplot() +
+  ggplot2::geom_line(ggplot2::aes(x = datetime, y = `eo:cloud_cover`))
+```
+
+`cql2_bbox_as_geojson()` is a `rstac` helper function and it must be evaluated before the request. This is why we embraced it with `{{`. We use `items_fetch()` to retrieve all paginated items matched in the search.
+
+
+### Working with STAC Catalogs and Collections
+
+STAC organizes items in catalogs (`STACCatalog`) and collections (`STACCollection`). These JSON documents contains metadata of the dataset they refer to. For instance, here we look at the [Bands](https://github.com/stac-extensions/eo#band-object) available for [Landsat 8 Collection 2 Level 2](https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2) data:
+
+```{r collection-landsat-bands}
+landsat <- planetary_computer |>
+  collections(collection_id = "landsat-c2-l2") |>
+  get_request()
+
+library(purrr)
+purrr::map_dfr(landsat$summaries$`eo:bands`, tibble::as_tibble_row)
+```
+
+We can see what [Assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object) are available on our item with:
+
+```{r landsat-assets}
+purrr::map_dfr(landsat$item_assets, function(x) {
+    tibble::as_tibble_row(
+      purrr::compact(x[c("title", "description", "gsd")])
+    )
+})
+```
+
+Some collections, like [Daymet](https://planetarycomputer.microsoft.com/dataset/daymet-daily-na) include collection-level assets. You can use the `assets` property to access those assets.
+
+```{r collection-daymet}
+daymet <- planetary_computer |>
+  collections(collection_id = "daymet-daily-na") |>
+  get_request()
+
+daymet
+```
+
+Just like assets on items, these assets include links to data in Azure Blob Storage.
+
+```{r}
+items_assets(daymet)
+
+library(stars)
+daymet |>
+  assets_select(asset_names = "zarr-abfs") |>
+  assets_url()
+```
+
+### Learn more
+
+For more about the Planetary Computer's STAC API, see [Using tokens for data access](https://planetarycomputer.microsoft.com/docs/concepts/sas/) and the [STAC API reference](https://planetarycomputer.microsoft.com/docs/reference/stac/). 
+For more about CQL2 in rstac, type the command `?ext_filter`.

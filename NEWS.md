@@ -1,12 +1,14 @@
 # rstac (development version)
 
-# rstac 0.9.2 (Released 2022-12-17)
+# rstac 0.9.2 (Released 2023-01-10)
 
-* Add support to CQL2 filter extension
-* Add `conformance()` function
-* Add `queryables()` function
+* Add support to CQL2 filter extension by function `ext_filter()`
+* Add `conformance()` and `queryables()` endpoints functions
+* Add `assets_rename()` and `assets_url()` assets functions
+* Add `items_compact()` function
+* General improvements in items functions
 * Other minor improvements
-* Deprecate functions: `assets_filter()` and `items_group()`
+* Deprecated `assets_filter()` and `items_group()` functions
 
 # rstac 0.9.1-6 (Released 2021-11-05)
 

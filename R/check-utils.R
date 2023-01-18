@@ -42,3 +42,27 @@
     .error("Invalid %s value in `%s` param.",
            paste0("`", expected, "`", collapse = " or "), obj_name)
 }
+
+check_items <- function(items) {
+  UseMethod("check_items", items)
+}
+
+check_items.STACItem <- function(items) {
+  if (!(is.list(items) && "assets" %in% names(items))) {
+    .error("Invalid STACItem object.")
+  }
+}
+
+check_items.STACItemCollection <- function(items) {
+  if (!(is.list(items) && "features" %in% names(items))) {
+    .error("Invalid STACItemCollection object.")
+  }
+}
+
+check_items.default <- check_items.STACItem
+
+
+check_character <- function(x, msg, ...) {
+  if (!is.character(x))
+    .error(msg, ...)
+}

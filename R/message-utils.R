@@ -8,7 +8,7 @@
 #'
 #' @noRd
 .error <- function(msg, ..., class = NULL) {
-  stop(errorCondition(sprintf(msg, ...), class = class, call = FALSE))
+  stop(errorCondition(sprintf(msg, ...), class = class, call = NULL))
 }
 
 #' @title Utility functions

@@ -95,9 +95,9 @@
 
   if (is.list(collections))
     for (e in collections)
-      stopifnot(is.character(e))
+      check_character(e, "Collection name must be a character value.")
   else
-    stopifnot(is.character(collections))
+    check_character(collections, "Collection name must be a character value.")
 
   if (is.character(collections) && length(collections) == 1)
     collections <- strsplit(collections, ",")[[1]]
@@ -118,17 +118,21 @@
 #' @noRd
 .parse_ids <- function(ids) {
 
-  if (is.list(ids))
-    for (e in ids)
-      stopifnot(is.character(e) || is.numeric(e))
-  else
-    stopifnot(is.character(ids) || is.numeric(ids))
-
-  if (is.character(ids) && length(ids) == 1)
-    ids <- strsplit(ids, ",")[[1]]
-
-  if (is.character(ids) || is.numeric(ids))
+  if (is.list(ids)) {
+    ids <- lapply(ids, function(id) {
+      if (is.numeric(id))
+        return(paste(id))
+      check_character(id, "Item id must be a character value.")
+      return(id)
+    })
+  } else if (is.numeric(ids)) {
+    ids <- as.list(paste(ids))
+  } else {
+    check_character(ids, "Item id must be a character value.")
+    if (length(ids) == 1)
+      ids <- strsplit(ids, ",")[[1]]
     ids <- as.list(ids)
+  }
 
   return(ids)
 }
@@ -142,33 +146,11 @@
 #' @return A `character` with the validate polygon.
 #'
 #' @noRd
-.parse_intersects <- function(geom) {
-
-  if (!is.list(geom))
-    .error("The 'intersects' parameter must be a list.")
-  geom
+.parse_intersects <- function(intersects) {
+  intersects <- get_spatial(intersects)
+  if (!is.list(intersects))
+    .error("Invalid GeoJSON object in `intersects` param.")
 }
-
-#' @title Utility functions
-#'
-#' @param items a `STACItemCollection` object representing the result
-#'  of `/stac/search` or \code{/collections/{collectionId}/items}.
-#'
-#' @return A `numeric` with the length of a `STACItemCollection`
-#'  object.
-#'
-#' @noRd
-.parse_items_size <- function(items) {
-
-  if (!is.null(items_matched(items)) && items_length(items) != items_matched(items))
-    message("The length of items in your object, does not correspond ",
-            "with the total of matched items. Consider using the ",
-            "function `items_fetch()`. By default, items_max = ",
-            items_length(items))
-
-  return(items_length(items))
-}
-
 
 #' @title Utility functions
 #'

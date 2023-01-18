@@ -1,6 +1,7 @@
 #' @title Filter extension
 #'
 #' @description
+#' `r lifecycle::badge('experimental')`
 #' `ext_filter()` implements Common Query Language (CQL2) filter extension
 #' on `rstac`. This extension expands the filter capabilities providing a
 #' query language to construct more complex expressions. CQL2 is an OGC
@@ -9,9 +10,9 @@
 #' for spatial geometries (point, lines, polygons) and temporal
 #' data (instants and intervals).
 #'
-#' `rstac` translates R expressions to CQL2 allowing users to express their
+#' `rstac` translates R expressions to CQL2, allowing users to express their
 #' filter criteria using R language. For more details on how to create
-#' CQL2 expressions in `rstac`, see the details section.
+#' CQL2 expressions in `rstac`. See the details section.
 #'
 #' @param q    a `RSTACQuery` object expressing a STAC query
 #' criteria.
@@ -21,13 +22,13 @@
 #' `"cql2-json"` (for JSON format). If `NULL` (default), `"cql2-text"` is
 #' used for HTTP `GET` requests and `"cql2-json"` for `POST` requests.
 #' @param crs  an optional character value informing the coordinate reference
-#' system used by geometry objects. If `NULL` (default) STAC services assume
+#' system used by geometry objects. If `NULL` (default), STAC services assume
 #' `"WGS 84"`.
 #'
 #' @details
 #' To allow users to express filter criteria in R language, `rstac` takes
 #' advantage of the abstract syntax tree (AST) to translate R expressions
-#' to CQL2 expressions. The following topics describes the correspondences
+#' to CQL2 expressions. The following topics describe the correspondences
 #' between `rstac` expressions and CQL2 operators.
 #'
 #' ## Standard comparison operators
@@ -41,7 +42,7 @@
 #' - `between(a, b, c)` corresponds to CQL2 `a BETWEEN b AND c`, where
 #'   `b` and `c` `integer` values.
 #' - `a %in% b` corresponds to CQL2 `a IN (b)`, where `b` should be
-#'   a list of values of same type as `a`.
+#'   a list of values of the same type as `a`.
 #'
 #' ## Spatial operators
 #' - functions `s_intersects(a, b)`, `s_touches(a, b)`, `s_within(a, b)`,
@@ -49,12 +50,19 @@
 #'   to CQL2 `S_INTERSECTS(a, b)`, `S_TOUCHES(a, b)`, `S_WITHIN(a, b)`,
 #'   `S_OVERLAPS(a, b)`, `S_CROSSES(a, b)`, and `S_CONTAINS(a, b)` operators,
 #'   respectively. Here, `a` and `b` should be `geometry` objects. `rstac`
-#'   accepts `sf`, `sfc`, `sfg`, or `geojson` objects.
+#'   accepts `sf`, `sfc`, `sfg`, `list` (representing GeoJSON objects), or
+#'   `character` (representing either GeoJSON or WKT).
+#'   **NOTE**: All of the above spatial object types, except for the
+#'   `character`, representing a WKT, may lose precision due to numeric
+#'   truncations when R converts numbers to JSON text. WKT strings are
+#'   sent "as is" to the service. Therefore, the only way for users to
+#'   retain precision on spatial objects is to represent them as a WKT
+#'   string.
 #'
 #' ## Temporal operators
 #' - functions `date(a)`, `timestamp(a)`, and `interval(a, b)` corresponds to
 #'   CQL2 `DATE(a)`, `TIMESTAMP(a)`, and `INTERVAL(a, b)` operators,
-#'   respectively. These functions creates literal `temporal` values.
+#'   respectively. These functions create literal `temporal` values.
 #'   The first two define an `instant` type, and the third an `interval` type.
 #' - functions `t_after(a, b)`, `t_before(a, b)`, `t_contains(a, b)`,
 #'   `t_disjoint(a, b)`, `t_during(a, b)`, `t_equals(a, b)`,
@@ -79,8 +87,8 @@
 #'   operators, respectively. Here, `a` and `b` should be `arrays`.
 #'
 #' @note
-#' The specification states that double quoted identifiers should be
-#' interpreted as a properties. However, the R language does not distinguishes
+#' The specification states that double-quoted identifiers should be
+#' interpreted as properties. However, the R language does not distinguish
 #' double quote from single quote strings. The right way to represent
 #' double quoted properties in R is to use the escape character (`),
 #' for example `"date"`.
@@ -217,8 +225,8 @@ ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
 }
 
 check_lang <- function(lang) {
-  if (!is.null(lang))
-    stopifnot(lang %in% c("cql2-text", "cql2-json"))
+  if (!is.null(lang) && !lang[[1]] %in% c("cql2-json", "cql2-text"))
+    .error("Value '%s' lang is not supported", lang[[1]])
 }
 
 #' @export
@@ -232,18 +240,22 @@ endpoint.ext_filter <- function(q) {
 #' @export
 before_request.ext_filter <- function(q) {
   check_query_verb(q, verbs = c("GET", "POST"))
-  if (is.null(cql2_lang(q$params))) {
-     if (q$verb == "GET") {
-       cql2_lang(q$params) <- "cql2-text"
-     } else {
-       cql2_lang(q$params) <- "cql2-json"
-     }
-  } else {
-    if (q$verb == "GET" && cql2_lang(q$params) == "cql2-json") {
-      # transform list into string to provide as querystring in GET
+  if (q$verb == "GET") {
+    # transform list into string to provide as querystring in GET
+    if (!is.null(cql2_lang(q$params)) && cql2_lang(q$params) == "cql2-json") {
       cql2_filter(q$params) <- to_json(cql2_filter(q$params))
+    } else {
+      cql2_lang(q$params) <- "cql2-text"
+      cql2_filter(q$params) <- to_text(cql2_filter(q$params))
+    }
+  } else {
+    if (!is.null(cql2_lang(q$params)) && cql2_lang(q$params) == "cql2-text") {
+      cql2_filter(q$params) <- to_text(cql2_filter(q$params))
+    } else {
+      cql2_lang(q$params) <- "cql2-json"
     }
   }
+
   if ("items" %in% subclass(q)) {
     # don't send 'collection_id' in url's query string or content body
     q <- omit_query_params(q, names = "collection_id")
@@ -253,11 +265,7 @@ before_request.ext_filter <- function(q) {
 
 #' @export
 after_response.ext_filter <- function(q, res) {
-
-  content <- content_response(res, "200", c("application/geo+json",
-                                            "application/json"))
-
-  RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
+  after_response.items(q, res)
 }
 
 #' @export

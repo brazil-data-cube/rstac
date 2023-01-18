@@ -51,23 +51,31 @@ stac_version.RSTACQuery <- function(x, ...) {
   if (!is.null(x$version))
     return(x$version)
 
+  version <- NULL
   # check in '/' endpoint
-  res <- httr::GET(url = make_url(x$base_url, endpoint = "/"), ...)
-
-  content <- tryCatch({content_response(res, "200", "application/json")},
-                      error = function(e) NULL)
-  version <- content[["stac_version"]]
+  res <- make_get_request(
+    url = make_url(x$base_url, endpoint = "/"), ..., error_msg = NULL
+  )
+  if (!is.null(res)) {
+    content <- content_response(res, "200", "application/json")
+    version <- content[["stac_version"]]
+  }
 
   # if no version was found, try '/stac' endpoint
   if (is.null(version)) {
-
-    res <- httr::GET(url = make_url(x$base_url, endpoint = "/stac"), ..., )
-    content <- tryCatch({content_response(res, "200", "application/json")},
-                        error = function(e) NULL)
-    version <- content[["stac_version"]]
+    res <- make_get_request(
+      url = make_url(x$base_url, endpoint = "/stac"), ..., error_msg = NULL
+    )
+    if (!is.null(res)) {
+      content <- content_response(res, "200", "application/json")
+      version <- content[["stac_version"]]
+    }
   }
   if (is.null(version))
-    .error("Could not determine STAC version in URL '%s'.", x$base_url)
+    .error(paste(
+      "Could not determine STAC version in URL '%s'.",
+      "Please, use 'force_version' parameter in stac() function"
+    ), x$base_url)
 
   return(version)
 }

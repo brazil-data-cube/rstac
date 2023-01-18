@@ -24,7 +24,7 @@
 #' the endpoint \code{/collections/\{collectionId\}/items/\{featureId\}}.
 #'
 #' @param datetime    a `character` with a date-time or an interval.
-#' Date and time strings needs to conform RFC 3339. Intervals are
+#' Date and time strings needs to conform to RFC 3339. Intervals are
 #' expressed by separating two date-time strings by `'/'` character.
 #' Open intervals are expressed by using `'..'` in place of date-time.
 #'
@@ -52,14 +52,14 @@
 #'
 #' The coordinate reference system of the values is WGS84
 #' longitude/latitude (<http://www.opengis.net/def/crs/OGC/1.3/CRS84>).
-#' The values are in most cases the sequence of minimum longitude,
-#' minimum latitude, maximum longitude and maximum latitude. However,
-#' in cases where the box spans the antimeridian the first value
+#' The values are, in most cases, the sequence of minimum longitude,
+#' minimum latitude, maximum longitude, and maximum latitude. However,
+#' in cases where the box spans the antimeridian, the first value
 #' (west-most box edge) is larger than the third value
 #' (east-most box edge).
 #'
 #' @param limit       an `integer` defining the maximum number of results
-#' to return. If not informed it defaults to the service implementation.
+#' to return. If not informed, it defaults to the service implementation.
 #'
 #' @seealso
 #' [get_request()],  [post_request()],
@@ -155,9 +155,14 @@ before_request.items <- function(q) {
 #' @export
 after_response.items <- function(q, res) {
 
-  content <- content_response(res, "200", c("application/geo+json",
-                                            "application/json"))
-
+  content <- content_response(
+    res, status_codes = "200", content_types = c("application/geo+json",
+                                                 "application/json")
+  )
+  if ("features" %in% names(content)) {
+    content$features <- lapply(content$features, RSTACDocument,
+                               subclass = "STACItem")
+  }
   RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
 }
 

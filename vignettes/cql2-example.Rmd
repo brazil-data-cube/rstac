@@ -1,6 +1,6 @@
 ---
 title: "rstac CQL2 examples"
-author: "Gilberto Camara, Rolf Simoes, and Felipe Carvalho"
+author: "Rolf Simoes, Felipe Carvalho, and Gilberto Camara"
 date: "2022-12-16"
 output: 
   html_document:
@@ -15,7 +15,7 @@ fontsize: 10,5pt
 indent: yes
 link-citations: yes
 vignette: >
-  %\VignetteIndexEntry{cql2-report}
+  %\VignetteIndexEntry{cql2-example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

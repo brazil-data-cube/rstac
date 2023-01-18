@@ -2,7 +2,7 @@
 % Please edit documentation in R/queryables-query.R
 \name{queryables}
 \alias{queryables}
-\title{Queryables endpoint}
+\title{Endpoint functions}
 \usage{
 queryables(q)
 }

@@ -6,35 +6,47 @@
 \alias{items_length}
 \alias{items_length.STACItem}
 \alias{items_length.STACItemCollection}
+\alias{items_length.default}
 \alias{items_matched}
 \alias{items_matched.STACItem}
 \alias{items_matched.STACItemCollection}
+\alias{items_matched.default}
 \alias{items_fetch}
-\alias{items_fetch.STACItem}
 \alias{items_fetch.STACItemCollection}
 \alias{items_next}
-\alias{items_next.STACItem}
 \alias{items_next.STACItemCollection}
 \alias{items_datetime}
 \alias{items_datetime.STACItem}
 \alias{items_datetime.STACItemCollection}
+\alias{items_datetime.default}
 \alias{items_bbox}
 \alias{items_bbox.STACItem}
 \alias{items_bbox.STACItemCollection}
+\alias{items_bbox.default}
 \alias{items_assets}
 \alias{items_assets.STACItem}
 \alias{items_assets.STACItemCollection}
+\alias{items_assets.default}
 \alias{items_filter}
+\alias{items_filter.STACItemCollection}
+\alias{items_compact}
+\alias{items_compact.STACItemCollection}
 \alias{items_reap}
 \alias{items_reap.STACItem}
 \alias{items_reap.STACItemCollection}
+\alias{items_reap.default}
 \alias{items_fields}
-\alias{items_fields.STACItemCollection}
 \alias{items_fields.STACItem}
+\alias{items_fields.STACItemCollection}
+\alias{items_fields.default}
 \alias{items_sign}
-\alias{items_sign.STACItemCollection}
 \alias{items_sign.STACItem}
-\title{STACItemCollection functions}
+\alias{items_sign.STACItemCollection}
+\alias{items_sign.default}
+\alias{items_as_sf}
+\alias{items_as_sf.STACItem}
+\alias{items_as_sf.STACItemCollection}
+\title{Items functions}
 \usage{
 items_group(items, ..., field = NULL, index = NULL)
 
@@ -44,21 +56,21 @@ items_length(items)
 
 \method{items_length}{STACItemCollection}(items)
 
+\method{items_length}{default}(items)
+
 items_matched(items, matched_field = NULL)
 
 \method{items_matched}{STACItem}(items, matched_field = NULL)
 
 \method{items_matched}{STACItemCollection}(items, matched_field = NULL)
 
-items_fetch(items, ...)
+\method{items_matched}{default}(items, matched_field = NULL)
 
-\method{items_fetch}{STACItem}(items, ...)
+items_fetch(items, ...)
 
 \method{items_fetch}{STACItemCollection}(items, ..., progress = TRUE, matched_field = NULL)
 
 items_next(items, ...)
-
-\method{items_next}{STACItem}(items, ...)
 
 \method{items_next}{STACItemCollection}(items, ...)
 
@@ -68,77 +80,100 @@ items_datetime(items)
 
 \method{items_datetime}{STACItemCollection}(items)
 
+\method{items_datetime}{default}(items)
+
 items_bbox(items)
 
 \method{items_bbox}{STACItem}(items)
 
 \method{items_bbox}{STACItemCollection}(items)
 
-items_assets(items, simplify = TRUE)
+\method{items_bbox}{default}(items)
 
-\method{items_assets}{STACItem}(items, simplify = TRUE)
+items_assets(items, simplify = deprecated())
 
-\method{items_assets}{STACItemCollection}(items, simplify = TRUE)
+\method{items_assets}{STACItem}(items, simplify = deprecated())
+
+\method{items_assets}{STACItemCollection}(items, simplify = deprecated())
+
+\method{items_assets}{default}(items, simplify = deprecated())
 
 items_filter(items, ..., filter_fn = NULL)
 
-items_reap(items, field = NULL, ...)
+\method{items_filter}{STACItemCollection}(items, ..., filter_fn = NULL)
 
-\method{items_reap}{STACItem}(items, field = NULL, ...)
+items_compact(items)
 
-\method{items_reap}{STACItemCollection}(items, field = NULL, ...)
+\method{items_compact}{STACItemCollection}(items)
+
+items_reap(items, field, ..., pick_fn = identity)
+
+\method{items_reap}{STACItem}(items, field, ..., pick_fn = identity)
+
+\method{items_reap}{STACItemCollection}(items, field, ..., pick_fn = identity)
+
+\method{items_reap}{default}(items, field, ..., pick_fn = identity)
 
 items_fields(items, field = NULL, ...)
 
-\method{items_fields}{STACItemCollection}(items, field = NULL, ...)
-
 \method{items_fields}{STACItem}(items, field = NULL, ...)
 
-items_sign(items, sign_fn = NULL)
+\method{items_fields}{STACItemCollection}(items, field = NULL, ...)
 
-\method{items_sign}{STACItemCollection}(items, sign_fn = NULL)
+\method{items_fields}{default}(items, field = NULL, ...)
 
-\method{items_sign}{STACItem}(items, sign_fn = NULL)
+items_sign(items, sign_fn)
+
+\method{items_sign}{STACItem}(items, sign_fn)
+
+\method{items_sign}{STACItemCollection}(items, sign_fn)
+
+\method{items_sign}{default}(items, sign_fn)
+
+items_as_sf(items)
+
+\method{items_as_sf}{STACItem}(items)
+
+\method{items_as_sf}{STACItemCollection}(items)
 }
 \arguments{
-\item{items}{a \code{STACItemCollection} object representing
-the result of \verb{/stac/search}, \code{/collections/{collectionId}/items}.}
+\item{items}{a \code{STACItemCollection} object.}
 
-\item{...}{a named way to provide field names to get the subfields values
-from the \code{RSTACDocument} objects.}
+\item{...}{additional arguments. See details.}
 
-\item{field}{a \code{character} with the names of the field to get the
-subfields values from the \code{RSTACDocument} objects.}
+\item{field}{a \code{character} with the names of the field to
+get the subfields values.}
 
-\item{index}{an \code{atomic} vector with values as group index}
+\item{index}{an \code{atomic} vector with values as the group index.}
 
 \item{matched_field}{a \code{character} vector with the path
-where the number of items returned in the named list is located starting from
-the initial node of the list. For example, if the information is at position
-\code{items$meta$found} of the object, it must be passed as the following
-parameter \code{c("meta", "found")}.}
+where the number of items returned in the named list is located starting
+from the initial node of the list. For example, if the information is in a
+position \code{items$meta$found} of the object, it must be passed as the
+following parameter \code{c("meta", "found")}.}
 
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
-\item{simplify}{a \code{logical} should return only the assets name of the
-first item? if not a \code{list} with all assets name will be returned. Default
-is \code{FALSE}.}
+\item{simplify}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} no side-effect}
 
 \item{filter_fn}{a \code{function} that receives an item that should
 evaluate a \code{logical} value.}
 
-\item{sign_fn}{a \code{function} that receives an item as parameter
+\item{pick_fn}{a \code{function} used to pick elements from items
+addressed by \code{field} parameter.}
+
+\item{sign_fn}{a \code{function} that receives an item as a parameter
 and returns an item signed.}
 }
 \value{
 \itemize{
 \item \code{items_length()}: an \code{integer} value.
 
-\item \code{items_matched()}: returns an \code{integer} value if STAC web server does
-support this extension, otherwise returns \code{NULL}.
+\item \code{items_matched()}: returns an \code{integer} value if the STAC web server
+does support this extension. Otherwise returns \code{NULL}.
 
-\item \code{items_fetch()}: an \code{STACItemCollection} with all matched items.
+\item \code{items_fetch()}: a \code{STACItemCollection} with all matched items.
 
 \item \code{items_next()}: fetches a new page from STAC service.
 
@@ -146,9 +181,8 @@ support this extension, otherwise returns \code{NULL}.
 
 \item \code{items_bbox()}: returns a \code{list} with all items' bounding boxes.
 
-\item \code{item_assets()}: if simplify is \code{TRUE}, returns a \code{character}
-value with all assets names of the first item. Otherwise, returns a
-\code{list} with assets name for each item.
+\item \code{item_assets()}: Returns a \code{character} value with all assets names
+of the all items.
 
 \item \code{items_filter()}: a \code{STACItemCollection} object.
 
@@ -159,10 +193,11 @@ otherwise or a \code{list}.
 
 \item \code{items_group()}: a \code{list} of \code{STACItemCollection} objects.
 
-\item \code{items_sign()}: a \code{STACItemCollection} object with signed assets url
-}
+\item \code{items_sign()}: a \code{STACItemCollection} object with signed assets url.
 
-A \code{character} with the subfields of the \code{feature} field.
+\item \code{items_as_sf()}: a \code{sf} object.
+
+}
 }
 \description{
 These functions provide support to work with
@@ -181,21 +216,21 @@ pagination.
 
 \item \code{items_next()}: fetches a new page from STAC service.
 
-\item \code{items_datetime()}: retrieves a the \code{datetime}
+\item \code{items_datetime()}: retrieves the \code{datetime}
 field in \code{properties} from \code{STACItemCollection} and
 \code{STACItem} objects.
 
-\item \code{items_bbox()}: retrieves a the \code{bbox}
-field of a \code{STACItemCollection} or an \code{STACItem} object.
+\item \code{items_bbox()}: retrieves the \code{bbox}
+field of a \code{STACItemCollection} or a \code{STACItem} object.
 
 \item \code{item_assets()}: returns the assets name from
 \code{STACItemCollection} and \code{STACItem} objects.
 
-\item \code{items_filter()}: selects only items that match some
-criteria.
+\item \code{items_filter()}: selects only items that match some criteria
+(see details section).
 
 \item \code{items_reap()}: extract key values by traversing all items
-in an \code{STACItemCollection} object.
+in a \code{STACItemCollection} object.
 
 \item \code{items_fields()}: lists field names inside an item.
 
@@ -203,13 +238,12 @@ in an \code{STACItemCollection} object.
 items as elements of a list using some criteria.
 
 \item \code{items_sign()}: allow access assets by preparing its url.
-}
 
-This function returns the subfields of the \code{feature}
-field of a \code{STACItemCollection} object.
+\item \code{items_as_sf()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} convert items to \code{sf} object.
+}
 }
 \details{
-Ellipsis argument (\code{...}) appears in different items function and
+Ellipsis argument (\code{...}) appears in different items functions and
 has distinct purposes:
 \itemize{
 \item \code{items_matched()} and \code{items_assets()}: ellipsis is not used.
@@ -219,15 +253,30 @@ additional \code{httr} options to \link[httr:GET]{GET} or \link[httr:POST]{POST}
 methods, such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.
 
-\item \code{items_filter()}: ellipsis is used to pass logical
-expressions using keys in \code{properties} field as filter criteria.
+\item \code{items_fields()}: ellipsis parameter is deprecated in version
+0.9.2 of rstac. Please, use \code{field} parameter instead.
 
-\item \code{items_sign()}: in a near future, ellipsis will be used to append
-key value pairs to url query string of an asset.
+\item \code{items_filter()}: ellipsis is used to pass logical
+expressions to be evaluated against a \code{STACItem} field as filter criteria.
+
+\strong{WARNING:} the evaluation of filter expressions changed in \code{rstac} 0.9.2.
+Older versions of \code{rstac} used \code{properties} field to evaluate filter
+expressions. Below, there is an example of how to write expressions in new
+\code{rstac} version:
+
+\if{html}{\out{<div class="sourceCode R">}}\preformatted{# expression in older version
+items_filter(stac_obj, `eo:cloud_cover` < 10)
+# now expressions must refer to properties explicitly
+items_filter(stac_obj, properties$`eo:cloud_cover` < 10)
+items_filter(stac_obj, properties[["eo:cloud_cover"]] < 10)
+}\if{html}{\out{</div>}}
+
+\item \code{items_sign()}: in the near future, ellipsis will be used to append
+key-value pairs to the url query string of an asset.
 }
 
 \code{items_sign()} has \code{sign_fn} parameter that must be a function that
-receives as argument an item and returns an signed item. \code{rstac} provides
+receives as argument an item and returns a signed item. \code{rstac} provides
 \code{sign_bdc()} and \code{sign_planetary_computer()} functions to access Brazil
 Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 }
@@ -264,16 +313,17 @@ stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
         datetime = "2017-08-01/2018-03-01",
         bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
-    get_request() \%>\% items_filter(`eo:cloud_cover` < 10)
+    get_request() \%>\%
+    items_filter(properties$`eo:cloud_cover` < 10)
 
 # Example with AWS STAC
 stac("https://earth-search.aws.element84.com/v0") \%>\%
-    stac_search(collections = "sentinel-s2-l2a-cogs",
+  stac_search(collections = "sentinel-s2-l2a-cogs",
               bbox = c(-48.206, -14.195, -45.067, -12.272),
               datetime = "2018-06-01/2018-06-30",
               limit = 500) \%>\%
-    post_request() \%>\%
-    items_filter(filter_fn = function(x) {x[["eo:cloud_cover"]] < 10})
+  post_request() \%>\%
+  items_filter(filter_fn = function(x) {x$properties$`eo:cloud_cover` < 10})
 }
 
 \dontrun{
@@ -285,16 +335,6 @@ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  get_request() \%>\% items_fetch(progress = FALSE)
 
 stac_item \%>\% items_reap(field = c("properties", "datetime"))
-}
-
-\dontrun{
- # STACItemCollection object
- stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  stac_search(collections = "CB4_64_16D_STK-1", limit = 10,
-         datetime = "2017-08-01/2018-03-01") \%>\%
-  get_request()
-
- stac_item \%>\% items_fields(field = "properties")
 }
 
 }

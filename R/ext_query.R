@@ -9,9 +9,9 @@
 #' The function accepts multiple filter criteria. Each filter entry is an
 #' expression formed by `<field> <operator> <value>`, where
 #' `<field>` refers to a valid item property. Supported `<fields>`
-#' depends on STAC API service implementation. The users must rely on service
-#' providers' documentation to know which properties can be used by this
-#' extension.
+#' depends on STAC API service implementation. The users must rely on the
+#' service providers' documentation to know which properties can be used
+#' by this extension.
 #'
 #' The `ext_query()` function allows the following `<operators>`
 #' \itemize{
@@ -38,7 +38,7 @@
 #' \item The `before_request()` for subclass `ext_query`
 #' \item The `after_response()` for subclass `ext_query`
 #' }
-#' See source file `ext_query.R` for an example on how implement new
+#' See source file `ext_query.R` for an example of how to implement new
 #' extensions.
 #'
 #' @param q   a `RSTACQuery` object expressing a STAC query
@@ -141,11 +141,7 @@ before_request.ext_query <- function(q) {
 
 #' @export
 after_response.ext_query <- function(q, res) {
-
-  content <- content_response(res, "200", c("application/geo+json",
-                                            "application/json"))
-
-  RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
+  after_response.items(q, res)
 }
 
 #' @export

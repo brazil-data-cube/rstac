@@ -1,5 +1,7 @@
 # eval ----
-cql2_eval <- function(x) {eval(x, envir = cql2_global_env)}
+cql2_eval <- function(x) {
+  eval(x, envir = cql2_global_env)
+}
 
 # unquote {{}} ----
 
@@ -36,10 +38,10 @@ is_literal <- function(x) {
   switch(typeof(x),
          character = , double = , integer = ,
          logical =   TRUE,
-         list = all(vapply(x, is_literal, TRUE)),
+         list = all(map_lgl(x, is_literal)),
          call =      {
            if (is_call_vec(x))
-             all(vapply(call_args(x), is_literal, TRUE))
+             all(map_lgl(call_args(x), is_literal, TRUE))
            else
              FALSE
          },
@@ -98,6 +100,8 @@ all_calls <- function(x) {
 
 # new env ----
 
+# nocov start
+
 new_env <- function(..., parent_env = NULL) {
   dots <- list(...)
   # default parent_env is taken from global parent env
@@ -107,3 +111,5 @@ new_env <- function(..., parent_env = NULL) {
   # register all elements in new env
   list2env(dots, envir = NULL, parent = parent_env, hash = TRUE)
 }
+
+# nocov end

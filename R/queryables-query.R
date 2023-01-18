@@ -1,4 +1,4 @@
-#' @title Queryables endpoint
+#' @title Endpoint functions
 #'
 #' @description
 #' The queryables endpoint allows the user to discover which

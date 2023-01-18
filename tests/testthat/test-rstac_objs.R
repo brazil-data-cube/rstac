@@ -140,7 +140,10 @@ testthat::test_that("stac search object", {
   # check object class of stac_search
   testthat::expect_s3_class(
     object  =  rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-      rstac::stac_search(intersects = list("aaa")),
+      rstac::stac_search(intersects = paste0(
+        "{\"type\":\"Polygon\",\"coordinates\":[[[-48.19039,-16.00871],",
+        "[-41.6341,-16.00871],[-41.6341,-11.91345],[-48.19039,-11.91345],",
+        "[-48.19039,-16.00871]]]}")),
     class = c("search", "RSTACQuery")
   )
 
@@ -596,7 +599,7 @@ testthat::test_that("stac item object", {
 
   # output test
   testthat::expect_equal(
-    object   = items_length(items_fetch(stac_item)),
+    object   = items_length(stac_item),
     expected = 1
   )
 })
