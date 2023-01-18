@@ -50,7 +50,7 @@ Collate:
     'cql2-json.R'
     'cql2-text.R'
     'cql2-adv_comp.R'
-    'cql2.R'
+    'cql2-funs.R'
     'cql2-env.R'
     'cql2-utils.R'
     'assets-utils.R'
