@@ -984,27 +984,6 @@ test_that("scalar data types contructors", {
   )
 })
 
-test_that("cql2 helper functions", {
-  bbox <- c(-122.2751, 47.5469, -121.9613, 47.7458)
-  time_range <- cql2_interval("2020-12-01", "2020-12-31")
-  area_of_interest <- cql2_bbox_as_geojson(bbox)
-
-  expect_equal(class(area_of_interest), "list")
-  expect_equal(class(time_range), "call")
-  expect_equal(class(cql2_date("2020-01-01")), "call")
-  expect_equal(class(cql2_timestamp("2020-01-01T12:00:00Z")), "call")
-  expect_error(cql2_date("2020-01-55"))
-  expect_error(cql2_timestamp("2020-01-01"))
-  expect_output(
-    object = {cql2_json(
-      collection == "landsat-c2-l2" &&
-        t_intersects(datetime, !!time_range) &&
-        s_intersects(geometry, !!area_of_interest)
-    )},
-    regexp = "-121.9613"
-  )
-})
-
 test_that("cql2 contructors", {
   # ---- new logic op ----
   logic_operator <- new_logic_op("and")
@@ -1250,7 +1229,7 @@ test_that("cql2 contructors", {
   expect_output(print(array_obj), "TEST((1,2),(true,false))", fixed = TRUE)
 })
 
-test_that("cql2 outputs functions", {
+test_that("cql2 output functions", {
   # ---- null ----
   expect_output(cat(to_json(NULL)), "null")
 
@@ -1396,5 +1375,26 @@ test_that("cql2 outputs functions", {
   expect_output(
     print(to_text(cql2(quote(a > 1)))),
     "a > 1"
+  )
+})
+
+test_that("cql2 helper functions", {
+  bbox <- c(-122.2751, 47.5469, -121.9613, 47.7458)
+  time_range <- cql2_interval("2020-12-01", "2020-12-31")
+  area_of_interest <- cql2_bbox_as_geojson(bbox)
+
+  expect_equal(class(area_of_interest), "list")
+  expect_equal(class(time_range), "call")
+  expect_equal(class(cql2_date("2020-01-01")), "call")
+  expect_equal(class(cql2_timestamp("2020-01-01T12:00:00Z")), "call")
+  expect_error(cql2_date("2020-01-55"))
+  expect_error(cql2_timestamp("2020-01-01"))
+  expect_output(
+    object = {cql2_json(
+      collection == "landsat-c2-l2" &&
+        t_intersects(datetime, !!time_range) &&
+        s_intersects(geometry, !!area_of_interest)
+    )},
+    regexp = "-121.9613"
   )
 })

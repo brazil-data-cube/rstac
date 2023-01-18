@@ -188,6 +188,31 @@ testthat::test_that("assets functions", {
     expected = "BAND13"
   )
 
+  expect_error(assets_select(stac_item, select_fn = function(x) x))
+  expect_error(assets_select(stac_item, select_fn = function(x) c(TRUE, FALSE)))
+
+  expect_error(asset_get("eo:bands"))
+  expect_equal(
+    object = items_assets(
+      assets_select(stac_item, 1 %in% asset_get("eo:bands"))
+    ),
+    expected = "BAND16"
+  )
+
+  expect_length(
+    object = items_assets(
+      assets_select(stac_item, 1 %in% asset_get("eo:band"))
+    ),
+    n = 0
+  )
+
+  expect_length(
+    object = items_assets(
+      assets_select(stac_item, "B1" %in% asset_get("eo:band"))
+    ),
+    n = 0
+  )
+
   # assets_rename-------------------------------------------------------------
   selected_items <- assets_select(stac_items,
                                   asset_names = c("BAND13", "BAND14"))
