@@ -70,7 +70,7 @@ corresponding JSON STAC objects.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://brazil-data-cube.github.io/rstac}
+  \item \url{https://brazil-data-cube.github.io/rstac/}
   \item Report bugs at \url{https://github.com/brazil-data-cube/rstac/issues}
 }
 

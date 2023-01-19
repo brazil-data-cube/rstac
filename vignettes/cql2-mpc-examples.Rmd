@@ -144,7 +144,7 @@ selected_item |>
   substr(1, 255)
 ```
 
-Everything after the `?` in that URL is a [SAS token](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview) grants access to the data. See https://planetarycomputer.microsoft.com/docs/concepts/sas/ for more on using tokens to access data.
+Everything after the `?` in that URL is a [SAS token](https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview) grants access to the data. See https://planetarycomputer.microsoft.com/docs/concepts/sas/ for more on using tokens to access data.
 
 ```{r url-check}
 library(httr)
@@ -289,5 +289,5 @@ daymet |>
 
 ### Learn more
 
-For more about the Planetary Computer's STAC API, see [Using tokens for data access](https://planetarycomputer.microsoft.com/docs/concepts/sas/) and the [STAC API reference](https://planetarycomputer.microsoft.com/docs/reference/stac/). 
+For more about the Planetary Computer's STAC API, see [Using tokens for data access](https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview) and the [STAC API reference](https://planetarycomputer.microsoft.com/docs/reference/stac/). 
 For more about CQL2 in rstac, type the command `?ext_filter`.
