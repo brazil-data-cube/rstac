@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 ```
 
 
-```{r}
+```{r load-rstac}
 library(rstac)
 ```
 
@@ -278,7 +278,7 @@ daymet
 
 Just like assets on items, these assets include links to data in Azure Blob Storage.
 
-```{r}
+```{r daymet-assets}
 items_assets(daymet)
 
 library(stars)
