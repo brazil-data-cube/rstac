@@ -29,7 +29,7 @@ preview_switch <- function(url, ...) {
 preview_read_file <- function(url) {
   temp_file <- tempfile(fileext = paste0(".", preview_file_type(url)))
   on.exit(unlink(temp_file))
-  utils::download.file(url, destfile = temp_file, quiet = TRUE)
+  utils::download.file(url, destfile = temp_file, quiet = TRUE, mode = "wb")
   preview_switch(
     url,
     png = {
