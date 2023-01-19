@@ -76,8 +76,8 @@ library(rstac)
 These functions can be used to retrieve information from a STAC API
 service. The code below creates a `stac` object and list the available
 collections of the STAC API of the [Brazil Data
-Cube](http://brazildatacube.org/) project of the Brazilian National
-Space Research Institute [INPE](http://www.inpe.br/).
+Cube](http://www.brazildatacube.org/en/home-page-2/) project of the
+Brazilian National Space Research Institute [INPE](http://www.inpe.br/).
 
 ``` r
 s_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
@@ -126,7 +126,8 @@ it_obj
 #>   - ... with 90 more feature(s).
 #> - assets: 
 #> BAND13, BAND14, BAND15, BAND16, CLEAROB, CMASK, EVI, NDVI, PROVENANCE, thumbnail, TOTALOB
-#> - other field(s): type, links, context, features
+#> - item's fields: 
+#> assets, bbox, collection, geometry, id, links, properties, stac_extensions, stac_version, type
 ```
 
 The `rstac` uses the [httr](https://github.com/r-lib/httr) package to
