@@ -184,9 +184,9 @@ sign_planetary_computer <- function(..., headers = NULL, token_url = NULL) {
   # append the same token for an asset
   parse_token <- function(res) {
     # transform to a datetime object
-    res[["msft:expiry"]] <- strptime(
+    res[["msft:expiry"]] <- as.POSIXct(strptime(
       res[["msft:expiry"]], "%Y-%m-%dT%H:%M:%SZ"
-    )
+    ))
 
     token_str <- paste0("?", res[["token"]])
     res[["token_value"]] <- httr::parse_url(token_str)[["query"]]
@@ -203,7 +203,7 @@ sign_planetary_computer <- function(..., headers = NULL, token_url = NULL) {
 
     difftime_token <- difftime(
       time1 = token[[acc]][[cnt]][["msft:expiry"]],
-      time2 = as.POSIXlt(Sys.time(), tz = "UTC"),
+      time2 = as.POSIXct(format(Sys.time(), tz = "UTC", usetz = TRUE)),
       units = "secs"
     )
 
