@@ -4,7 +4,13 @@ date: "2022-12-21"
 output: 
   html_document:
     df_print: tibble
+    theme:
+      base_font:
+        google: IBM Plex Serif
+      code_font:
+        google: IBM Plex Mono
 classoption: x11names
+fontsize: 10,5pt
 indent: yes
 link-citations: yes
 vignette: >

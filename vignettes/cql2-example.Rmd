@@ -20,6 +20,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = TRUE
+)
+
 ## Introduction{-}
 
 CQL2 is an OGC standard that enables complex filter expressions on OAFeat3 or STAC web services. CQL2 standard states that expressions can be represented in JSON or TEXT formats. Our implementation intends to convert native R expressions into CQL2 valid expressions without needing cumbersome nested lists or dictionaries. Also, we can make CQL2 filter requisition in JSON or TEXT formats with the same filter representation.
