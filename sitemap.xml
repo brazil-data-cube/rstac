@@ -10,7 +10,13 @@
     <loc>/articles/cql2-example.html</loc>
   </url>
   <url>
+    <loc>/articles/cql2-mpc-examples.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>/articles/rstac-intro.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -22,13 +28,13 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/assets_download.html</loc>
+    <loc>/reference/RSTACDocument.html</loc>
   </url>
   <url>
     <loc>/reference/assets_filter.html</loc>
   </url>
   <url>
-    <loc>/reference/assets_function.html</loc>
+    <loc>/reference/assets_functions.html</loc>
   </url>
   <url>
     <loc>/reference/collections.html</loc>
@@ -37,7 +43,7 @@
     <loc>/reference/conformance.html</loc>
   </url>
   <url>
-    <loc>/reference/cql2_functions.html</loc>
+    <loc>/reference/cql2_helpers.html</loc>
   </url>
   <url>
     <loc>/reference/doc_query.html</loc>
@@ -61,13 +67,16 @@
     <loc>/reference/items_functions.html</loc>
   </url>
   <url>
-    <loc>/reference/pipe.html</loc>
+    <loc>/reference/preview_plot.html</loc>
   </url>
   <url>
     <loc>/reference/print.html</loc>
   </url>
   <url>
     <loc>/reference/queryables.html</loc>
+  </url>
+  <url>
+    <loc>/reference/reexports.html</loc>
   </url>
   <url>
     <loc>/reference/request.html</loc>
@@ -88,6 +97,6 @@
     <loc>/reference/stac_search.html</loc>
   </url>
   <url>
-    <loc>/reference/utilities.html</loc>
+    <loc>/reference/stac_version.html</loc>
   </url>
 </urlset>
