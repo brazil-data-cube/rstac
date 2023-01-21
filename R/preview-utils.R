@@ -10,6 +10,7 @@
 #'
 #' @export
 preview_plot <- function(url) {
+  preview_check(url)
   img <- preview_read_file(url)
   plot(1:10, ty = "n", axes = F, xlab = "", ylab = "")
   grid::grid.raster(img)
@@ -24,30 +25,39 @@ preview_switch <- function(url, ...) {
   switch(type, ..., .error("File type '%s' not supported", type))
 }
 
+preview_check <- function(url) {
+  preview_switch(
+    url,
+    png = if (!requireNamespace("png", quietly = TRUE))
+      .error(paste(
+        "This function requires `png` package. Please, use",
+        "install.packages('png')."
+      ))
+    ,
+    jpeg = if (!requireNamespace("jpeg", quietly = TRUE))
+      .error(paste(
+        "This function requires `jpeg` package. Please, use",
+        "install.packages('jpeg')."
+      ))
+  )
+}
+
 # nocov start
 
 preview_read_file <- function(url) {
   temp_file <- tempfile(fileext = paste0(".", preview_file_type(url)))
+
   on.exit(unlink(temp_file))
-  utils::download.file(url, destfile = temp_file, quiet = TRUE, mode = "wb")
+  make_get_request(
+    url = url,
+    httr::write_disk(path = temp_file, overwrite = TRUE),
+    error_msg = "Error in downloading"
+  )
   preview_switch(
     url,
-    png = {
-      if (!requireNamespace("png", quietly = TRUE))
-        .error(paste(
-          "This function requires `png` package. Please, use",
-          "install.packages('png')."
-        ))
-      png::readPNG(temp_file)
-    },
-    jpeg = {
-      if (!requireNamespace("jpeg", quietly = TRUE))
-        .error(paste(
-          "This function requires `jpeg` package. Please, use",
-          "install.packages('jpeg')."
-        ))
-      jpeg::readJPEG(temp_file)
-    })
+    png = png::readPNG(temp_file),
+    jpeg = jpeg::readJPEG(temp_file)
+  )
 }
 
 # nocov end

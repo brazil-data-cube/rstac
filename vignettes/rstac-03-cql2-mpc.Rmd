@@ -4,11 +4,6 @@ date: "2022-12-21"
 output: 
   html_document:
     df_print: tibble
-    theme:
-      base_font:
-        google: IBM Plex Serif
-      code_font:
-        google: IBM Plex Mono
 classoption: x11names
 fontsize: 10,5pt
 indent: yes
@@ -189,7 +184,7 @@ We can load up that single COG file using packages like [stars](https://github.c
 library(stars)
 selected_item |> 
   assets_url(asset_names = "blue", append_gdalvsi = TRUE) |>
-  stars::read_stars(RasterIO = list(nBufXSize = 1024, nBufYSize = 1024)) |>
+  stars::read_stars(RasterIO = list(nBufXSize = 512, nBufYSize = 512)) |>
   plot(main = "blue")
 ```
 

@@ -1,5 +1,10 @@
 # rstac (development version)
 
+# rstac 0.9.2-1 (Released 2023-01-21)
+
+* Fix intersects bug in `stac_search()` function
+* Vignettes are now fault tolerant
+
 # rstac 0.9.2 (Released 2023-01-10)
 
 * Add support to CQL2 filter extension by function `ext_filter()`

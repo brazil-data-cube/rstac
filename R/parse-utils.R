@@ -150,6 +150,7 @@
   intersects <- get_spatial(intersects)
   if (!is.list(intersects))
     .error("Invalid GeoJSON object in `intersects` param.")
+  return(intersects)
 }
 
 #' @title Utility functions
