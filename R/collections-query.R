@@ -8,7 +8,7 @@
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{
-#'   \item `/collections`: Returns a list of STAC Collection published in
+#'   \item `/collections`: Returns a list of STAC Collections published in
 #'     the STAC service
 #'   \item \code{/collections/\{collectionId\}}: Returns a single STAC
 #'     Collection object
@@ -20,8 +20,7 @@
 #' @param collection_id a `character` collection id to be retrieved.
 #'
 #' @seealso
-#' [get_request()], [post_request()],
-#'  [items()]
+#' [get_request()], [post_request()], [items()]
 #'
 #' @return
 #' A `RSTACQuery` object with the subclass `collections` for
@@ -30,16 +29,16 @@
 #'  parameters to be provided to STAC API web service.
 #'
 #' @examples
-#' \donttest{
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   collections() %>%
-#'   get_request()
+#' \dontrun{
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    collections() %>%
+#'    get_request()
 #'
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   collections(collection_id = "CB4_64_16D_STK-1") %>%
-#'   get_request()
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    collections(collection_id = "CB4_64_16D_STK-1") %>%
+#'    get_request()
 #' }
-
+#'
 #' @export
 collections <- function(q, collection_id = NULL) {
 

@@ -1,4 +1,4 @@
-#' @title Extension functions
+#' @title Query extension
 #'
 #' @description
 #' The `ext_query()` is the *exported function* of the STAC API
@@ -9,9 +9,9 @@
 #' The function accepts multiple filter criteria. Each filter entry is an
 #' expression formed by `<field> <operator> <value>`, where
 #' `<field>` refers to a valid item property. Supported `<fields>`
-#' depends on STAC API service implementation. The users must rely on service
-#' providers' documentation to know which properties can be used by this
-#' extension.
+#' depends on STAC API service implementation. The users must rely on the
+#' service providers' documentation to know which properties can be used
+#' by this extension.
 #'
 #' The `ext_query()` function allows the following `<operators>`
 #' \itemize{
@@ -38,7 +38,7 @@
 #' \item The `before_request()` for subclass `ext_query`
 #' \item The `after_response()` for subclass `ext_query`
 #' }
-#' See source file `ext_query.R` for an example on how implement new
+#' See source file `ext_query.R` for an example of how to implement new
 #' extensions.
 #'
 #' @param q   a `RSTACQuery` object expressing a STAC query
@@ -46,7 +46,7 @@
 #'
 #' @param ... entries with format `<field> <operator> <value>`.
 #'
-#' @seealso [stac_search()], [post_request()],
+#' @seealso [ext_filter()], [stac_search()], [post_request()],
 #' [endpoint()], [before_request()],
 #' [after_response()], [content_response()]
 #'
@@ -55,25 +55,25 @@
 #'  all request parameters to be passed to `post_request()` function.
 #'
 #' @examples
-#' \donttest{
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
-#'   ext_query("bdc:tile" %in% "022024") %>%
-#'   post_request()
+#' \dontrun{
+#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'    stac_search(collections = "CB4_64_16D_STK-1") %>%
+#'    ext_query("bdc:tile" %in% "022024") %>%
+#'    post_request()
 #' }
 #'
 #' @export
 ext_query <- function(q, ...) {
 
   # check s parameter
-  check_subclass(q, c("search", "ext_query"))
+  check_subclass(q, "search")
 
   # get the env parent
   env_parent <- parent.frame()
 
   params <- list()
-  if (!is.null(substitute(list(...))[-1])) {
-    dots <- substitute(list(...))[-1]
+  if (!is.null(substitute(list(...), env = environment())[-1])) {
+    dots <- substitute(list(...), env = environment())[-1]
     tryCatch({
       ops <- lapply(dots, function(x) as.character(x[[1]]))
       keys <- lapply(dots, function(x) as.character(x[[2]]))
@@ -118,7 +118,7 @@ ext_query <- function(q, ...) {
   RSTACQuery(version = q$version,
              base_url = q$base_url,
              params = utils::modifyList(q$params, params),
-             subclass = "ext_query")
+             subclass = unique(c("ext_query", subclass(q))))
 }
 
 #' @export
@@ -141,18 +141,14 @@ before_request.ext_query <- function(q) {
 
 #' @export
 after_response.ext_query <- function(q, res) {
-
-  content <- content_response(res, "200", c("application/geo+json",
-                                            "application/json"))
-
-  RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
+  after_response.items(q, res)
 }
 
 #' @export
 parse_params.ext_query <- function(q, params) {
 
   # call super class
-  params <- parse_params.search(q, params)
+  params <- NextMethod("parse_params")
 
   params$query <- .parse_values_keys(params$query)
 

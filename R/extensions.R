@@ -1,6 +1,21 @@
 #' @title Extension development functions
 #'
 #' @description
+#' Currently, there are five STAC documents defined in STAC spec:
+#' \itemize{
+#' \item `STACCatalog`
+#' \item `STACCollection`
+#' \item `STACCollectionList`
+#' \item `STACItem`
+#' \item `STACItemCollection`
+#' }
+#'
+#' Each document class is associated with STAC API endpoints.
+#' As soon as new STAC documents are proposed in the specification, new
+#' classes can be created in the `rstac` package.
+#'
+#' Let `version` parameter `NULL` to detect version automatically.
+#'
 #' Basically, there are two types of extensions in STAC specification:
 #' \enumerate{
 #' \item STAC documents extensions: these extensions can be defined in
@@ -84,35 +99,35 @@
 #' @seealso [ext_query()]
 #'
 #' @name extensions
+#'
+#' @keywords internal
 NULL
 
 #' @title Extension development functions
+#'
 #' @rdname extensions
-#' @export
 endpoint <- function(q) {
 
   UseMethod("endpoint", q)
 }
 
 #' @title Extension development functions
+#'
 #' @rdname extensions
-#' @export
 before_request <- function(q) {
-
   UseMethod("before_request", q)
 }
 
 #' @title Extension development functions
+#'
 #' @rdname extensions
-#' @export
 after_response <- function(q, res) {
-
   UseMethod("after_response", q)
 }
 
 #' @title Extension development functions
+#'
 #' @rdname extensions
-#' @export
 parse_params <- function(q, params) {
   UseMethod("parse_params", q)
 }
@@ -130,12 +145,17 @@ parse_params <- function(q, params) {
 #' @param content_types a `character` vector with all acceptable
 #' responses' content type.
 #'
+#' @param key_message  a `character` vector with the JSON keys to show the
+#' requested API message.
+#'
 #' @return
 #' The `content_response()` function returns a `list` data structure
 #' representing the JSON file received in HTTP response
-#'
-#' @export
-content_response <- function(res, status_codes, content_types) {
+content_response <- function(res,
+                             status_codes,
+                             content_types,
+                             key_message = c("message", "description",
+                                             "detail")) {
 
   # convert any json extension
   content_type <- httr::http_type(res)
@@ -156,9 +176,9 @@ content_response <- function(res, status_codes, content_types) {
     message <- ""
     if (is.atomic(content))
       message <- content
-    else if (!is.null(content[["description"]]))
-      message <- content[["description"]]
-
+    else if (any(key_message %in% names(content))) {
+      message <- content[[which(names(content) %in% key_message)[[1]]]]
+    }
     .error("HTTP status '%s'. %s", status_code, message)
   }
 
@@ -180,8 +200,6 @@ content_response <- function(res, status_codes, content_types) {
 #' @param verbs   a `character` vector with allowed HTTP request methods
 #'
 #' @param msg     a `character` with a personalized error message
-#'
-#' @export
 check_query_verb <- function(q, verbs, msg = NULL) {
 
   if (!q$verb %in% verbs) {
@@ -201,21 +219,15 @@ check_query_verb <- function(q, verbs, msg = NULL) {
 #' criteria or any `RSTACDocument`.
 #'
 #' @param subclasses   a `character` vector with all allowed S3 subclasses
-#'
-#' @export
 check_subclass <- function(x, subclasses) {
-
-  UseMethod("check_subclass")
+  UseMethod("check_subclass", x)
 }
 
 #' @describeIn extensions
 #' The `subclass()` function returns a `character` representing the
 #' subclass name of either `RSTACQuery` or `RSTACDocument` S3 classes.
-#'
-#' @export
 subclass <- function(x) {
-
-  UseMethod("subclass")
+  UseMethod("subclass", x)
 }
 
 #' @describeIn extensions
@@ -227,10 +239,7 @@ subclass <- function(x) {
 #' @param q       a `RSTACQuery` object.
 #'
 #' @param names   a `character` vector with the names do omit.
-#'
-#' @export
 omit_query_params <- function(q, names) {
-
   .check_obj(names, "character")
   q$omitted <- unname(names)
   q
