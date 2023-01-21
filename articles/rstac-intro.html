@@ -48,7 +48,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/cql2-example.html">rstac CQL2 examples</a>
+    <a class="dropdown-item" href="../articles/cql2-example.html">CQL2 examples</a>
     <a class="dropdown-item" href="../articles/cql2-mpc-examples.html">Reading Planetary Computer Data using CQL2 filter extension</a>
     <a class="dropdown-item" href="../articles/rstac-intro.html">Introduction to rstac package</a>
   </div>
@@ -93,7 +93,7 @@ Felipe Carvalho, and Gilberto Camara</h4>
     
     
 <div class="section level2">
-<h2 id="about-rstac">About rstac<a class="anchor" aria-label="anchor" href="#about-rstac"></a>
+<h2 class="unnumbered" id="about-rstac">About rstac<a class="anchor" aria-label="anchor" href="#about-rstac"></a>
 </h2>
 <p>This document will introduce the concepts of the <code>rstac</code>
 package. <code>rstac</code> is an R client library for STAC that fully
@@ -171,14 +171,14 @@ package according to the STAC API endpoints. For each endpoint,
 <code>rstac</code> pipeline creates the endpoints with function
 concatenations and then requests them.</p>
 <div class="section level3">
-<h3 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+<h3 class="unnumbered" id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h3>
 <p>Let’s start by installing the <code>rstac</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rstac"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="creating-queries">Creating queries<a class="anchor" aria-label="anchor" href="#creating-queries"></a>
+<h3 class="unnumbered" id="creating-queries">Creating queries<a class="anchor" aria-label="anchor" href="#creating-queries"></a>
 </h3>
 <p>This tutorial use the STAC API made available by the <a href="http://www.brazildatacube.org/en/home-page-2/" class="external-link">Brazil Data Cube
 (BDC)</a> project. BDC is a research, development, and technological
@@ -201,13 +201,15 @@ creation.</p>
 <p>Endpoints are constructed through function concatenations provided by
 <code>rstac</code>. Some examples are shown below:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/collections.html">collections</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/collections.html">collections</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###RSTACQuery</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">url:</span> https://brazildatacube.dpi.inpe.br/stac/</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">params:</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> version, base_url, endpoint, params, verb, encode</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/collections.html">collections</a></span><span class="op">(</span><span class="st">"S2-16D-2"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/collections.html">collections</a></span><span class="op">(</span><span class="st">"S2-16D-2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###RSTACQuery</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">url:</span> https://brazildatacube.dpi.inpe.br/stac/</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">params:</span></span></span>
@@ -244,7 +246,7 @@ creation.</p>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> version, base_url, endpoint, params, verb, encode</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="making-requests">Making requests<a class="anchor" aria-label="anchor" href="#making-requests"></a>
+<h3 class="unnumbered" id="making-requests">Making requests<a class="anchor" aria-label="anchor" href="#making-requests"></a>
 </h3>
 <p><code>rstac</code> package supports <strong>GET</strong> and
 <strong>POST</strong> HTTP methods. With future updates to the STAC
@@ -255,7 +257,7 @@ headers (<code><a href="https://httr.r-lib.org/reference/add_headers.html" class
 (<code><a href="https://httr.r-lib.org/reference/set_cookies.html" class="external-link">httr::set_cookies()</a></code>). These options are available in the
 <code>httr</code> package documentation in the <a href="https://httr.r-lib.org/reference/config.html" class="external-link"><code>config</code></a>.</p>
 <div class="section level4">
-<h4 id="http-get-get_request">HTTP GET: <code>get_request()</code><a class="anchor" aria-label="anchor" href="#http-get-get_request"></a>
+<h4 id="http-get-get_request">HTTP GET: <code class="unnumbered">get_request()</code><a class="anchor" aria-label="anchor" href="#http-get-get_request"></a>
 </h4>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span></span>
@@ -281,13 +283,14 @@ headers (<code><a href="https://httr.r-lib.org/reference/add_headers.html" class
 <span><span class="co">#&gt; assets, bbox, collection, geometry, id, links, properties, stac_extensions, stac_version, type</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="http-post-post_request">HTTP POST: <code>post_request()</code><a class="anchor" aria-label="anchor" href="#http-post-post_request"></a>
+<h4 id="http-post-post_request">HTTP POST: <code class="unnumbered">post_request()</code><a class="anchor" aria-label="anchor" href="#http-post-post_request"></a>
 </h4>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CB4_64_16D_STK-1"</span>, <span class="st">"S2-16D-2"</span><span class="op">)</span>,</span>
-<span>              datetime <span class="op">=</span> <span class="st">"2021-01-01/2021-01-31"</span>,</span>
-<span>              limit <span class="op">=</span> <span class="fl">400</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span></span>
+<span>    collections <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CB4_64_16D_STK-1"</span>, <span class="st">"S2-16D-2"</span><span class="op">)</span>,</span>
+<span>    datetime <span class="op">=</span> <span class="st">"2021-01-01/2021-01-31"</span>,</span>
+<span>    limit <span class="op">=</span> <span class="fl">400</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/request.html">post_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 1440</span></span>
@@ -314,8 +317,8 @@ request:</p>
 <span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CB4_64_16D_STK-1"</span>, <span class="st">"S2-16D-2"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/request.html">post_request</a></span><span class="op">(</span>config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/add_headers.html" class="external-link">add_headers</a></span><span class="op">(</span><span class="st">"x-api-key"</span> <span class="op">=</span> <span class="st">"MY-KEY"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 67034</span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (10 item(s) / 67024 not fetched):</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 67233</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (10 item(s) / 67223 not fetched):</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_001014_20220930</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_002011_20220930</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_002012_20220930</span></span>
@@ -333,24 +336,25 @@ request:</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="visualization-of-the-documents">Visualization of the documents<a class="anchor" aria-label="anchor" href="#visualization-of-the-documents"></a>
+<h3 class="unnumbered" id="visualization-of-the-documents">Visualization of the documents<a class="anchor" aria-label="anchor" href="#visualization-of-the-documents"></a>
 </h3>
 <p>Each <code>rstac</code> object is mapped according to the endpoints
 of the STAC spec. In this way, each object has a different view. The
 format for viewing objects is in <strong>Markdown</strong>.</p>
 <div class="section level5">
-<h5 id="staccatalog-object">
+<h5 class="unnumbered" id="staccatalog-object">
 <code>STACCatalog</code> object<a class="anchor" aria-label="anchor" href="#staccatalog-object"></a>
 </h5>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/request.html">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/request.html">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###STACCatalog</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">id:</span> bdc</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">description:</span> Brazil Data Cube Catalog</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> description, id, stac_version, links</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="staccollection-object">
+<h5 class="unnumbered" id="staccollection-object">
 <code>STACCollection</code> object<a class="anchor" aria-label="anchor" href="#staccollection-object"></a>
 </h5>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -366,7 +370,7 @@ format for viewing objects is in <strong>Markdown</strong>.</p>
 <span><span class="co">#&gt; id, stac_version, stac_extensions, title, version, deprecated, description, license, properties, extent, bdc:bands_quicklook, bdc:metadata, bdc:grs, bdc:tiles, bdc:composite_function, bdc:type, cube:dimensions, bdc:crs, bdc:temporal_composition, links</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="stacitem-object">
+<h5 class="unnumbered" id="stacitem-object">
 <code>STACItem</code> object<a class="anchor" aria-label="anchor" href="#stacitem-object"></a>
 </h5>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -386,7 +390,7 @@ format for viewing objects is in <strong>Markdown</strong>.</p>
 <span><span class="co">#&gt; assets, bbox, collection, geometry, id, links, properties, stac_extensions, stac_version, type</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="stacitemcollection-object">
+<h5 class="unnumbered" id="stacitemcollection-object">
 <code>STACItemCollection</code> object<a class="anchor" aria-label="anchor" href="#stacitemcollection-object"></a>
 </h5>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
@@ -394,8 +398,8 @@ format for viewing objects is in <strong>Markdown</strong>.</p>
 <span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CB4_64_16D_STK"</span>, <span class="st">"S2-16D-2"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/request.html">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 59529</span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (10 item(s) / 59519 not fetched):</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 59728</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (10 item(s) / 59718 not fetched):</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_001014_20220930</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_002011_20220930</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_002012_20220930</span></span>
@@ -419,7 +423,7 @@ Otherwise, asset-oriented functions have the prefix
 </div>
 </div>
 <div class="section level3">
-<h3 id="items-functions">Items functions<a class="anchor" aria-label="anchor" href="#items-functions"></a>
+<h3 class="unnumbered" id="items-functions">Items functions<a class="anchor" aria-label="anchor" href="#items-functions"></a>
 </h3>
 <p>The <code>STACItemCollection</code> object have some facilitating
 functions to manipulate/extract information, for example:</p>
@@ -428,29 +432,30 @@ functions to manipulate/extract information, for example:</p>
 <strong><code><a href="../reference/items_functions.html">items_fields()</a></code>:</strong> Lists fields names
 inside an item.</li>
 <li>
-<strong><code>item_filter()</code>:</strong> Performs a filter by
+<strong><code><a href="../reference/items_functions.html">items_filter()</a></code>:</strong> Performs a filter by
 items according to expressions operating on the properties of a
 <code>STACItemCollection</code> object.</li>
 <li>
-<strong><code>item_fetch()</code>:</strong> Performs the pagination
+<strong><code><a href="../reference/items_functions.html">items_fetch()</a></code>:</strong> Performs the pagination
 of items.</li>
 <li>
-<strong><code>item_length()</code>:</strong> Returns the number of
+<strong><code><a href="../reference/items_functions.html">items_length()</a></code>:</strong> Returns the number of
 items in an object.</li>
 <li>
-<strong><code>item_matched()</code>:</strong> Returns the number of
+<strong><code><a href="../reference/items_functions.html">items_matched()</a></code>:</strong> Returns the number of
 items matching the search criteria.</li>
 <li>
-<strong><code>item_assets()</code>:</strong> Returns the assets name
-from <code>STACItemCollection</code> and <code>STACItem</code>
+<strong><code><a href="../reference/items_functions.html">items_assets()</a></code>:</strong> Returns the assets
+name from <code>STACItemCollection</code> and <code>STACItem</code>
 objects.</li>
 </ul>
 <p>It is interesting to verify the fields of items before filtering:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
-<span>              datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
-<span>              limit <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span></span>
+<span>    collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
+<span>    datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
+<span>    limit <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/request.html">post_request</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/items_functions.html">items_fields</a></span><span class="op">(</span>field <span class="op">=</span> <span class="st">"properties"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "bdc:tiles"      "created"        "datetime"       "end_datetime"  </span></span>
@@ -460,9 +465,10 @@ objects.</li>
 10%:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
-<span>              datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
-<span>              limit <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span></span>
+<span>    collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
+<span>    datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
+<span>    limit <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/request.html">post_request</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/items_functions.html">items_filter</a></span><span class="op">(</span><span class="va">properties</span><span class="op">$</span><span class="va">`eo:cloud_cover`</span> <span class="op">&lt;</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
@@ -487,51 +493,54 @@ objects.</li>
 limit defined as parameter):</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
-<span>              datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
-<span>              limit <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span></span>
+<span>    collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
+<span>    datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
+<span>    limit <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/request.html">post_request</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/items_functions.html">items_length</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 100</span></span></code></pre></div>
 <p>Number of matched items in the query:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
-<span>              datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
-<span>              limit <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span></span>
+<span>    collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
+<span>    datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
+<span>    limit <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/request.html">post_request</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/items_functions.html">items_matched</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1127</span></span></code></pre></div>
 <p>Paginating all items that were matched in the query:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>items_fetched <span class="ot">&lt;-</span> s_obj <span class="sc">|&gt;</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stac_search</span>(<span class="at">collections =</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">datetime =</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">limit =</span> <span class="dv">500</span>) <span class="sc">|&gt;</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">post_request</span>() <span class="sc">|&gt;</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">items_fetch</span>()</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="er">|======================================================================|</span> <span class="dv">100</span>%</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>items_fetched</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1m###STACItemCollection [22m</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -  [1mmatched feature(s): [22m 1127</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -  [1mfeatures [22m (1127 item(s) / 0 not fetched):</span></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_020024_2019-12-19_2019-12-31</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_020025_2019-12-19_2019-12-31</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_020026_2019-12-19_2019-12-31</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_020027_2019-12-19_2019-12-31</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_021023_2019-12-19_2019-12-31</span></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_021024_2019-12-19_2019-12-31</span></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_021025_2019-12-19_2019-12-31</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_021026_2019-12-19_2019-12-31</span></span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_021027_2019-12-19_2019-12-31</span></span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_022021_2019-12-19_2019-12-31</span></span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - ... with 1117 more feature(s).</span></span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -  [1massets: [22m </span></span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; BAND13, BAND14, BAND15, BAND16, CLEAROB, CMASK, EVI, NDVI, PROVENANCE, thumbnail, TOTALOB</span></span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -  [1mitem's fields: [22m </span></span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; assets, bbox, collection, geometry, id, links, properties, stac_extensions, stac_version, type</span></span></code></pre></div>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stac_search</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">collections =</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">datetime =</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">limit =</span> <span class="dv">500</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">post_request</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">items_fetch</span>()</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="er">|======================================================================|</span> <span class="dv">100</span>%</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>items_fetched</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1m###STACItemCollection [22m</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -  [1mmatched feature(s): [22m 1127</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -  [1mfeatures [22m (1127 item(s) / 0 not fetched):</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_020024_2019-12-19_2019-12-31</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_020025_2019-12-19_2019-12-31</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_020026_2019-12-19_2019-12-31</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_020027_2019-12-19_2019-12-31</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_021023_2019-12-19_2019-12-31</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_021024_2019-12-19_2019-12-31</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_021025_2019-12-19_2019-12-31</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_021026_2019-12-19_2019-12-31</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_021027_2019-12-19_2019-12-31</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - CB4_64_16D_STK_v001_022021_2019-12-19_2019-12-31</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   - ... with 1117 more feature(s).</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -  [1massets: [22m </span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; BAND13, BAND14, BAND15, BAND16, CLEAROB, CMASK, EVI, NDVI, PROVENANCE, thumbnail, TOTALOB</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -  [1mitem's fields: [22m </span></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; assets, bbox, collection, geometry, id, links, properties, stac_extensions, stac_version, type</span></span></code></pre></div>
 <p>Note that the 1127 has been recovered:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/items_functions.html">items_length</a></span><span class="op">(</span><span class="va">items_fetched</span><span class="op">)</span></span>
@@ -544,7 +553,7 @@ limit defined as parameter):</p>
 <span><span class="co">#&gt; [11] "TOTALOB"</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="assets-functions">Assets functions<a class="anchor" aria-label="anchor" href="#assets-functions"></a>
+<h3 class="unnumbered" id="assets-functions">Assets functions<a class="anchor" aria-label="anchor" href="#assets-functions"></a>
 </h3>
 <ul>
 <li>
@@ -570,9 +579,10 @@ using a named list or a function.</li>
 <p>Listing the assets names of all items:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
-<span>              datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
-<span>              limit <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span></span>
+<span>    collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
+<span>    datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
+<span>    limit <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/request.html">post_request</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/items_functions.html">items_assets</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "BAND13"     "BAND14"     "BAND15"     "BAND16"     "CLEAROB"   </span></span>
@@ -582,9 +592,10 @@ using a named list or a function.</li>
 <code>"NDVI"</code></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_assets</span> <span class="op">&lt;-</span> <span class="va">s_obj</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
-<span>              datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
-<span>              limit <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span></span>
+<span>    collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
+<span>    datetime <span class="op">=</span> <span class="st">"2019-01-01/2019-12-31"</span>,</span>
+<span>    limit <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/request.html">post_request</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assets_functions.html">assets_select</a></span><span class="op">(</span>asset_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BAND14"</span>, <span class="st">"NDVI"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -592,7 +603,8 @@ using a named list or a function.</li>
 <span><span class="co">#&gt; [1] "BAND14" "NDVI"</span></span></code></pre></div>
 <p>Listing asset urls from the selected bands:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_assets</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/assets_functions.html">assets_url</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">selected_assets</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/assets_functions.html">assets_url</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "https://brazildatacube.dpi.inpe.br/cubes/composed/CB4_64_16D_STK/v001/020024/2019-12-19_2019-12-31/CB4_64_16D_STK_v001_020024_2019-12-19_2019-12-31_BAND14.tif"</span></span>
 <span><span class="co">#&gt;  [2] "https://brazildatacube.dpi.inpe.br/cubes/composed/CB4_64_16D_STK/v001/020025/2019-12-19_2019-12-31/CB4_64_16D_STK_v001_020025_2019-12-19_2019-12-31_BAND14.tif"</span></span>
 <span><span class="co">#&gt;  [3] "https://brazildatacube.dpi.inpe.br/cubes/composed/CB4_64_16D_STK/v001/020026/2019-12-19_2019-12-31/CB4_64_16D_STK_v001_020026_2019-12-19_2019-12-31_BAND14.tif"</span></span>
@@ -616,7 +628,8 @@ using a named list or a function.</li>
 <p>Renaming assets using the pattern
 <code>&lt;old-name&gt; = &lt;new-name&gt;</code></p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">renamed_assets</span> <span class="op">&lt;-</span> <span class="va">selected_assets</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/assets_functions.html">assets_rename</a></span><span class="op">(</span>BAND14 <span class="op">=</span> <span class="st">"B14"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">renamed_assets</span> <span class="op">&lt;-</span> <span class="va">selected_assets</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/assets_functions.html">assets_rename</a></span><span class="op">(</span>BAND14 <span class="op">=</span> <span class="st">"B14"</span><span class="op">)</span></span>
 <span><span class="va">renamed_assets</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 1127</span></span>
@@ -641,16 +654,17 @@ names using the <code><a href="../reference/items_functions.html">items_assets()
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/items_functions.html">items_assets</a></span><span class="op">(</span><span class="va">renamed_assets</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "B14"  "NDVI"</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h3>
-<ul>
-<li>[1] <a href="https://stacspec.org/" class="external-link uri">https://stacspec.org/</a>
-</li>
-<li>[2] <a href="https://github.com/brazil-data-cube/rstac" class="external-link uri">https://github.com/brazil-data-cube/rstac</a>
-</li>
-</ul>
 </div>
+<div class="section level2">
+<h2 class="unnumbered" id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</h2>
+<p>The <code>rstac</code> package can be useful for querying and working
+with satellite imagery data from STAC APIs. It offers a simple interface
+for searching STAC items, exploring the results, and working with
+assets. Additional functionalities include reading and plotting preview
+images. This tutorial has provided a short introduction on how to use
+the package. For more about CQL2 in <code>rstac</code>, type the command
+<code><a href="../reference/ext_filter.html">?ext_filter</a></code>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

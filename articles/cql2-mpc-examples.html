@@ -48,7 +48,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/cql2-example.html">rstac CQL2 examples</a>
+    <a class="dropdown-item" href="../articles/cql2-example.html">CQL2 examples</a>
     <a class="dropdown-item" href="../articles/cql2-mpc-examples.html">Reading Planetary Computer Data using CQL2 filter extension</a>
     <a class="dropdown-item" href="../articles/rstac-intro.html">Introduction to rstac package</a>
   </div>
@@ -94,30 +94,30 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://brazil-data-cube.github.io/rstac" class="external-link">rstac</a></span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h3>
-<p>This tutorial will use the open-source package rstac to search data
-in Planetary Computer’s SpatioTemporal Asset Catalog (STAC) service.
-STAC services can be accessed through STAC API endpoints, which allow
-users to search datasets using various parameters such as space and
-time. In addition to demonstrating the use of rstac, the tutorial will
-explain the Common Query Language (CQL2) filter extension to narrow the
-search results and find datasets that meet specific criteria in the STAC
-API.</p>
+<div class="section level2">
+<h2 class="unnumbered" id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>This tutorial will use the open-source package <code>rstac</code> to
+search data in Planetary Computer’s SpatioTemporal Asset Catalog (STAC)
+service. STAC services can be accessed through STAC API endpoints, which
+allow users to search datasets using various parameters such as space
+and time. In addition to demonstrating the use of <code>rstac</code>,
+the tutorial will explain the Common Query Language (CQL2) filter
+extension to narrow the search results and find datasets that meet
+specific criteria in the STAC API.</p>
 <p>This tutorial is based on <a href="https://planetarycomputer.microsoft.com/docs/quickstarts/reading-stac/" class="external-link">reading
 STAC API data in Python</a>.</p>
 </div>
-<div class="section level3">
-<h3 id="reading-data-from-stac-api">Reading data from STAC API<a class="anchor" aria-label="anchor" href="#reading-data-from-stac-api"></a>
-</h3>
+<div class="section level2">
+<h2 class="unnumbered" id="reading-data-from-stac-api">Reading data from STAC API<a class="anchor" aria-label="anchor" href="#reading-data-from-stac-api"></a>
+</h2>
 <p>To access Planetary Computer STAC API, we’ll create a
 <code>rstac</code> query.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">planetary_computer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stac.html">stac</a></span><span class="op">(</span><span class="st">"https://planetarycomputer.microsoft.com/api/stac/v1"</span><span class="op">)</span></span></code></pre></div>
-<div class="section level4">
-<h4 id="listing-supported-properties-in-cql2">Listing supported properties in CQL2<a class="anchor" aria-label="anchor" href="#listing-supported-properties-in-cql2"></a>
-</h4>
+<div class="section level3">
+<h3 class="unnumbered" id="listing-supported-properties-in-cql2">Listing supported properties in CQL2<a class="anchor" aria-label="anchor" href="#listing-supported-properties-in-cql2"></a>
+</h3>
 <p>CQL2 expressions can be constructed using properties that refer to
 attributes of items. A list of all properties supported by a collection
 can be obtained by accessing the
@@ -150,9 +150,9 @@ queriables and make a <code>GET</code> request to the service.</p>
 <span><span class="co">#&gt;   - instrument</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> $schema, $id, type, title, properties</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="searching-with-cql2">Searching with CQL2<a class="anchor" aria-label="anchor" href="#searching-with-cql2"></a>
-</h4>
+<div class="section level3">
+<h3 class="unnumbered" id="searching-with-cql2">Searching with CQL2<a class="anchor" aria-label="anchor" href="#searching-with-cql2"></a>
+</h3>
 <p>Now we can use <code>rstac</code> to make a search query with CQL2
 filter extension to obtain the items.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -196,9 +196,9 @@ containing 8 items that matched our search criteria.</p>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">item's fields:</span> </span></span>
 <span><span class="co">#&gt; assets, bbox, collection, geometry, id, links, properties, stac_extensions, stac_version, type</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="exploring-data">Exploring data<a class="anchor" aria-label="anchor" href="#exploring-data"></a>
-</h4>
+<div class="section level3">
+<h3 class="unnumbered" id="exploring-data">Exploring data<a class="anchor" aria-label="anchor" href="#exploring-data"></a>
+</h3>
 <p>A <code>STACItemCollection</code> is a regular GeoJSON object. It is
 a collection of <code>STACItem</code> entries that stores metadata on
 assets. Users can convert a <code>STACItemCollection</code> to a
@@ -219,8 +219,8 @@ we depict the items footprint.</p>
 <span></span>
 <span><span class="fu">plot_map</span><span class="op">(</span><span class="va">sf</span><span class="op">)</span></span>
 <span><span class="co">#&gt; tmap mode set to interactive viewing</span></span></code></pre></div>
-<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-008ee747ed5a9037bf77" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-008ee747ed5a9037bf77">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"createMapPane","args":["tmap401",401]},{"method":"addProviderTiles","args":["Stamen.Watercolor",null,"Stamen.Watercolor",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"pane":"tilePane"}]},{"method":"addPolygons","args":[[[[{"lng":[-122.7254903,-120.2924778,-120.9898948,-123.3472198,-122.7254903],"lat":[48.5088438,48.0783502,46.3770494,46.8018651,48.5088438]}]],[[{"lng":[-124.5204639,-121.9393228,-122.5958254,-125.0918508,-124.5204639],"lat":[48.4424485,48.0694636,46.4966008,46.8572467,48.4424485]}]],[[{"lng":[-122.9680194,-120.3902432,-121.0455955,-123.5392639,-122.9680194],"lat":[48.4454719,48.0727855,46.499514,46.8597052,48.4454719]}]],[[{"lng":[-124.2754702,-121.8416742,-122.5397592,-124.8986192,-124.2754702],"lat":[48.5083121,48.0779677,46.3765134,46.8017604,48.5083121]}]],[[{"lng":[-122.7299597,-120.2969035,-120.9949826,-123.3519375,-122.7299597],"lat":[48.5085845,48.0784545,46.3765988,46.8018506,48.5085845]}]],[[{"lng":[-124.519352,-121.9396534,-122.5965833,-125.0919766,-124.519352],"lat":[48.445972,48.0729756,46.4998433,46.8604842,48.445972]}]],[[{"lng":[-122.9870854,-120.4094503,-121.0571193,-123.5545681,-122.9870854],"lat":[48.4479047,48.0672817,46.4943105,46.8553125,48.4479047]}]],[[{"lng":[-124.2738459,-121.8396547,-122.5378065,-124.896271,-124.2738459],"lat":[48.5083301,48.0782173,46.3767755,46.8020693,48.5083301]}]]],["X1","X2","X3","X4","X5","X6","X7","X8"],"x",{"interactive":false,"className":"","pane":"tmap401","stroke":true,"color":"#666666","weight":1,"opacity":1,"fill":true,"fillOpacity":0,"dashArray":"none","smoothFactor":1,"noClip":false},null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[[],"x",{"collapsed":true,"autoZIndex":true,"position":"topleft"}]}],"limits":{"lat":[46.3765134,48.5088438],"lng":[-125.0919766,-120.2924778]},"fitBounds":[46.3765134,-125.0919766,48.5088438,-120.2924778,[]]},"evals":[],"jsHooks":[]}</script><p>Some collections use the <code>eo</code> extension, which allows us
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-ac174fb3881e01696085" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-ac174fb3881e01696085">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"createMapPane","args":["tmap401",401]},{"method":"addProviderTiles","args":["Stamen.Watercolor",null,"Stamen.Watercolor",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"pane":"tilePane"}]},{"method":"addPolygons","args":[[[[{"lng":[-122.7254903,-120.2924778,-120.9898948,-123.3472198,-122.7254903],"lat":[48.5088438,48.0783502,46.3770494,46.8018651,48.5088438]}]],[[{"lng":[-124.5204639,-121.9393228,-122.5958254,-125.0918508,-124.5204639],"lat":[48.4424485,48.0694636,46.4966008,46.8572467,48.4424485]}]],[[{"lng":[-122.9680194,-120.3902432,-121.0455955,-123.5392639,-122.9680194],"lat":[48.4454719,48.0727855,46.499514,46.8597052,48.4454719]}]],[[{"lng":[-124.2754702,-121.8416742,-122.5397592,-124.8986192,-124.2754702],"lat":[48.5083121,48.0779677,46.3765134,46.8017604,48.5083121]}]],[[{"lng":[-122.7299597,-120.2969035,-120.9949826,-123.3519375,-122.7299597],"lat":[48.5085845,48.0784545,46.3765988,46.8018506,48.5085845]}]],[[{"lng":[-124.519352,-121.9396534,-122.5965833,-125.0919766,-124.519352],"lat":[48.445972,48.0729756,46.4998433,46.8604842,48.445972]}]],[[{"lng":[-122.9870854,-120.4094503,-121.0571193,-123.5545681,-122.9870854],"lat":[48.4479047,48.0672817,46.4943105,46.8553125,48.4479047]}]],[[{"lng":[-124.2738459,-121.8396547,-122.5378065,-124.896271,-124.2738459],"lat":[48.5083301,48.0782173,46.3767755,46.8020693,48.5083301]}]]],["X1","X2","X3","X4","X5","X6","X7","X8"],"x",{"interactive":false,"className":"","pane":"tmap401","stroke":true,"color":"#666666","weight":1,"opacity":1,"fill":true,"fillOpacity":0,"dashArray":"none","smoothFactor":1,"noClip":false},null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[[],"x",{"collapsed":true,"autoZIndex":true,"position":"topleft"}]}],"limits":{"lat":[46.3765134,48.5088438],"lng":[-125.0919766,-120.2924778]},"fitBounds":[46.3765134,-125.0919766,48.5088438,-120.2924778,[]]},"evals":[],"jsHooks":[]}</script><p>Some collections use the <code>eo</code> extension, which allows us
 to sort items by attributes like cloud coverage. The next example
 selects the item with lowest cloud_cover attribute:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -278,9 +278,9 @@ the other assets. These assets are in private Azure Blob Storage
 containers and is necessary to sign them to have access to the data,
 otherwise, you’ll get a 404 (forbidden) status code.</p>
 </div>
-<div class="section level4">
-<h4 id="signing-items">Signing items<a class="anchor" aria-label="anchor" href="#signing-items"></a>
-</h4>
+<div class="section level3">
+<h3 class="unnumbered" id="signing-items">Signing items<a class="anchor" aria-label="anchor" href="#signing-items"></a>
+</h3>
 <p>To sign URL in <code>rstac</code>, we can use
 <code><a href="../reference/items_functions.html">items_sign()</a></code> function.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -290,7 +290,7 @@ otherwise, you’ll get a 404 (forbidden) status code.</p>
 <span><span class="va">selected_item</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/assets_functions.html">assets_url</a></span><span class="op">(</span>asset_names <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">255</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "https://landsateuwest.blob.core.windows.net/landsat-c2/level-2/standard/oli-tirs/2020/047/027/LC08_L2SP_047027_20201204_20210313_02_T1/LC08_L2SP_047027_20201204_20210313_02_T1_SR_B2.TIF?st=2023-01-19T12%3A50%3A59Z&amp;se=2023-01-20T13%3A35%3A59Z&amp;sp=rl&amp;sv=2021"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "https://landsateuwest.blob.core.windows.net/landsat-c2/level-2/standard/oli-tirs/2020/047/027/LC08_L2SP_047027_20201204_20210313_02_T1/LC08_L2SP_047027_20201204_20210313_02_T1_SR_B2.TIF?st=2023-01-20T02%3A36%3A57Z&amp;se=2023-01-21T03%3A21%3A57Z&amp;sp=rl&amp;sv=2021"</span></span></code></pre></div>
 <p>Everything after the <code>?</code> in that URL is a <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview" class="external-link">SAS
 token</a> grants access to the data. See <a href="https://planetarycomputer.microsoft.com/docs/concepts/sas/" class="external-link uri">https://planetarycomputer.microsoft.com/docs/concepts/sas/</a>
 for more on using tokens to access data.</p>
@@ -304,9 +304,9 @@ for more on using tokens to access data.</p>
 <p>The 200 status code means that we were able to access the data using
 the signed URL with the SAS token included.</p>
 </div>
-<div class="section level4">
-<h4 id="reading-files">Reading files<a class="anchor" aria-label="anchor" href="#reading-files"></a>
-</h4>
+<div class="section level3">
+<h3 class="unnumbered" id="reading-files">Reading files<a class="anchor" aria-label="anchor" href="#reading-files"></a>
+</h3>
 <p>We can load up that single COG file using packages like <a href="https://github.com/r-spatial/stars" class="external-link">stars</a> or <a href="https://github.com/rspatial/terra" class="external-link">terra</a>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span></span>
@@ -321,9 +321,9 @@ the signed URL with the SAS token included.</p>
 access the data using HTTP.</p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="searching-on-additional-properties">Searching on additional properties<a class="anchor" aria-label="anchor" href="#searching-on-additional-properties"></a>
-</h3>
+<div class="section level2">
+<h2 class="unnumbered" id="searching-on-additional-properties">Searching on additional properties<a class="anchor" aria-label="anchor" href="#searching-on-additional-properties"></a>
+</h2>
 <p>In the previous step of this tutorial, we learned how to search for
 items by specifying the space and time parameters. However, the
 Planetary Computer’s STAC API offers even more flexibility by allowing
@@ -358,9 +358,9 @@ common name in both collections.</p>
 rename asset names. The parameter can be either a named list or a
 function that is called against each asset metadata. A last parameter
 was included to force band renaming.</p>
-<div class="section level4">
-<h4 id="analyzing-stac-metadata">Analyzing STAC Metadata<a class="anchor" aria-label="anchor" href="#analyzing-stac-metadata"></a>
-</h4>
+<div class="section level3">
+<h3 class="unnumbered" id="analyzing-stac-metadata">Analyzing STAC Metadata<a class="anchor" aria-label="anchor" href="#analyzing-stac-metadata"></a>
+</h3>
 <p><code>STACItem</code> objects are features of
 <code>STACItemCollection</code> and store information about assets.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
@@ -402,9 +402,9 @@ embraced it with <code>{{</code>. We use <code><a href="../reference/items_funct
 retrieve all paginated items matched in the search.</p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="working-with-stac-catalogs-and-collections">Working with STAC Catalogs and Collections<a class="anchor" aria-label="anchor" href="#working-with-stac-catalogs-and-collections"></a>
-</h3>
+<div class="section level2">
+<h2 class="unnumbered" id="working-with-stac-catalogs-and-collections">Working with STAC Catalogs and Collections<a class="anchor" aria-label="anchor" href="#working-with-stac-catalogs-and-collections"></a>
+</h2>
 <p>STAC organizes items in catalogs (<code>STACCatalog</code>) and
 collections (<code>STACCollection</code>). These JSON documents contains
 metadata of the dataset they refer to. For instance, here we look at the
@@ -491,13 +491,13 @@ Azure Blob Storage.</p>
 <span>  <span class="fu"><a href="../reference/assets_functions.html">assets_url</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "abfs://daymet-zarr/daily/na.zarr"</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="learn-more">Learn more<a class="anchor" aria-label="anchor" href="#learn-more"></a>
-</h3>
+<div class="section level2">
+<h2 class="unnumbered" id="learn-more">Learn more<a class="anchor" aria-label="anchor" href="#learn-more"></a>
+</h2>
 <p>For more about the Planetary Computer’s STAC API, see <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview" class="external-link">Using
 tokens for data access</a> and the <a href="https://planetarycomputer.microsoft.com/docs/reference/stac/" class="external-link">STAC
-API reference</a>. For more about CQL2 in rstac, type the command
-<code><a href="../reference/ext_filter.html">?ext_filter</a></code>.</p>
+API reference</a>. For more about CQL2 in <code>rstac</code>, type the
+command <code><a href="../reference/ext_filter.html">?ext_filter</a></code>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
