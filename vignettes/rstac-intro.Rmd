@@ -336,6 +336,19 @@ It is also possible to check the asset names using the `items_assets()` function
 items_assets(renamed_assets)
 ```
 
+
+## Asset preview{-}
+
+`rstac` also provides a helper function to plot preview assets (e.g. thumbnail and quicklook).
+
+```{r plot-preview}
+items_fetched$features[[2]] |>
+  assets_url(asset_names = "thumbnail") |>
+  preview_plot()
+```
+
+Here, we use the second URL of `thumbnail` assets to plot the asset preview.
+
 # Conclusion{-}
 
 The `rstac` package can be useful for querying and working with satellite imagery data from STAC APIs. It offers a simple interface for searching STAC items, exploring the results, and working with assets. Additional functionalities include reading and plotting preview images. This tutorial has provided a short introduction on how to use the package. For more about CQL2 in `rstac`, type the command `?ext_filter`.
