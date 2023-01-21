@@ -46,7 +46,6 @@ preview_check <- function(url) {
 
 preview_read_file <- function(url) {
   temp_file <- tempfile(fileext = paste0(".", preview_file_type(url)))
-
   on.exit(unlink(temp_file))
   make_get_request(
     url = url,
