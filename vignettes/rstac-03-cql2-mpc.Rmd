@@ -141,7 +141,7 @@ is_accessible <- is_online && tryCatch({
 })
 ```
 
-```{r asset-preview, eval=is_accessible}
+```{r asset-preview, eval=is_accessible, fig.height=3, fig.width=5}
 selected_item$assets[["rendered_preview"]]$href
 
 selected_item |> 
