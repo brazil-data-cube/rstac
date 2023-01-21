@@ -7,16 +7,16 @@
     <loc>/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/articles/cql2-example.html</loc>
-  </url>
-  <url>
-    <loc>/articles/cql2-mpc-examples.html</loc>
-  </url>
-  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/rstac-intro.html</loc>
+    <loc>/articles/rstac-01-intro.html</loc>
+  </url>
+  <url>
+    <loc>/articles/rstac-02-cql2.html</loc>
+  </url>
+  <url>
+    <loc>/articles/rstac-03-cql2-mpc.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>

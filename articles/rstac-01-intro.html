@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rstac</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.2-1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,9 +50,9 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/cql2-example.html">CQL2 examples</a>
-    <a class="dropdown-item" href="../articles/cql2-mpc-examples.html">Reading Planetary Computer Data using CQL2 filter extension</a>
-    <a class="dropdown-item" href="../articles/rstac-intro.html">Introduction to rstac package</a>
+    <a class="dropdown-item" href="../articles/rstac-01-intro.html">Introduction to rstac package</a>
+    <a class="dropdown-item" href="../articles/rstac-02-cql2.html">CQL2 examples</a>
+    <a class="dropdown-item" href="../articles/rstac-03-cql2-mpc.html">Reading Planetary Computer Data using CQL2 filter extension</a>
   </div>
 </li>
 <li class="nav-item">
@@ -88,8 +88,8 @@ Felipe Carvalho, and Gilberto Camara</h4>
             
             <h4 data-toc-skip class="date">2023-01-09</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/brazil-data-cube/rstac/blob/HEAD/vignettes/rstac-intro.Rmd" class="external-link"><code>vignettes/rstac-intro.Rmd</code></a></small>
-      <div class="d-none name"><code>rstac-intro.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/brazil-data-cube/rstac/blob/HEAD/vignettes/rstac-01-intro.Rmd" class="external-link"><code>vignettes/rstac-01-intro.Rmd</code></a></small>
+      <div class="d-none name"><code>rstac-01-intro.Rmd</code></div>
     </div>
 
     
@@ -319,8 +319,8 @@ request:</p>
 <span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CB4_64_16D_STK-1"</span>, <span class="st">"S2-16D-2"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/request.html">post_request</a></span><span class="op">(</span>config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/add_headers.html" class="external-link">add_headers</a></span><span class="op">(</span><span class="st">"x-api-key"</span> <span class="op">=</span> <span class="st">"MY-KEY"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 67263</span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (10 item(s) / 67253 not fetched):</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 67455</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (10 item(s) / 67445 not fetched):</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_001014_20220930</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_002011_20220930</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_002012_20220930</span></span>
@@ -400,8 +400,8 @@ format for viewing objects is in <strong>Markdown</strong>.</p>
 <span>  <span class="fu"><a href="../reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CB4_64_16D_STK"</span>, <span class="st">"S2-16D-2"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/request.html">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 59758</span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (10 item(s) / 59748 not fetched):</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 59950</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (10 item(s) / 59940 not fetched):</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_001014_20220930</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_002011_20220930</span></span>
 <span><span class="co">#&gt;   - S2-16D_V2_002012_20220930</span></span>
@@ -660,12 +660,13 @@ names using the <code><a href="../reference/items_functions.html">items_assets()
 <p><code>rstac</code> also provides a helper function to plot preview
 assets (e.g. thumbnail and quicklook).</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">items_fetched</span><span class="op">$</span><span class="va">features</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">second_item</span> <span class="op">&lt;-</span> <span class="va">items_fetched</span><span class="op">$</span><span class="va">features</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">second_item</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/assets_functions.html">assets_url</a></span><span class="op">(</span>asset_names <span class="op">=</span> <span class="st">"thumbnail"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/preview_plot.html">preview_plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="rstac-intro_files/figure-html/plot-preview-1.png" width="700"></p>
-<p>Here, we use the second URL of <code>thumbnail</code> assets to plot
-the asset preview.</p>
+<p><img src="rstac-01-intro_files/figure-html/plot-preview-1.png" width="700"></p>
+<p>Here, we selected the second item of <code>items_fetched</code>’s
+features and plotted its <code>thumbnail</code> asset.</p>
 </div>
 </div>
 <div class="section level2">

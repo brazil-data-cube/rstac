@@ -2,8 +2,8 @@ pandoc: '2.18'
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  cql2-example: cql2-example.html
-  cql2-mpc-examples: cql2-mpc-examples.html
-  rstac-intro: rstac-intro.html
-last_built: 2023-01-21T04:26Z
+  rstac-01-intro: rstac-01-intro.html
+  rstac-02-cql2: rstac-02-cql2.html
+  rstac-03-cql2-mpc: rstac-03-cql2-mpc.html
+last_built: 2023-01-21T19:59Z
 
