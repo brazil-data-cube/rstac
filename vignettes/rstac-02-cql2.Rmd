@@ -5,11 +5,6 @@ date: "2022-12-16"
 output: 
   html_document:
     df_print: tibble
-    theme:
-      base_font:
-        google: IBM Plex Serif
-      code_font:
-        google: IBM Plex Mono
 classoption: x11names
 fontsize: 10,5pt
 indent: yes
