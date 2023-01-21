@@ -64,9 +64,7 @@ get_request <- function(q, ...) {
 
   res <- make_get_request(
     url = make_url(q$base_url, endpoint = q$endpoint),
-    query = .querystrings_encode(q$params),
-    ...,
-    error_msg = "Error while requesting"
+    query = .querystrings_encode(q$params), ...
   )
 
   # restore omitted params
