@@ -1,61 +1,67 @@
 #' @title R client library for STAC (rstac)
 #'
-#' @section The \code{rstac} functions:
+#' @section The `rstac` functions:
 #' The rstac package provides two categories of functions:
 #' API endpoints and data access and organization.
 #'
 #' @section STAC API endpoints functions:
 #' \itemize{
-#'   \item \code{\link{stac}}: implements STAC \code{/stac} endpoint for version
-#'    0.8.1 or below, and \code{/} for versions 0.9.0 or higher.
-#'   \item \code{\link{collections}}: implements \code{/collections}
-#'     and \code{/collections/\{collectionId\}} WFS3 endpoints.
-#'   \item \code{\link{items}}: implements
+#'   \item [stac()]: implements STAC `/stac` endpoint for version
+#'     0.8.1 or below, and `/` for versions 0.9.0 or higher.
+#'   \item [conformance()]: implements `/conformance` endpoint.
+#'   \item [collections()]: implements `/collections`
+#'     and \code{/collections/\{collectionId\}} endpoints.
+#'   \item [items()]: implements
 #'     \code{/collections/\{collectionId\}/items} and
-#'     \code{/collections/\{collectionId\}/items/\{featureId\}} WFS3 endpoints.
-#'   \item \code{\link{stac_search}}: implements STAC \code{/stac/search}
-#'   endpoint for version 0.8.1 or below, and \code{/search} endpoint for
+#'     \code{/collections/\{collectionId\}/items/\{featureId\}} endpoints.
+#'   \item [queryables()]: implements `/queryables` and
+#'     \code{/collections/\{collectionId\}/queryables} endpoints.
+#'   \item [stac_search()]: implements STAC `/stac/search`
+#'   endpoint for version 0.8.1 or below, and `/search` endpoint for
 #'   versions 0.9.0 or higher.
+#'   \item [ext_filter()]: implements `/filter` CQL2 endpoint.
 #' }
 #'
 #' @section Data access and organization functions:
 #' \itemize{
-#'   \item \code{\link{get_request}}: makes HTTP GET requests to STAC web
-#'   service.
-#'   \item \code{\link{post_request}}: makes HTTP POST requests to STAC web
-#'   service.
-#'   \item \code{\link{items_matched}}: returns how many items matched the
+#'   \item [get_request()]: makes HTTP GET requests to STAC web service.
+#'   \item [post_request()]: makes HTTP POST requests to STAC web service.
+#'   \item [items_matched()]: returns how many items matched the
 #'   search criteria.
-#'   \item \code{\link{items_length}}: informs how many items are
-#'   stored locally.
-#'   \item \code{\link{items_fetch}}: fetches all matched items from service.
-#'   \item \code{\link{assets_download}}: download all assets in batch.
+#'   \item [items_fetch()]: fetches all matched items from service.
+#'   \item [items_filter()]: selects items according to some criteria.
+#'   \item [items_as_sf()]: converts items to a `sf` object.
+#'   \item [items_fields()]: help explore fields inside items.
+#'   \item [items_compact()]: removes all items with empty assets.
+#'   \item [items_reap()]: extracts contents from items.
+#'   \item [items_length()]: informs how many items are fetched locally.
+#'   \item [items_sign()]: appends tokens to assets' URL and turn
+#'   them accessible.
+#'   \item [assets_select()]: select assets in items.
+#'   \item [assets_rename()]: rename assets in items.
+#'   \item [assets_url()]: extract all URL to assets in items.
+#'   \item [assets_download()]: download assets in batch.
 #' }
 #'
 #' @section Data types:
-#' The package implements the follow S3 classes: \code{STACItemCollection},
-#'  \code{STACItem}, \code{STACCatalog}, \code{STACCollectionList} and
-#'  \code{STACCollection}. These classes are regular lists representing the
+#' The package implements the following S3 classes: `STACItemCollection`,
+#'  `STACItem`, `STACCatalog`, `STACCollectionList` and
+#'  `STACCollection`. These classes are regular lists representing the
 #'  corresponding JSON STAC objects.
 #'
 #' @name rstac
 "_PACKAGE"
 NULL
 
-#' Pipe
-#'
-#' Magrittr compound assignment pipe-operator.
-#'
 #' @importFrom magrittr %>%
-#' @name %>%
-#' @rdname pipe
-#' @param lhs,rhs A visualization and a function to apply to it.
+#' @keywords internal
 #' @export
-NULL
+magrittr::`%>%`
 
 #' @importFrom httr GET POST write_disk add_headers content status_code
 #' http_type
 #' @importFrom crayon bold
 #' @importFrom utils modifyList URLdecode
 #' @importFrom jsonlite fromJSON
+#' @importFrom lifecycle deprecated
 NULL

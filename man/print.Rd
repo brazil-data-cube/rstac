@@ -8,6 +8,8 @@
 \alias{print.STACCollection}
 \alias{print.STACItemCollection}
 \alias{print.STACItem}
+\alias{print.Queryables}
+\alias{print.Conformance}
 \title{Printing functions}
 \usage{
 \method{print}{RSTACQuery}(x, ...)
@@ -21,6 +23,10 @@
 \method{print}{STACItemCollection}(x, n = 10, ..., tail = FALSE)
 
 \method{print}{STACItem}(x, ...)
+
+\method{print}{Queryables}(x, n = 10, ...)
+
+\method{print}{Conformance}(x, n = 5, ...)
 }
 \arguments{
 \item{x}{either a \code{RSTACQuery} object expressing a STAC query
@@ -41,21 +47,21 @@ STACItemCollection object must be show.}
 The print function covers all objects in the rstac package:
 
 \itemize{
-\item \code{\link{stac}}: returns a \code{STACCatalog} document from
-  \code{/stac} (v0.8.0) or \code{/} (v0.9.0 or v1.0.0) endpoint.
-\item \code{\link{stac_search}}: returns a \code{STACItemCollection}
-  document from \code{/stac/search} (v0.8.0) or \code{/search}
-  (v0.9.0 or v1.0.0) endpoint containing all Items that match
-  the provided search predicates.
-\item \code{\link{collections}}: implements the \code{/collections} and
-  \code{/collections/\{collectionId\}} endpoints. The former returns
-  a \code{STACCollectionList} document that lists all collections published
-  by the server, and the later returns a single \code{STACCollection}
-  document that describes a unique collection.
-\item \code{\link{items}}: retrieves a \code{STACItemCollection} document
-  from \code{/collections/\{collectionId\}/items} endpoint and a
-  \code{STACItem} document from
-  \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
+\item \code{\link[=stac]{stac()}}: returns a \code{STACCatalog} document from
+\verb{/stac} (v0.8.0) or \code{/} (v0.9.0 or v1.0.0) endpoint.
+\item \code{\link[=stac_search]{stac_search()}}: returns a \code{STACItemCollection}
+document from \verb{/stac/search} (v0.8.0) or \verb{/search}
+(v0.9.0 or v1.0.0) endpoint containing all Items that match
+the provided search predicates.
+\item \code{\link[=collections]{collections()}}: implements the \verb{/collections} and
+\code{/collections/\{collectionId\}} endpoints. The former returns
+a \code{STACCollectionList} document that lists all collections published
+by the server, and the later returns a single \code{STACCollection}
+document that describes a unique collection.
+\item \code{\link[=items]{items()}}: retrieves a \code{STACItemCollection} document
+from \code{/collections/\{collectionId\}/items} endpoint and a
+\code{STACItem} document from
+\code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
 }
 
 The rstac package objects visualization is based on markdown, a
@@ -66,32 +72,32 @@ Call \code{print()} function to print the rstac's objects.
 You can determine how many items will be printed using \code{n} parameter.
 }
 \examples{
-\donttest{
-# STACItemCollection object
-stac_item_collection <-
-  stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  stac_search(collections = "CB4_64_16D_STK-1",
-         bbox = c(-47.02148, -12.98314, -42.53906, -17.35063),
-         limit = 15) \%>\%
-  get_request()
+\dontrun{
+ # STACItemCollection object
+ stac_item_collection <-
+   stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+   stac_search(collections = "CB4_64_16D_STK-1",
+          bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
+          limit = 15) \%>\%
+   get_request()
 
-print(stac_item_collection, n = 10)
+ print(stac_item_collection, n = 10)
 
-# STACCollectionList object
-stac_collection <-
-    stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-    collections() \%>\%
-    get_request()
+ # STACCollectionList object
+ stac_collection <-
+     stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+     collections() \%>\%
+     get_request()
 
-print(stac_collection, n = 5)
+ print(stac_collection, n = 5)
 
-# RSTACQuery object
-obj_rstac <- stac("https://brazildatacube.dpi.inpe.br/stac/")
+ # RSTACQuery object
+ obj_rstac <- stac("https://brazildatacube.dpi.inpe.br/stac/")
 
-print(obj_rstac)
+ print(obj_rstac)
 }
 }
 \seealso{
-\code{\link{stac}} \code{\link{stac_search}} \code{\link{collections}}
-\code{\link{items}}
+\code{\link[=stac]{stac()}} \code{\link[=stac_search]{stac_search()}} \code{\link[=collections]{collections()}}
+\code{\link[=items]{items()}}
 }
