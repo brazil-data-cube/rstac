@@ -15,21 +15,28 @@ fontsize: 10,5pt
 indent: yes
 link-citations: yes
 vignette: >
-  %\VignetteIndexEntry{rstac-intro}
+  %\VignetteIndexEntry{Introduction to rstac package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r prepare, include = FALSE}
+is_online <- tryCatch({
+  res <- httr::GET("https://brazildatacube.dpi.inpe.br/stac/")
+  !httr::http_error(res)
+}, error = function(e) {
+  FALSE
+})
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  cache = TRUE
+  eval = is_online
 )
 library(tibble)
 ```
 
-```{r setup, echo=FALSE}
+```{r setup, eval=TRUE, echo=FALSE}
 library(rstac)
 ```
 
@@ -41,7 +48,7 @@ The table shows the functions implemented by the `rstac` package according to
 the STAC API endpoints. For each endpoint, `rstac` has a specialized implementation. 
 
 
-```{R endpoints, echo=FALSE}
+```{R endpoints, eval=TRUE, echo=FALSE}
 
 data.frame(
   "**STAC** endpoints"   = c(
@@ -76,41 +83,41 @@ This tutorial use the STAC API made available by the [Brazil Data Cube (BDC)](ht
 
 Let's start by creating a query for the BDC catalog.
 
-```{r queries-1}
+```{r queries-1, eval=TRUE}
 s_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
 s_obj
 ```
 The `RSTACQuery` object stores the metadata of the created query.
 This metadata can be accessed as a list element during query creation.
 
-```{r base-url}
+```{r base-url, eval=TRUE}
 s_obj$base_url
 ```
 Endpoints are constructed through function concatenations provided by `rstac`. Some examples are shown below:
 
-```{r queries-2}
+```{r queries-2, eval=TRUE}
 s_obj |> 
   collections()
 ```
 
-```{r queries-3}
+```{r queries-3, eval=TRUE}
 s_obj |> 
   collections("S2-16D-2")
 ```
 
-```{r queries-4}
+```{r queries-4, eval=TRUE}
 s_obj |> 
   collections("S2-16D-2") |>
   items()
 ```
 
-```{r queries-5}
+```{r queries-5, eval=TRUE}
 s_obj |> 
   collections("S2-16D-2") |> 
   items(feature_id = "S2-16D_V2_015011_20190117")
 ```
 
-```{r queries-6}
+```{r queries-6, eval=TRUE}
 s_obj |> 
   stac_search(collections = c("CB4_64_16D_STK", "S2-16D-2")) |>
   ext_query("bdc:tile" == "022024")
@@ -341,13 +348,25 @@ items_assets(renamed_assets)
 
 `rstac` also provides a helper function to plot preview assets (e.g. thumbnail and quicklook).
 
-```{r plot-preview}
-items_fetched$features[[2]] |>
+```{r asset-preview-check, eval=TRUE, include=FALSE, echo=FALSE}
+is_accessible <- is_online && tryCatch({
+  res <- httr::HEAD(
+    assets_url(items_fetched$features[[2]], asset_names = "thumbnail")
+  )
+  !httr::http_error(res)
+}, error = function(e) {
+  FALSE
+})
+```
+
+```{r plot-preview, eval=is_accessible}
+second_item <- items_fetched$features[[2]]
+second_item |>
   assets_url(asset_names = "thumbnail") |>
   preview_plot()
 ```
 
-Here, we use the second URL of `thumbnail` assets to plot the asset preview.
+Here, we selected the second item of `items_fetched`'s features and plotted its `thumbnail` asset.
 
 # Conclusion{-}
 

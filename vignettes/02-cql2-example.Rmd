@@ -15,7 +15,7 @@ fontsize: 10,5pt
 indent: yes
 link-citations: yes
 vignette: >
-  %\VignetteIndexEntry{cql2-example}
+  %\VignetteIndexEntry{CQL2 examples}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,8 +23,7 @@ vignette: >
 ```{r prepare, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  cache = TRUE
+  comment = "#>"
 )
 ```
 
