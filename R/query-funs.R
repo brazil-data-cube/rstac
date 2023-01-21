@@ -54,7 +54,7 @@ stac_version.RSTACQuery <- function(x, ...) {
   version <- NULL
   # check in '/' endpoint
   res <- make_get_request(
-    url = make_url(x$base_url, endpoint = "/"), ..., error_msg = NULL
+    url = make_url(x$base_url, endpoint = "/"), ...
   )
   if (!is.null(res)) {
     content <- content_response(res, "200", "application/json")

@@ -4,43 +4,57 @@ date: "2022-12-21"
 output: 
   html_document:
     df_print: tibble
+    theme:
+      base_font:
+        google: IBM Plex Serif
+      code_font:
+        google: IBM Plex Mono
 classoption: x11names
+fontsize: 10,5pt
 indent: yes
 link-citations: yes
 vignette: >
-  %\VignetteIndexEntry{cql2-mpc-examples}
+  %\VignetteIndexEntry{Reading Planetary Computer Data using CQL2 filter extension}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
+is_online <- tryCatch({
+  res <- httr::GET("https://planetarycomputer.microsoft.com/api/stac/v1")
+  !httr::http_error(res)
+}, error = function(e) {
+  FALSE
+})
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  cache = TRUE
+  eval = is_online
 )
 ```
 
 
-```{r load-rstac}
+```{r load-rstac, eval=TRUE}
 library(rstac)
 ```
 
-### Introduction
+# Introduction{-}
 
-This tutorial will use the open-source package rstac to search data in Planetary Computer's SpatioTemporal Asset Catalog (STAC) service. STAC services can be accessed through STAC API endpoints, which allow users to search datasets using various parameters such as space and time. In addition to demonstrating the use of rstac, the tutorial will explain the Common Query Language (CQL2) filter extension to narrow the search results and find datasets that meet specific criteria in the STAC API.
+This tutorial will use the open-source package `rstac` to search data in Planetary Computer's SpatioTemporal Asset Catalog (STAC) service. STAC services can be accessed through STAC API endpoints, which allow users to search datasets using various parameters such as space and time. In addition to demonstrating the use of `rstac`, the tutorial will explain the Common Query Language (CQL2) filter extension to narrow the search results and find datasets that meet specific criteria in the STAC API.
 
 This tutorial is based on [reading STAC API data in Python](https://planetarycomputer.microsoft.com/docs/quickstarts/reading-stac/).
 
-### Reading data from STAC API
+# Reading data from STAC API{-}
 
 To access Planetary Computer STAC API, we'll create a `rstac` query.
 
-```{r connection}
+```{r connection, eval=TRUE}
 planetary_computer <- stac("https://planetarycomputer.microsoft.com/api/stac/v1")
+planetary_computer
 ```
 
-#### Listing supported properties in CQL2
+## Listing supported properties in CQL2{-}
 
 CQL2 expressions can be constructed using properties that refer to attributes of items. A list of all properties supported by a collection can be obtained by accessing the `/collections/<collection_id>/queryables` endpoint. Filter expressions can use properties listed in this endpoint. 
 
@@ -53,7 +67,7 @@ planetary_computer |>
   get_request()
 ```
 
-#### Searching with CQL2
+## Searching with CQL2{-}
 
 Now we can use `rstac` to make a search query with CQL2 filter extension to obtain the items.
 
@@ -73,13 +87,13 @@ stac_items <- planetary_computer |>
 
 In that example, our filter expression used a temporal (`t_intersects`) and a spatial (`s_intersects`) operators. `t_intersects()` only accepts interval as it second argument, which we created using function `cql2_interval()`. `s_intersects()` spatial operator only accepts GeoJSON objects as its arguments. This is why we had to convert the bounding box vector (`bbox`) into a structure representing a GeoJSON object using the function `cql2_bbox_as_geojson()`. We embrace the arguments using `{{` to evaluate them before make the request.
 
-`items` is a `STACItemCollection` object containing `r items_length(stac_items)` items that matched our search criteria.
+`items` is a `STACItemCollection` object containing 8 items that matched our search criteria.
 
 ```{r items-length}
 stac_items
 ```
 
-#### Exploring data
+## Exploring data{-}
 
 A `STACItemCollection` is a regular GeoJSON object. It is a collection of `STACItem` entries that stores metadata on assets. Users can convert a `STACItemCollection` to a `sf` object containing the properties field as columns. Here we depict the items footprint.
 
@@ -121,7 +135,18 @@ purrr::map_dfr(items_assets(selected_item), function(key) {
 
 Here, we’ll inspect the `rendered_preview` asset. To plot this asset, we can use the helper function `preview_plot()` and provide a URL to be plotted. We use the function `assets_url()` to get the URL. This function extracts all available URLs in items.
 
-```{r asset-preview}
+```{r asset-preview-check, eval=TRUE, include=FALSE, echo=FALSE}
+is_accessible <- is_online && tryCatch({
+  res <- httr::HEAD(
+    assets_url(selected_item, asset_names = "rendered_preview")
+  )
+  !httr::http_error(res)
+}, error = function(e) {
+  FALSE
+})
+```
+
+```{r asset-preview, eval=is_accessible}
 selected_item$assets[["rendered_preview"]]$href
 
 selected_item |> 
@@ -131,7 +156,7 @@ selected_item |>
 
 The `rendered_preview` asset is generated dynamically by Planetary Computer API using raw data. We can access the raw data, stored as Cloud Optimized GeoTIFFs (COG) in Azure Blob Storage, using the other assets. These assets are in private Azure Blob Storage containers and is necessary to sign them to have access to the data, otherwise, you’ll get a 404 (forbidden) status code. 
 
-#### Signing items
+## Signing items{-}
 
 To sign URL in `rstac`, we can use `items_sign()` function.
 
@@ -156,7 +181,7 @@ selected_item |>
 
 The 200 status code means that we were able to access the data using the signed URL with the SAS token included.
 
-#### Reading files
+## Reading files{-}
 
 We can load up that single COG file using packages like [stars](https://github.com/r-spatial/stars) or [terra](https://github.com/rspatial/terra).
 
@@ -164,13 +189,13 @@ We can load up that single COG file using packages like [stars](https://github.c
 library(stars)
 selected_item |> 
   assets_url(asset_names = "blue", append_gdalvsi = TRUE) |>
-  stars::read_stars(RasterIO = list(nBufXSize = 512, nBufYSize = 512)) |>
+  stars::read_stars(RasterIO = list(nBufXSize = 1024, nBufYSize = 1024)) |>
   plot(main = "blue")
 ```
 
 We used the `assets_url()` method with the `append_gdalvsi = TRUE` parameter to insert `/vsicurl` in the URL. This allows the GDAL VSI driver to access the data using HTTP.
 
-### Searching on additional properties
+# Searching on additional properties{-}
 
 In the previous step of this tutorial, we learned how to search for items by specifying the space and time parameters. However, the Planetary Computer's STAC API offers even more flexibility by allowing you to search for items based on additional properties.
 
@@ -200,11 +225,11 @@ stac_items |>
 
 `assets_rename()` uses parameter mapper that is used to rename asset names. The parameter can be either a named list or a function that is called against each asset metadata. A last parameter was included to force band renaming.
 
-#### Analyzing STAC Metadata
+## Analyzing STAC Metadata{-}
 
 `STACItem` objects are features of `STACItemCollection` and store information about assets.
 
-```{r }
+```{r items-fetch}
 stac_items <- planetary_computer |>
   ext_filter(
     collection == "sentinel-2-l2a" &&
@@ -243,7 +268,7 @@ df |>
 `cql2_bbox_as_geojson()` is a `rstac` helper function and it must be evaluated before the request. This is why we embraced it with `{{`. We use `items_fetch()` to retrieve all paginated items matched in the search.
 
 
-### Working with STAC Catalogs and Collections
+# Working with STAC Catalogs and Collections{-}
 
 STAC organizes items in catalogs (`STACCatalog`) and collections (`STACCollection`). These JSON documents contains metadata of the dataset they refer to. For instance, here we look at the [Bands](https://github.com/stac-extensions/eo#band-object) available for [Landsat 8 Collection 2 Level 2](https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2) data:
 
@@ -281,13 +306,12 @@ Just like assets on items, these assets include links to data in Azure Blob Stor
 ```{r daymet-assets}
 items_assets(daymet)
 
-library(stars)
 daymet |>
   assets_select(asset_names = "zarr-abfs") |>
   assets_url()
 ```
 
-### Learn more
+# Learn more{-}
 
 For more about the Planetary Computer's STAC API, see [Using tokens for data access](https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview) and the [STAC API reference](https://planetarycomputer.microsoft.com/docs/reference/stac/). 
-For more about CQL2 in rstac, type the command `?ext_filter`.
+For more about CQL2 in `rstac`, type the command `?ext_filter`.
