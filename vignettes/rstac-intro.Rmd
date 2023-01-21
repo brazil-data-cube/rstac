@@ -258,7 +258,7 @@ items_fetched <- s_obj |>
     datetime = "2019-01-01/2019-12-31",
     limit = 500) |>
   post_request() |>
-  items_fetch()
+  items_fetch(progress = FALSE)
 
 items_fetched
 ```
