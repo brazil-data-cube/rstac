@@ -5,11 +5,6 @@ date: "2023-01-09"
 output: 
   html_document:
     df_print: tibble
-    theme:
-      base_font:
-        google: IBM Plex Serif
-      code_font:
-        google: IBM Plex Mono
 classoption: x11names
 fontsize: 10,5pt
 indent: yes
@@ -359,7 +354,7 @@ is_accessible <- is_online && tryCatch({
 })
 ```
 
-```{r plot-preview, eval=is_accessible}
+```{r plot-preview, eval=is_accessible, fig.height=3, fig.width=5}
 second_item <- items_fetched$features[[2]]
 second_item |>
   assets_url(asset_names = "thumbnail") |>
