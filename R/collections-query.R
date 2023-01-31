@@ -80,21 +80,22 @@ before_request.collections <- function(q) {
 
 #' @export
 after_response.collections <- function(q, res) {
-
-  content <- content_response(res, "200", "application/json")
-
+  content <- content_response(
+    res,
+    status_codes = "200",
+    content_types = "application/.*json",
+    key_message = c("message", "description", "detail")
+  )
   RSTACDocument(content = content, q = q, subclass = "STACCollectionList")
 }
 
 #' @export
 endpoint.collection_id <- function(q) {
-
   return(paste("/collections", q$params[["collection_id"]], sep = "/"))
 }
 
 #' @export
 before_request.collection_id <- function(q) {
-
   check_query_verb(q, verbs = c("GET", "POST"))
 
   # don't send 'collection_id' in url's query string or content body
@@ -105,9 +106,12 @@ before_request.collection_id <- function(q) {
 
 #' @export
 after_response.collection_id <- function(q, res) {
-
-  content <- content_response(res, "200", "application/json")
-
+  content <- content_response(
+    res,
+    status_codes = "200",
+    content_types = "application/.*json",
+    key_message = c("message", "description", "detail")
+  )
   RSTACDocument(content = content, q = q,
                 subclass = c("STACCollection", "STACCatalog"))
 }

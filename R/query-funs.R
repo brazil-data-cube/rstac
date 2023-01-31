@@ -57,7 +57,12 @@ stac_version.RSTACQuery <- function(x, ...) {
     url = make_url(x$base_url, endpoint = "/"), ...
   )
   if (!is.null(res)) {
-    content <- content_response(res, "200", "application/json")
+    content <- content_response(
+      res,
+      status_codes = "200",
+      content_types = "application/.*json",
+      key_message = c("message", "description", "detail")
+    )
     version <- content[["stac_version"]]
   }
 
@@ -67,7 +72,12 @@ stac_version.RSTACQuery <- function(x, ...) {
       url = make_url(x$base_url, endpoint = "/stac"), ..., error_msg = NULL
     )
     if (!is.null(res)) {
-      content <- content_response(res, "200", "application/json")
+      content <- content_response(
+        res,
+        status_codes = "200",
+        content_types = "application/.*json",
+        key_message = c("message", "description", "detail")
+      )
       version <- content[["stac_version"]]
     }
   }

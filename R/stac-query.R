@@ -63,6 +63,11 @@ before_request.stac <- function(q) {
 
 #' @export
 after_response.stac <- function(q, res) {
-  content <- content_response(res, "200", "application/json")
+  content <- content_response(
+    res,
+    status_codes = "200",
+    content_types = "application/.*json",
+    key_message = c("message", "description", "detail")
+  )
   RSTACDocument(content = content, q = q, subclass = "STACCatalog")
 }

@@ -154,10 +154,11 @@ before_request.items <- function(q) {
 
 #' @export
 after_response.items <- function(q, res) {
-
   content <- content_response(
-    res, status_codes = "200", content_types = c("application/geo+json",
-                                                 "application/json")
+    res,
+    status_codes = "200",
+    content_types = "application/.*json",
+    key_message = c("message", "description", "detail")
   )
   if ("features" %in% names(content)) {
     content$features <- lapply(content$features, RSTACDocument,
@@ -187,9 +188,11 @@ before_request.item_id <- function(q) {
 
 #' @export
 after_response.item_id <- function(q, res) {
-
-  content <- content_response(res, "200", c("application/geo+json",
-                                            "application/json"))
-
+  content <- content_response(
+    res,
+    status_codes = "200",
+    content_types = "application/.*json",
+    key_message = c("message", "description", "detail")
+  )
   RSTACDocument(content = content, q = q, subclass = "STACItem")
 }

@@ -60,7 +60,10 @@ before_request.queryables <- function(q) {
 #' @export
 after_response.queryables <- function(q, res) {
   content <- content_response(
-    res, "200", c("application/geo+json", "application/json")
+    res,
+    status_codes = "200",
+    content_types = "application/.*json",
+    key_message = c("message", "description", "detail")
   )
   RSTACDocument(content = content, q = q, subclass = "Queryables")
 }
