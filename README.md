@@ -77,8 +77,7 @@ These functions can be used to retrieve information from a STAC API
 service. The code below creates a `stac` object and list the available
 collections of the STAC API of the [Brazil Data
 Cube](http://www.brazildatacube.org/en/home-page-2/) project of the
-Brazilian National Space Research Institute
-[INPE](https://www.gov.br/inpe/pt-br/).
+Brazilian National Space Research Institute (INPE).
 
 ``` r
 s_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")

@@ -217,11 +217,11 @@ sign_planetary_computer <- function(..., headers = NULL, token_url = NULL) {
       httr::add_headers(.headers = headers), ...
     )
     res_content <- content_response(
-      res = res,
+      res,
       status_codes = "200",
-      content_types = "application/json"
+      content_types = "application/.*json",
+      key_message = c("message", "description", "detail")
     )
-
     token[[acc]][[cnt]] <<- parse_token(res_content)
   }
 

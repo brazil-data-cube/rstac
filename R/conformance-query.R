@@ -44,7 +44,10 @@ before_request.conformance <- function(q) {
 #' @export
 after_response.conformance <- function(q, res) {
   content <- content_response(
-    res, "200", c("application/geo+json", "application/json")
+    res,
+    status_codes = "200",
+    content_types = "application/.*json",
+    key_message = c("message", "description", "detail")
   )
   RSTACDocument(content = content, q = q, subclass = "Conformance")
 }

@@ -66,13 +66,15 @@ testthat::test_that("internals response", {
 
     testthat::expect_error(
       content_response(res = bdc_catalog,
-                       status_codes = c(300),
-                       content_types = "application/json")
+                       status_codes = 300,
+                       content_types = "application/.*json",
+                       key_message = c("message", "description", "detail"))
     )
 
     testthat::expect_error(
       content_response(res = bdc_wrong_path,
-                       status_codes = c(300),
-                       content_types = "application/json")
+                       status_codes = 300,
+                       content_types = "application/.*json",
+                       key_message = c("message", "description", "detail"))
     )
 })
