@@ -1,5 +1,9 @@
 # rstac (development version)
 
+# rstac 0.9.2-2 (Released 2023-02-02)
+
+* Fix mpc vignette
+
 # rstac 0.9.2-1 (Released 2023-01-21)
 
 * Fix intersects bug in `stac_search()` function
