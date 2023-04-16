@@ -10,7 +10,7 @@ assignees: ''
 **Describe the requested improvement**
 Please provide a concise description of the required improvement. 
 
-**Associated sits API function**
+**Associated rstac API function**
 If possible, please inform which function should be improved and how it should work including new parameters if necessary.
 
 **Additional context**

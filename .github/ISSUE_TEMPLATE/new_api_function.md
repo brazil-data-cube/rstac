@@ -10,7 +10,7 @@ assignees: ''
 **Describe the new API function requested**
 Please provide a concise description of the new function, why is it necessary, and how it should work. 
 
-**Associated sits API function**
+**Associated rstac API function**
 Please provide the suggested function name and its parameter.
 
 **Additional context**
