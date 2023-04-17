@@ -1,5 +1,11 @@
 # rstac (development version)
 
+# rstac 0.9.2-3 (Released 2023-04-17)
+
+* Fix renewing mpc tokens per session
+* Include support to check package with github actions
+* Add issue template
+
 # rstac 0.9.2-2 (Released 2023-02-02)
 
 * Fix mpc vignette

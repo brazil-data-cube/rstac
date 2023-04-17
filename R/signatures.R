@@ -1,3 +1,5 @@
+ms_token <- new_env()
+
 #' @title Signature in hrefs provided by the STAC from the Brazil Data Cube
 #'  project.
 #'
@@ -146,8 +148,6 @@ sign_planetary_computer <- function(..., headers = NULL, token_url = NULL) {
   # general info
   ms_token_endpoint <- "https://planetarycomputer.microsoft.com/api/sas/v1/token"
 
-  token <- list()
-
   get_ms_info <- function(asset) {
     parsed_url <- httr::parse_url(asset[["href"]])
     host_spplited <- strsplit(
@@ -195,14 +195,14 @@ sign_planetary_computer <- function(..., headers = NULL, token_url = NULL) {
   }
 
   exists_token <- function(acc, cnt) {
-    acc %in% names(token) && cnt %in% names(token[[acc]])
+    acc %in% names(ms_token) && cnt %in% names(ms_token[[acc]])
   }
 
   is_token_expired <- function(acc, cnt) {
     ms_max_timeleft <- 300
 
     difftime_token <- difftime(
-      time1 = token[[acc]][[cnt]][["msft:expiry"]],
+      time1 = ms_token[[acc]][[cnt]][["msft:expiry"]],
       time2 = as.POSIXct(format(Sys.time(), tz = "UTC", usetz = TRUE)),
       units = "secs"
     )
@@ -222,13 +222,14 @@ sign_planetary_computer <- function(..., headers = NULL, token_url = NULL) {
       content_types = "application/.*json",
       key_message = c("message", "description", "detail")
     )
-    token[[acc]][[cnt]] <<- parse_token(res_content)
+    assign(acc, value = list(), envir = ms_token)
+    ms_token[[acc]][[cnt]] <- parse_token(res_content)
   }
 
   get_token <- function(acc, cnt) {
     new_token(acc, cnt)
     # get token value from global variable
-    token[[acc]][[cnt]][["token_value"]]
+    ms_token[[acc]][[cnt]][["token_value"]]
   }
 
   sign_asset <- function(asset) {
