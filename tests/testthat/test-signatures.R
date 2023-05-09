@@ -94,6 +94,14 @@ testthat::test_that("signature functions", {
       class = c("STACItemCollection", "RSTACDocument")
     )
 
+    # provided wrong url
+    testthat::expect_error(
+      object = suppressWarnings(
+        items_sign(stac_items,
+                   sign_fn = sign_planetary_computer(token_url = "test"))
+      )
+    )
+
     # return the same object after signature?
     testthat::expect_s3_class(
       object = suppressWarnings(
@@ -122,13 +130,5 @@ testthat::test_that("signature functions", {
     testthat::expect_match(
       object = href_item,
       regexp = "se"
-    )
-
-    # provided wrong url
-    testthat::expect_error(
-      object = suppressWarnings(
-        items_sign(stac_items,
-                   sign_fn = sign_planetary_computer(token_url = "test"))
-      )
     )
 })
