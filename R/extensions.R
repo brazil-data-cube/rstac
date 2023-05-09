@@ -151,20 +151,16 @@ parse_params <- function(q, params) {
 #' @return
 #' The `content_response()` function returns a `list` data structure
 #' representing the JSON file received in HTTP response
-content_response <- function(res,
-                             status_codes,
-                             content_types,
-                             key_message = c("message", "description",
-                                             "detail")) {
-
+content_response <- function(res, status_codes, content_types, key_message) {
   # convert any json extension
-  content_type <- httr::http_type(res)
-  if (grepl("application/.*json", content_type))
-    content_type <- "application/json"
+  if (!grepl(content_types, httr::http_type(res))) {
+    .error("HTTP content type response '%s' not defined for this operation.",
+           httr::http_type(res))
+  }
 
   # parse content
   content <- httr::content(res,
-                           type = content_type,
+                           type = "application/json",
                            encoding = "UTF-8",
                            simplifyVector = TRUE,
                            simplifyDataFrame = FALSE,
@@ -181,11 +177,6 @@ content_response <- function(res,
     }
     .error("HTTP status '%s'. %s", status_code, message)
   }
-
-  # test for allowed content types
-  if (!httr::http_type(res) %in% content_types)
-    .error("HTTP content type response '%s' not defined for this operation.",
-           httr::http_type(res))
 
   return(content)
 }

@@ -1,5 +1,20 @@
 # rstac (development version)
 
+# rstac 0.9.2-3 (Released 2023-04-17)
+
+* Fix renewing mpc tokens per session
+* Include support to check package with github actions
+* Add issue template
+
+# rstac 0.9.2-2 (Released 2023-02-02)
+
+* Fix mpc vignette
+
+# rstac 0.9.2-1 (Released 2023-01-21)
+
+* Fix intersects bug in `stac_search()` function
+* Vignettes are now fault tolerant
+
 # rstac 0.9.2 (Released 2023-01-10)
 
 * Add support to CQL2 filter extension by function `ext_filter()`

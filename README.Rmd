@@ -21,7 +21,7 @@ R Client Library for SpatioTemporal Asset Catalog (rstac)
 <!-- badges: start -->
 [![Software License](https://img.shields.io/badge/license-MIT-green)](https://github.com/brazil-data-cube/rstac/blob/master/LICENSE)
 <!-- [![Build Status](https://drone.dpi.inpe.br/api/badges/brazil-data-cube/rstac/status.svg)](https://drone.dpi.inpe.br/brazil-data-cube/rstac) -->
-[![Build Status](https://cloud.drone.io/api/badges/OldLipe/rstac/status.svg)](https://cloud.drone.io/OldLipe/rstac)
+[![R-CMD-check](https://github.com/brazil-data-cube/rstac/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/brazil-data-cube/rstac/actions/workflows/R-CMD-check.yaml)
 [![Build status](https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true)](https://ci.appveyor.com/project/OldLipe/rstac)
 [![codecov](https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT)](https://app.codecov.io/gh/brazil-data-cube/rstac)
 [![Software Life Cycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
@@ -85,7 +85,7 @@ tibble::tribble(
 These functions can be used to retrieve information from a STAC API service.
 The code below creates a `stac` object and list the available collections of 
 the STAC API of the [Brazil Data Cube](http://www.brazildatacube.org/en/home-page-2/) project of 
-the Brazilian National Space Research Institute [INPE](https://www.gov.br/inpe/pt-br/).
+the Brazilian National Space Research Institute (INPE).
 
 ```{R stac-obj, echo=TRUE}
 s_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
