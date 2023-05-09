@@ -355,8 +355,9 @@ items_next.STACItemCollection <- function(items, ...) {
   matched <- items_matched(items)
 
   q <- doc_query(items)
-  if (is.null(q))
+  if (is.null(q)) {
     .error("Cannot get next link URL", class = "next_error")
+  }
 
   # get url of the next page
   next_url <- Filter(function(x) x$rel == "next", items$links)
@@ -420,7 +421,6 @@ items_next.STACItemCollection <- function(items, ...) {
 
     content <- post_request(next_stac, ..., encode = q$encode)
   } else {
-
     .error("Invalid HTTP method.")
   }
 
@@ -430,7 +430,6 @@ items_next.STACItemCollection <- function(items, ...) {
   # check pagination length
   if (!is.null(q$params[["limit"]]) &&
       items_length(content) > as.numeric(q$params[["limit"]])) {
-
     .error("STAC invalid retrieved page length.")
   }
 
@@ -438,7 +437,6 @@ items_next.STACItemCollection <- function(items, ...) {
   if (!is.null(matched) && !is.null(q$params[["limit"]]) &&
       (items_length(content) != as.numeric(q$params[["limit"]])) &&
       (items_length(content) + items_length(items) != matched)) {
-
     .error("STAC pagination error.")
   }
 
