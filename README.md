@@ -94,7 +94,7 @@ connection to it and retrieves a STAC Catalog document from the server.
 Each `links` entry is an available collection that can be accessed via
 STAC API.
 
-In the code below, we get some STAC items of `CB4_64_16D_STK-1`
+In the code below, we get some STAC items of `CB4-16D-2`
 collection that intersects the bounding box passed to the `bbox`
 parameter. To do this, we call the `stac_search` function that
 implements the STAC `/search` endpoint. The returned document is a STAC
@@ -103,7 +103,7 @@ Item Collection (a geojson containing a feature collection).
 ``` r
 
 it_obj <- s_obj |>
-  stac_search(collections = "CB4_64_16D_STK-1",
+  stac_search(collections = "CB4-16D-2",
               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
               limit = 100) |> 
   get_request()
@@ -137,7 +137,7 @@ on a HTTP request.
 
 ``` r
 it_obj <- s_obj |>
-  stac_search(collections = "CB4_64_16D_STK-1",
+  stac_search(collections = "CB4-16D-2",
               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) |>
   get_request(add_headers("x-api-key" = "MY-TOKEN"))
 ```
