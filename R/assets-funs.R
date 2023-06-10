@@ -121,7 +121,7 @@
 #' \dontrun{
 #'  # assets_download function
 #'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'    stac_search(collections = "CB4_64_16D_STK-1",
+#'    stac_search(collections = "CB4-16D-2",
 #'                datetime = "2019-06-01/2019-08-01") %>%
 #'    stac_search() %>%
 #'    get_request() %>%
@@ -131,7 +131,7 @@
 #' \dontrun{
 #'  # assets_url function
 #'  stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'   stac_search(collections = "CB4-16D-2", limit = 100,
 #'          datetime = "2017-08-01/2018-03-01",
 #'          bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
 #'   get_request() %>% items_fetch(progress = FALSE)
@@ -142,7 +142,7 @@
 #' \dontrun{
 #'  # assets_select function
 #'  stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'   stac_search(collections = "CB4-16D-2", limit = 100,
 #'          datetime = "2017-08-01/2018-03-01",
 #'          bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
 #'   get_request() %>% items_fetch(progress = FALSE)
