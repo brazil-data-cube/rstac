@@ -112,7 +112,7 @@ testthat::test_that("stac search object", {
 
   testthat::expect_error(
     object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-      collections("CB4_64_16D_STK-1") %>%
+      collections("CB4-16D-2") %>%
       items(c("CB4_64_16D_STK_v001_022023_2020-07-11_2020-07-26", "dddd"))
   )
 
@@ -182,7 +182,7 @@ testthat::test_that("stac search object", {
   # check extension query - wrong construction
   testthat::expect_error(
     object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-      ext_query("bdc:tile" == "022024") %>%
+      ext_query("bdc:tile" == "007004") %>%
       rstac::stac_search(datetime = "2018-01-01/..")
   )
 
@@ -190,7 +190,7 @@ testthat::test_that("stac search object", {
   testthat::expect_error(
     object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       stac_search(datetime = "2018-01-01/..") %>%
-      ext_query("bdc:tile" == "022024", test = "test") %>%
+      ext_query("bdc:tile" == "007004", test = "test") %>%
       stac_search(datetime = "2018-01-01/..")
   )
 
@@ -198,7 +198,7 @@ testthat::test_that("stac search object", {
   testthat::expect_error(
     object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       stac_search(datetime = "2018-01-01/..") %>%
-      ext_query("bdc:tile" + "022024") %>%
+      ext_query("bdc:tile" + "007004") %>%
       stac_search(datetime = "2018-01-01/..")
   )
 
@@ -206,7 +206,7 @@ testthat::test_that("stac search object", {
   testthat::expect_error(
     object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       stac_search(datetime = "2018-01-01/..") %>%
-      ext_query("bdc:tile" == "022024") %>%
+      ext_query("bdc:tile" == "007004") %>%
       get_request()
   )
 
@@ -218,19 +218,19 @@ testthat::test_that("stac search object", {
 
   # 'in' operation
   testthat::expect_equal(
-    object   =  subclass(ext_query(s_search, "bdc:tile" %in% "022024")),
+    object   =  subclass(ext_query(s_search, "bdc:tile" %in% "007004")),
     expected = c("ext_query", "search")
   )
 
   # 'neq' operation
   testthat::expect_equal(
-    object   = subclass(ext_query(s_search, "bdc:tile" != "022024")),
+    object   = subclass(ext_query(s_search, "bdc:tile" != "007004")),
     expected = c("ext_query", "search")
   )
 
   # 'eq' operation
   testthat::expect_equal(
-    object   = subclass(ext_query(s_search, "bdc:tile" == "022024")),
+    object   = subclass(ext_query(s_search, "bdc:tile" == "007004")),
     expected = c("ext_query", "search")
   )
 
@@ -289,7 +289,7 @@ testthat::test_that("stac search object", {
 
   # sucess requisition
   testthat::expect_s3_class(
-    object = ext_query(s_search, "bdc:tile" %in% "022024") %>%
+    object = ext_query(s_search, "bdc:tile" %in% "007004") %>%
       post_request(),
     class = "STACItemCollection"
   )
@@ -442,7 +442,7 @@ testthat::test_that("stac collection object", {
   # check object class of stac collections
   s_colid <-
     rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-    rstac::collections(collection_id = "CB4_64_16D_STK-1")
+    rstac::collections(collection_id = "CB4-16D-2")
 
   testthat::expect_null(
     object   = s_colid$endpoint
@@ -571,12 +571,12 @@ testthat::test_that("stac item object", {
   )
 
   stac_item <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-    collections("CB4_64_16D_STK-1") %>%
+    collections("CB4-16D-2") %>%
     items(
       bbox       = c(-48.19039, -16.00871, -41.6341, -11.91345),
       limit      = 10,
       datetime   = "2018-02-01/..",
-      feature_id = "CB4_64_16D_STK_v001_021027_2020-07-11_2020-07-26") %>%
+      feature_id = "CB4-16D_V2_000002_20230509") %>%
     get_request()
 
   # output test
