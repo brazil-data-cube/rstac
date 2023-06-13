@@ -179,7 +179,7 @@ s_obj |>
 ```{r item}
 s_obj |>
   collections("CB4-16D-2") |>
-  items(feature_id = "CB4_64_16D_STK_v001_021027_2020-07-11_2020-07-26") |>
+  items(feature_id = "CB4-16D_V2_000002_20230509") |>
   get_request()
 ```
 
