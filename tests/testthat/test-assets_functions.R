@@ -109,7 +109,7 @@ testthat::test_that("assets functions", {
     object = {
       stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         collections("CB4-16D-2") %>%
-        items("CB4_64_16D_STK_v001_020024_2019-11-01_2019-11-16") %>%
+        items("CB4-16D_V2_000002_20230509") %>%
         get_request() %>%
         assets_download(asset_names = c("thumbnail"),
                         fn = function(x) {x},
@@ -124,7 +124,7 @@ testthat::test_that("assets functions", {
     object = {
       x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         collections("CB4-16D-2") %>%
-        items("CB4_64_16D_STK_v001_020024_2019-11-01_2019-11-16") %>%
+        items("CB4-16D_V2_000002_20230509") %>%
         get_request() %>%
         assets_download(asset_names = c("thumbnail"),
                         items_max = 2,
@@ -144,7 +144,7 @@ testthat::test_that("assets functions", {
 
   stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
     collections("CB4-16D-2") %>%
-    items("CB4_64_16D_STK_v001_022023_2020-07-11_2020-07-26") %>%
+    items("CB4-16D_V2_000002_20230509") %>%
     get_request()
 
   # assets_select-----------------------------------------------------------
@@ -170,15 +170,7 @@ testthat::test_that("assets functions", {
   testthat::expect_equal(
     object = items_assets(assets_select(stac_items,
                                         asset_names = c("BAND14", "EVI"),
-                                        `eo:bands` == 9)),
-    expected = "EVI"
-  )
-
-  # were the asset selected?
-  testthat::expect_equal(
-    object = items_assets(assets_select(stac_item,
-                                        asset_names = c("BAND14", "EVI"),
-                                        `eo:bands` == 9)),
+                                        `eo:bands` == 5)),
     expected = "EVI"
   )
 
@@ -196,12 +188,12 @@ testthat::test_that("assets functions", {
     object = items_assets(
       assets_select(stac_item, 1 %in% asset_get("eo:bands"))
     ),
-    expected = "BAND16"
+    expected = "BAND14"
   )
 
   expect_length(
     object = items_assets(
-      assets_select(stac_item, 1 %in% asset_get("eo:band"))
+      assets_select(stac_item, 10 %in% asset_get("eo:band"))
     ),
     n = 0
   )
@@ -277,9 +269,9 @@ testthat::test_that("assets functions", {
 
   testthat::expect_equal(
     object = items_assets(
-      assets_rename(selected_item,mapper = function(x) paste0(x[["eo:bands"]]))
+      assets_rename(selected_item, mapper = function(x) paste0(x[["eo:bands"]]))
     ),
-    expected = c("3", "4")
+    expected = c("0", "1")
   )
 
   # assets_url----------------------------------------------------------
