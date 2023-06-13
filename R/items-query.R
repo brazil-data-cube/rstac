@@ -82,7 +82,7 @@
 #'
 #'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'    collections("CB4-16D-2") %>%
-#'    items("CB4_64_16D_STK_v001_022023_2020-07-11_2020-07-26") %>%
+#'    items("CB4-16D_V2_000002_20230509") %>%
 #'    get_request()
 #' }
 #'
