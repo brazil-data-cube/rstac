@@ -2,15 +2,15 @@ testthat::test_that("signature functions", {
     #---- BDC provider ----#
     # stac item collection from bdc
     stac_items <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-      stac_search(collections = "CB4_64_16D_STK-1",
+      stac_search(collections = "CB4-16D-2",
                   limit = 1) %>%
-      ext_query("bdc:tile" == "021027") %>%
+      ext_query("bdc:tile" == "007004") %>%
       post_request()
 
     # stac item from bdc
     stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-      collections("CB4_64_16D_STK-1") %>%
-      items("CB4_64_16D_STK_v001_022023_2020-07-11_2020-07-26") %>%
+      collections("CB4-16D-2") %>%
+      items("CB4-16D_V2_000002_20230509") %>%
       get_request()
 
     # return the same object after signature?
@@ -82,8 +82,8 @@ testthat::test_that("signature functions", {
 
     # stac item from ms
     stac_item <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
-      collections("landsat-8-c2-l2") %>%
-      items("LC08_L2SP_217072_20210909_02_T1") %>%
+      collections("landsat-c2-l2") %>%
+      items("LC09_L2SR_083075_20230608_02_T1") %>%
       get_request()
 
     # return the same object after signature?

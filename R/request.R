@@ -37,7 +37,7 @@
 #'   get_request()
 #'
 #'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'   stac_search(collections = "CB4_64_16D_STK-1") %>%
+#'   stac_search(collections = "CB4-16D-2") %>%
 #'   post_request()
 #' }
 #' @export
@@ -87,7 +87,7 @@ post_request <- function(q, ..., encode = c("json", "multipart", "form")) {
   httr_encode <- c("json", "multipart", "form")
   encode <- encode[[1]]
   if (!encode %in% httr_encode)
-    .error("Invalid body `encode` '%s'. Allowed `econde` are %s.",
+    .error("Invalid body `encode` '%s'. Allowed `encode` are %s.",
            encode, paste0("'", httr_encode, "'", collapse = ", "))
 
   # stamp verb

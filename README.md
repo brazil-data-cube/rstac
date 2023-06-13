@@ -94,34 +94,34 @@ connection to it and retrieves a STAC Catalog document from the server.
 Each `links` entry is an available collection that can be accessed via
 STAC API.
 
-In the code below, we get some STAC items of `CB4_64_16D_STK-1`
-collection that intersects the bounding box passed to the `bbox`
-parameter. To do this, we call the `stac_search` function that
-implements the STAC `/search` endpoint. The returned document is a STAC
-Item Collection (a geojson containing a feature collection).
+In the code below, we get some STAC items of `CB4-16D-2` collection that
+intersects the bounding box passed to the `bbox` parameter. To do this,
+we call the `stac_search` function that implements the STAC `/search`
+endpoint. The returned document is a STAC Item Collection (a geojson
+containing a feature collection).
 
 ``` r
 
 it_obj <- s_obj |>
-  stac_search(collections = "CB4_64_16D_STK-1",
+  stac_search(collections = "CB4-16D-2",
               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
               limit = 100) |> 
   get_request()
 
 it_obj
 #> ###STACItemCollection
-#> - matched feature(s): 306
-#> - features (100 item(s) / 206 not fetched):
-#>   - CB4_64_16D_STK_v001_022024_2022-08-13_2022-08-28
-#>   - CB4_64_16D_STK_v001_022025_2022-08-13_2022-08-28
-#>   - CB4_64_16D_STK_v001_022024_2022-07-28_2022-08-12
-#>   - CB4_64_16D_STK_v001_022025_2022-07-28_2022-08-12
-#>   - CB4_64_16D_STK_v001_022024_2022-07-12_2022-07-27
-#>   - CB4_64_16D_STK_v001_022025_2022-07-12_2022-07-27
-#>   - CB4_64_16D_STK_v001_022024_2022-06-26_2022-07-11
-#>   - CB4_64_16D_STK_v001_022025_2022-06-26_2022-07-11
-#>   - CB4_64_16D_STK_v001_022024_2022-06-10_2022-06-25
-#>   - CB4_64_16D_STK_v001_022025_2022-06-10_2022-06-25
+#> - matched feature(s): 1003
+#> - features (100 item(s) / 903 not fetched):
+#>   - CB4-16D_V2_007004_20230509
+#>   - CB4-16D_V2_007005_20230509
+#>   - CB4-16D_V2_007006_20230509
+#>   - CB4-16D_V2_008004_20230509
+#>   - CB4-16D_V2_008006_20230509
+#>   - CB4-16D_V2_008005_20230509
+#>   - CB4-16D_V2_007004_20230423
+#>   - CB4-16D_V2_007005_20230423
+#>   - CB4-16D_V2_007006_20230423
+#>   - CB4-16D_V2_008004_20230423
 #>   - ... with 90 more feature(s).
 #> - assets: 
 #> BAND13, BAND14, BAND15, BAND16, CLEAROB, CMASK, EVI, NDVI, PROVENANCE, thumbnail, TOTALOB
@@ -137,7 +137,7 @@ on a HTTP request.
 
 ``` r
 it_obj <- s_obj |>
-  stac_search(collections = "CB4_64_16D_STK-1",
+  stac_search(collections = "CB4-16D-2",
               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) |>
   get_request(add_headers("x-api-key" = "MY-TOKEN"))
 ```
@@ -156,7 +156,7 @@ search criteria:
 # it_obj variable from the last code example
 it_obj |> 
   items_matched()
-#> [1] 306
+#> [1] 1003
 ```
 
 However, if we count how many items there are in `it_obj` variable, we
@@ -177,7 +177,7 @@ it_obj <- it_obj |>
 
 it_obj |>
   items_length()
-#> [1] 306
+#> [1] 1003
 ```
 
 ### Download assets
@@ -236,14 +236,14 @@ Remote Sensing Symposium IGARSS, 2021, pp. 7674-7677, doi:
 We acknowledge and thank the project funders that provided financial and
 material support:
 
--   Amazon Fund, established by the Brazilian government with financial
-    contribution from Norway, through the project contract between the
-    Brazilian Development Bank (BNDES) and the Foundation for Science,
-    Technology and Space Applications (FUNCATE), for the establishment
-    of the Brazil Data Cube, process 17.2.0536.1.
+- Amazon Fund, established by the Brazilian government with financial
+  contribution from Norway, through the project contract between the
+  Brazilian Development Bank (BNDES) and the Foundation for Science,
+  Technology and Space Applications (FUNCATE), for the establishment of
+  the Brazil Data Cube, process 17.2.0536.1.
 
--   Radiant Earth Foundation and STAC Project Steering Committee for the
-    advance of STAC ecosystem programme.
+- Radiant Earth Foundation and STAC Project Steering Committee for the
+  advance of STAC ecosystem programme.
 
 ## How to contribute?
 

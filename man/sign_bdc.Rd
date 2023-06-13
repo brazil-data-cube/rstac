@@ -25,7 +25,7 @@ environment variable in \code{BDC_ACCESS_KEY}or use \code{acess_token} parameter
 \dontrun{
  # STACItemCollection object
  stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-   stac_search(collections = "CB4_64_16D_STK-1",
+   stac_search(collections = "CB4-16D-2",
                datetime = "2019-06-01/2019-08-01") \%>\%
    stac_search() \%>\%
    get_request()
