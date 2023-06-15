@@ -50,7 +50,7 @@
 #'  # STACItemCollection object
 #'  stac_item_collection <-
 #'    stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'    stac_search(collections = "CB4_64_16D_STK-1",
+#'    stac_search(collections = "CB4-16D-2",
 #'           bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
 #'           limit = 15) %>%
 #'    get_request()

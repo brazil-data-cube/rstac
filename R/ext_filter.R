@@ -122,12 +122,6 @@
 #' # Not equal operator '!=' with collection property
 #' req %>% ext_filter(collection != "sentinel-2-l2a") %>% post_request()
 #'
-#' # Less than operator '<' with cloud_cover property
-#' req %>% ext_filter(`eo:cloud_cover` < 10) %>% post_request()
-#'
-#' # Greater than operator '>' with vegetation_percentage property
-#' req %>% ext_filter(`s2:vegetation_percentage` > 50) %>% post_request()
-#'
 #' # Less than or equal operator '<=' with datetime property
 #' req %>% ext_filter(datetime <= "1986-01-01") %>% post_request()
 #'

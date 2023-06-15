@@ -35,7 +35,7 @@
 #'    get_request()
 #'
 #'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'    collections(collection_id = "CB4_64_16D_STK-1") %>%
+#'    collections(collection_id = "CB4-16D-2") %>%
 #'    get_request()
 #' }
 #'

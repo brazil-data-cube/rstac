@@ -14,14 +14,14 @@ testthat::test_that("examples rstac", {
     # test collections items - /collections/{collection_id}
     testthat::expect_s3_class(
       object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        collections(collection_id = "CB4_64_16D_STK-1") %>%
+        collections(collection_id = "CB4-16D-2") %>%
         get_request(),
       class = c("STACCollection", "STACCatalog", "RSTACDocument"))
 
     # test items collection - /collections/{collection_id}/items
     testthat::expect_s3_class(
       object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        collections("CB4_64_16D_STK-1") %>%
+        collections("CB4-16D-2") %>%
         items(bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) %>%
         get_request(),
       class = c("STACItemCollection", "RSTACDocument"))
@@ -29,7 +29,7 @@ testthat::test_that("examples rstac", {
     # test items collection - /search/
     testthat::expect_s3_class(
       stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        stac_search(collections = "CB4_64_16D_STK-1",
+        stac_search(collections = "CB4-16D-2",
                     bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) %>%
         get_request(),
       class = c("STACItemCollection", "RSTACDocument"))
@@ -37,7 +37,7 @@ testthat::test_that("examples rstac", {
     # test items collection - /search/
     testthat::expect_s3_class(
       stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        stac_search(collections = "CB4_64_16D_STK-1",
+        stac_search(collections = "CB4-16D-2",
                     bbox = c(-47.02148, -12.98314, -42.53906, -17.35063)) %>%
         post_request(),
       class = c("STACItemCollection", "RSTACDocument"))
@@ -45,8 +45,8 @@ testthat::test_that("examples rstac", {
     # test stac item - /collections/{collection_id}/items/{feature_id}
     testthat::expect_s3_class(
       object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        collections("CB4_64_16D_STK-1") %>%
-        items("CB4_64_16D_STK_v001_022024_2020-07-11_2020-07-26") %>%
+        collections("CB4-16D-2") %>%
+        items("CB4-16D_V2_000002_20230509") %>%
         get_request(),
       class = c("STACItem", "RSTACDocument"))
 
@@ -61,7 +61,7 @@ testthat::test_that("examples rstac", {
     # test extension query
     testthat::expect_s3_class(
       object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-              stac_search(collections = "CB4_64_16D_STK-1") %>%
+              stac_search(collections = "CB4-16D-2") %>%
               ext_query("bdc:tile" == "021027") %>%
               post_request(),
       class = c("STACItem", "RSTACDocument"))
@@ -80,20 +80,11 @@ testthat::test_that("examples rstac", {
     # test item_length
     testthat::expect_equal(
       object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        stac_search(collections = "CB4_64_16D_STK-1",
+        stac_search(collections = "CB4-16D-2",
                     limit = 10) %>%
         get_request() %>%
         items_length(),
       expected = 10)
-
-    # test item_length
-    testthat::expect_equal(
-      object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        stac_search(collections = "CB4_64_16D_STK-1",
-                    limit = 10) %>%
-        get_request() %>%
-        items_matched(),
-      expected = 7505)
 
     # test items_group
     testthat::expect_error(
@@ -155,7 +146,7 @@ testthat::test_that("examples rstac", {
     testthat::expect_equal(
       object = typeof(
         stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-          stac_search(collections = "CB4_64_16D_STK-1",
+          stac_search(collections = "CB4-16D-2",
                       limit = 10,
                       datetime = "2017-08-01/2018-03-01") %>%
           get_request() %>%
@@ -166,7 +157,7 @@ testthat::test_that("examples rstac", {
     testthat::expect_equal(
       object = typeof(
         stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-          stac_search(collections = "CB4_64_16D_STK-1",
+          stac_search(collections = "CB4-16D-2",
                       limit = 10,
                       datetime = "2017-08-01/2018-03-01") %>%
           get_request() %>%

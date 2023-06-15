@@ -147,7 +147,7 @@
 #' @examples
 #' \dontrun{
 #'  x <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
-#'      stac_search(collections = "CB4_64_16D_STK-1") %>%
+#'      stac_search(collections = "CB4-16D-2") %>%
 #'      stac_search(limit = 500) %>%
 #'      get_request()
 #'
@@ -164,7 +164,7 @@
 #'
 #' # STACItem object
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'     stac_search(collections = "CB4-16D-2", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
 #'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
 #'     get_request() %>% items_sign(sign_fn = sign_bdc())
@@ -174,7 +174,7 @@
 #' \dontrun{
 #' # STACItemCollection object
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'     stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'     stac_search(collections = "CB4-16D-2", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
 #'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
 #'     get_request() %>%
@@ -193,7 +193,7 @@
 #' \dontrun{
 #' # STACItemCollection object
 #' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4_64_16D_STK-1", limit = 100,
+#'  stac_search(collections = "CB4-16D-2", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
 #'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
 #'  get_request() %>% items_fetch(progress = FALSE)

@@ -60,8 +60,8 @@ extensions.
 \examples{
 \dontrun{
  stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-   stac_search(collections = "CB4_64_16D_STK-1") \%>\%
-   ext_query("bdc:tile" \%in\% "022024") \%>\%
+   stac_search(collections = "CB4-16D-2") \%>\%
+   ext_query("bdc:tile" \%in\% "007004") \%>\%
    post_request()
 }
 
