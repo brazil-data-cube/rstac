@@ -1,5 +1,9 @@
 # rstac (development version)
 
+# rstac 0.9.2-4 (Released 2023-06-15)
+
+* Fix vignette BDC errors
+
 # rstac 0.9.2-3 (Released 2023-04-17)
 
 * Fix renewing mpc tokens per session
