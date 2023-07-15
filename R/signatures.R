@@ -222,7 +222,9 @@ sign_planetary_computer <- function(..., headers = NULL, token_url = NULL) {
       content_types = "application/.*json",
       key_message = c("message", "description", "detail")
     )
-    assign(acc, value = list(), envir = ms_token)
+    if (!acc %in% names(ms_token)) {
+      assign(acc, value = list(), envir = ms_token)
+    }
     ms_token[[acc]][[cnt]] <- parse_token(res_content)
   }
 
