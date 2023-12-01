@@ -44,9 +44,9 @@
 #' }
 #'
 #' @section Data types:
-#' The package implements the following S3 classes: `STACItemCollection`,
-#'  `STACItem`, `STACCatalog`, `STACCollectionList` and
-#'  `STACCollection`. These classes are regular lists representing the
+#' The package implements the following S3 classes: `doc_items`,
+#'  `doc_item`, `doc_catalog`, `doc_collections` and
+#'  `doc_collection`. These classes are regular lists representing the
 #'  corresponding JSON STAC objects.
 #'
 #' @name rstac

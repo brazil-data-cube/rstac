@@ -1,8 +1,8 @@
 #' @title Query development functions
 #'
 #' @describeIn extensions
-#' The `RSTACQuery()` function is a constructor of `RSTACQuery`
-#' objects. Every extension must implement a subclass of `RSTACQuery` to
+#' The `rstac_query()` function is a constructor of `rstac_query`
+#' objects. Every extension must implement a subclass of `rstac_query` to
 #' represent its queries. This is done by informing to the `subclass`
 #' parameter the extension's subclass name.
 #'
@@ -32,9 +32,9 @@
 #' object to be created.
 #'
 #' @return
-#' The `RSTACQuery()` function returns a `STACQuery` object with
+#' The `rstac_query()` function returns a `STACQuery` object with
 #' subclass defined by `subclass` parameter.
-RSTACQuery <- function(version = NULL, base_url, params = list(), subclass) {
+rstac_query <- function(version = NULL, base_url, params = list(), subclass) {
   structure(
     list(version = version,
          base_url = base_url,
@@ -42,43 +42,32 @@ RSTACQuery <- function(version = NULL, base_url, params = list(), subclass) {
          params = params,
          verb = "GET",
          encode = NULL),
-    class = c(subclass, "RSTACQuery"))
+    class = c(subclass, "rstac_query"))
 }
 
 #' @export
-stac_version.RSTACQuery <- function(x, ...) {
-
+stac_version.rstac_query <- function(x, ...) {
   if (!is.null(x$version))
     return(x$version)
-
   version <- NULL
   # check in '/' endpoint
   res <- make_get_request(
-    url = make_url(x$base_url, endpoint = "/"), ...
+    url = resolve_url(x$base_url, "./"),
+    ...
   )
   if (!is.null(res)) {
-    content <- content_response(
-      res,
-      status_codes = "200",
-      content_types = "application/.*json",
-      key_message = c("message", "description", "detail")
-    )
-    version <- content[["stac_version"]]
+    content <- content_response_json(res)
+    version <- content$stac_version
   }
-
-  # if no version was found, try '/stac' endpoint
+  # if no version was found, try './stac' endpoint
   if (is.null(version)) {
     res <- make_get_request(
-      url = make_url(x$base_url, endpoint = "/stac"), ..., error_msg = NULL
+      url = resolve_url(x$base_url, "./stac"),
+      ...
     )
     if (!is.null(res)) {
-      content <- content_response(
-        res,
-        status_codes = "200",
-        content_types = "application/.*json",
-        key_message = c("message", "description", "detail")
-      )
-      version <- content[["stac_version"]]
+      content <- content_response_json(res)
+      version <- content$stac_version
     }
   }
   if (is.null(version))
@@ -86,38 +75,14 @@ stac_version.RSTACQuery <- function(x, ...) {
       "Could not determine STAC version in URL '%s'.",
       "Please, use 'force_version' parameter in stac() function"
     ), x$base_url)
-
-  return(version)
+  version
 }
 
 #' @export
-subclass.RSTACQuery <- function(x) {
-
-  setdiff(class(x), "RSTACQuery")
+subclass.rstac_query <- function(x) {
+  setdiff(class(x), "rstac_query")
 }
 
-#' @export
-check_subclass.RSTACQuery <- function(x, subclasses) {
-
-  if (!any(subclasses %in% subclass(x)))
-    .error("Expecting %s query.",
-           paste0("`", subclasses, "`", collapse = " or "))
-}
-
-#' @export
-endpoint.RSTACQuery <- function(q) {
-
-  .error("No endpoint was defined for the extension `%s`.", subclass(q))
-}
-
-#' @export
-before_request.RSTACQuery <- function(q) {
-
-  check_query_verb(q, "")
-}
-
-#' @export
-after_response.RSTACQuery <- function(q, res) {
-
-  check_query_verb(q, "")
+query_class <- function(q) {
+  class(q)[[1]]
 }

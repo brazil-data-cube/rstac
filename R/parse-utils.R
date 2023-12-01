@@ -17,26 +17,19 @@
 #'
 #' @noRd
 .parse_bbox <- function(bbox) {
-
   if (is.character(bbox))
     bbox <- strsplit(bbox, ",")[[1]]
-
   if (!length(bbox) %in% c(4, 6))
     .error("Param `bbox` must have 4 or 6 numbers, not %s.", length(bbox))
-
   if (length(bbox) == 4) {
-
     if (bbox[[2]] > bbox[[4]])
       bbox <- bbox[c(1, 4, 3, 2)]
   } else {
-
     if (bbox[[2]] > bbox[[5]])
       bbox <- bbox[c(1, 5, 3, 4, 2, 6)]
-
     if (bbox[[3]] > bbox[[6]])
       bbox <- bbox[c(1, 2, 6, 4, 5, 3)]
   }
-
   return(bbox)
 }
 
@@ -50,17 +43,12 @@
 #'
 #' @noRd
 .parse_limit <- function(limit) {
-
   if (length(limit) != 1)
     .error("Parameter `limit` must be a single value.")
-
   limit <- as.character(limit)
-
   limit_int <- suppressWarnings(as.integer(limit))
-
   if (any(is.na(as.integer(limit))) || as.character(limit_int) != limit)
     .error("Param `limit` must be an integer.")
-
   return(limit)
 }
 
@@ -75,10 +63,8 @@
 #'
 #' @noRd
 .parse_feature_id <- function(feature_id) {
-
   if (length(feature_id) != 1)
     .error("Parameter `feature_id` must be a single value.")
-
   return(feature_id)
 }
 
@@ -92,19 +78,15 @@
 #'
 #' @noRd
 .parse_collections <- function(collections) {
-
-  if (is.list(collections))
-    for (e in collections)
-      check_character(e, "Collection name must be a character value.")
-  else
+  if (is.list(collections)) {
+    for (col in collections)
+      check_character(col, "Collection name must be a character value.")
+  } else
     check_character(collections, "Collection name must be a character value.")
-
   if (is.character(collections) && length(collections) == 1)
     collections <- strsplit(collections, ",")[[1]]
-
   if (is.character(collections))
     collections <- as.list(collections)
-
   return(collections)
 }
 
@@ -117,7 +99,6 @@
 #'
 #' @noRd
 .parse_ids <- function(ids) {
-
   if (is.list(ids)) {
     ids <- lapply(ids, function(id) {
       if (is.numeric(id))
@@ -133,7 +114,6 @@
       ids <- strsplit(ids, ",")[[1]]
     ids <- as.list(ids)
   }
-
   return(ids)
 }
 
@@ -174,109 +154,48 @@
 #'
 #' @noRd
 .parse_datetime <- function(datetime) {
-
   # check if the date time provided is an open interval
   check_interval <-
     grepl("(?=^(\\..\\/.*)).+|(.*/\\..)", datetime, perl = TRUE)
-
   if (check_interval) {
     # regex to separate the open interval elements
     split_datetime <- strsplit(datetime, "(\\/\\..)|(\\..\\/)", perl = TRUE)
     split_datetime <- split_datetime[[1]][which(unlist(split_datetime) != "")]
-
     # checking if date time is in the RFC standards
     match_rfc <- .check_rfc_3339(split_datetime)
-
     if (!match_rfc)
       .error(paste("The interval date time provided is not in RFC format,",
                    "please check the RFC 3339 rules."))
-
     return(datetime)
   } else {
-
     # Splits the vector elements with the dates by the backslash
     split_datetime <- strsplit(datetime, "/", perl = TRUE)
     split_datetime <- unlist(split_datetime)
-
     # In case the vector has two elements it is a closed date time
     if (length(split_datetime) == 2) {
       # Checks if there is FALSE value in vector
       if (!all(.check_rfc_3339(split_datetime)))
         .error(paste0("The date time provided not follow the RFC 3339 format,",
                       "please check the RFC 3339 rules."))
-
       # formatting the closed date time according to the RFC
       interval_dt <- as.POSIXct(split_datetime,
                                 tz = "UTC",
                                 tryFormats = c("%Y-%m-%dT%H:%M:%SZ",
                                                "%Y-%m-%d"))
-
       # Check the interval, if the interval is wrong an error is returned
       if (interval_dt[1] > interval_dt[2]) {
         .error(paste("The closed date time provided is not in correct",
                      "interval, the first date time shold be less than",
                      "second."))
       }
-
       return(datetime)
     }
-
-    # Check if date time is a fixed interval
     else {
+      # Check if date time is a fixed interval
       if (!all(.check_rfc_3339(split_datetime)) || length(split_datetime) != 1)
         .error(paste("The date time provided not follow the RFC 3339 format,",
                      "please check the RFC 3339 rules."))
-
       return(datetime)
     }
   }
-}
-
-iso_3339_date_fullyear <- "[0-9]{4}"
-iso_3339_date_month <- "(1[0-2]|0[1-9])"
-iso_3339_date_mday <- "(3[01]|[12][0-9]|0[1-9])"
-iso_3339_time_hour <- "(2[0-3]|[01][0-9])"
-iso_3339_time_minute <- "([0-5][0-9])"
-iso_3339_time_second <- "(60|[0-5][0-9])"
-iso_3339_time_secfrac <- "(\\.[0-9]+)?"
-iso_3339_time_numoffset <- paste0(
-  "[+-]",
-  paste(
-    iso_3339_time_hour,
-    iso_3339_time_minute,
-    sep = ":"
-  )
-)
-iso_3339_time_offset <- paste0(
-  "(Z|", iso_3339_time_numoffset, ")"
-)
-iso_3339_partial_time <- paste0(
-  paste(
-    iso_3339_time_hour,
-    iso_3339_time_minute,
-    iso_3339_time_second,
-    sep = ":"
-  ),
-  iso_3339_time_secfrac
-)
-iso_3339_full_date <- paste(
-  iso_3339_date_fullyear,
-  iso_3339_date_month,
-  iso_3339_date_mday,
-  sep = "-"
-)
-iso_3339_full_time <- paste0(
-  iso_3339_partial_time,
-  iso_3339_time_offset
-)
-iso_3339_date_time <- paste0(
-  iso_3339_full_date,
-  "T",
-  iso_3339_full_time
-)
-grep_iso_3339_date <- function(x) {
-  grepl(paste0("^", iso_3339_full_date, "$"), x)
-}
-grep_iso_3339_date_time <- function(x) {
-  grepl(paste0("^", iso_3339_date_time, "$"), x)
 }

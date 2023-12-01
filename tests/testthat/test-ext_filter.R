@@ -5,7 +5,7 @@ conformance_test <- function(q, expected_number) {
   )
 }
 
-test_that("Conformance Test 7", {
+test_that("doc_conformance Test 7", {
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
   conformance_test(
@@ -38,10 +38,10 @@ test_that("Conformance Test 7", {
                  datetime < "2019-02-02")
   res <- post_request(res)
 
-  expect_s3_class(res, "STACItemCollection")
+  expect_s3_class(res, "doc_items")
   res2 <- items_next(res)
-  expect_s3_class(res2, "STACItemCollection")
-  expect_gt(object = items_length(res2), expected = items_length(res))
+  expect_s3_class(res2, "doc_items")
+  expect_equal(object = items_length(res2), expected = items_length(res))
 
   conformance_test(
     q = ext_filter(
@@ -252,7 +252,7 @@ test_that("Conformance Test 7", {
   )
 })
 
-test_that("Conformance Test 12", {
+test_that("doc_conformance Test 12", {
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
   conformance_test(
@@ -370,7 +370,7 @@ test_that("Conformance Test 12", {
   )
 })
 
-test_that("Conformance Test 16", {
+test_that("doc_conformance Test 16", {
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
 
@@ -457,7 +457,7 @@ test_that("Conformance Test 16", {
   )
 })
 
-test_that("Conformance Test 25", {
+test_that("doc_conformance Test 25", {
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
 
@@ -532,7 +532,7 @@ test_that("Conformance Test 25", {
   )
 })
 
-test_that("Conformance Test 34", {
+test_that("doc_conformance Test 34", {
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
   polygon <- list(
@@ -685,7 +685,7 @@ test_that("Conformance Test 34", {
   )
 })
 
-test_that("Conformance Test 38", {
+test_that("doc_conformance Test 38", {
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
 
@@ -874,7 +874,7 @@ test_that("Conformance Test 38", {
   )
 })
 
-test_that("Conformance Test 45", {
+test_that("doc_conformance Test 45", {
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
   conformance_test(

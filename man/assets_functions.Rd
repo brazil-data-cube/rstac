@@ -3,24 +3,24 @@
 \name{assets_functions}
 \alias{assets_functions}
 \alias{assets_download}
-\alias{assets_download.STACItem}
-\alias{assets_download.STACItemCollection}
+\alias{assets_download.doc_item}
+\alias{assets_download.doc_items}
 \alias{assets_download.default}
 \alias{assets_url}
-\alias{assets_url.STACItem}
-\alias{assets_url.STACItemCollection}
+\alias{assets_url.doc_item}
+\alias{assets_url.doc_items}
 \alias{assets_url.default}
 \alias{assets_select}
-\alias{assets_select.STACItem}
-\alias{assets_select.STACItemCollection}
+\alias{assets_select.doc_item}
+\alias{assets_select.doc_items}
 \alias{assets_select.default}
 \alias{assets_rename}
-\alias{assets_rename.STACItem}
-\alias{assets_rename.STACItemCollection}
+\alias{assets_rename.doc_item}
+\alias{assets_rename.doc_items}
 \alias{assets_rename.default}
 \alias{has_assets}
-\alias{has_assets.STACItem}
-\alias{has_assets.STACItemCollection}
+\alias{has_assets.doc_item}
+\alias{has_assets.doc_items}
 \alias{has_assets.default}
 \alias{asset_key}
 \alias{asset_eo_bands}
@@ -37,7 +37,7 @@ assets_download(
   fn = deprecated()
 )
 
-\method{assets_download}{STACItem}(
+\method{assets_download}{doc_item}(
   items,
   asset_names = NULL,
   output_dir = getwd(),
@@ -48,7 +48,7 @@ assets_download(
   fn = deprecated()
 )
 
-\method{assets_download}{STACItemCollection}(
+\method{assets_download}{doc_items}(
   items,
   asset_names = NULL,
   output_dir = getwd(),
@@ -74,33 +74,33 @@ assets_download(
 
 assets_url(items, asset_names = NULL, append_gdalvsi = FALSE)
 
-\method{assets_url}{STACItem}(items, asset_names = NULL, append_gdalvsi = FALSE)
+\method{assets_url}{doc_item}(items, asset_names = NULL, append_gdalvsi = FALSE)
 
-\method{assets_url}{STACItemCollection}(items, asset_names = NULL, append_gdalvsi = FALSE)
+\method{assets_url}{doc_items}(items, asset_names = NULL, append_gdalvsi = FALSE)
 
 \method{assets_url}{default}(items, asset_names = NULL, append_gdalvsi = FALSE)
 
 assets_select(items, ..., asset_names = NULL, select_fn = NULL)
 
-\method{assets_select}{STACItem}(items, ..., asset_names = NULL, select_fn = NULL)
+\method{assets_select}{doc_item}(items, ..., asset_names = NULL, select_fn = NULL)
 
-\method{assets_select}{STACItemCollection}(items, ..., asset_names = NULL, select_fn = NULL)
+\method{assets_select}{doc_items}(items, ..., asset_names = NULL, select_fn = NULL)
 
 \method{assets_select}{default}(items, ..., asset_names = NULL, select_fn = NULL)
 
 assets_rename(items, mapper = NULL, ...)
 
-\method{assets_rename}{STACItem}(items, mapper = NULL, ...)
+\method{assets_rename}{doc_item}(items, mapper = NULL, ...)
 
-\method{assets_rename}{STACItemCollection}(items, mapper = NULL, ...)
+\method{assets_rename}{doc_items}(items, mapper = NULL, ...)
 
 \method{assets_rename}{default}(items, mapper = NULL, ...)
 
 has_assets(items)
 
-\method{has_assets}{STACItem}(items)
+\method{has_assets}{doc_item}(items)
 
-\method{has_assets}{STACItemCollection}(items)
+\method{has_assets}{doc_items}(items)
 
 \method{has_assets}{default}(items)
 
@@ -111,7 +111,7 @@ asset_eo_bands(field)
 asset_raster_bands(field)
 }
 \arguments{
-\item{items}{a \code{STACItem} or \code{STACItemCollection} object
+\item{items}{a \code{doc_item} or \code{doc_items} object
 representing the result of \verb{/stac/search},
 \code{/collections/{collectionId}/items} or
 \code{/collections/{collectionId}/items/{itemId}} endpoints.}
@@ -135,7 +135,7 @@ hrefs for each asset, as well as the way download is done.}
 use \code{download_fn} parameter instead.}
 
 \item{create_json}{a \code{logical} indicating if a JSON file with item
-metadata (\code{STACItem} or \code{STACItemCollection}) must be created in the
+metadata (\code{doc_item} or \code{doc_items}) must be created in the
 output directory.}
 
 \item{items_max}{a \code{numeric} corresponding to how many items will be
@@ -149,14 +149,14 @@ included in the URL of each asset. The following schemes are supported:
 HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
 
 \item{select_fn}{a \code{function} to select assets an item
-(\code{STACItem} or \code{STACItemCollection}). This function receives as parameter
+(\code{doc_item} or \code{doc_items}). This function receives as parameter
 the asset element and, optionally, the asset name. Asset elements
 contain metadata describing spatial-temporal objects. Users can provide
 a function to select assets based on this metadata by returning a
 logical value where \code{TRUE} selects the asset, and \code{FALSE} discards it.}
 
 \item{mapper}{either a named \code{list} or a \code{function} to rename assets
-of an item (\code{STACItem} or \code{STACItemCollection}). In the case of a named
+of an item (\code{doc_item} or \code{doc_items}). In the case of a named
 list, use \verb{<old name> = <new name>} to rename the assets. The function
 can be used to rename the assets by returning a \code{character} string using
 the metadata contained in the asset object.}
@@ -167,22 +167,22 @@ return.}
 \value{
 \itemize{
 \item \code{assets_download()}: returns the same input object item
-(\code{STACItem} or \code{STACItemCollection}) where \code{href} properties point to
+(\code{doc_item} or \code{doc_items}) where \code{href} properties point to
 the download assets.
 
 \item \code{assets_url()}: returns a character vector with all assets \code{href}
-of an item (\code{STACItem} or \code{STACItemCollection}).
+of an item (\code{doc_item} or \code{doc_items}).
 
 \item \code{assets_select()}: returns the same input object item
-(\code{STACItem} or \code{STACItemCollection}) with the selected assets.
+(\code{doc_item} or \code{doc_items}) with the selected assets.
 
 \item \code{assets_rename()}: returns the same input object item
-(\code{STACItemCollection} or \code{STACItem}) with the assets renamed.
+(\code{doc_items} or \code{doc_item}) with the assets renamed.
 }
 }
 \description{
-These functions provide support to work with \code{STACItemCollection} and
-\code{STACItem} item objects.
+These functions provide support to work with \code{doc_items} and
+\code{doc_item} item objects.
 
 \itemize{
 \item \code{assets_download()}: Downloads the assets provided by the STAC API.

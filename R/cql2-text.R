@@ -253,7 +253,7 @@ wkt_spatial_type <- function(x) {
   if (!"type" %in% names(x) ||
       !any(c("coordinates", "geometries") %in% names(x)))
     .error("Not a valid GeoJSON geometry.")
-  x[["type"]]
+  x$type
 }
 
 wkt_spatial_switch <- function(x, ...) {

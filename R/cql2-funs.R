@@ -47,10 +47,10 @@ cql2_crs <- function(obj) {
 }
 
 cql2_filter <- function(obj) {
-  obj[["filter"]]
+  obj$filter
 }
 
 `cql2_filter<-` <- function(obj, value) {
-  obj[["filter"]] <- value
+  obj$filter <- value
   obj
 }

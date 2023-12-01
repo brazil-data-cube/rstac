@@ -28,7 +28,7 @@ token that will be used in the href.
 }
 \examples{
 \dontrun{
- # STACItemCollection object
+ # doc_items object
  stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") \%>\%
   stac_search(collections = "sentinel-2-l2a",
               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%

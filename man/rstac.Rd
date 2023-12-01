@@ -61,9 +61,9 @@ them accessible.
 
 \section{Data types}{
 
-The package implements the following S3 classes: \code{STACItemCollection},
-\code{STACItem}, \code{STACCatalog}, \code{STACCollectionList} and
-\code{STACCollection}. These classes are regular lists representing the
+The package implements the following S3 classes: \code{doc_items},
+\code{doc_item}, \code{doc_catalog}, \code{doc_collections} and
+\code{doc_collection}. These classes are regular lists representing the
 corresponding JSON STAC objects.
 }
 

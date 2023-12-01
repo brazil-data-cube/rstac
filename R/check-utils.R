@@ -19,48 +19,60 @@
 #'
 #' @noRd
 .check_rfc_3339 <- function(datetime) {
-
   # Standard regexp of RFC 3339
   pattern_rfc   <- "^\\d{4}-\\d{2}-\\d{2}?(T\\d{2}:\\d{2}:\\d{2}Z)?$"
   check_pattern <- grepl(pattern_rfc, datetime, perl = TRUE)
-
   return(check_pattern)
 }
 
-#' @title Utility functions
-#'
-#' @param obj       an `object` to compare.
-#'
-#' @param expected  a `character` with the expected classes.
-#'
-#' @noRd
-.check_obj <- function(obj, expected) {
+check_link <- function(link) {
+  if (!is.list(link) || is.null(names(link)))
+    .error("Invalid doc_link object.")
+  if (!"href" %in% names(link))
+    .error("Invalid doc_link object. Expecting `href` key.")
+  link
+}
 
-  obj_name <- as.character(substitute(obj, env = environment()))
-
-  if (!inherits(obj, expected))
-    .error("Invalid %s value in `%s` param.",
-           paste0("`", expected, "`", collapse = " or "), obj_name)
+check_item <- function(items) {
+  if (!is.list(items) || is.null(names(items)))
+    .error("Invalid doc_item object.")
+  if (!"type" %in% names(items) || items$type != "Feature")
+    .error("Invalid doc_item object. Expecting 'type': 'Feature' key value.")
+  if (!"geometry" %in% names(items))
+    .error("Invalid doc_item object. Expecting `geometry` key.")
+  if (!"properties" %in% names(items))
+    .error("Invalid doc_item object. Expecting `properties` key")
+  items
 }
 
 check_items <- function(items) {
-  UseMethod("check_items", items)
+  if (!is.list(items) || is.null(names(items)))
+    .error("Invalid doc_items object.")
+  if (!"type" %in% names(items) || items$type != "FeatureCollection")
+    .error("Invalid doc_items object. Expecting ",
+           "'type': 'FeatureCollection' key value.")
+  if (!"features" %in% names(items))
+    .error("Invalid doc_items object. Expecting `features` key")
+  items
 }
 
-check_items.STACItem <- function(items) {
-  if (!(is.list(items) && "assets" %in% names(items))) {
-    .error("Invalid STACItem object.")
-  }
+check_catalog <- function(catalog) {
+  if (!is.list(catalog) || is.null(names(catalog)))
+    .error("Invalid doc_catalog object.")
+  if (!"links" %in% names(catalog))
+    .error("Invalid doc_catalog object. Expecting `links` key.")
+  catalog
 }
 
-check_items.STACItemCollection <- function(items) {
-  if (!(is.list(items) && "features" %in% names(items))) {
-    .error("Invalid STACItemCollection object.")
-  }
+check_collection <- function(collection) {
+  if (!is.list(collection) || is.null(names(collection)))
+    .error("Invalid doc_collection object.")
+  if (!"id" %in% names(collection))
+    .error("Invalid doc_collection object. Expecting `id` key.")
+  if (!"links" %in% names(collection))
+    .error("Invalid doc_collection object. Expecting `links` key.")
+  collection
 }
-
-check_items.default <- check_items.STACItem
-
 
 check_character <- function(x, msg, ...) {
   if (!is.character(x))

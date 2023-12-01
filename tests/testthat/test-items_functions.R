@@ -76,7 +76,7 @@ testthat::test_that("items functions", {
                       limit = 500) %>%
           get_request(.) %>%
           items_fetch()),
-      expected = "STACItemCollection"
+      expected = "doc_items"
     )
 
     testthat::expect_error(
@@ -95,7 +95,7 @@ testthat::test_that("items functions", {
             ext_query("io:tile_id" %in% "60W") %>%
             post_request() %>%
             items_fetch())),
-      expected = "STACItemCollection"
+      expected = "doc_items"
     )
 
     # items_length--------------------------------------------------------------
@@ -103,10 +103,10 @@ testthat::test_that("items functions", {
     testthat::expect_true(is.numeric(items_length(res)))
 
     # items_datetime------------------------------------------------------------
-    # STACItemCollection
+    # doc_items
     testthat::expect_length(items_datetime(res), n = 10)
 
-    # STACItem
+    # doc_item
     testthat::expect_vector(items_datetime(item_stac), ptype = character())
 
     # provide wrong object
@@ -119,10 +119,10 @@ testthat::test_that("items functions", {
     )
 
     # items_bbox----------------------------------------------------------------
-    # STACItemCollection
+    # doc_items
     testthat::expect_length(items_bbox(res), n = 10)
 
-    # STACItem
+    # doc_item
     testthat::expect_vector(items_bbox(item_stac), ptype = double())
 
     testthat::expect_error(
@@ -134,10 +134,10 @@ testthat::test_that("items functions", {
     )
 
     # items_assets---------------------------------------------------------------
-    # STACItemCollection
+    # doc_items
     testthat::expect_length(items_assets(res), n = 11)
 
-    # STACItem
+    # doc_item
     testthat::expect_vector(items_assets(item_stac), ptype = character())
 
     # provide wrong object
@@ -163,36 +163,36 @@ testthat::test_that("items functions", {
       object = items_filter(
         res, filter_fn = function(x) {x[["eo:cloud_cover"]] < 10}
       ),
-      class = "STACItemCollection"
+      class = "doc_items"
     )
 
     testthat::expect_s3_class(
       object = items_filter(
         res, filter_fn = function(x) {x$properties$`eo:cloud_cover` < 10}
       ),
-      class = "STACItemCollection"
+      class = "doc_items"
     )
 
     testthat::expect_warning(
-      object = items_filter(res, `eo:cloud_cover` < 10),
-      class = "STACItemCollection"
+      object = items_filter(res, properies$`eo:cloud_cover` < 10),
+      class = "doc_items"
     )
 
     testthat::expect_s3_class(
       object = items_filter(res, properties$`eo:cloud_cover` < 10),
-      class = "STACItemCollection"
+      class = "doc_items"
     )
 
     testthat::expect_s3_class(
       object = items_filter(res),
-      class = "STACItemCollection"
+      class = "doc_items"
     )
 
     testthat::expect_error(
       object = items_filter(item_stac, `eo:cloud_cover` < 10)
     )
 
-    testthat::expect_error(
+    testthat::expect_warning(
       object = items_filter(res, list(`eo:cloud_cover` < 10))
     )
 
@@ -200,11 +200,6 @@ testthat::test_that("items functions", {
     testthat::expect_equal(
       object = class(items_assets(res)),
       expected = "character"
-    )
-
-    testthat::expect_message(
-      items_assets(res, simplify = FALSE),
-      regexp = "deprecated"
     )
 
     testthat::expect_equal(
@@ -215,40 +210,39 @@ testthat::test_that("items functions", {
     # items_next----------------------------------------------------------------
     testthat::expect_s3_class(
       object = items_next(res_geo),
-      class = "STACItemCollection"
+      class = "doc_items"
     )
 
     testthat::expect_s3_class(
       object = items_next(res_bbox),
-      class = "STACItemCollection"
+      class = "doc_items"
     )
 
     testthat::expect_s3_class(
       object = items_next(res),
-      class = "STACItemCollection"
+      class = "doc_items"
     )
 
     testthat::expect_s3_class(
       object = items_next(res_ext),
-      class = "STACItemCollection"
+      class = "doc_items"
     )
 
     testthat::expect_equal(
       object = items_length(items_next(res)),
-      expected = 20
+      expected = 10
     )
 
     testthat::expect_error(
       object = {
         mock_obj <- res_geo
         attributes(mock_obj)$query <- list(NULL)
-
         items_next(mock_obj)
       }
     )
 
     # items_reap----------------------------------------------------------------
-    # STACItemCollection
+    # doc_items
     testthat::expect_equal(
       object = class(items_reap(item_stac, field = c("properties", "datetime"))),
       expected = "character"
@@ -260,14 +254,12 @@ testthat::test_that("items functions", {
     )
 
     testthat::expect_null(items_reap(item_stac, FALSE))
-    testthat::expect_message(items_reap(item_stac, FALSE, field = FALSE),
-                             regexp = "^The parameter \\.\\.\\.")
 
     testthat::expect_error(
       object = subclass(items_reap(item_stac))
     )
 
-    # STACItemCollection
+    # doc_items
     testthat::expect_equal(
       object = class(items_reap(res, field = c("properties", "datetime"))),
       expected = "character"
@@ -280,14 +272,14 @@ testthat::test_that("items functions", {
 
     # items_reap with pick_fn
     testthat::expect_equal(
-      object = class(items_reap(item_stac, field = c("properties"),
-                                pick_fn = function(x) x[["datetime"]])),
+      object = class(items_reap(item_stac, field = "properties",
+                                pick_fn = function(x) x$datetime)),
       expected = "character"
     )
 
     testthat::expect_length(
-      object = items_reap(item_stac, field = c("properties"),
-                          pick_fn = function(x) x[["datetime"]]),
+      object = items_reap(item_stac, field = "properties",
+                          pick_fn = function(x) x$datetime),
       n = 1
     )
 

@@ -7,10 +7,10 @@
 queryables(q)
 }
 \arguments{
-\item{q}{a \code{RSTACQuery} object expressing a STAC query criteria.}
+\item{q}{a \code{rstac_query} object expressing a STAC query criteria.}
 }
 \value{
-A \code{RSTACQuery} object with the subclass \code{queryables} for \verb{/queryables}
+A \code{rstac_query} object with the subclass \code{queryables} for \verb{/queryables}
 endpoint.
 }
 \description{

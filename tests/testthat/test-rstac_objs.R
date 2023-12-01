@@ -5,35 +5,6 @@ testthat::test_that("stac search object", {
     stac("https://landsatlook.usgs.gov/sat-api/stac", force_version = "0.7.0")
   )
 
-  testthat::expect_equal(
-    suppressWarnings(
-      endpoint(stac("https://landsatlook.usgs.gov/sat-api/stac",
-                    force_version = "0.7.0")
-      )
-    ),
-    expected = "/stac"
-  )
-
-  testthat::expect_equal(
-    suppressWarnings(
-      endpoint(stac("https://landsatlook.usgs.gov/sat-api/stac",
-                    force_version = "0.8.1") %>%
-                 stac_search()
-
-      )
-    ),
-    expected = "/stac/search"
-  )
-
-  testthat::expect_equal(
-    suppressWarnings(
-      endpoint(stac("https://landsatlook.usgs.gov/sat-api/stac",
-                    force_version = "1.0.0")
-      )
-    ),
-    expected = "/"
-  )
-
   # no stac version detected
   testthat::expect_error(
     stac("https://landsatlook.usgs.gov/sat-api/stac") %>%
@@ -55,7 +26,7 @@ testthat::test_that("stac search object", {
     object  = class(
       rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::stac_search(bbox = "-48.19039,-16.00871,-41.6341,-11.91345")),
-    expected = c("search", "RSTACQuery")
+    expected = c("search", "rstac_query")
   )
 
   # check object class of stac_search
@@ -64,7 +35,7 @@ testthat::test_that("stac search object", {
       rstac::stac_search(bbox = c(-48.19039, -16.00871,
                                   -41.6341, -11.91345,
                                   -18.00871, -42.12)),
-    class = c("search", "RSTACQuery")
+    class = c("search", "rstac_query")
   )
 
   # check object class of stac_search
@@ -74,16 +45,7 @@ testthat::test_that("stac search object", {
         rstac::stac_search(bbox = c(-48.19039, -16.00871,
                                     -41.6341, -11.91345,
                                     -18.00871, -42.12))),
-    class = c("search", "RSTACQuery")
-  )
-
-  # check object class of stac_search
-  testthat::expect_error(
-    object  = endpoint(
-      rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        rstac::stac_search(bbox = c(-48.19039, -16.00871,
-                                    -41.6341, -11.91345,
-                                    -18.00871, -42.12)))
+    class = c("search", "rstac_query")
   )
 
   # check object class of stac_search
@@ -100,14 +62,14 @@ testthat::test_that("stac search object", {
     object  = rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       rstac::stac_search(bbox = c(-48.19039, -16.00871,
                                   -41.6341, -11.91345)),
-    class = c("search", "RSTACQuery")
+    class = c("search", "rstac_query")
   )
 
   # check object class of stac_search
   testthat::expect_s3_class(
     object  =  rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       rstac::stac_search(limit = 10),
-    class = c("search", "RSTACQuery")
+    class = c("search", "rstac_query")
   )
 
   testthat::expect_error(
@@ -134,7 +96,7 @@ testthat::test_that("stac search object", {
   testthat::expect_s3_class(
     object  =  rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       rstac::stac_search(ids = c(1, 2)),
-    class = c("search", "RSTACQuery")
+    class = c("search", "rstac_query")
   )
 
   # check object class of stac_search
@@ -144,14 +106,14 @@ testthat::test_that("stac search object", {
         "{\"type\":\"Polygon\",\"coordinates\":[[[-48.19039,-16.00871],",
         "[-41.6341,-16.00871],[-41.6341,-11.91345],[-48.19039,-11.91345],",
         "[-48.19039,-16.00871]]]}")),
-    class = c("search", "RSTACQuery")
+    class = c("search", "rstac_query")
   )
 
   # check object class of stac_search
   testthat::expect_s3_class(
     object = rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       rstac::stac_search(collections = "ssss", ids = "aaa,bbb,ccc"),
-    class = c("search", "RSTACQuery")
+    class = c("search", "rstac_query")
   )
 
   # check GET request from stac_search object
@@ -161,7 +123,7 @@ testthat::test_that("stac search object", {
         rstac::stac_search(bbox = c(-48.19039, -16.00871,
                                     -41.6341, -11.91345)) %>%
         get_request()),
-    expected = "STACItemCollection"
+    expected = "doc_items"
   )
 
   # check for invalid stac endpoint
@@ -291,7 +253,7 @@ testthat::test_that("stac search object", {
   testthat::expect_s3_class(
     object = ext_query(s_search, "bdc:tile" %in% "007004") %>%
       post_request(),
-    class = "STACItemCollection"
+    class = "doc_items"
   )
 
   # Check print function------------------------------------------------------
@@ -302,7 +264,7 @@ testthat::test_that("stac search object", {
       rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::stac_search(datetime = "2018-01-01/2018-07-01", limit = 10) %>%
         get_request(), n = 10),
-    regexp = "###STACItemCollection"
+    regexp = "###Items"
   )
 
   testthat::expect_output(
@@ -310,7 +272,7 @@ testthat::test_that("stac search object", {
       rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         rstac::stac_search(datetime = "2018-01-01/2018-07-01", limit = 10) %>%
         get_request(), n = 10),
-    regexp = "###STACItemCollection"
+    regexp = "###Items"
   )
 
   # Check errors in fixed date time-------------------------------------------
@@ -405,8 +367,8 @@ testthat::test_that("stac collection object", {
     get_request()
 
   testthat::expect_equal(
-    object   =  subclass(s_col),
-    expected = "STACCollectionList"
+    object   =  stac_subclass(s_col),
+    expected = "doc_collections"
   )
 
   testthat::expect_equal(
@@ -426,17 +388,12 @@ testthat::test_that("stac collection object", {
   testthat::expect_output(
     object = print(rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
                      rstac::collections()),
-    regexp = "###RSTACQuery"
+    regexp = "###rstac_query"
   )
 
   testthat::expect_output(
     object = print(s_col),
     regexp = "collections"
-  )
-
-  testthat::expect_equal(
-    object   =  attributes(s_col)$query$endpoint,
-    expected = "/collections"
   )
 
   # check object class of stac collections
@@ -457,13 +414,13 @@ testthat::test_that("stac collection object", {
   # check request from stac collections object
   testthat::expect_equal(
     object   = subclass(s_colid %>% get_request()),
-    expected = "STACCollection"
+    expected = "doc_collection"
   )
 
   # check print stac_collection object
   testthat::expect_output(
     object   = print((s_colid %>% get_request())),
-    regexp   = "###STACCollection"
+    regexp   = "###Collection"
   )
 })
 
@@ -491,7 +448,7 @@ testthat::test_that("stac object", {
     object   = subclass(
       rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         get_request()),
-    expected = "STACCatalog"
+    expected = "doc_catalog"
   )
 
   # check print stac_collection object
@@ -499,7 +456,7 @@ testthat::test_that("stac object", {
     object   = print(
       rstac::stac("https://brazildatacube.dpi.inpe.br/stac") %>%
         get_request()),
-    regexp   = "###STACCatalog"
+    regexp   = "###Catalog"
   )
 })
 
@@ -582,7 +539,7 @@ testthat::test_that("stac item object", {
   # output test
   testthat::expect_output(
     object   = print(stac_item),
-    regexp   = "###STACItem"
+    regexp   = "###Item"
   )
 
   # output test
@@ -615,13 +572,13 @@ testthat::test_that("queryables object", {
     object = subclass(
       rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         queryables()),
-    expected = c("queryables", "stac")
+    expected = c("queryables")
   )
   testthat::expect_equal(
     object = subclass(
       rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         queryables()),
-    expected = c("queryables", "stac")
+    expected = c("queryables")
   )
 
   testthat::expect_equal(
@@ -629,7 +586,7 @@ testthat::test_that("queryables object", {
       rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         collections("sentinel") %>%
         queryables()),
-    expected = c("queryables", "collection_id")
+    expected = c("queryables")
   )
 
   testthat::expect_equal(
@@ -637,7 +594,7 @@ testthat::test_that("queryables object", {
       stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
         queryables() %>%
         get_request()),
-    expected = c("Queryables", "RSTACDocument", "list")
+    expected = c("doc_queryables", "rstac_doc", "list")
   )
 
   testthat::expect_equal(
@@ -646,7 +603,7 @@ testthat::test_that("queryables object", {
         collections(collection_id = "sentinel-2-l2a") %>%
         queryables() %>%
         get_request()),
-    expected = c("Queryables", "RSTACDocument", "list")
+    expected = c("doc_queryables", "rstac_doc", "list")
   )
 
   testthat::expect_output(
@@ -670,14 +627,14 @@ testthat::test_that("conformance object", {
     object = subclass(
       rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         conformance()),
-    expected = c("conformance", "stac")
+    expected = c("conformance")
   )
 
   testthat::expect_equal(
     object = subclass(
       rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
         conformance()),
-    expected = c("conformance", "stac")
+    expected = c("conformance")
   )
 
   testthat::expect_equal(
@@ -685,7 +642,7 @@ testthat::test_that("conformance object", {
       stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
         conformance() %>%
         get_request()),
-    expected = c("Conformance", "RSTACDocument", "list")
+    expected = c("doc_conformance", "rstac_doc", "list")
   )
 
   testthat::expect_output(

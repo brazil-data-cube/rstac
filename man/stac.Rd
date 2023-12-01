@@ -16,7 +16,7 @@ the version of STAC used. It is highly recommended that you inform the STAC
 version you are using.}
 }
 \value{
-A \code{RSTACQuery} object with the subclass \code{stac} containing all
+A \code{rstac_query} object with the subclass \code{stac} containing all
 request parameters to be provided to API service.
 }
 \description{

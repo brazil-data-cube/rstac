@@ -7,13 +7,13 @@
 collections(q, collection_id = NULL)
 }
 \arguments{
-\item{q}{a \code{RSTACQuery} object expressing a STAC query
+\item{q}{a \code{rstac_query} object expressing a STAC query
 criteria.}
 
 \item{collection_id}{a \code{character} collection id to be retrieved.}
 }
 \value{
-A \code{RSTACQuery} object with the subclass \code{collections} for
+A \code{rstac_query} object with the subclass \code{collections} for
 \verb{/collections/} endpoint, or a \code{collection_id} subclass for
 \code{/collections/{collection_id}} endpoint, containing all search field
 parameters to be provided to STAC API web service.
