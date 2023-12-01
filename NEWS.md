@@ -1,5 +1,9 @@
 # rstac (development version)
 
+# rstac 1.0.0-beta (Pre-Release)
+
+* Add support to static catalogs
+
 # rstac 0.9.2-4 (Released 2023-06-15)
 
 * Fix vignette BDC errors

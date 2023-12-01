@@ -110,18 +110,18 @@ it_obj <- s_obj |>
 
 it_obj
 #> ###STACItemCollection
-#> - matched feature(s): 1003
-#> - features (100 item(s) / 903 not fetched):
-#>   - CB4-16D_V2_007004_20230509
-#>   - CB4-16D_V2_007005_20230509
-#>   - CB4-16D_V2_007006_20230509
-#>   - CB4-16D_V2_008004_20230509
-#>   - CB4-16D_V2_008006_20230509
-#>   - CB4-16D_V2_008005_20230509
-#>   - CB4-16D_V2_007004_20230423
-#>   - CB4-16D_V2_007005_20230423
-#>   - CB4-16D_V2_007006_20230423
-#>   - CB4-16D_V2_008004_20230423
+#> - matched feature(s): 1072
+#> - features (100 item(s) / 972 not fetched):
+#>   - CB4-16D_V2_007004_20231101
+#>   - CB4-16D_V2_007006_20231101
+#>   - CB4-16D_V2_007005_20231101
+#>   - CB4-16D_V2_008004_20231101
+#>   - CB4-16D_V2_008006_20231101
+#>   - CB4-16D_V2_008005_20231101
+#>   - CB4-16D_V2_007004_20231016
+#>   - CB4-16D_V2_007005_20231016
+#>   - CB4-16D_V2_007006_20231016
+#>   - CB4-16D_V2_008004_20231016
 #>   - ... with 90 more feature(s).
 #> - assets: 
 #> BAND13, BAND14, BAND15, BAND16, CLEAROB, CMASK, EVI, NDVI, PROVENANCE, thumbnail, TOTALOB
@@ -156,7 +156,7 @@ search criteria:
 # it_obj variable from the last code example
 it_obj |> 
   items_matched()
-#> [1] 1003
+#> [1] 1072
 ```
 
 However, if we count how many items there are in `it_obj` variable, we
@@ -177,7 +177,7 @@ it_obj <- it_obj |>
 
 it_obj |>
   items_length()
-#> [1] 1003
+#> [1] 1072
 ```
 
 ### Download assets

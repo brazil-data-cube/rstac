@@ -264,7 +264,7 @@ items_fetched <- s_obj |>
 
 items_fetched
 ```
-Note that the 1127 has been recovered:
+Note that all items was fetched:
 
 ```{r length-2}
 items_length(items_fetched)

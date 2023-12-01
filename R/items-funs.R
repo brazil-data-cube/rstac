@@ -296,6 +296,8 @@ items_fetch.doc_items <- function(items, ...,
       }
     })
   }
+  # Initialize the items
+  next_items <- items
   while (TRUE) {
     # check if features is complete
     if (!is.null(matched) && (items_length(items) == matched))
@@ -304,15 +306,15 @@ items_fetch.doc_items <- function(items, ...,
     if (!is.null(matched) && (items_length(items) > matched))
       .error(paste("Length of returned items (%s) is different",
                    "from matched items (%s)."), items_length(items), matched)
-    new_items <- tryCatch({
-      items_next(items, ...)
+    next_items <- tryCatch({
+      items_next(next_items, ...)
     }, next_error = function(e) NULL)
-    if (is.null(new_items))
+    if (is.null(next_items))
       break
-    items$features <- c(items$features, new_items$features)
+    items$features <- c(items$features, next_items$features)
     # update progress bar
     if (progress)
-      utils::setTxtProgressBar(pb, length(new_items))
+      utils::setTxtProgressBar(pb, length(next_items))
   }
   items
 }
