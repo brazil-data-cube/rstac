@@ -52,24 +52,6 @@ testthat::test_that("assets functions", {
     expected = "doc_items"
   )
 
-  # deprec param
-  testthat::expect_message(
-    object = {
-      stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        stac_search(
-          collections = "CB4-16D-2",
-          datetime    = "2019-09-01/2019-11-01",
-          limit       = 1) %>%
-        get_request() %>%
-        assets_download(asset_names = c("thumbnail"),
-                        fn = function(x) { x },
-                        output_dir = tempdir(),
-                        create_json = FALSE,
-                        overwrite = TRUE)
-    },
-    regexp = "deprecated"
-  )
-
   testthat::expect_equal(
     object = {
       x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
@@ -102,22 +84,6 @@ testthat::test_that("assets functions", {
       subclass(x)
     },
     expected = "doc_item"
-  )
-
-  # deprec fn param
-  testthat::expect_message(
-    object = {
-      stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        collections("CB4-16D-2") %>%
-        items("CB4-16D_V2_000002_20230509") %>%
-        get_request() %>%
-        assets_download(asset_names = c("thumbnail"),
-                        fn = function(x) {x},
-                        output_dir = tempdir(),
-                        create_json = FALSE,
-                        overwrite = TRUE)
-    },
-    regexp = "deprecated"
   )
 
   testthat::expect_equal(
@@ -345,49 +311,41 @@ testthat::test_that("assets functions", {
   )
 
   # assets_select-----------------------------------------------------------
-  # deprec function assets_select
   testthat::expect_equal(
-    object = {suppressWarnings(class(assets_select(stac_items, `eo:bands` < 6)))},
+    object = {class(assets_select(stac_items, `eo:bands` < 6))},
     expected = c("doc_items", "rstac_doc", "list")
   )
 
-  # deprec function assets_select
   testthat::expect_equal(
-    object = {suppressWarnings(class(assets_select(stac_items, select_fn = function(x) {
+    object = {class(assets_select(stac_items, select_fn = function(x) {
       if ("eo:bands" %in% names(x))
         return(x$`eo:bands` < 6)
       return(FALSE)
-    })))},
+    }))},
     expected = c("doc_items", "rstac_doc", "list")
   )
 
-  # deprec function assets_select
   testthat::expect_equal(
     object = class(assets_select(stac_item, `eo:bands` < 6)),
     expected = c("doc_item", "rstac_doc", "list")
   )
 
-  # deprec function assets_select
   testthat::expect_error(
     object = assets_select(stac_item, a = `eo:bands` < 6),
   )
 
-  # deprec function assets_select
   testthat::expect_warning(
     object = assets_select(stac_item, `eo:dbandsd` < 6),
   )
 
-  # deprec function assets_select
   testthat::expect_error(
     object = assets_select(stac_items, a = `eo:bands` < 6),
   )
 
-  # deprec function assets_select
   testthat::expect_warning(
     object = assets_select(stac_items, `eo:dbandsd` < 6),
   )
 
-  # deprec function assets_select
   testthat::expect_equal(
     object = {
       class(assets_select(stac_item, select_fn = function(x) {

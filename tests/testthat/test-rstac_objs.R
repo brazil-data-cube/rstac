@@ -542,23 +542,6 @@ testthat::test_that("stac item object", {
     regexp   = "###Item"
   )
 
-  # output test
-  testthat::expect_equal(
-    object   = items_length(stac_item),
-    expected = 1
-  )
-
-  # output test
-  testthat::expect_equal(
-    object   = items_matched(stac_item),
-    expected = 1
-  )
-
-  # output test
-  testthat::expect_equal(
-    object   = items_length(stac_item),
-    expected = 1
-  )
 })
 
 testthat::test_that("queryables object", {

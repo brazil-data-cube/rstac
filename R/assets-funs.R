@@ -47,9 +47,6 @@
 #' each item to be downloaded. Using this function, you can change the
 #' hrefs for each asset, as well as the way download is done.
 #'
-#' @param fn          `r lifecycle::badge('deprecated')`
-#' use `download_fn` parameter instead.
-#'
 #' @param append_gdalvsi a `logical` value. If true, gdal drivers are
 #' included in the URL of each asset. The following schemes are supported:
 #' HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
@@ -185,14 +182,11 @@ assets_download <- function(items,
                             asset_names = NULL,
                             output_dir = getwd(),
                             overwrite = FALSE, ...,
-                            download_fn = NULL,
-                            fn = deprecated()) {
-
+                            download_fn = NULL) {
   # check output dir
   if (!dir.exists(output_dir))
     .error(paste("The directory provided does not exist.",
-                 "Please specify a valid directory."))
-
+                 "Please, provide an existing directory."))
   UseMethod("assets_download", items)
 }
 
@@ -204,17 +198,7 @@ assets_download.doc_item <- function(items,
                                      output_dir = getwd(),
                                      overwrite = FALSE, ...,
                                      create_json = FALSE,
-                                     download_fn = NULL,
-                                     fn = deprecated()) {
-  if (!missing(fn)) {
-    deprec_parameter(
-      deprec_var = "fn",
-      deprec_version = "0.9.2",
-      msg = "Please, use `download_fn` parameter instead."
-    )
-    download_fn <- fn
-  }
-
+                                     download_fn = NULL) {
   if (!is.null(asset_names)) {
     in_assets <- asset_names %in% items_assets(items)
     if (!all(asset_names %in% items_assets(items))) {
@@ -223,12 +207,10 @@ assets_download.doc_item <- function(items,
     }
     items <- assets_select(items = items, asset_names = asset_names)
   }
-
   items$assets <- lapply(
     items$assets, asset_download, output_dir = output_dir,
     overwrite = overwrite, ..., download_fn = download_fn
   )
-
   if (create_json) {
     file <- "item.json"
     if ("id" %in% names(items)) {
@@ -236,29 +218,20 @@ assets_download.doc_item <- function(items,
     }
     cat(to_json(items), file = file.path(output_dir, file))
   }
-  return(items)
+  items
 }
 
 #' @rdname assets_functions
 #'
 #' @export
 assets_download.doc_items <- function(items,
-                                               asset_names = NULL,
-                                               output_dir = getwd(),
-                                               overwrite = FALSE, ...,
-                                               download_fn = NULL,
-                                               create_json = TRUE,
-                                               items_max = Inf,
-                                               progress = TRUE,
-                                               fn = deprecated()) {
-  if (!missing(fn)) {
-    deprec_parameter(
-      deprec_var = "fn",
-      deprec_version = "0.9.2",
-      msg = "Please, use `download_fn` parameter instead."
-    )
-    download_fn <- fn
-  }
+                                      asset_names = NULL,
+                                      output_dir = getwd(),
+                                      overwrite = FALSE, ...,
+                                      download_fn = NULL,
+                                      create_json = TRUE,
+                                      items_max = Inf,
+                                      progress = TRUE) {
   # remove empty items
   items <- items_compact(items)
   items_max <- max(0, min(items_length(items), items_max))
@@ -324,8 +297,8 @@ assets_url.doc_item <- function(items,
 #'
 #' @export
 assets_url.doc_items <- function(items,
-                                          asset_names = NULL,
-                                          append_gdalvsi = FALSE) {
+                                 asset_names = NULL,
+                                 append_gdalvsi = FALSE) {
   if (is.null(asset_names)) {
     asset_names <- items_assets(items)
   }
@@ -401,8 +374,8 @@ assets_select.doc_item <- function(items, ...,
 #'
 #' @export
 assets_select.doc_items <- function(items, ...,
-                                             asset_names = NULL,
-                                             select_fn = NULL) {
+                                    asset_names = NULL,
+                                    select_fn = NULL) {
   items <- foreach_item(
     items, assets_select, asset_names = asset_names, ...,
     select_fn = select_fn
@@ -475,9 +448,7 @@ has_assets <- function(items) {
 #'
 #' @export
 has_assets.doc_item <- function(items) {
-  if (!"assets" %in% names(items))
-    .error("Parameter `items` is not a valid.")
-  return(length(items$assets) > 0)
+  length(items$assets) > 0
 }
 
 #' @rdname assets_functions

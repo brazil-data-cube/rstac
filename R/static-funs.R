@@ -133,7 +133,10 @@ read_items <- function(collection, limit = 100, page = 1, progress = TRUE) {
 #'
 #' @export
 links <- function(x, ...) {
-  exprs <- as.list(substitute(list(...)))[-1]
+  exprs <- unquote(
+    expr = as.list(substitute(list(...), env = environment())[-1]),
+    env =  parent.frame()
+  )
   sel <- !logical(length(x$links))
   for (expr in exprs) {
     sel <- sel & map_lgl(x$links, function(x) eval(expr, envir = x))

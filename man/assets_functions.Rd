@@ -33,8 +33,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
-  download_fn = NULL,
-  fn = deprecated()
+  download_fn = NULL
 )
 
 \method{assets_download}{doc_item}(
@@ -44,8 +43,7 @@ assets_download(
   overwrite = FALSE,
   ...,
   create_json = FALSE,
-  download_fn = NULL,
-  fn = deprecated()
+  download_fn = NULL
 )
 
 \method{assets_download}{doc_items}(
@@ -57,8 +55,7 @@ assets_download(
   download_fn = NULL,
   create_json = TRUE,
   items_max = Inf,
-  progress = TRUE,
-  fn = deprecated()
+  progress = TRUE
 )
 
 \method{assets_download}{default}(
@@ -68,8 +65,7 @@ assets_download(
   overwrite = FALSE,
   ...,
   create_json = FALSE,
-  download_fn = NULL,
-  fn = deprecated()
+  download_fn = NULL
 )
 
 assets_url(items, asset_names = NULL, append_gdalvsi = FALSE)
@@ -130,9 +126,6 @@ if FALSE, a warning message is shown.}
 \item{download_fn}{a \code{function} to handle download of assets for
 each item to be downloaded. Using this function, you can change the
 hrefs for each asset, as well as the way download is done.}
-
-\item{fn}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-use \code{download_fn} parameter instead.}
 
 \item{create_json}{a \code{logical} indicating if a JSON file with item
 metadata (\code{doc_item} or \code{doc_items}) must be created in the

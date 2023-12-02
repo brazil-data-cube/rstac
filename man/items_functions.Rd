@@ -3,13 +3,9 @@
 \name{items_functions}
 \alias{items_functions}
 \alias{items_length}
-\alias{items_length.doc_item}
 \alias{items_length.doc_items}
-\alias{items_length.default}
 \alias{items_matched}
-\alias{items_matched.doc_item}
 \alias{items_matched.doc_items}
-\alias{items_matched.default}
 \alias{items_fetch}
 \alias{items_fetch.doc_items}
 \alias{items_next}
@@ -17,11 +13,9 @@
 \alias{items_datetime}
 \alias{items_datetime.doc_item}
 \alias{items_datetime.doc_items}
-\alias{items_datetime.default}
 \alias{items_bbox}
 \alias{items_bbox.doc_item}
 \alias{items_bbox.doc_items}
-\alias{items_bbox.default}
 \alias{items_assets}
 \alias{items_assets.doc_item}
 \alias{items_assets.doc_items}
@@ -37,7 +31,6 @@
 \alias{items_fields}
 \alias{items_fields.doc_item}
 \alias{items_fields.doc_items}
-\alias{items_fields.default}
 \alias{items_sign}
 \alias{items_sign.doc_item}
 \alias{items_sign.doc_items}
@@ -49,19 +42,11 @@
 \usage{
 items_length(items)
 
-\method{items_length}{doc_item}(items)
-
 \method{items_length}{doc_items}(items)
-
-\method{items_length}{default}(items)
 
 items_matched(items, matched_field = NULL)
 
-\method{items_matched}{doc_item}(items, matched_field = NULL)
-
 \method{items_matched}{doc_items}(items, matched_field = NULL)
-
-\method{items_matched}{default}(items, matched_field = NULL)
 
 items_fetch(items, ...)
 
@@ -77,15 +62,11 @@ items_datetime(items)
 
 \method{items_datetime}{doc_items}(items)
 
-\method{items_datetime}{default}(items)
-
 items_bbox(items)
 
 \method{items_bbox}{doc_item}(items)
 
 \method{items_bbox}{doc_items}(items)
-
-\method{items_bbox}{default}(items)
 
 items_assets(items)
 
@@ -111,13 +92,11 @@ items_reap(items, field, pick_fn = identity)
 
 \method{items_reap}{default}(items, field, pick_fn = identity)
 
-items_fields(items, field = NULL, ...)
+items_fields(items, field = NULL)
 
 \method{items_fields}{doc_item}(items, field = NULL)
 
 \method{items_fields}{doc_items}(items, field = NULL)
-
-\method{items_fields}{default}(items, field = NULL)
 
 items_sign(items, sign_fn)
 
@@ -158,8 +137,6 @@ addressed by \code{field} parameter.}
 
 \item{sign_fn}{a \code{function} that receives an item as a parameter
 and returns an item signed.}
-
-\item{index}{an \code{atomic} vector with values as the group index.}
 }
 \value{
 \itemize{

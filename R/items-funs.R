@@ -58,8 +58,6 @@
 #' @param pick_fn         a `function` used to pick elements from items
 #' addressed by `field` parameter.
 #'
-#' @param index           an `atomic` vector with values as the group index.
-#'
 #' @param sign_fn         a `function` that receives an item as a parameter
 #' and returns an item signed.
 #'
@@ -207,14 +205,6 @@ items_length <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_length.doc_item <- function(items) {
-  check_item(items)
-  return(1)
-}
-
-#' @rdname items_functions
-#'
-#' @export
 items_length.doc_items <- function(items) {
   check_items(items)
   return(length(items$features))
@@ -223,21 +213,8 @@ items_length.doc_items <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_length.default <- items_length.doc_item
-
-#' @rdname items_functions
-#'
-#' @export
 items_matched  <- function(items, matched_field = NULL) {
   UseMethod("items_matched", items)
-}
-
-#' @rdname items_functions
-#'
-#' @export
-items_matched.doc_item  <- function(items, matched_field = NULL) {
-  check_item(items)
-  return(1)
 }
 
 #' @rdname items_functions
@@ -259,11 +236,6 @@ items_matched.doc_items <- function(items, matched_field = NULL) {
     matched <- items$numberMatched
   matched
 }
-
-#' @rdname items_functions
-#'
-#' @export
-items_matched.default <- items_matched.doc_item
 
 #' @rdname items_functions
 #'
@@ -385,7 +357,7 @@ items_datetime <- function(items) {
 items_datetime.doc_item <- function(items) {
   check_item(items)
   if (!"datetime" %in% names(items$properties)) {
-    .error("Parameter `items` is invalid.")
+    .error("Item has no datetime field.")
   }
   items$properties$datetime
 }
@@ -397,11 +369,6 @@ items_datetime.doc_items <- function(items) {
   check_items(items)
   map_chr(items$features, items_datetime)
 }
-
-#' @rdname items_functions
-#'
-#' @export
-items_datetime.default <- items_datetime.doc_item
 
 #' @rdname items_functions
 #'
@@ -429,11 +396,6 @@ items_bbox.doc_items <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_bbox.default <- items_bbox.doc_item
-
-#' @rdname items_functions
-#'
-#' @export
 items_assets <- function(items) {
   UseMethod("items_assets", items)
 }
@@ -443,7 +405,9 @@ items_assets <- function(items) {
 #' @export
 items_assets.doc_item <- function(items) {
   check_item(items)
-  items_fields(items, field = "assets")
+  if (!"assets" %in% names(items))
+    .error("Item has no assets.")
+  names(items$assets)
 }
 
 #' @rdname items_functions
@@ -457,7 +421,11 @@ items_assets.doc_items <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_assets.default <- items_assets.doc_item
+items_assets.default <- function(items) {
+  if (!"assets" %in% names(items))
+    .error("Item has no assets.")
+  names(items$assets)
+}
 
 #' @rdname items_functions
 #'
@@ -470,7 +438,6 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #'
 #' @export
 items_filter.doc_items <- function(items, ..., filter_fn = NULL) {
-  check_items(items)
   init_length <- items_length(items)
   exprs <- unquote(
     expr = as.list(substitute(list(...), env = environment())[-1]),
@@ -544,12 +511,14 @@ items_reap.doc_items <- function(items, field, pick_fn = identity) {
 #' @rdname items_functions
 #'
 #' @export
-items_reap.default <- items_reap.doc_item
+items_reap.default <- function(items, field, pick_fn = identity) {
+  apply_deeply(items, i = field, fn = pick_fn)
+}
 
 #' @rdname items_functions
 #'
 #' @export
-items_fields <- function(items, field = NULL, ...) {
+items_fields <- function(items, field = NULL) {
   UseMethod("items_fields", items)
 }
 
@@ -575,14 +544,9 @@ items_fields.doc_items <- function(items, field = NULL) {
   check_items(items)
   if (items_length(items) == 0)
     return(NULL)
-  fields <- lapply(items$features, items_fields.doc_item, field = field)
+  fields <- apply_deeply(items, i = c("features", "*", field), fn = names)
   sort(unique(unlist(unname(fields))))
 }
-
-#' @rdname items_functions
-#'
-#' @export
-items_fields.default <- items_fields.doc_item
 
 #' @rdname items_functions
 #'
@@ -610,7 +574,9 @@ items_sign.doc_items <- function(items, sign_fn) {
 #' @rdname items_functions
 #'
 #' @export
-items_sign.default <- items_sign.doc_item
+items_sign.default <- function(items, sign_fn) {
+  sign_fn(items)
+}
 
 #' @rdname items_functions
 #'
@@ -631,5 +597,6 @@ items_as_sf.doc_item <- function(items) {
 #'
 #' @export
 items_as_sf.doc_items <- function(items) {
-  items_as_sf.doc_item(items)
+  check_items(items)
+  geojsonsf::geojson_sf(to_json(items))
 }
