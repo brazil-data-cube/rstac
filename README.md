@@ -82,7 +82,7 @@ Brazilian National Space Research Institute (INPE).
 s_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
 
 get_request(s_obj)
-#> ###STACCatalog
+#> ###Catalog
 #> - id: bdc
 #> - description: Brazil Data Cube Catalog
 #> - field(s): description, id, stac_version, links
@@ -109,7 +109,7 @@ it_obj <- s_obj |>
   get_request()
 
 it_obj
-#> ###STACItemCollection
+#> ###Items
 #> - matched feature(s): 1072
 #> - features (100 item(s) / 972 not fetched):
 #>   - CB4-16D_V2_007004_20231101
@@ -244,6 +244,11 @@ material support:
 
 - Radiant Earth Foundation and STAC Project Steering Committee for the
   advance of STAC ecosystem programme.
+
+- OpenGeoHub Foundation and the European Commission (EC) through the
+  project Open-Earth-Monitor Cyberinfrastructure: Environmental
+  information to support EU’s Green Deal (1 Jun. 2022 – 31 May 2026 -
+  101059548)
 
 ## How to contribute?
 

@@ -217,6 +217,8 @@ We acknowledge and thank the project funders that provided financial and materia
 
 - Radiant Earth Foundation and STAC Project Steering Committee for the advance of STAC ecosystem programme.
 
+- OpenGeoHub Foundation and the European Commission (EC) through the project Open-Earth-Monitor Cyberinfrastructure: Environmental information to support EU’s Green Deal (1 Jun. 2022 – 31 May 2026 - 101059548)
+
 ## How to contribute?
 
 The `rstac` package was implemented based on an extensible architecture, so 
