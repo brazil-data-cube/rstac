@@ -30,6 +30,8 @@ stac_subclass <- function(obj) {
       return("doc_items")
     if (obj$type == "Collection")
       return("doc_collection")
+    if (obj$type == "Catalog")
+      return("doc_catalog")
     .error("Invalid STAC document. Key value 'type': '", obj$type,
            "' is not a supported STAC document.")
   } else {

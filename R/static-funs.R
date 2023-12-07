@@ -159,5 +159,5 @@ link_open <- function(link, base_url = NULL) {
     url <- link
   content <- jsonlite::read_json(url)
   # create an rstac doc from content and return
-  as_rstac_doc(content)
+  as_rstac_doc(content, base_url = url)
 }
