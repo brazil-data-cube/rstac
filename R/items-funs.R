@@ -600,3 +600,26 @@ items_as_sf.doc_items <- function(items) {
   check_items(items)
   geojsonsf::geojson_sf(to_json(items))
 }
+
+#' @rdname items_functions
+#'
+#' @export
+items_geometry <- function(items) {
+  UseMethod("items_geometry", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_geometry.doc_item <- function(items) {
+  check_item(items)
+  geojsonsf::geojson_sf(to_json(items))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_geometry.doc_items <- function(items) {
+  check_items(items)
+  geojsonsf::geojson_sf(to_json(items))
+}
