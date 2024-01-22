@@ -22,7 +22,7 @@ License: MIT + file LICENSE
 URL: https://brazil-data-cube.github.io/rstac/
 BugReports: https://github.com/brazil-data-cube/rstac/issues
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.0
 Depends:
     R (>= 3.5)
 Imports:
@@ -69,6 +69,7 @@ Collate:
     'ext_filter.R'
     'ext_query.R'
     'extensions.R'
+    'geom-funs.R'
     'items-funs.R'
     'items-utils.R'
     'items-query.R'
