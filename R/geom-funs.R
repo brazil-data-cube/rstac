@@ -17,8 +17,7 @@ get_geom <- function(x) {
     LineString = linestring(x),
     MultiLineString = multi_linestring(x),
     Polygon = polygon(x),
-    MultiPolygon = multi_polygon(x),
-    GeometryCollection = geom_collection(x)
+    MultiPolygon = multi_polygon(x)
   )
 }
 
@@ -33,21 +32,33 @@ multi_point <- function(x) {
 }
 
 linestring <- function(x) {
-
+  data <- matrix(unlist(x$coordinates), ncol = 2, byrow = TRUE)
+  structure(c(data), dim = dim(data), class = c("XY", "LINESTRING", "sfg"))
 }
 
 multi_linestring <- function(x) {
-
+  data <- lapply(x$coordinates, \(ls) {
+    data <- matrix(unlist(ls), ncol = 2, byrow = TRUE)
+    structure(c(data), dim = dim(data))
+  })
+  structure(data, class = c("XY", "MULTILINESTRING", "sfg"))
 }
 
 polygon <- function(x) {
-
+  data <- lapply(x$coordinates, \(lr) {
+    data <- matrix(unlist(lr), ncol = 2, byrow = TRUE)
+    structure(c(data), dim = dim(data))
+  })
+  structure(data, class = c("XY", "POLYGON", "sfg"))
 }
 
 multi_polygon <- function(x) {
-
+  data <- lapply(x$coordinates, \(pl) {
+    lapply(pl, \(lr) {
+      data <- matrix(unlist(lr), ncol = 2, byrow = TRUE)
+      structure(c(data), dim = dim(data))
+    })
+  })
+  structure(data, class = c("XY", "MULTIPOLYGON", "sfg"))
 }
 
-geom_collection <- function(x) {
-
-}
