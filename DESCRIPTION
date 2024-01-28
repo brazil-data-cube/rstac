@@ -69,6 +69,7 @@ Collate:
     'ext_filter.R'
     'ext_query.R'
     'extensions.R'
+    'geom-funs.R'
     'items-funs.R'
     'items-utils.R'
     'items-query.R'
