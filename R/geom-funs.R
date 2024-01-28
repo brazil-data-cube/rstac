@@ -1,5 +1,5 @@
 geom_type <- function(x) {
-  if (!"type" %in% names(x) || !"coordinates" %in% names(x))
+  if (!"type" %in% names(x))
     .error("Invalid geometry object")
   x$type
 }
@@ -10,6 +10,8 @@ geom_switch <- function(x, ...) {
 }
 
 get_geom <- function(x) {
+  if ("geometry" %in% names(x))
+    x <- x$geometry
   geom_switch(
     x,
     Point = point(x),
@@ -17,7 +19,8 @@ get_geom <- function(x) {
     LineString = linestring(x),
     MultiLineString = multi_linestring(x),
     Polygon = polygon(x),
-    MultiPolygon = multi_polygon(x)
+    MultiPolygon = multi_polygon(x),
+    GeometryCollection = geom_collection(x)
   )
 }
 
@@ -62,3 +65,7 @@ multi_polygon <- function(x) {
   structure(data, class = c("XY", "MULTIPOLYGON", "sfg"))
 }
 
+geom_collection <- function(x) {
+  data <- lapply(x$geometries, get_geom)
+  structure(data, class = c("XY", "GEOMETRYCOLLECTION", "sfg"))
+}

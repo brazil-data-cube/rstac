@@ -38,6 +38,12 @@
 \alias{items_as_sf}
 \alias{items_as_sf.doc_item}
 \alias{items_as_sf.doc_items}
+\alias{items_as_sfc}
+\alias{items_as_sfc.doc_item}
+\alias{items_as_sfc.doc_items}
+\alias{items_intersects}
+\alias{items_intersects.doc_item}
+\alias{items_intersects.doc_items}
 \title{Items functions}
 \usage{
 items_length(items)
@@ -106,11 +112,23 @@ items_sign(items, sign_fn)
 
 \method{items_sign}{default}(items, sign_fn)
 
-items_as_sf(items)
+items_as_sf(items, ..., crs = 4326)
 
-\method{items_as_sf}{doc_item}(items)
+\method{items_as_sf}{doc_item}(items, ..., crs = 4326)
 
-\method{items_as_sf}{doc_items}(items)
+\method{items_as_sf}{doc_items}(items, ..., crs = 4326)
+
+items_as_sfc(items, crs = 4326)
+
+\method{items_as_sfc}{doc_item}(items, crs = 4326)
+
+\method{items_as_sfc}{doc_items}(items, crs = 4326)
+
+items_intersects(items, geom, ..., crs = 4326)
+
+\method{items_intersects}{doc_item}(items, geom, ..., crs = 4326)
+
+\method{items_intersects}{doc_items}(items, geom, ..., crs = 4326)
 }
 \arguments{
 \item{items}{a \code{doc_items} object.}
@@ -162,8 +180,6 @@ of the all items.
 otherwise or a \code{list}.
 
 \item \code{items_fields()}: a \code{character} vector.
-
-\item \code{items_group()}: a \code{list} of \code{doc_items} objects.
 
 \item \code{items_sign()}: a \code{doc_items} object with signed assets url.
 

@@ -127,8 +127,6 @@
 #'
 #' \item `items_fields()`: a `character` vector.
 #'
-#' \item `items_group()`: a `list` of `doc_items` objects.
-#'
 #' \item `items_sign()`: a `doc_items` object with signed assets url.
 #'
 #' \item `items_as_sf()`: a `sf` object.
@@ -581,45 +579,84 @@ items_sign.default <- function(items, sign_fn) {
 #' @rdname items_functions
 #'
 #' @export
-items_as_sf <- function(items) {
+items_as_sf <- function(items, ..., crs = 4326) {
   UseMethod("items_as_sf", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_as_sf.doc_item <- function(items) {
+items_as_sf.doc_item <- function(items, ..., crs = 4326) {
   check_item(items)
-  geojsonsf::geojson_sf(to_json(items))
+  data <- sf::st_sf(
+    datetime = items_datetime(items),
+    ...,
+    geometry = items_as_sfc(items, crs = crs)
+  )
+  data
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_as_sf.doc_items <- function(items) {
+items_as_sf.doc_items <- function(items, ..., crs = 4326) {
   check_items(items)
-  geojsonsf::geojson_sf(to_json(items))
+  data <- sf::st_sf(
+    datetime = items_datetime(items),
+    ...,
+    geometry = items_as_sfc(items, crs = crs)
+  )
+  data
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_geometry <- function(items) {
-  UseMethod("items_geometry", items)
+items_as_sfc <- function(items, crs = 4326) {
+  UseMethod("items_as_sfc", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_geometry.doc_item <- function(items) {
+items_as_sfc.doc_item <- function(items, crs = 4326) {
   check_item(items)
-  geojsonsf::geojson_sf(to_json(items))
+  sf::st_sfc(get_geom(items$geometry), crs = crs)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_geometry.doc_items <- function(items) {
+items_as_sfc.doc_items <- function(items, crs = 4326) {
   check_items(items)
-  geojsonsf::geojson_sf(to_json(items))
+  sf::st_sfc(lapply(items$features, get_geom), crs = crs)
 }
+
+
+#' @rdname items_functions
+#'
+#' @export
+items_intersects <- function(items, geom, ..., crs = 4326) {
+  UseMethod("items_intersects", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_intersects.doc_item <- function(items, geom, ..., crs = 4326) {
+  check_item(items)
+  items_geom <- items_as_sfc(items, crs = crs)
+  geom <- sf::st_transform(geom, crs = crs)
+  apply(sf::st_intersects(items_geom, geom), 1, any) > 0
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_intersects.doc_items <- function(items, geom, ..., crs = 4326) {
+  check_items(items)
+  items_geom <- items_as_sfc(items, crs = crs)
+  geom <- sf::st_transform(geom, crs = crs)
+  apply(sf::st_intersects(items_geom, geom), 1, any) > 0
+}
+

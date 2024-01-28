@@ -2,8 +2,8 @@
 % Please edit documentation in R/rstac.R
 \docType{package}
 \name{rstac}
-\alias{rstac}
 \alias{rstac-package}
+\alias{rstac}
 \title{R client library for STAC (rstac)}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
