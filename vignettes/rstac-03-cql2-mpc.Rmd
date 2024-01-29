@@ -31,6 +31,8 @@ knitr::opts_chunk$set(
 
 
 ```{r load-rstac, eval=TRUE}
+if (!requireNamespace("tmap")) install.packages("tmap")
+library(tmap)
 library(rstac)
 ```
 
@@ -246,18 +248,15 @@ library(slider)
 library(ggplot2)
 
 df <- items_as_sf(stac_items)  |>
+  dplyr::mutate(cloud_cover = rstac::items_reap(stac_items, c("properties", "eo:cloud_cover"))) |> 
   dplyr::mutate(datetime = as.Date(datetime)) |>
   dplyr::group_by(datetime) |>
-  dplyr::summarise(`eo:cloud_cover` = mean(`eo:cloud_cover`)) |>
-  dplyr::mutate(
-    `eo:cloud_cover` = slider::slide_mean(
-      `eo:cloud_cover`, before = 3, after = 3
-    )
-  )
+  dplyr::summarise(cloud_cover = mean(cloud_cover)) |>
+  dplyr::mutate(cloud_cover = slider::slide_mean(cloud_cover, before = 3, after = 3))
 
 df |> 
   ggplot2::ggplot() +
-  ggplot2::geom_line(ggplot2::aes(x = datetime, y = `eo:cloud_cover`))
+  ggplot2::geom_line(ggplot2::aes(x = datetime, y = cloud_cover))
 ```
 
 `cql2_bbox_as_geojson()` is a `rstac` helper function and it must be evaluated before the request. This is why we embraced it with `{{`. We use `items_fetch()` to retrieve all paginated items matched in the search.

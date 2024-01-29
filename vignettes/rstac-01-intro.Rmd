@@ -32,6 +32,8 @@ library(tibble)
 ```
 
 ```{r setup, eval=TRUE, echo=FALSE}
+if (!requireNamespace("png")) install.packages("png")
+library(png)
 library(rstac)
 ```
 
