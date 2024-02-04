@@ -39,6 +39,15 @@
 #'
 #' \item `items_as_sf()`: `r lifecycle::badge('experimental')` convert items
 #'   to `sf` object.
+#'
+#' \item `items_as_sfc()`: `r lifecycle::badge('experimental')` convert items
+#'   to `sfc` object.
+#'
+#' \item `items_intersects()`: `r lifecycle::badge('experimental')` indicates
+#'   which items intersects a given geometry.
+#'
+#' \item `items_properties()`: lists properties names inside an item.
+#'
 #' }
 #'
 #' @param items           a `doc_items` object.
@@ -63,6 +72,10 @@
 #'
 #' @param filter_fn       a `function` that receives an item that should
 #' evaluate a `logical` value.
+#'
+#' @param crs       a `character` representing the geometry projection.
+#'
+#' @param geom       a `sf` or `sfc` object.
 #'
 #' @param ...             additional arguments. See details.
 #'
@@ -117,8 +130,8 @@
 #'
 #' \item `items_bbox()`: returns a `list` with all items' bounding boxes.
 #'
-#' \item `item_assets()`: Returns a `character` value with all assets names
-#' of the all items.
+#' \item `item_assets()`: returns a `character` value with all assets names
+#' of all items.
 #'
 #' \item `items_filter()`: a `doc_items` object.
 #'
@@ -130,6 +143,13 @@
 #' \item `items_sign()`: a `doc_items` object with signed assets url.
 #'
 #' \item `items_as_sf()`: a `sf` object.
+#'
+#' \item `items_as_sfc()`: a `sfc` object.
+#'
+#' \item `items_intersects()`: a `logical` vector.
+#'
+#' \item `items_properties()`: returns a `character` value with all properties
+#' of all items.
 #'
 #' }
 #'
@@ -589,10 +609,10 @@ items_as_sf <- function(items, ..., crs = 4326) {
 items_as_sf.doc_item <- function(items, ..., crs = 4326) {
   check_item(items)
   data <- sf::st_sf(
-    datetime = items_datetime(items),
-    ...,
+    items_as_tibble(items),
     geometry = items_as_sfc(items, crs = crs)
   )
+  class(data) <- c("sf", "tbl_df", "tbl", "data.frame")
   data
 }
 
@@ -602,10 +622,10 @@ items_as_sf.doc_item <- function(items, ..., crs = 4326) {
 items_as_sf.doc_items <- function(items, ..., crs = 4326) {
   check_items(items)
   data <- sf::st_sf(
-    datetime = items_datetime(items),
-    ...,
+    items_as_tibble(items),
     geometry = items_as_sfc(items, crs = crs)
   )
+  #class(data) <- c("sf", "tbl_df", "tbl", "data.frame")
   data
 }
 
@@ -660,3 +680,27 @@ items_intersects.doc_items <- function(items, geom, ..., crs = 4326) {
   apply(sf::st_intersects(items_geom, geom), 1, any) > 0
 }
 
+#' @rdname items_functions
+#'
+#' @export
+items_properties <- function(items) {
+  UseMethod("items_properties", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_properties.doc_item <- function(items) {
+  check_item(items)
+  sort(names(items$properties))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_properties.doc_items <- function(items) {
+  check_items(items)
+  sort(unique(unlist(lapply(items$features, function(item) {
+    names(item$properties)
+  }))))
+}

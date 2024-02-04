@@ -64,4 +64,5 @@ magrittr::`%>%`
 #' @importFrom utils modifyList URLdecode
 #' @importFrom jsonlite fromJSON
 #' @importFrom lifecycle deprecated
+#' @importFrom tibble as_tibble
 NULL

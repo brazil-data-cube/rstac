@@ -44,6 +44,9 @@
 \alias{items_intersects}
 \alias{items_intersects.doc_item}
 \alias{items_intersects.doc_items}
+\alias{items_properties}
+\alias{items_properties.doc_item}
+\alias{items_properties.doc_items}
 \title{Items functions}
 \usage{
 items_length(items)
@@ -129,6 +132,12 @@ items_intersects(items, geom, ..., crs = 4326)
 \method{items_intersects}{doc_item}(items, geom, ..., crs = 4326)
 
 \method{items_intersects}{doc_items}(items, geom, ..., crs = 4326)
+
+items_properties(items)
+
+\method{items_properties}{doc_item}(items)
+
+\method{items_properties}{doc_items}(items)
 }
 \arguments{
 \item{items}{a \code{doc_items} object.}
@@ -155,6 +164,10 @@ addressed by \code{field} parameter.}
 
 \item{sign_fn}{a \code{function} that receives an item as a parameter
 and returns an item signed.}
+
+\item{crs}{a \code{character} representing the geometry projection.}
+
+\item{geom}{a \code{sf} or \code{sfc} object.}
 }
 \value{
 \itemize{
@@ -171,8 +184,8 @@ does support this extension. Otherwise returns \code{NULL}.
 
 \item \code{items_bbox()}: returns a \code{list} with all items' bounding boxes.
 
-\item \code{item_assets()}: Returns a \code{character} value with all assets names
-of the all items.
+\item \code{item_assets()}: returns a \code{character} value with all assets names
+of all items.
 
 \item \code{items_filter()}: a \code{doc_items} object.
 
@@ -184,6 +197,13 @@ otherwise or a \code{list}.
 \item \code{items_sign()}: a \code{doc_items} object with signed assets url.
 
 \item \code{items_as_sf()}: a \code{sf} object.
+
+\item \code{items_as_sfc()}: a \code{sfc} object.
+
+\item \code{items_intersects()}: a \code{logical} vector.
+
+\item \code{items_properties()}: returns a \code{character} value with all properties
+of all items.
 
 }
 }
@@ -226,6 +246,15 @@ in a \code{doc_items} object.
 
 \item \code{items_as_sf()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} convert items
 to \code{sf} object.
+
+\item \code{items_as_sfc()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} convert items
+to \code{sfc} object.
+
+\item \code{items_intersects()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} indicates
+which items intersects a given geometry.
+
+\item \code{items_properties()}: lists properties names inside an item.
+
 }
 }
 \details{
