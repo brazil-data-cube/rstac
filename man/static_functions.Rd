@@ -2,15 +2,18 @@
 % Please edit documentation in R/static-funs.R
 \name{static_functions}
 \alias{static_functions}
-\alias{stac_read}
+\alias{read_stac}
 \alias{read_items}
+\alias{read_collections}
 \alias{links}
 \alias{link_open}
 \title{Static functions}
 \usage{
-stac_read(url, ...)
+read_stac(url, ...)
 
 read_items(collection, limit = 100, page = 1, progress = TRUE)
+
+read_collections(catalog, limit = 100, page = 1, progress = TRUE)
 
 links(x, ...)
 
@@ -21,7 +24,8 @@ link_open(link, base_url = NULL)
 
 \item{...}{additional arguments. See details.}
 
-\item{collection}{a \code{doc_collection} object to fetch all item links.}
+\item{collection}{a \code{doc_collection} object to fetch all
+\code{rel=="item"} links.}
 
 \item{limit}{an \code{integer} with defining the page size of items to fetch.}
 
@@ -29,6 +33,8 @@ link_open(link, base_url = NULL)
 
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
+
+\item{catalog}{a \code{doc_catalog} object to fetch all \code{rel=="child"} links.}
 
 \item{x}{any \code{rstac} document with \code{'links'} key entry.}
 
@@ -84,12 +90,21 @@ evaluated against a \code{doc_link} item as a filter criteria. See examples.
 }
 
 \dontrun{
- x <- stac_read(
-   "https://s3.eu-central-1.wasabisys.com/stac/openlandmap/wv_mcd19a2v061.seasconv/collection.json"
+ wv_url <- paste0(
+   "https://s3.eu-central-1.wasabisys.com",
+   "/stac/openlandmap/wv_mcd19a2v061.seasconv/collection.json"
  )
+ wv <- read_stac(wv_url)
+ stac_type(wv)  # Collection
 
- read_items(x, limit = 10, page = 2) # reads the second page of 10 links
+ # reads the second page of 5 links
+ wv_items <- read_items(wv, limit = 5, page = 2)
 
+ # lists all links of the collection document that are not items
+ links(wv, rel != "item")
+
+ # lists all links of the items document
+ links(wv_items)
 }
 
 }

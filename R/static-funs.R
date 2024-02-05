@@ -17,7 +17,10 @@
 #'
 #' @param url     a `character` value with the URL to a valid STAC document.
 #'
-#' @param collection  a `doc_collection` object to fetch all item links.
+#' @param catalog  a `doc_catalog` object to fetch all `rel=="child"` links.
+#'
+#' @param collection  a `doc_collection` object to fetch all
+#'   `rel=="item"` links.
 #'
 #' @param limit     an `integer` with defining the page size of items to fetch.
 #'
@@ -68,12 +71,21 @@
 #' }
 #'
 #' \dontrun{
-#'  x <- stac_read(
-#'    "https://s3.eu-central-1.wasabisys.com/stac/openlandmap/wv_mcd19a2v061.seasconv/collection.json"
+#'  wv_url <- paste0(
+#'    "https://s3.eu-central-1.wasabisys.com",
+#'    "/stac/openlandmap/wv_mcd19a2v061.seasconv/collection.json"
 #'  )
+#'  wv <- read_stac(wv_url)
+#'  stac_type(wv)  # Collection
 #'
-#'  read_items(x, limit = 10, page = 2) # reads the second page of 10 links
+#'  # reads the second page of 5 links
+#'  wv_items <- read_items(wv, limit = 5, page = 2)
 #'
+#'  # lists all links of the collection document that are not items
+#'  links(wv, rel != "item")
+#'
+#'  # lists all links of the items document
+#'  links(wv_items)
 #' }
 #'
 #' @name static_functions
@@ -82,7 +94,7 @@ NULL
 #' @rdname static_functions
 #'
 #' @export
-stac_read <- function(url, ...) {
+read_stac <- function(url, ...) {
   check_character(url, "STAC URL must be a character value.")
   content <- jsonlite::read_json(url, ...)
   # create an rstac doc from content and return
@@ -120,13 +132,68 @@ read_items <- function(collection, limit = 100, page = 1, progress = TRUE) {
   for (i in seq_along(link_items)) {
     if (progress)
       utils::setTxtProgressBar(pb, i)
-    features <- c(features, list(link_open(link_items[[i]])))
+    item <- link_open(link_items[[i]])
+    features <- c(features, list(item))
   }
   # Convert to doc_items object and return
-  doc_items(
-    x = list(type = "FeatureCollection", features = features),
-    base_url = url
-  )
+  parent <- links(collection, rel == "self")
+  if (length(parent) > 0) {
+    parent <- parent[[1]]
+    parent$rel <- "parent"
+    parent <- list(parent)
+  }
+  doc_items(list(
+    type = "FeatureCollection",
+    features = features,
+    links = parent
+  ))
+}
+
+#' @rdname static_functions
+#'
+#' @export
+read_collections <- function(catalog, limit = 100, page = 1, progress = TRUE) {
+  check_catalog(catalog)
+  rel <- NULL
+  link_collections <- links(catalog, rel == "child")
+  if (is.null(limit) || limit < 1)
+    limit <- length(link_collections)
+  limit <- max(1, as.integer(limit))
+  page <- max(1, as.integer(page))
+  pages <- ceiling(length(link_collections) / limit)
+  if (page > pages)
+    return(NULL)
+  if (length(link_collections) > limit) {
+    previous_len <- (page - 1) * limit
+    len <- min(limit, length(link_collections) - previous_len)
+    link_collections <- link_collections[previous_len + seq_len(len)]
+  }
+
+  # verify if progress bar can be shown
+  progress <- progress && length(link_collections) > 1
+  if (progress) {
+    pb <- utils::txtProgressBar(max = length(link_collections), style = 3)
+    # close progress bar when exit
+    on.exit(if (progress) close(pb))
+  }
+  collections <- list()
+  for (i in seq_along(link_collections)) {
+    if (progress)
+      utils::setTxtProgressBar(pb, i)
+    collection <- link_open(link_collections[[i]])
+    collections <- c(collections, list(collection))
+  }
+  # Convert to doc_items object and return
+  parent <- links(catalog, rel == "self")
+  if (length(parent) > 0) {
+    parent <- parent[[1]]
+    parent$rel <- "parent"
+    parent <- list(parent)
+  }
+  doc_collections(list(
+    collections = collections,
+    links = parent
+  ))
 }
 
 #' @rdname static_functions

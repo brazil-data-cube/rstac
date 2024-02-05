@@ -367,7 +367,7 @@ testthat::test_that("stac collection object", {
     get_request()
 
   testthat::expect_equal(
-    object   =  stac_subclass(s_col),
+    object   =  stac_type(s_col),
     expected = "doc_collections"
   )
 

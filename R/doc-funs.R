@@ -29,6 +29,47 @@ subclass.rstac_doc <- function(x) {
   class(x)[[1]]
 }
 
+#' @export
+stac_type.rstac_doc <- function(x) {
+  subclass <- subclass(x)
+  switch(
+    subclass,
+    doc_conformance = "Conformance",
+    doc_catalog = "Catalog",
+    doc_collection = "Collection",
+    doc_collections = "Collections",
+    doc_item = "Item",
+    doc_items = "Items"
+  )
+}
+
+stac_subclass <- function(obj) {
+  if (!is.list(obj) || is.null(names(obj)))
+    .error("Invalid STAC document.")
+  if ("type" %in% names(obj)) {
+    if (obj$type == "Feature")
+      return("doc_item")
+    if (obj$type == "FeatureCollection")
+      return("doc_items")
+    if (obj$type == "Collection")
+      return("doc_collection")
+    if (obj$type == "Catalog")
+      return("doc_catalog")
+    .error("Invalid STAC document. Key value 'type': '", obj$type,
+           "' is not a supported STAC document.")
+  } else {
+    if ("conformsTo" %in% names(obj))
+      return("doc_conformance")
+    if ("collections" %in% names(obj))
+      return("doc_collections")
+    if ("id" %in% names(obj) && "links" %in% names(obj))
+      return("doc_collection")
+    if ("links" %in% names(obj))
+      return("doc_catalog")
+    .error("Invalid STAC document.")
+  }
+}
+
 as_rstac_doc <- function(x, base_url = NULL) {
   subclass <- stac_subclass(x)
   switch(
@@ -66,6 +107,7 @@ doc_links <- function(x, base_url = NULL) {
   if (!is.list(x))
     .error("Invalid Links object.")
   x <- lapply(x, doc_link, base_url = base_url)
+  x <- c(list(list(rel = "self", href = base_url)), x)
   rstac_doc(x, subclass = c("doc_links"))
 }
 

@@ -15,34 +15,16 @@
 #' The `stac_version()` function returns a `character` STAC API
 #' version.
 #'
+#' @name stac_functions
+#'
 #' @export
 stac_version <- function(x, ...) {
   UseMethod("stac_version", x)
 }
 
-stac_subclass <- function(obj) {
-  if (!is.list(obj) || is.null(names(obj)))
-    .error("Invalid STAC document.")
-  if ("type" %in% names(obj)) {
-    if (obj$type == "Feature")
-      return("doc_item")
-    if (obj$type == "FeatureCollection")
-      return("doc_items")
-    if (obj$type == "Collection")
-      return("doc_collection")
-    if (obj$type == "Catalog")
-      return("doc_catalog")
-    .error("Invalid STAC document. Key value 'type': '", obj$type,
-           "' is not a supported STAC document.")
-  } else {
-    if ("conformsTo" %in% names(obj))
-      return("doc_conformance")
-    if ("collections" %in% names(obj))
-      return("doc_collections")
-    if ("id" %in% names(obj) && "links" %in% names(obj))
-      return("doc_collection")
-    if ("links" %in% names(obj))
-      return("doc_catalog")
-    .error("Invalid STAC document.")
-  }
+#' @rdname stac_functions
+#'
+#' @export
+stac_type <- function(x) {
+  UseMethod("stac_type", x)
 }
