@@ -105,6 +105,14 @@ read_stac <- function(url, ...) {
 #'
 #' @export
 read_items <- function(collection, limit = 100, page = 1, progress = TRUE) {
+  UseMethod("read_items", collection)
+}
+
+#' @export
+read_items.doc_collection <- function(collection,
+                                      limit = 100,
+                                      page = 1,
+                                      progress = TRUE) {
   check_collection(collection)
   rel <- NULL
   link_items <- links(collection, rel == "item")
@@ -153,6 +161,14 @@ read_items <- function(collection, limit = 100, page = 1, progress = TRUE) {
 #'
 #' @export
 read_collections <- function(catalog, limit = 100, page = 1, progress = TRUE) {
+  UseMethod("read_collections", catalog)
+}
+
+#' @export
+read_collections.catalog <- function(catalog,
+                                     limit = 100,
+                                     page = 1,
+                                     progress = TRUE) {
   check_catalog(catalog)
   rel <- NULL
   link_collections <- links(catalog, rel == "child")
@@ -200,13 +216,25 @@ read_collections <- function(catalog, limit = 100, page = 1, progress = TRUE) {
 #'
 #' @export
 links <- function(x, ...) {
+  UseMethod("links")
+}
+
+#' @export
+links.rstac_doc <- function(x, ...) {
   exprs <- unquote(
     expr = as.list(substitute(list(...), env = environment())[-1]),
     env =  parent.frame()
   )
   sel <- !logical(length(x$links))
   for (expr in exprs) {
-    sel <- sel & map_lgl(x$links, function(x) eval(expr, envir = x))
+    sel <- sel & map_lgl(x$links, function(x) {
+      tryCatch(
+        eval(expr, envir = x),
+        error = function(e) {
+          FALSE
+        }
+      )
+    })
   }
   structure(x$links[sel], class = c("doc_links", "list"))
 }
@@ -215,15 +243,17 @@ links <- function(x, ...) {
 #'
 #' @export
 link_open <- function(link, base_url = NULL) {
-  if (is.list(link)) {
-    check_link(link)
-    url <- link$href
-    if (!is.null(base_url))
-      url <- resolve_url(base_url, url)
-    else if ("rstac:base_url" %in% names(link))
-      url <- resolve_url(link[["rstac:base_url"]], url)
-  } else if (is.character(link))
-    url <- link
+  UseMethod("link_open", link)
+}
+
+#' @export
+link_open.doc_link <- function(link, base_url = NULL) {
+  check_link(link)
+  url <- link$href
+  if (!is.null(base_url))
+    url <- resolve_url(base_url, url)
+  else if ("rstac:base_url" %in% names(link))
+    url <- resolve_url(link[["rstac:base_url"]], url)
   content <- jsonlite::read_json(url)
   # create an rstac doc from content and return
   as_rstac_doc(content, base_url = url)
