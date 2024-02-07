@@ -41,6 +41,9 @@
 \alias{items_as_sfc}
 \alias{items_as_sfc.doc_item}
 \alias{items_as_sfc.doc_items}
+\alias{items_as_tibble}
+\alias{items_as_tibble.doc_item}
+\alias{items_as_tibble.doc_items}
 \alias{items_intersects}
 \alias{items_intersects.doc_item}
 \alias{items_intersects.doc_items}
@@ -127,6 +130,12 @@ items_as_sfc(items, crs = 4326)
 
 \method{items_as_sfc}{doc_items}(items, crs = 4326)
 
+items_as_tibble(items)
+
+\method{items_as_tibble}{doc_item}(items)
+
+\method{items_as_tibble}{doc_items}(items)
+
 items_intersects(items, geom, ..., crs = 4326)
 
 \method{items_intersects}{doc_item}(items, geom, ..., crs = 4326)
@@ -199,6 +208,8 @@ otherwise or a \code{list}.
 \item \code{items_as_sf()}: a \code{sf} object.
 
 \item \code{items_as_sfc()}: a \code{sfc} object.
+
+\item \code{items_as_tibble()}: a \code{tibble} object.
 
 \item \code{items_intersects()}: a \code{logical} vector.
 
@@ -347,6 +358,11 @@ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  get_request() \%>\% items_fetch(progress = FALSE)
 
 stac_item \%>\% items_reap(field = c("properties", "datetime"))
+
+stac_item \%>\% items_as_sf()
+
+stac_item \%>\% items_as_tibble()
+
 }
 
 }

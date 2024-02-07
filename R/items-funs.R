@@ -146,6 +146,8 @@
 #'
 #' \item `items_as_sfc()`: a `sfc` object.
 #'
+#' \item `items_as_tibble()`: a `tibble` object.
+#'
 #' \item `items_intersects()`: a `logical` vector.
 #'
 #' \item `items_properties()`: returns a `character` value with all properties
@@ -208,6 +210,11 @@
 #'  get_request() %>% items_fetch(progress = FALSE)
 #'
 #' stac_item %>% items_reap(field = c("properties", "datetime"))
+#'
+#' stac_item %>% items_as_sf()
+#'
+#' stac_item %>% items_as_tibble()
+#'
 #' }
 #'
 #' @name items_functions
@@ -652,6 +659,46 @@ items_as_sfc.doc_items <- function(items, crs = 4326) {
   sf::st_sfc(lapply(items$features, get_geom), crs = crs)
 }
 
+#' @rdname items_functions
+#'
+#' @export
+items_as_tibble <- function(items) {
+  UseMethod("items_as_tibble", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_tibble.doc_item <- function(items) {
+  check_item(items)
+  non_atomic <- non_atomic_properties(items)
+  items$properties[non_atomic] <- lapply(items$properties[non_atomic], list)
+  data <- list(items$properties)
+  data <- do.call(mapply, args = c(list(FUN = c, SIMPLIFY = FALSE), data))
+  structure(
+    data,
+    class = c("tbl_df", "tbl", "data.frame"),
+    row.names = if (length(data)) c(NA, -length(data[[1]])) else integer(0)
+  )
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_tibble.doc_items <- function(items) {
+  check_items(items)
+  non_atomic <- non_atomic_properties(items)
+  data <- lapply(items$features, function(item) {
+    item$properties[non_atomic] <- lapply(item$properties[non_atomic], list)
+    item$properties
+  })
+  data <- do.call(mapply, args = c(list(FUN = c, SIMPLIFY = FALSE), data))
+  structure(
+    data,
+    class = c("tbl_df", "tbl", "data.frame"),
+    row.names = if (length(data)) c(NA, -length(data[[1]])) else integer(0)
+  )
+}
 
 #' @rdname items_functions
 #'
