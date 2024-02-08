@@ -11,9 +11,9 @@
 \usage{
 read_stac(url, ...)
 
-read_items(collection, limit = 100, page = 1, progress = TRUE)
+read_items(collection, ..., limit = 100, page = 1, progress = TRUE)
 
-read_collections(catalog, limit = 100, page = 1, progress = TRUE)
+read_collections(catalog, ..., limit = 100, page = 1, progress = TRUE)
 
 links(x, ...)
 
