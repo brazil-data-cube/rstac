@@ -55,7 +55,7 @@ planetary_computer
 
 CQL2 expressions can be constructed using properties that refer to attributes of items. A list of all properties supported by a collection can be obtained by accessing the `/collections/<collection_id>/queryables` endpoint. Filter expressions can use properties listed in this endpoint. 
 
-In this example, we will search for [Landsat Collection 2 Level-2](https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2) imagery of the Microsoft main campus from December 2020. The name of this collection in STAC service is `landsat-c2-l2`. Here we'll prepare a query to retrieve its queriables and make a `GET` request to the service.
+In this example, we will search for [Landsat Collection 2 Level-2](https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2) imagery of the Microsoft main campus from December 2020. The name of this collection in STAC service is `landsat-c2-l2`. Here we'll prepare a query to retrieve its queryables and make a `GET` request to the service.
 
 ```{r queryables}
 planetary_computer |>
@@ -84,7 +84,7 @@ stac_items <- planetary_computer |>
 
 In that example, our filter expression used a temporal (`t_intersects`) and a spatial (`s_intersects`) operators. `t_intersects()` only accepts interval as it second argument, which we created using function `cql2_interval()`. `s_intersects()` spatial operator only accepts GeoJSON objects as its arguments. This is why we had to convert the bounding box vector (`bbox`) into a structure representing a GeoJSON object using the function `cql2_bbox_as_geojson()`. We embrace the arguments using `{{` to evaluate them before make the request.
 
-`items` is a `STACItemCollection` object containing 8 items that matched our search criteria.
+`items` is an `Items` object containing 8 items that matched our search criteria.
 
 ```{r items-length}
 stac_items
@@ -92,7 +92,7 @@ stac_items
 
 ## Exploring data{-}
 
-A `STACItemCollection` is a regular GeoJSON object. It is a collection of `STACItem` entries that stores metadata on assets. Users can convert a `STACItemCollection` to a `sf` object containing the properties field as columns. Here we depict the items footprint.
+An `Items` is a regular GeoJSON object. It is a collection of `Item` entries that stores metadata on assets. Users can convert a `Items` to a `sf` object containing the properties field as columns. Here we depict the items footprint.
 
 ```{r geojson-to-sf}
 sf <- items_as_sf(stac_items)
@@ -224,7 +224,7 @@ stac_items |>
 
 ## Analyzing STAC Metadata{-}
 
-`STACItem` objects are features of `STACItemCollection` and store information about assets.
+`Item` objects are features of `Items` and store information about assets.
 
 ```{r items-fetch}
 stac_items <- planetary_computer |>

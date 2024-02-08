@@ -104,18 +104,21 @@ read_stac <- function(url, ...) {
 #' @rdname static_functions
 #'
 #' @export
-read_items <- function(collection, limit = 100, page = 1, progress = TRUE) {
+read_items <- function(collection, ...,
+                       limit = 100,
+                       page = 1,
+                       progress = TRUE) {
   UseMethod("read_items", collection)
 }
 
 #' @export
-read_items.doc_collection <- function(collection,
+read_items.doc_collection <- function(collection, ...,
                                       limit = 100,
                                       page = 1,
                                       progress = TRUE) {
   check_collection(collection)
   rel <- NULL
-  link_items <- links(collection, rel == "item")
+  link_items <- links(collection, rel == "item", ...)
   if (is.null(limit) || limit < 1)
     limit <- length(link_items)
   limit <- max(1, as.integer(limit))
@@ -160,18 +163,21 @@ read_items.doc_collection <- function(collection,
 #' @rdname static_functions
 #'
 #' @export
-read_collections <- function(catalog, limit = 100, page = 1, progress = TRUE) {
+read_collections <- function(catalog, ...,
+                             limit = 100,
+                             page = 1,
+                             progress = TRUE) {
   UseMethod("read_collections", catalog)
 }
 
 #' @export
-read_collections.catalog <- function(catalog,
+read_collections.catalog <- function(catalog, ...,
                                      limit = 100,
                                      page = 1,
                                      progress = TRUE) {
   check_catalog(catalog)
   rel <- NULL
-  link_collections <- links(catalog, rel == "child")
+  link_collections <- links(catalog, rel == "child", ...)
   if (is.null(limit) || limit < 1)
     limit <- length(link_collections)
   limit <- max(1, as.integer(limit))

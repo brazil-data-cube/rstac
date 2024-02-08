@@ -176,7 +176,7 @@ s_obj |>
   get_request()
 ```
 
-#### `STACItem` object{-}
+#### `Item` object{-}
 
 ```{r item}
 s_obj |>
@@ -185,7 +185,7 @@ s_obj |>
   get_request()
 ```
 
-#### `STACItemCollection` object{-}
+#### `Items` object{-}
 
 ```{r item-collection}
 s_obj |> 
@@ -194,18 +194,18 @@ s_obj |>
 ```
 
 
-Besides, the `rstac` package provides several auxiliary functions for `STACItem` and `STACItemCollection` objects. These auxiliary functions operate at the item or asset level. Functions dedicated to items have the prefix `items_`. Otherwise, asset-oriented functions have the prefix `assets_`
+Besides, the `rstac` package provides several auxiliary functions for `Item` and `Items` objects. These auxiliary functions operate at the item or asset level. Functions dedicated to items have the prefix `items_`. Otherwise, asset-oriented functions have the prefix `assets_`
 
 ## Items functions{-}
 
-The `STACItemCollection` object have some facilitating functions to manipulate/extract information, for example:
+The `Items` object have some facilitating functions to manipulate/extract information, for example:
 
 - **`items_fields()`:** Lists fields names inside an item.
-- **`items_filter()`:** Performs a filter by items according to expressions operating on the properties of a `STACItemCollection` object.
+- **`items_filter()`:** Performs a filter by items according to expressions operating on the properties of a `Items` object.
 - **`items_fetch()`:** Performs the pagination of items.
 - **`items_length()`:** Returns the number of items in an object.
 - **`items_matched()`:** Returns the number of items matching the search criteria.
-- **`items_assets()`:** Returns the assets name from `STACItemCollection` and `STACItem` objects.
+- **`items_assets()`:** Returns the assets name from `Items` and `Item` objects.
 
 
 It is interesting to verify the fields of items before filtering:
