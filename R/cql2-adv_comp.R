@@ -137,6 +137,11 @@ get_spatial.GEOMETRYCOLLECTION <- function(x) {
   )
 }
 
+#' @export
+as.character.cql2_spatial <- function(x, ...) {
+  to_text(x)
+}
+
 # temporal_op
 temporal_op <- function(op) {
   function(a, b) {
