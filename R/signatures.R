@@ -3,8 +3,25 @@ ms_token <- new_env()
 #' @title Signature in hrefs provided by the STAC from the Brazil Data Cube
 #'  project.
 #'
-#' @description To sign the hrefs with your token you need to store it in an
+#' @description
+#' These functions provide support to access assets from Brazil Data Cube.
+#'
+#' \itemize{
+#'  \item `items_sign_bdc()`: `r lifecycle::badge('experimental')`
+#'  A simplified function to sign assets' URL from Brazil Data Cube
+#'    to be able to access the data.
+#'
+#'  \item `sign_bdc()`: Creates a signing function to be
+#'  used by `items_sign()`. This function sign all the assets' URL.
+#' }
+#'
+#' To sign the hrefs with your token you need to store it in an
 #' environment variable in `BDC_ACCESS_KEY`or use `acess_token` parameter.
+#'
+#' @param items       a `doc_item` or `doc_items` object
+#' representing the result of `/stac/search`,
+#' \code{/collections/{collectionId}/items} or
+#' \code{/collections/{collectionId}/items/{itemId}} endpoints.
 #'
 #' @param access_token a `character` with the access token parameter to access
 #'  Brazil Data Cube assets.
@@ -13,6 +30,11 @@ ms_token <- new_env()
 #'  function of the `httr` package.
 #'
 #' @return a `function` that signs each item assets.
+#' \itemize{
+#'  \item `items_sign_bdc()`: items with signed assets URLs.
+#'
+#'  \item `sign_bdc()`: a function to to be passed to `items_sign()`.
+#' }
 #'
 #' @examples
 #' \dontrun{
@@ -23,9 +45,24 @@ ms_token <- new_env()
 #'    stac_search() %>%
 #'    get_request()
 #'
-#'  # signing each item href
-#'  stac_obj %>% items_sign(sign_fn = sign_bdc(access_token = "123"))
+#'  # the new way to authenticate:
+#'  stac_obj <- stac_obj %>%
+#'    items_sign_bdc("<your-access-token>")
+#'
+#'  # this is the old way of authentication (still works):
+#'  # stac_obj %>%
+#'  #   items_sign(sign_fn = sign_bdc(access_token = "<your-access-token>"))
 #' }
+#'
+#' @name items_sign_bdc
+#'
+#' @export
+items_sign_bdc <- function(items, access_token = NULL, ...) {
+  sign_fn <- sign_bdc(access_token)
+  items_sign(items, sign_fn)
+}
+
+#' @rdname items_sign_bdc
 #'
 #' @export
 sign_bdc <- function(access_token = NULL, ...) {
@@ -98,15 +135,31 @@ sign_bdc <- function(access_token = NULL, ...) {
   return(sign_item)
 }
 
-#' @title Signature in hrefs provided by the STAC from Microsoft's Planetary
-#' Computer.
+#' @title Signs URL to access assets from Microsoft's Planetary Computer.
 #'
-#' @description To perform the signing of the hrefs a request is sent to
-#' Planetary Computer servers and the returned content corresponds to the
-#' token that will be used in the href.
+#' @description
+#' These functions provide support to access assets from Planetary Computer.
+#'
+#' \itemize{
+#'  \item `items_sign_planetary_computer()`: `r lifecycle::badge('experimental')`
+#'  A simplified function to sign assets' URL from Microsoft Planetary
+#'  Computer to be able to access the data.
+#'
+#'  \item `sign_planetary_computer()`: Creates a signing function to be
+#'  used by `items_sign()`. This function sign all the assets' URL.
+#' }
+#'
+#' @param items       a `doc_item` or `doc_items` object
+#' representing the result of `/stac/search`,
+#' \code{/collections/{collectionId}/items} or
+#' \code{/collections/{collectionId}/items/{itemId}} endpoints.
+#'
+#' @param subscription_key the `subscription-key` to access restricted
+#'   assets in Microsoft Planetary Computer. You can keep this parameter
+#'   empty for non-protected assets.
 #'
 #' @param ...       additional parameters can be supplied to the `GET` function
-#' of the `httr` package.
+#'   of the `httr` package.
 #'
 #' @param headers   a named character vector with headers key-value content.
 #'
@@ -115,7 +168,13 @@ sign_bdc <- function(access_token = NULL, ...) {
 #'  By default is used:
 #'  `"https://planetarycomputer.microsoft.com/api/sas/v1/token"`
 #'
-#' @return a `function` that signs each item assets.
+#' @return
+#' \itemize{
+#'  \item `items_sign_planetary_computer()`: items with signed assets URLs.
+#'
+#'  \item `sign_planetary_computer()`: a function to to be passed to
+#'    `items_sign()`.
+#' }
 #'
 #' @examples
 #' \dontrun{
@@ -125,8 +184,13 @@ sign_bdc <- function(access_token = NULL, ...) {
 #'               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
 #'   get_request()
 #'
-#'  # signing each asset href
-#'  stac_obj %>% items_sign(sign_fn = sign_planetary_computer())
+#'  # the new way to authenticate:
+#'  stac_obj <- stac_obj %>%
+#'    items_sign_planetary_computer()
+#'
+#'  # this is the old way of authentication (still works):
+#'  # stac_obj <- stac_obj %>%
+#'  #   items_sign(sign_fn = sign_planetary_computer())
 #'
 #'  # example of access to collections that require authentication
 #'  stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
@@ -135,14 +199,32 @@ sign_bdc <- function(access_token = NULL, ...) {
 #'                datetime = "2019-01-01/2019-01-28") %>%
 #'    post_request()
 #'
-#'  # signing each asset href
-#'  # stac_obj %>% items_sign(
-#'  #   sign_fn = sign_planetary_computer(
-#'  #     headers = c("Ocp-Apim-Subscription-Key" = <your-mpc-token>)
+#'  # the new way to authenticate:
+#'  # stac_obj <- stac_obj %>%
+#'  #   items_sign_planetary_computer("<subscription-key>")
+#'
+#'  # this is the old way of authentication (still works):
+#'  # stac_obj <- stac_obj %>%
+#'  #   items_sign(
+#'  #     sign_fn = sign_planetary_computer(
+#'  #       headers = c("Ocp-Apim-Subscription-Key" = <your-mpc-token>)
+#'  #     )
 #'  #   )
-#'  # )
 #' }
 #'
+#' @name items_sign_planetary_computer
+#' @export
+items_sign_planetary_computer <- function(items, subscription_key = NULL, ...) {
+  header <- NULL
+  if (!is.null(subscription_key))
+    header <- httr::add_headers(
+      c("Ocp-Apim-Subscription-Key" = subscription_key)
+    )
+  sign_fn <- sign_planetary_computer(header)
+  items_sign(items, sign_fn)
+}
+
+#' @rdname items_sign_planetary_computer
 #' @export
 sign_planetary_computer <- function(..., headers = NULL, token_url = NULL) {
   # general info
