@@ -16,6 +16,8 @@ vignette: >
 ---
 
 ```{r prepare, include = FALSE}
+not_on_cran <- identical(Sys.getenv("NOT_CRAN"), "true")
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"

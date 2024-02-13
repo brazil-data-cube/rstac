@@ -15,22 +15,16 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-is_online <- tryCatch({
-  res <- httr::GET("https://planetarycomputer.microsoft.com/api/stac/v1")
-  !httr::http_error(res)
-}, error = function(e) {
-  FALSE
-})
+not_on_cran <- identical(Sys.getenv("NOT_CRAN"), "true")
 
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = is_online
+  comment = "#>"
 )
 ```
 
 
-```{r load-rstac, eval=TRUE}
+```{r load-rstac, eval=not_on_cran}
 if (!requireNamespace("tmap")) install.packages("tmap")
 library(tmap)
 library(rstac)
@@ -46,7 +40,7 @@ This tutorial is based on [reading STAC API data in Python](https://planetarycom
 
 To access Planetary Computer STAC API, we'll create a `rstac` query.
 
-```{r connection, eval=TRUE}
+```{r connection, eval=not_on_cran}
 planetary_computer <- stac("https://planetarycomputer.microsoft.com/api/stac/v1")
 planetary_computer
 ```
@@ -57,7 +51,7 @@ CQL2 expressions can be constructed using properties that refer to attributes of
 
 In this example, we will search for [Landsat Collection 2 Level-2](https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2) imagery of the Microsoft main campus from December 2020. The name of this collection in STAC service is `landsat-c2-l2`. Here we'll prepare a query to retrieve its queryables and make a `GET` request to the service.
 
-```{r queryables}
+```{r queryables, eval=not_on_cran}
 planetary_computer |>
   collections("landsat-c2-l2") |> 
   queryables() |> 
@@ -68,7 +62,7 @@ planetary_computer |>
 
 Now we can use `rstac` to make a search query with CQL2 filter extension to obtain the items.
 
-```{r cql2-search}
+```{r cql2-search, eval=not_on_cran}
 time_range <- cql2_interval("2020-12-01", "2020-12-31")
 bbox <- c(-122.2751, 47.5469, -121.9613, 47.7458)
 area_of_interest = cql2_bbox_as_geojson(bbox)
@@ -86,7 +80,7 @@ In that example, our filter expression used a temporal (`t_intersects`) and a sp
 
 `items` is an `Items` object containing 8 items that matched our search criteria.
 
-```{r items-length}
+```{r items-length, eval=not_on_cran}
 stac_items
 ```
 
@@ -94,7 +88,7 @@ stac_items
 
 An `Items` is a regular GeoJSON object. It is a collection of `Item` entries that stores metadata on assets. Users can convert a `Items` to a `sf` object containing the properties field as columns. Here we depict the items footprint.
 
-```{r geojson-to-sf}
+```{r geojson-to-sf, eval=not_on_cran}
 sf <- items_as_sf(stac_items)
 
 # create a function to plot a map
@@ -112,7 +106,7 @@ plot_map(sf)
 
 Some collections use the `eo` extension, which allows us to sort items by attributes like cloud coverage. The next example selects the item with lowest cloud_cover attribute:
 
-```{r lowest-cloud-cover}
+```{r lowest-cloud-cover, eval=not_on_cran}
 cloud_cover <- stac_items |>
   items_reap(field = c("properties", "eo:cloud_cover"))
 selected_item <- stac_items$features[[which.min(cloud_cover)]]
@@ -122,7 +116,7 @@ We use function `items_reap()` to extract cloud cover values from all features.
 
 Each STAC item have an `assets` field which describes files and provides link to access them.
 
-```{r assets-list}
+```{r assets-list, eval=not_on_cran}
 items_assets(selected_item)
 
 purrr::map_dfr(items_assets(selected_item), function(key) {
@@ -132,18 +126,7 @@ purrr::map_dfr(items_assets(selected_item), function(key) {
 
 Here, we’ll inspect the `rendered_preview` asset. To plot this asset, we can use the helper function `preview_plot()` and provide a URL to be plotted. We use the function `assets_url()` to get the URL. This function extracts all available URLs in items.
 
-```{r asset-preview-check, eval=TRUE, include=FALSE, echo=FALSE}
-is_accessible <- is_online && tryCatch({
-  res <- httr::HEAD(
-    assets_url(selected_item, asset_names = "rendered_preview")
-  )
-  !httr::http_error(res)
-}, error = function(e) {
-  FALSE
-})
-```
-
-```{r asset-preview, eval=is_accessible, fig.height=3, fig.width=5}
+```{r asset-preview, eval=not_on_cran, fig.height=3, fig.width=5}
 selected_item$assets[["rendered_preview"]]$href
 
 selected_item |> 
@@ -157,7 +140,7 @@ The `rendered_preview` asset is generated dynamically by Planetary Computer API 
 
 To sign URL in `rstac`, we can use `items_sign()` function.
 
-```{r sign-item}
+```{r sign-item, eval=not_on_cran}
 selected_item <- selected_item |>
   items_sign(sign_fn = sign_planetary_computer())
 
@@ -168,7 +151,7 @@ selected_item |>
 
 Everything after the `?` in that URL is a [SAS token](https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview) grants access to the data. See https://planetarycomputer.microsoft.com/docs/concepts/sas/ for more on using tokens to access data.
 
-```{r url-check}
+```{r url-check, eval=not_on_cran}
 library(httr)
 selected_item |> 
   assets_url(asset_names = "blue") |>
@@ -182,7 +165,7 @@ The 200 status code means that we were able to access the data using the signed 
 
 We can load up that single COG file using packages like [stars](https://github.com/r-spatial/stars) or [terra](https://github.com/rspatial/terra).
 
-```{r read-file}
+```{r read-file, eval=not_on_cran}
 library(stars)
 selected_item |> 
   assets_url(asset_names = "blue", append_gdalvsi = TRUE) |>
@@ -198,7 +181,7 @@ In the previous step of this tutorial, we learned how to search for items by spe
 
 For instance, collections like `sentinel-2-l2a` and `landsat-c2-l2` both implement the [eo](https://github.com/stac-extensions/eo) STAC extension and include an `eo:cloud_cover` property. To filter your search results to only return items that have a cloud coverage of less than 20%, you can use:
 
-```{r cql2-search-cloud}
+```{r cql2-search-cloud, eval=not_on_cran}
 stac_items <- planetary_computer |>
   ext_filter(
     collection %in% c("sentinel-2-l2a", "landsat-c2-l2") &&
@@ -211,7 +194,7 @@ stac_items <- planetary_computer |>
 
 Here we search for `sentinel-2-l2a` and `landsat-c2-l2` assets. As a result, we have images from both collections in our search results. Users can rename the assets to have a common name in both collections.
 
-```{r assets-rename}
+```{r assets-rename, eval=not_on_cran}
 stac_items <- stac_items |>
   assets_select(asset_names = c("B11", "swir16")) |>
   assets_rename(B11 = "swir16")
@@ -226,7 +209,7 @@ stac_items |>
 
 `Item` objects are features of `Items` and store information about assets.
 
-```{r items-fetch}
+```{r items-fetch, eval=not_on_cran}
 stac_items <- planetary_computer |>
   ext_filter(
     collection == "sentinel-2-l2a" &&
@@ -242,7 +225,7 @@ stac_items <- items_fetch(stac_items)
 
 We can use the metadata to plot cloud cover of a region over time, for example.
 
-```{r cloud-cover-ts-plot}
+```{r cloud-cover-ts-plot, eval=not_on_cran}
 library(dplyr)
 library(slider)
 library(ggplot2)
@@ -265,7 +248,7 @@ df |>
 
 STAC organizes items in catalogs (`STACCatalog`) and collections (`STACCollection`). These JSON documents contains metadata of the dataset they refer to. For instance, here we look at the [Bands](https://github.com/stac-extensions/eo#band-object) available for [Landsat 8 Collection 2 Level 2](https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2) data:
 
-```{r collection-landsat-bands}
+```{r collection-landsat-bands, eval=not_on_cran}
 landsat <- planetary_computer |>
   collections(collection_id = "landsat-c2-l2") |>
   get_request()
@@ -276,7 +259,7 @@ purrr::map_dfr(landsat$summaries$`eo:bands`, tibble::as_tibble_row)
 
 We can see what [Assets](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md#asset-object) are available on our item with:
 
-```{r landsat-assets}
+```{r landsat-assets, eval=not_on_cran}
 purrr::map_dfr(landsat$item_assets, function(x) {
     tibble::as_tibble_row(
       purrr::compact(x[c("title", "description", "gsd")])
@@ -286,7 +269,7 @@ purrr::map_dfr(landsat$item_assets, function(x) {
 
 Some collections, like [Daymet](https://planetarycomputer.microsoft.com/dataset/daymet-daily-na) include collection-level assets. You can use the `assets` property to access those assets.
 
-```{r collection-daymet}
+```{r collection-daymet, eval=not_on_cran}
 daymet <- planetary_computer |>
   collections(collection_id = "daymet-daily-na") |>
   get_request()
@@ -296,7 +279,7 @@ daymet
 
 Just like assets on items, these assets include links to data in Azure Blob Storage.
 
-```{r daymet-assets}
+```{r daymet-assets, eval=not_on_cran}
 items_assets(daymet)
 
 daymet |>
