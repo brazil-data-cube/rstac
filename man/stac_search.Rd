@@ -61,8 +61,8 @@ interval or date-time informed in \code{datetime} are selected.}
 
 \item{intersects}{a \code{list} expressing GeoJSON geometries
 objects as specified in RFC 7946. Only returns items that intersect with
-the provided geometry. To turn a GeoJSON into a list the packages
-\code{geojsonsf} or \code{jsonlite} can be used.}
+the provided geometry. To turn a GeoJSON into a list the package
+\code{jsonlite} can be used.}
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed, it defaults to the service implementation.}

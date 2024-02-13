@@ -58,8 +58,8 @@
 #'
 #' @param intersects  a `list` expressing GeoJSON geometries
 #' objects as specified in RFC 7946. Only returns items that intersect with
-#' the provided geometry. To turn a GeoJSON into a list the packages
-#' `geojsonsf` or `jsonlite` can be used.
+#' the provided geometry. To turn a GeoJSON into a list the package
+#' `jsonlite` can be used.
 #'
 #' @param limit       an `integer` defining the maximum number of results
 #' to return. If not informed, it defaults to the service implementation.
