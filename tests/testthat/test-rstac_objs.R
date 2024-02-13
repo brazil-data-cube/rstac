@@ -368,7 +368,7 @@ testthat::test_that("stac collection object", {
 
   testthat::expect_equal(
     object   =  stac_type(s_col),
-    expected = "doc_collections"
+    expected = "Collections"
   )
 
   testthat::expect_equal(

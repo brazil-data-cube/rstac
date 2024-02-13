@@ -6,6 +6,9 @@ conformance_test <- function(q, expected_number) {
 }
 
 test_that("doc_conformance Test 7", {
+  skip_if({
+    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+  }, "Test server is offline")
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
   conformance_test(
@@ -253,6 +256,9 @@ test_that("doc_conformance Test 7", {
 })
 
 test_that("doc_conformance Test 12", {
+  skip_if({
+    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+  }, "Test server is offline")
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
   conformance_test(
@@ -371,6 +377,9 @@ test_that("doc_conformance Test 12", {
 })
 
 test_that("doc_conformance Test 16", {
+  skip_if({
+    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+  }, "Test server is offline")
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
 
@@ -458,6 +467,9 @@ test_that("doc_conformance Test 16", {
 })
 
 test_that("doc_conformance Test 25", {
+  skip_if({
+    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+  }, "Test server is offline")
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
 
@@ -533,6 +545,9 @@ test_that("doc_conformance Test 25", {
 })
 
 test_that("doc_conformance Test 34", {
+  skip_if({
+    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+  }, "Test server is offline")
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
   polygon <- list(
@@ -686,6 +701,9 @@ test_that("doc_conformance Test 34", {
 })
 
 test_that("doc_conformance Test 38", {
+  skip_if({
+    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+  }, "Test server is offline")
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
 
@@ -875,6 +893,9 @@ test_that("doc_conformance Test 38", {
 })
 
 test_that("doc_conformance Test 45", {
+  skip_if({
+    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+  }, "Test server is offline")
   q <- rstac::stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
                    force_version = "0.9.0")
   conformance_test(
