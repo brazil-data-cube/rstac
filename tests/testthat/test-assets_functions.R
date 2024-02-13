@@ -4,7 +4,7 @@ testthat::test_that("assets functions", {
 
   # assets_download-----------------------------------------------------------
   testthat::expect_equal(
-    object = rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       stac_search(
         collections = "CB4-16D-2",
         datetime    = "2019-09-01/2019-11-01",

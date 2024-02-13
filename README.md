@@ -44,9 +44,7 @@ To install the development version of `rstac`, run the following
 commands
 
 ``` r
-# load necessary libraries
-library(devtools)
-install_github("brazil-data-cube/rstac")
+remotes::install_github("brazil-data-cube/rstac")
 ```
 
 Importing `rstac` package:
@@ -102,26 +100,26 @@ containing a feature collection).
 
 ``` r
 
-it_obj <- s_obj |>
+it_obj <- s_obj %>%
   stac_search(collections = "CB4-16D-2",
               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
-              limit = 100) |> 
+              limit = 100) %>% 
   get_request()
 
 it_obj
 #> ###Items
-#> - matched feature(s): 1072
-#> - features (100 item(s) / 972 not fetched):
-#>   - CB4-16D_V2_007004_20231101
-#>   - CB4-16D_V2_007006_20231101
-#>   - CB4-16D_V2_007005_20231101
-#>   - CB4-16D_V2_008004_20231101
-#>   - CB4-16D_V2_008006_20231101
-#>   - CB4-16D_V2_008005_20231101
-#>   - CB4-16D_V2_007004_20231016
-#>   - CB4-16D_V2_007005_20231016
-#>   - CB4-16D_V2_007006_20231016
-#>   - CB4-16D_V2_008004_20231016
+#> - matched feature(s): 1096
+#> - features (100 item(s) / 996 not fetched):
+#>   - CB4-16D_V2_007004_20240101
+#>   - CB4-16D_V2_007005_20240101
+#>   - CB4-16D_V2_007006_20240101
+#>   - CB4-16D_V2_008004_20240101
+#>   - CB4-16D_V2_008006_20240101
+#>   - CB4-16D_V2_008005_20240101
+#>   - CB4-16D_V2_007004_20231219
+#>   - CB4-16D_V2_007006_20231219
+#>   - CB4-16D_V2_007005_20231219
+#>   - CB4-16D_V2_008004_20231219
 #>   - ... with 90 more feature(s).
 #> - assets: 
 #> BAND13, BAND14, BAND15, BAND16, CLEAROB, CMASK, EVI, NDVI, PROVENANCE, thumbnail, TOTALOB
@@ -136,9 +134,9 @@ the code below, we present an example of how to pass a parameter token
 on a HTTP request.
 
 ``` r
-it_obj <- s_obj |>
+it_obj <- s_obj %>%
   stac_search(collections = "CB4-16D-2",
-              bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) |>
+              bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
   get_request(add_headers("x-api-key" = "MY-TOKEN"))
 ```
 
@@ -154,9 +152,9 @@ search criteria:
 
 ``` r
 # it_obj variable from the last code example
-it_obj |> 
+it_obj %>% 
   items_matched()
-#> [1] 1072
+#> [1] 1096
 ```
 
 However, if we count how many items there are in `it_obj` variable, we
@@ -164,7 +162,7 @@ get `10`, meaning that more items could be fetched from the STAC
 service:
 
 ``` r
-it_obj |> 
+it_obj %>% 
   items_length()
 #> [1] 100
 ```
@@ -172,12 +170,12 @@ it_obj |>
 ``` r
 # fetch all items from server 
 # (but don't stored them back in it_obj)
-it_obj <- it_obj |> 
+it_obj <- it_obj %>% 
   items_fetch(progress = FALSE) 
 
-it_obj |>
+it_obj %>%
   items_length()
-#> [1] 1072
+#> [1] 1096
 ```
 
 ### Download assets
@@ -190,7 +188,7 @@ assets. The code below downloads the `thumbnail` assets (.png files) of
 `10` items stored in `it_obj` variable.
 
 ``` r
-download_items <- it_obj |>
+download_items <- it_obj %>%
   assets_download(assets_name = "thumbnail", items_max = 10)
 ```
 
@@ -203,12 +201,12 @@ easy and natural way. For a complete
 ``` r
 s_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1")
 
-it_obj <- s_obj |> 
+it_obj <- s_obj %>% 
   ext_filter(
     collection == "sentinel-2-l2a" && `s2:vegetation_percentage` >= 50 &&
       `eo:cloud_cover` <= 10 && `s2:mgrs_tile` == "20LKP" && 
       anyinteracts(datetime, interval("2020-06-01", "2020-09-30"))
-  ) |>
+  ) %>%
   post_request()
 ```
 
@@ -261,19 +259,21 @@ based on the STAC API specifications.
     [fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo).
 2.  Create a file inside the `R/` directory called
     `ext_{extension_name}.R`.
-3.  In the code, you need to specify a subclass name
-    (e.g.`ext_subclass`) for your extension in
-    [`RSTACQuery`](https://github.com/OldLipe/rstac/blob/49370251033cca26c6da5b1a38f6d4fa4a83bb96/R/documents.R#L33-L40)
-    function constructor, and implement the S3 generics methods:
-    [`get_endpoint`](https://github.com/OldLipe/rstac/blob/49370251033cca26c6da5b1a38f6d4fa4a83bb96/R/extensions.R#L87-L90),
-    [`before_request`](https://github.com/OldLipe/rstac/blob/49370251033cca26c6da5b1a38f6d4fa4a83bb96/R/extensions.R#L93-L96),
+3.  In the code, you need to specify a subclass name (e.g.`my_subclass`)
+    for your extension and use it when calling
+    [`rstac_query()`](https://github.com/brazil-data-cube/rstac/blob/master/R/query-funs.R)
+    function. You also need to implement for your subclass the following
+    S3 generic functions:
+    [`before_request()`](https://github.com/brazil-data-cube/rstac/blob/master/R/extensions.R),
+    [`after_response()`](https://github.com/brazil-data-cube/rstac/blob/master/R/extensions.R),
     and
-    [`after_response`](https://github.com/OldLipe/rstac/blob/49370251033cca26c6da5b1a38f6d4fa4a83bb96/R/extensions.R#L99-L102).
-    Using these S3 generics methods you can define how parameters must
+    [`parse_params()`](https://github.com/brazil-data-cube/rstac/blob/master/R/extensions.R).
+    With these S3 generics methods you can define how parameters should
     be submitted to the HTTP request and the types of the returned
-    documents responses. See the implemented
-    [ext_query](https://github.com/brazil-data-cube/rstac/blob/master/R/ext_query.R)
-    API extension as an example.  
+    documents. See the implemented
+    [ext_filter](https://github.com/brazil-data-cube/rstac/blob/master/R/ext_filter.R)
+    API extension as an example.
 4.  Make a [Pull
     Request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)
-    on the branch [dev](https://github.com/OldLipe/rstac/tree/dev).
+    on the most recent [development
+    branch](https://github.com/brazil-data-cube/rstac/).

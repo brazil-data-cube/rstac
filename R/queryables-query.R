@@ -17,14 +17,14 @@
 #' @examples
 #' \dontrun{
 #' # Catalog's queryables
-#' rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
-#'   rstac::queryables() %>% rstac::get_request()
+#' stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+#'   queryables() %>% get_request()
 #'
 #' # Collection's queryables
-#' rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
-#'   rstac::collections(collection_id = "sentinel-2-l2a") %>%
-#'   rstac::queryables() %>%
-#'   rstac::get_request()
+#' stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+#'   collections(collection_id = "sentinel-2-l2a") %>%
+#'   queryables() %>%
+#'   get_request()
 #' }
 #'
 #' @export

@@ -6,9 +6,9 @@ testthat::test_that("examples rstac", {
 
     # test collections - /collections/
     testthat::expect_s3_class(
-      object = rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        rstac::collections() %>%
-        rstac::get_request(),
+      object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+        collections() %>%
+        get_request(),
       class = c("doc_collections", "rstac_doc"))
 
     # test collections items - /collections/{collection_id}

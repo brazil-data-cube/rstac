@@ -2,7 +2,7 @@ testthat::test_that("internals functions", {
   # skip cran check test
   testthat::skip_on_cran()
 
-  stac_obj <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/")
+  stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
 
   # check_query object
   testthat::expect_null(

@@ -112,8 +112,8 @@
 #' \dontrun{
 #' # Standard comparison operators in rstac:
 #' # Creating a stac search query
-#' req <- rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
-#'   rstac::stac_search(limit = 5)
+#' req <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+#'   stac_search(limit = 5)
 #'
 #' # Equal operator '=' with collection property
 #' req %>% ext_filter(collection == "sentinel-2-l2a") %>% post_request()

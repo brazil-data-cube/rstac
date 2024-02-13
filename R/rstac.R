@@ -58,11 +58,12 @@ NULL
 #' @export
 magrittr::`%>%`
 
-#' @importFrom httr GET POST write_disk add_headers content status_code
-#' http_type
+#' @importFrom utils txtProgressBar setTxtProgressBar modifyList URLdecode
+#' @importFrom httr write_disk http_type content status_code parse_url add_headers build_url GET POST
+#' @importFrom jsonlite fromJSON read_json
+#' @importFrom sf st_geometry st_geometry_type st_sf st_sfc st_transform st_intersects
+#' @importFrom grid grid.raster
+#' @importFrom png readPNG
+#' @importFrom jpeg readJPEG
 #' @importFrom crayon bold
-#' @importFrom utils modifyList URLdecode
-#' @importFrom jsonlite fromJSON
-#' @importFrom lifecycle deprecated
-#' @importFrom tibble as_tibble
 NULL

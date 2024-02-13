@@ -2,13 +2,13 @@ testthat::test_that("items functions", {
     # skip cran check test
     testthat::skip_on_cran()
 
-    res <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    res <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       stac_search(
         collections = "CB4-16D-2",
         limit = 10) %>%
       get_request()
 
-    res_bbox <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    res_bbox <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       stac_search(
         collections = "CB4-16D-2",
         limit = 1,
@@ -26,7 +26,7 @@ testthat::test_that("items functions", {
                               .Dim = c(1L, 5L, 2L))
     )
 
-    res_geo <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    res_geo <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       stac_search(
         collections = "CB4-16D-2",
         limit = 1,
@@ -34,13 +34,13 @@ testthat::test_that("items functions", {
         intersects = intersects_geojson) %>%
       post_request()
 
-    res_ext <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    res_ext <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       stac_search(collections = "CB4-16D-2",
                   limit = 10) %>%
       ext_query("bdc:tile" %in% "007004") %>%
       post_request()
 
-    item_stac <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    item_stac <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
       collections(collection_id = "CB4-16D-2") %>%
       items(feature_id = "CB4-16D_V2_000002_20230509") %>%
       get_request()
@@ -71,7 +71,7 @@ testthat::test_that("items functions", {
     # ok - stac_collection_list object
     testthat::expect_equal(
       object = subclass(
-        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           stac_search(collections = "LCC_C4_64_1M_STK_GO_PA-SPC-AC-NA-1",
                       limit = 500) %>%
           get_request(.) %>%
@@ -112,7 +112,7 @@ testthat::test_that("items functions", {
     # provide wrong object
     testthat::expect_error(
       object = items_datetime(
-        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           collections(collection_id = "CB4-16D-2") %>%
           get_request()
       )
@@ -127,7 +127,7 @@ testthat::test_that("items functions", {
 
     testthat::expect_error(
       object = items_bbox(
-        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           collections(collection_id = "CB4-16D-2") %>%
           get_request()
       )
@@ -143,7 +143,7 @@ testthat::test_that("items functions", {
     # provide wrong object
     testthat::expect_error(
       object = items_assets(
-        rstac::stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+        stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
           collections(collection_id = "CB4-16D-2") %>%
           get_request()
       )

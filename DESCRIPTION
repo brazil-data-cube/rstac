@@ -4,10 +4,10 @@ Version: 1.0.0
 Authors@R:
     c(person("Rolf", "Simoes",
              email = "rolfsimoes@gmail.com",
-             role = c("aut")),
+             role = c("aut", "cre")),
       person("Felipe", "Carvalho",
              email = "lipecaso@gmail.com",
-             role = c("aut", "cre")),
+             role = c("aut")),
       person("Brazil Data Cube Team",
              email = "brazildatacube@inpe.br",
              role = c("aut")),
@@ -26,28 +26,26 @@ RoxygenNote: 7.3.1
 Depends:
     R (>= 3.5)
 Imports:
-    httr,
-    crayon,
     utils,
+    httr,
     jsonlite,
-    lifecycle,
-    magrittr,
-    tibble
-Suggests:
-    testthat,
+    crayon,
     sf,
-    knitr,
-    rmarkdown,
     png,
     jpeg,
-    dplyr,
-    purrr,
-    slider,
-    leaflet,
+    grid,
+    magrittr
+Suggests:
+    lifecycle,
+    testthat,
+    knitr,
     tmap,
+    leaflet,
     stars,
+    slider,
     ggplot2,
-    geojsonsf
+    purrr,
+    dplyr
 Collate:
     'cql2-expr-funs.R'
     'cql2-types.R'

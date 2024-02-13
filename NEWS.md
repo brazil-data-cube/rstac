@@ -1,8 +1,9 @@
 # rstac (development version)
 
-# rstac 1.0.0-beta (Pre-Release)
+# rstac 1.0.0 (Released 2024-02-13)
 
-* Add support to static catalogs
+* Add support to static catalogs:
+`read_stac()`
 
 # rstac 0.9.2-4 (Released 2023-06-15)
 

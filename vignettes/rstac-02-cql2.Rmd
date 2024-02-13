@@ -58,7 +58,7 @@ Note how properties `vehicle_height` and `bridge_clearance` are represented in t
 
 In the R language, the JSON above could be represented by nested lists, which would be somewhat cumbersome to write. To produce valid CQL2 filter expressions, we use the R abstract syntax tree (AST) from R expressions that can be converted to TEXT or JSON formats. Let us see the same previous example written in R CQL2: 
 
-```{r setup}
+```{r setup, message=FALSE, warning=FALSE}
 library(rstac)
 ```
 
