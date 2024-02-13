@@ -43,3 +43,5 @@ inst/doc
 /doc/
 /Meta/
 ^revdep$
+^local_vignettes$
+
