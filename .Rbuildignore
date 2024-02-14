@@ -13,3 +13,4 @@
 ^Meta$
 ^\.github$
 ^revdep$
+^cran-comments\.md$
