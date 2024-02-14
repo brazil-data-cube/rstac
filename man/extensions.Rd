@@ -2,20 +2,17 @@
 % Please edit documentation in R/extensions.R, R/query-funs.R
 \name{extensions}
 \alias{extensions}
-\alias{endpoint}
 \alias{before_request}
 \alias{after_response}
 \alias{parse_params}
 \alias{content_response}
 \alias{check_query_verb}
-\alias{check_subclass}
+\alias{check_query}
 \alias{subclass}
-\alias{omit_query_params}
-\alias{RSTACQuery}
+\alias{set_query_endpoint}
+\alias{rstac_query}
 \title{Extension development functions}
 \usage{
-endpoint(q)
-
 before_request(q)
 
 after_response(q, res)
@@ -26,16 +23,16 @@ content_response(res, status_codes, content_types, key_message)
 
 check_query_verb(q, verbs, msg = NULL)
 
-check_subclass(x, subclasses)
+check_query(x, classes = NULL)
 
 subclass(x)
 
-omit_query_params(q, names)
+set_query_endpoint(q, endpoint, params = NULL)
 
-RSTACQuery(version = NULL, base_url, params = list(), subclass)
+rstac_query(version = NULL, base_url, params = list(), subclass)
 }
 \arguments{
-\item{q}{a \code{RSTACQuery} object.}
+\item{q}{a \code{rstac_query} object.}
 
 \item{res}{a \code{httr} \code{response} object.}
 
@@ -55,12 +52,13 @@ requested API message.}
 
 \item{msg}{a \code{character} with a personalized error message}
 
-\item{x}{either a \code{RSTACQuery} object expressing a STAC query
-criteria or any \code{RSTACDocument}.}
+\item{x}{a \code{rstac_query} object expressing a STAC query
+criteria.}
 
-\item{subclasses}{a \code{character} vector with all allowed S3 subclasses}
+\item{classes}{a \code{character} vector with all allowed S3 sub-classes}
 
-\item{names}{a \code{character} vector with the names do omit.}
+\item{endpoint}{a \code{character} vector with the format string with the
+endpoint url.}
 
 \item{version}{a \code{character} with the STAC version.}
 
@@ -71,24 +69,23 @@ STAC web service.}
 object to be created.}
 }
 \value{
-A \code{character} endpoint value for \code{endpoint()} function.
-A \code{RSTACQuery} object for \code{before_request()} and
+A \code{rstac_query} object for \code{before_request()} and
 \code{after_response()} functions.
 
 The \code{content_response()} function returns a \code{list} data structure
 representing the JSON file received in HTTP response
 
-The \code{RSTACQuery()} function returns a \code{STACQuery} object with
+The \code{rstac_query()} function returns a \code{STACQuery} object with
 subclass defined by \code{subclass} parameter.
 }
 \description{
 Currently, there are five STAC documents defined in STAC spec:
 \itemize{
-\item \code{STACCatalog}
-\item \code{STACCollection}
-\item \code{STACCollectionList}
-\item \code{STACItem}
-\item \code{STACItemCollection}
+\item \code{doc_catalog}
+\item \code{doc_collection}
+\item \code{doc_collections}
+\item \code{doc_item}
+\item \code{doc_items}
 }
 
 Each document class is associated with STAC API endpoints.
@@ -125,22 +122,18 @@ These functions are intended for those who want to implement new STAC API
 extensions. An extension must define a subclass name and implement all the
 following S3 generic methods for that subclass:
 \itemize{
-\item \code{endpoint()}: returns the endpoint value of the extension.
-Endpoints that vary between STAC API versions can be properly returned by
-checking the \code{version} field of \code{RSTACQuery} object.
 \item \code{before_request()}: allows handling query parameters before
-submit them to the HTTP server;
+submit them to the HTTP server, usually sets up the query endpoint;
 \item \code{after_request()}: allows to check and parse document received
 by the HTTP server;
 }
 
-These methods will work 'behind the scenes' when a \code{RSTACQuery} object
+These methods will work 'behind the scenes' when a \code{rstac_query} object
 representing a user query are passed to a request function
 (e.g. \code{get_request()} or \code{post_request()}). The calling order is:
 \enumerate{
 \item begin of \code{get_request()} or \code{post_request()}
 \item if STAC API version is not defined, try detect it
-\item call \code{endpoint()}
 \item call \code{before_request()}
 \item send HTTP request
 \item receive HTTP response
@@ -149,13 +142,13 @@ representing a user query are passed to a request function
 }
 
 Besides that, the extension must expose a function to receive user
-parameters and return a \code{RSTACQuery} object with a subclass
+parameters and return a \code{rstac_query} object with a subclass
 associated with the above S3 methods. This function must accept as its
-first parameter a \code{RSTACQuery} object representing the actual query.
+first parameter a \code{rstac_query} object representing the actual query.
 To keep the command flow consistency, the function needs to check the
 subclass of the input query. After that, it must set new or changes the
 input query parameters according to the user input and, finally,
-return the new query as a \code{RSTACQuery} object.
+return the new query as a \code{rstac_query} object.
 
 You can see examples on how to implement an STAC API extension by looking at
 \code{stac.R}, \code{collections.R}, \code{items.R}, \code{stac_search.R},
@@ -175,20 +168,20 @@ It returns the parsed content response.
 verbs are allowed. It is useful for establishing which verbs will be
 supported by an extension.
 
-\item \code{check_subclass()}: The \code{check_subclass()} function specifies which type of query
-objects (\code{RSTACQuery}) or document objects (\code{RSTACDocument})
-are expected in the function extension.
+\item \code{check_query()}: The \code{check_query()} function specifies which type of query
+object (\code{rstac_query}) is expected in the function extension.
 
 \item \code{subclass()}: The \code{subclass()} function returns a \code{character} representing the
-subclass name of either \code{RSTACQuery} or \code{RSTACDocument} S3 classes.
+subclass name of \code{rstac_query} objects.
 
-\item \code{omit_query_params()}: The \code{omit_query_params()} function was created to omit the paths that
-are defined as query parameters to simplify the creation of a query.
-Therefore, use this method only in endpoints that specify a parameter in
-their paths.
+\item \code{set_query_endpoint()}: The \code{set_query_endpoint()} function defines the endpoint of a query.
+If \code{params} parameter is passed, each value must be an entry of params
+field of the given query. The corresponding param value will be used as
+value replacement of \verb{\%s} occurrences in the \code{endpoint} string. After
+the replacement, all params in this list will be removed.
 
-\item \code{RSTACQuery()}: The \code{RSTACQuery()} function is a constructor of \code{RSTACQuery}
-objects. Every extension must implement a subclass of \code{RSTACQuery} to
+\item \code{rstac_query()}: The \code{rstac_query()} function is a constructor of \code{rstac_query}
+objects. Every extension must implement a subclass of \code{rstac_query} to
 represent its queries. This is done by informing to the \code{subclass}
 parameter the extension's subclass name.
 

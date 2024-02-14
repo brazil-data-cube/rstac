@@ -2,15 +2,11 @@ testthat::test_that("internals functions", {
   # skip cran check test
   testthat::skip_on_cran()
 
-  stac_obj <- rstac::stac("https://brazildatacube.dpi.inpe.br/stac/")
+  stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
 
-  # check_subclass object
+  # check_query object
   testthat::expect_null(
-    object = check_subclass(stac_obj, subclasses = c("stac"))
-  )
-
-  testthat::expect_error(
-    object = .check_obj(stac_obj, "numeric")
+    object = check_query(stac_obj, classes = c("stac"))
   )
 
   # check for query for wrong verb
@@ -26,7 +22,7 @@ testthat::test_that("internals functions", {
   testthat::expect_error(
     object = {
       mock_obj <- stac_obj
-      class(mock_obj) <- "RSTACQuery"
+      class(mock_obj) <- "rstac_query"
       after_response(mock_obj, res = NULL)
     }
   )
@@ -34,7 +30,7 @@ testthat::test_that("internals functions", {
   testthat::expect_error(
     object = {
       mock_obj <- stac_obj
-      class(mock_obj) <- "RSTACQuery"
+      class(mock_obj) <- "rstac_query"
       endpoint(mock_obj)
     }
   )
@@ -53,10 +49,6 @@ testthat::test_that("internals functions", {
   # .warning function
   testthat::expect_warning(
     .warning("warning function")
-  )
-
-  testthat::expect_error(
-    .make_url("aaa", params = list(1))
   )
 })
 

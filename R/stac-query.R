@@ -20,7 +20,7 @@
 #' [post_request()]
 #'
 #' @return
-#' A `RSTACQuery` object with the subclass `stac` containing all
+#' A `rstac_query` object with the subclass `stac` containing all
 #' request parameters to be provided to API service.
 #'
 #' @examples
@@ -32,42 +32,32 @@
 #' @rdname stac
 #' @export
 stac <- function(base_url, force_version = NULL) {
-  # check url parameter
-  .check_obj(base_url, "character")
-
+  check_character(base_url, "STAC URL must be a character value.")
   # check version
   force_version <- force_version[[1]]
   if (!is.null(force_version) && force_version < "0.8.0")
     .warning("STAC API version '%s' is not supported by `rstac` package.",
              force_version)
-
   # create a new STAC
-  RSTACQuery(version = force_version,
-             base_url = base_url,
-             params = list(),
-             subclass = "stac")
-}
-
-#' @export
-endpoint.stac <- function(q) {
-  if (q$version < "0.9.0")
-    return("/stac")
-  return("/")
+  base_url <- url_normalize(base_url)
+  rstac_query(
+    version = force_version,
+    base_url = base_url,
+    params = list(),
+    subclass = "stac"
+  )
 }
 
 #' @export
 before_request.stac <- function(q) {
   check_query_verb(q, verbs = c("GET", "POST"))
-  return(q)
+  if (!is.null(q$version) && q$version < "0.9.0")
+    return(set_query_endpoint(q, endpoint = "./stac"))
+  set_query_endpoint(q, endpoint = "./")
 }
 
 #' @export
 after_response.stac <- function(q, res) {
-  content <- content_response(
-    res,
-    status_codes = "200",
-    content_types = "application/.*json",
-    key_message = c("message", "description", "detail")
-  )
-  RSTACDocument(content = content, q = q, subclass = "STACCatalog")
+  content <- content_response_json(res)
+  doc_catalog(content)
 }

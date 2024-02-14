@@ -15,24 +15,18 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r prepare, include = FALSE}
-is_online <- tryCatch({
-  res <- httr::GET("https://brazildatacube.dpi.inpe.br/stac/")
-  !httr::http_error(res)
-}, error = function(e) {
-  FALSE
-})
+```{r prepare, include=FALSE}
+not_on_cran <- identical(Sys.getenv("NOT_CRAN"), "true")
 
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = is_online
+  comment = "#>"
 )
-library(tibble)
-```
 
-```{r setup, eval=TRUE, echo=FALSE}
+if (!requireNamespace("png")) install.packages("png")
 library(rstac)
+library(png)
+
 ```
 
 # About rstac{-}
@@ -44,7 +38,6 @@ the STAC API endpoints. For each endpoint, `rstac` has a specialized implementat
 
 
 ```{R endpoints, eval=TRUE, echo=FALSE}
-
 data.frame(
   "**STAC** endpoints"   = c(
     "`/`", "`/stac`","`/collections`", "`/collections/{collectionId}`", 
@@ -76,45 +69,49 @@ install.packages("rstac")
 
 This tutorial use the STAC API made available by the [Brazil Data Cube (BDC)](http://www.brazildatacube.org/en/home-page-2/) project. BDC is a research, development, and technological innovation project of the National Institute for Space Research (INPE), Brazil.
 
-Let's start by creating a query for the BDC catalog.
+Let's start by loading `rstac` and creating a query for the BDC catalog.
 
-```{r queries-1, eval=TRUE}
+```{r setup, eval=FALSE}
+library(rstac)
+```
+
+```{r queries-1, eval=not_on_cran}
 s_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
 s_obj
 ```
-The `RSTACQuery` object stores the metadata of the created query.
+The `rstac_query` object stores the metadata of the created query.
 This metadata can be accessed as a list element during query creation.
 
-```{r base-url, eval=TRUE}
+```{r base-url, eval=not_on_cran}
 s_obj$base_url
 ```
 Endpoints are constructed through function concatenations provided by `rstac`. Some examples are shown below:
 
-```{r queries-2, eval=TRUE}
-s_obj |> 
+```{r queries-2, eval=not_on_cran}
+s_obj %>% 
   collections()
 ```
 
-```{r queries-3, eval=TRUE}
-s_obj |> 
+```{r queries-3, eval=not_on_cran}
+s_obj %>% 
   collections("S2-16D-2")
 ```
 
-```{r queries-4, eval=TRUE}
-s_obj |> 
-  collections("S2-16D-2") |>
+```{r queries-4, eval=not_on_cran}
+s_obj %>% 
+  collections("S2-16D-2") %>%
   items()
 ```
 
-```{r queries-5, eval=TRUE}
-s_obj |> 
-  collections("S2-16D-2") |> 
+```{r queries-5, eval=not_on_cran}
+s_obj %>% 
+  collections("S2-16D-2") %>% 
   items(feature_id = "S2-16D_V2_015011_20190117")
 ```
 
-```{r queries-6, eval=TRUE}
-s_obj |> 
-  stac_search(collections = c("CB4-16D-2", "S2-16D-2")) |>
+```{r queries-6, eval=not_on_cran}
+s_obj %>% 
+  stac_search(collections = c("CB4-16D-2", "S2-16D-2")) %>%
   ext_query("bdc:tile" == "007004")
 ```
 
@@ -129,29 +126,29 @@ These options are available in the `httr` package documentation in the [`config`
 
 ### HTTP GET: `get_request()`{-}
 
-```{r request-1}
-s_obj |>
-  collections(collection_id = "CB4-16D-2") |>
-  items() |>
+```{r request-1, eval=not_on_cran}
+s_obj %>%
+  collections(collection_id = "CB4-16D-2") %>%
+  items() %>%
   get_request() 
 ```
 
 ### HTTP POST: `post_request()`{-}
 
-```{r request-2}
-s_obj |>
+```{r request-2, eval=not_on_cran}
+s_obj %>%
   stac_search(
     collections = c("CB4-16D-2", "S2-16D-2"),
     datetime = "2021-01-01/2021-01-31",
-    limit = 400) |>
+    limit = 400) %>%
   post_request()
 ```
 
 Example of providing an additional argument to HTTP verb in a request:
 
-```{r request-3}
-s_obj |> 
-  stac_search(collections = c("CB4-16D-2", "S2-16D-2")) |>
+```{r request-3, eval=not_on_cran}
+s_obj %>% 
+  stac_search(collections = c("CB4-16D-2", "S2-16D-2")) %>%
   post_request(config = c(httr::add_headers("x-api-key" = "MY-KEY")))
 ```
 
@@ -161,118 +158,118 @@ Each `rstac` object is mapped according to the endpoints of the STAC spec. In th
 
 #### `STACCatalog` object{-}
 
-```{r catalog}
-s_obj |> 
+```{r catalog, eval=not_on_cran}
+s_obj %>% 
   get_request()
 ```
 
 #### `STACCollection` object{-}
 
-```{r collection}
-s_obj |>
-  collections("S2-16D-2") |>
+```{r collection, eval=not_on_cran}
+s_obj %>%
+  collections("S2-16D-2") %>%
   get_request()
 ```
 
-#### `STACItem` object{-}
+#### `Item` object{-}
 
-```{r item}
-s_obj |>
-  collections("CB4-16D-2") |>
-  items(feature_id = "CB4-16D_V2_000002_20230509") |>
+```{r item, eval=not_on_cran}
+s_obj %>%
+  collections("CB4-16D-2") %>%
+  items(feature_id = "CB4-16D_V2_000002_20230509") %>%
   get_request()
 ```
 
-#### `STACItemCollection` object{-}
+#### `Items` object{-}
 
-```{r item-collection}
-s_obj |> 
-  stac_search(collections = c("CB4_64_16D_STK", "S2-16D-2")) |>
+```{r item-collection, eval=not_on_cran}
+s_obj %>% 
+  stac_search(collections = c("CB4_64_16D_STK", "S2-16D-2")) %>%
   get_request()
 ```
 
 
-Besides, the `rstac` package provides several auxiliary functions for `STACItem` and `STACItemCollection` objects. These auxiliary functions operate at the item or asset level. Functions dedicated to items have the prefix `items_`. Otherwise, asset-oriented functions have the prefix `assets_`
+Besides, the `rstac` package provides several auxiliary functions for `Item` and `Items` objects. These auxiliary functions operate at the item or asset level. Functions dedicated to items have the prefix `items_`. Otherwise, asset-oriented functions have the prefix `assets_`
 
 ## Items functions{-}
 
-The `STACItemCollection` object have some facilitating functions to manipulate/extract information, for example:
+The `Items` object have some facilitating functions to manipulate/extract information, for example:
 
 - **`items_fields()`:** Lists fields names inside an item.
-- **`items_filter()`:** Performs a filter by items according to expressions operating on the properties of a `STACItemCollection` object.
+- **`items_filter()`:** Performs a filter by items according to expressions operating on the properties of a `Items` object.
 - **`items_fetch()`:** Performs the pagination of items.
 - **`items_length()`:** Returns the number of items in an object.
 - **`items_matched()`:** Returns the number of items matching the search criteria.
-- **`items_assets()`:** Returns the assets name from `STACItemCollection` and `STACItem` objects.
+- **`items_assets()`:** Returns the assets name from `Items` and `Item` objects.
 
 
 It is interesting to verify the fields of items before filtering:
 
-```{r fields}
-s_obj |>
+```{r fields, eval=not_on_cran}
+s_obj %>%
   stac_search(
     collections = "CB4-16D-2",
     datetime = "2019-01-01/2019-12-31",
-    limit = 100) |> 
-  post_request() |>
+    limit = 100) %>% 
+  post_request() %>%
   items_fields(field = "properties")
 ```
 
 Let's filter items that have the percentage of clouds smaller than 10%:
 
-```{r filter}
-s_obj |>
+```{r filter, eval=not_on_cran}
+s_obj %>%
   stac_search(
     collections = "CB4-16D-2",
     datetime = "2019-01-01/2019-12-31",
-    limit = 100) |> 
-  post_request() |>
+    limit = 100) %>% 
+  post_request() %>%
   items_filter(properties$`eo:cloud_cover` < 10)
 ```
 Number of items returned in the query (in this case equal to the limit defined as parameter):
 
-```{r length}
-s_obj |>
+```{r length, eval=not_on_cran}
+s_obj %>%
   stac_search(
     collections = "CB4-16D-2",
     datetime = "2019-01-01/2019-12-31",
-    limit = 100) |> 
-  post_request() |>
+    limit = 100) %>% 
+  post_request() %>%
   items_length()
 ```
 Number of matched items in the query:
 
-```{r matched}
-s_obj |>
+```{r matched, eval=not_on_cran}
+s_obj %>%
   stac_search(
     collections = "CB4-16D-2",
     datetime = "2019-01-01/2019-12-31",
-    limit = 100) |>
-  post_request() |>
+    limit = 100) %>%
+  post_request() %>%
   items_matched()
 ```
 Paginating all items that were matched in the query:
 
-```{r fetch}
-items_fetched <- s_obj |>
+```{r fetch, eval=not_on_cran}
+items_fetched <- s_obj %>%
   stac_search(
     collections = "CB4-16D-2",
     datetime = "2019-01-01/2019-12-31",
-    limit = 500) |>
-  post_request() |>
+    limit = 500) %>%
+  post_request() %>%
   items_fetch(progress = FALSE)
 
 items_fetched
 ```
-Note that the 1127 has been recovered:
+Note that all items was fetched:
 
-```{r length-2}
+```{r length-2, eval=not_on_cran}
 items_length(items_fetched)
 ```
 
 Listing the assets of the retrieved items:
 
-```{r assets}
+```{r assets, eval=not_on_cran}
 items_assets(items_fetched)
 ```
 
@@ -290,43 +287,43 @@ For the URL you can add the GDAL library drivers for the following schemes:
 
 Listing the assets names of all items:
 
-```{r assets-2}
-s_obj |>
+```{r assets-2, eval=not_on_cran}
+s_obj %>%
   stac_search(
     collections = "CB4-16D-2",
     datetime = "2019-01-01/2019-12-31",
-    limit = 10) |>
-  post_request() |>
+    limit = 10) %>%
+  post_request() %>%
   items_assets()
 ```
 
 Selecting assets that have names `"BAND14"` and `"NDVI"`
 
-```{r assets-select}
-selected_assets <- s_obj |>
+```{r assets-select, eval=not_on_cran}
+selected_assets <- s_obj %>%
   stac_search(
     collections = "CB4-16D-2",
     datetime = "2019-01-01/2019-12-31",
-    limit = 10) |>
-  post_request() |>
+    limit = 10) %>%
+  post_request() %>%
   assets_select(asset_names = c("BAND14", "NDVI"))
 ```
 
-```{r assets-3}
+```{r assets-3, eval=not_on_cran}
 items_assets(selected_assets)
 ```
 
 Listing asset urls from the selected bands:
 
-```{r assets-url}
-selected_assets |> 
+```{r assets-url, eval=not_on_cran}
+selected_assets %>% 
   assets_url()
 ```
 
 Renaming assets using the pattern `<old-name> = <new-name>`
 
-```{r assets-renamed}
-renamed_assets <- selected_assets |> 
+```{r assets-renamed, eval=not_on_cran}
+renamed_assets <- selected_assets %>% 
   assets_rename(BAND14 = "B14")
 renamed_assets
 ```
@@ -334,7 +331,7 @@ renamed_assets
 In the `assets` field of the output it can be seen that the asset's name has changed.
 It is also possible to check the asset names using the `items_assets()` function.
 
-```{r assets-4}
+```{r assets-4, eval=not_on_cran}
 items_assets(renamed_assets)
 ```
 
@@ -343,21 +340,10 @@ items_assets(renamed_assets)
 
 `rstac` also provides a helper function to plot preview assets (e.g. thumbnail and quicklook).
 
-```{r asset-preview-check, eval=TRUE, include=FALSE, echo=FALSE}
-is_accessible <- is_online && tryCatch({
-  res <- httr::HEAD(
-    assets_url(items_fetched$features[[2]], asset_names = "thumbnail")
-  )
-  !httr::http_error(res)
-}, error = function(e) {
-  FALSE
-})
-```
-
-```{r plot-preview, eval=is_accessible, fig.height=3, fig.width=5}
+```{r plot-preview, eval=not_on_cran, fig.height=3, fig.width=5}
 second_item <- items_fetched$features[[2]]
-second_item |>
-  assets_url(asset_names = "thumbnail") |>
+second_item %>%
+  assets_url(asset_names = "thumbnail") %>%
   preview_plot()
 ```
 
@@ -365,4 +351,4 @@ Here, we selected the second item of `items_fetched`'s features and plotted its 
 
 # Conclusion{-}
 
-The `rstac` package can be useful for querying and working with satellite imagery data from STAC APIs. It offers a simple interface for searching STAC items, exploring the results, and working with assets. Additional functionalities include reading and plotting preview images. This tutorial has provided a short introduction on how to use the package. For more about CQL2 in `rstac`, type the command `?ext_filter`.
+The `rstac` package can be useful for querying and working with satellite imagery data from STAC APIs. It offers a simple interface for searching STAC items, exploring the results, and working with assets. Additional functions include reading and plotting preview images. This tutorial has provided a short introduction on how to use the package. For more about CQL2 in `rstac`, type the command `?ext_filter`.

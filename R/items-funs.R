@@ -2,11 +2,11 @@
 #'
 #' @description
 #' These functions provide support to work with
-#' `STACItemCollection` and `STACItem` objects.
+#' `doc_items` and `doc_item` objects.
 #'
 #' \itemize{
 #' \item `items_length()`: shows how many items there are in
-#' the `STACItemCollection` object.
+#' the `doc_items` object.
 #'
 #' \item `items_matched()`: shows how many items matched the
 #' search criteria. It supports `search:metadata` (v0.8.0),
@@ -18,32 +18,39 @@
 #' \item `items_next()`: fetches a new page from STAC service.
 #'
 #' \item `items_datetime()`: retrieves the `datetime`
-#' field in `properties` from `STACItemCollection` and
-#' `STACItem` objects.
+#' field in `properties` from `doc_items` and
+#' `doc_item` objects.
 #'
 #' \item `items_bbox()`: retrieves the `bbox`
-#' field of a `STACItemCollection` or a `STACItem` object.
+#' field of a `doc_items` or a `doc_item` object.
 #'
 #' \item `item_assets()`: returns the assets name from
-#' `STACItemCollection` and `STACItem` objects.
+#' `doc_items` and `doc_item` objects.
 #'
 #' \item `items_filter()`: selects only items that match some criteria
 #'  (see details section).
 #'
 #' \item `items_reap()`: extract key values by traversing all items
-#' in a `STACItemCollection` object.
+#' in a `doc_items` object.
 #'
 #' \item `items_fields()`: lists field names inside an item.
 #'
-#' \item `items_group()`: `r lifecycle::badge('deprecated')` organizes
-#' items as elements of a list using some criteria.
-#'
 #' \item `items_sign()`: allow access assets by preparing its url.
 #'
-#' \item `items_as_sf()`: `r lifecycle::badge('experimental')` convert items to `sf` object.
+#' \item `items_as_sf()`: `r lifecycle::badge('experimental')` convert items
+#'   to `sf` object.
+#'
+#' \item `items_as_sfc()`: `r lifecycle::badge('experimental')` convert items
+#'   to `sfc` object.
+#'
+#' \item `items_intersects()`: `r lifecycle::badge('experimental')` indicates
+#'   which items intersects a given geometry.
+#'
+#' \item `items_properties()`: lists properties names inside an item.
+#'
 #' }
 #'
-#' @param items           a `STACItemCollection` object.
+#' @param items           a `doc_items` object.
 #'
 #' @param matched_field   a `character` vector with the path
 #' where the number of items returned in the named list is located starting
@@ -54,21 +61,24 @@
 #' @param progress        a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
-#' @param simplify        `r lifecycle::badge('deprecated')` no side-effect
-#'
 #' @param field           a `character` with the names of the field to
 #' get the subfields values.
 #'
 #' @param pick_fn         a `function` used to pick elements from items
 #' addressed by `field` parameter.
 #'
-#' @param index           an `atomic` vector with values as the group index.
-#'
 #' @param sign_fn         a `function` that receives an item as a parameter
 #' and returns an item signed.
 #'
 #' @param filter_fn       a `function` that receives an item that should
 #' evaluate a `logical` value.
+#'
+#' @param crs       a `character` representing the geometry projection.
+#'
+#' @param geom       a `sf` or `sfc` object.
+#'
+#' @param selection  an `integer` vector containing the indices of the items
+#'   to select.
 #'
 #' @param ...             additional arguments. See details.
 #'
@@ -83,11 +93,8 @@
 #' methods, such as [add_headers][httr::add_headers] or
 #' [set_cookies][httr::set_cookies].
 #'
-#' \item `items_fields()`: ellipsis parameter is deprecated in version
-#' 0.9.2 of rstac. Please, use `field` parameter instead.
-#'
 #' \item `items_filter()`: ellipsis is used to pass logical
-#' expressions to be evaluated against a `STACItem` field as filter criteria.
+#' expressions to be evaluated against a `doc_item` field as filter criteria.
 #'
 #' **WARNING:** the evaluation of filter expressions changed in `rstac` 0.9.2.
 #' Older versions of `rstac` used `properties` field to evaluate filter
@@ -118,7 +125,7 @@
 #' \item `items_matched()`: returns an `integer` value if the STAC web server
 #' does support this extension. Otherwise returns `NULL`.
 #'
-#' \item `items_fetch()`: a `STACItemCollection` with all matched items.
+#' \item `items_fetch()`: a `doc_items` with all matched items.
 #'
 #' \item `items_next()`: fetches a new page from STAC service.
 #'
@@ -126,21 +133,30 @@
 #'
 #' \item `items_bbox()`: returns a `list` with all items' bounding boxes.
 #'
-#' \item `item_assets()`: Returns a `character` value with all assets names
-#' of the all items.
+#' \item `item_assets()`: returns a `character` value with all assets names
+#' of all items.
 #'
-#' \item `items_filter()`: a `STACItemCollection` object.
+#' \item `items_filter()`: a `doc_items` object.
 #'
 #' \item `items_reap()`: a `vector` if the supplied field is atomic,
 #' otherwise or a `list`.
 #'
 #' \item `items_fields()`: a `character` vector.
 #'
-#' \item `items_group()`: a `list` of `STACItemCollection` objects.
-#'
-#' \item `items_sign()`: a `STACItemCollection` object with signed assets url.
+#' \item `items_sign()`: a `doc_items` object with signed assets url.
 #'
 #' \item `items_as_sf()`: a `sf` object.
+#'
+#' \item `items_as_sfc()`: a `sfc` object.
+#'
+#' \item `items_as_tibble()`: a `tibble` object.
+#'
+#' \item `items_intersects()`: a `logical` vector.
+#'
+#' \item `items_properties()`: returns a `character` value with all properties
+#' of all items.
+#'
+#' \item `items_select()`: select features from an items object.
 #'
 #' }
 #'
@@ -148,7 +164,7 @@
 #' \dontrun{
 #'  x <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
 #'      stac_search(collections = "CB4-16D-2") %>%
-#'      stac_search(limit = 500) %>%
+#'      stac_search(datetime = "2020-01-01/2021-01-01", limit = 500) %>%
 #'      get_request()
 #'
 #'  x %>% items_length()
@@ -162,7 +178,7 @@
 #' # Defining BDC token
 #' Sys.setenv("BDC_ACCESS_KEY" = "token-123")
 #'
-#' # STACItem object
+#' # doc_item object
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'     stac_search(collections = "CB4-16D-2", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
@@ -172,7 +188,7 @@
 #' }
 #'
 #' \dontrun{
-#' # STACItemCollection object
+#' # doc_items object
 #' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'     stac_search(collections = "CB4-16D-2", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
@@ -191,7 +207,7 @@
 #' }
 #'
 #' \dontrun{
-#' # STACItemCollection object
+#' # doc_items object
 #' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'  stac_search(collections = "CB4-16D-2", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
@@ -199,6 +215,13 @@
 #'  get_request() %>% items_fetch(progress = FALSE)
 #'
 #' stac_item %>% items_reap(field = c("properties", "datetime"))
+#'
+#' stac_item %>% items_as_sf()
+#'
+#' stac_item %>% items_as_tibble()
+#'
+#' stac_item %>% items_select(c(1, 4, 10, 20))
+#'
 #' }
 #'
 #' @name items_functions
@@ -214,23 +237,10 @@ items_length <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_length.STACItem <- function(items) {
-  check_items(items)
-  return(1)
-}
-
-#' @rdname items_functions
-#'
-#' @export
-items_length.STACItemCollection <- function(items) {
+items_length.doc_items <- function(items) {
   check_items(items)
   return(length(items$features))
 }
-
-#' @rdname items_functions
-#'
-#' @export
-items_length.default <- items_length.STACItem
 
 #' @rdname items_functions
 #'
@@ -242,42 +252,22 @@ items_matched  <- function(items, matched_field = NULL) {
 #' @rdname items_functions
 #'
 #' @export
-items_matched.STACItem  <- function(items, matched_field = NULL) {
-  check_items(items)
-  return(1)
-}
-
-#' @rdname items_functions
-#'
-#' @export
-items_matched.STACItemCollection <- function(items, matched_field = NULL) {
+items_matched.doc_items <- function(items, matched_field = NULL) {
   check_items(items)
   matched <- NULL
-
   # try by the matched_field provided by user. This allow users specify a
   # non-standard field for matched items.
-  if (is.character(matched_field) && matched_field %in% names(items)) {
-      matched <- as.numeric(items[[matched_field]])
-  }
-  if (is.null(matched)) {
-    if (stac_version(items) < "0.9.0")
-      # STAC API < 0.9.0 extensions
-      matched <- items$`search:metadata`$matched
-    else
-      # STAC API >= 0.9.0 extensions
-      matched <- items$`context`$matched
-
-    # try the last resort: OGC features core spec
-    if (is.null(matched))
-      matched <- items$numberMatched
-  }
-  return(matched)
+  if (is.character(matched_field) && matched_field %in% names(items))
+    matched <- as.numeric(items[[matched_field]])
+  if (is.null(matched) && "search:metadata" %in% names(items))
+    matched <- items$`search:metadata`$matched
+  if (is.null(matched) && "context" %in% names(items))
+    matched <- items$`context`$matched
+  # try the last resort: OGC features core spec
+  if (is.null(matched))
+    matched <- items$numberMatched
+  matched
 }
-
-#' @rdname items_functions
-#'
-#' @export
-items_matched.default <- items_matched.STACItem
 
 #' @rdname items_functions
 #'
@@ -289,55 +279,48 @@ items_fetch <- function(items, ...) {
 #' @rdname items_functions
 #'
 #' @export
-items_fetch.STACItemCollection <- function(items, ...,
-                                           progress = TRUE,
-                                           matched_field = NULL) {
+items_fetch.doc_items <- function(items, ...,
+                                  progress = TRUE,
+                                  matched_field = NULL) {
   check_items(items)
   matched <- items_matched(items, matched_field)
-
   # verify if progress bar can be shown
   progress <- progress & (!is.null(matched) && (items_length(items) < matched))
-  if (progress)
+  if (progress) {
     pb <- utils::txtProgressBar(
       min = items_length(items),
       max = matched,
       style = 3
     )
-
+    # close progress bar when exit
+    on.exit({
+      if (progress) {
+        utils::setTxtProgressBar(pb, matched)
+        close(pb)
+      }
+    })
+  }
+  # Initialize the items
+  next_items <- items
   while (TRUE) {
-
     # check if features is complete
     if (!is.null(matched) && (items_length(items) == matched))
       break
-
     # protect against infinite loop
     if (!is.null(matched) && (items_length(items) > matched))
       .error(paste("Length of returned items (%s) is different",
                    "from matched items (%s)."), items_length(items), matched)
-
-    content <- tryCatch({
-      items_next(items, ...)
-    },
-    next_error = function(e) NULL
-    )
-
-    if (!is.null(content))
-      items <- content
-    else
+    next_items <- tryCatch({
+      items_next(next_items, ...)
+    }, next_error = function(e) NULL)
+    if (is.null(next_items))
       break
-
+    items$features <- c(items$features, next_items$features)
     # update progress bar
     if (progress)
-      utils::setTxtProgressBar(pb, length(content))
+      utils::setTxtProgressBar(pb, length(next_items))
   }
-
-  # close progress bar
-  if (progress) {
-    utils::setTxtProgressBar(pb, matched)
-    close(pb)
-  }
-
-  return(items)
+  items
 }
 
 #' @rdname items_functions
@@ -350,103 +333,47 @@ items_next <- function(items, ...) {
 #' @rdname items_functions
 #'
 #' @export
-items_next.STACItemCollection <- function(items, ...) {
+items_next.doc_items <- function(items, ...) {
   check_items(items)
-  matched <- items_matched(items)
-
-  q <- doc_query(items)
-  if (is.null(q)) {
-    .error("Cannot get next link URL", class = "next_error")
-  }
-
   # get url of the next page
-  next_url <- Filter(function(x) x$rel == "next", items$links)
-  if (length(next_url) == 0)
-    .error("Cannot get next link URL", class = "next_error")
-
-  next_url <- next_url[[1]]
-
-  # create a new stac object with params from the next url
+  rel <- NULL
+  next_link <- links(items, rel == "next")
+  if (length(next_link) == 0)
+    .error("Cannot get next link URL.", class = "next_error")
+  next_link <- next_link[[1]]
   # check for body implementation in next link
-  if (q$verb == "POST" && all(c("body", "method") %in% names(next_url))) {
-
-    # TODO: check if spec can enforce that the same provided base url
-    # must be used to proceed pagination.
-    # For security concerns, here, the original base_url will be used in
-    # subsequent requests of pagination
-
-    # # update query base_url and verb to the returned one
-    # q$base_url <- next_url$href
-
-    # erase current parameters if merge == FALSE
-    if (!is.null(next_url$merge) && !next_url$merge) {
-      q$params <- list()
+  verb <- "GET"
+  if ("method" %in% names(next_link) && next_link$method %in% c("GET", "POST"))
+    verb <- next_link$method
+  q <- NULL
+  if (verb == "POST") {
+    # POST
+    q <- attr(items, "query")
+    if (!is.null(q)) {
+      # merge content body to next body field
+      if ("merge" %in% names(next_link) && next_link$merge)
+        next_link$body <- modify_list(q$params, next_link$body)
+      next_link$body <- parse_params(q, next_link$body)
     }
-
-    # get parameters
-    params <- next_url$body
-
-  } else {
-
-    # TODO: check if spec can enforce that the same provided base url
-    # must be used to proceed pagination.
-    # For security concerns, here, the original base_url will be used in
-    # subsequent requests of pagination
-
-    # # update query base_url and verb to the returned one
-    # q$base_url <- gsub("^([^?]+)(\\?.*)?$", "\\1", next_url$href)
-
-    # get next link parameters from url
-    params <- .querystring_decode(substring(
-      gsub("^([^?]+)(\\?.*)?$", "\\2", next_url$href), 2)
+    res <- make_post_request(
+      url = next_link$href,
+      body = next_link$body,
+      headers = next_link$headers,
+      ...,
+      error_msg = "Error while requesting next page"
     )
-
-    # verify if query params is valid
-    params <- .validate_query(params = params)
+  } else if (verb == "GET") {
+    # GET
+    res <- make_get_request(
+      url = next_link$href,
+      headers = next_link$headers,
+      ...,
+      error_msg = "Error while requesting next page"
+    )
   }
-
-  # parse params
-  params <- parse_params(q, params = params)
-
-  next_stac <- RSTACQuery(version = q$version,
-                          base_url = q$base_url,
-                          params = modify_list(q$params, params),
-                          subclass = subclass(q))
-
-  # call request
-  if (q$verb == "GET") {
-
-    content <- get_request(next_stac, ...)
-  } else if (q$verb == "POST") {
-
-    content <- post_request(next_stac, ..., encode = q$encode)
-  } else {
-    .error("Invalid HTTP method.")
-  }
-
-  # check content response
-  check_subclass(content, "STACItemCollection")
-
-  # check pagination length
-  if (!is.null(q$params[["limit"]]) &&
-      items_length(content) > as.numeric(q$params[["limit"]])) {
-    .error("STAC invalid retrieved page length.")
-  }
-
-  # check if result length is valid
-  if (!is.null(matched) && !is.null(q$params[["limit"]]) &&
-      (items_length(content) != as.numeric(q$params[["limit"]])) &&
-      (items_length(content) + items_length(items) != matched)) {
-    .error("STAC pagination error.")
-  }
-
-  # merge features result into resulting content
-  content$features <- c(items$features, content$features)
-
-  # prepares next iteration
-  items <- content
-
-  return(items)
+  content <- content_response_json(res)
+  # return items
+  doc_items(content, query = q)
 }
 
 #' @rdname items_functions
@@ -459,26 +386,21 @@ items_datetime <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_datetime.STACItem <- function(items) {
-  check_items(items)
+items_datetime.doc_item <- function(items) {
+  check_item(items)
   if (!"datetime" %in% names(items$properties)) {
-    .error("Parameter `items` is invalid.")
+    .error("Item has no datetime field.")
   }
-  return(items$properties$datetime)
+  items$properties$datetime
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_datetime.STACItemCollection <- function(items) {
+items_datetime.doc_items <- function(items) {
   check_items(items)
-  return(map_chr(items$features, items_datetime))
+  map_chr(items$features, items_datetime)
 }
-
-#' @rdname items_functions
-#'
-#' @export
-items_datetime.default <- items_datetime.STACItem
 
 #' @rdname items_functions
 #'
@@ -490,15 +412,15 @@ items_bbox <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_bbox.STACItem <- function(items) {
-  check_items(items)
+items_bbox.doc_item <- function(items) {
+  check_item(items)
   return(items$bbox)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_bbox.STACItemCollection <- function(items) {
+items_bbox.doc_items <- function(items) {
   check_items(items)
   return(items_reap(items, field = "bbox"))
 }
@@ -506,42 +428,36 @@ items_bbox.STACItemCollection <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_bbox.default <- items_bbox.STACItem
-
-#' @rdname items_functions
-#'
-#' @export
-items_assets <- function(items, simplify = deprecated()) {
-  if (!missing(simplify)) {
-    deprec_parameter(
-      deprec_var = "simplify",
-      deprec_version = "0.9.2",
-      msg = "By default, the return will be simplified."
-    )
-  }
+items_assets <- function(items) {
   UseMethod("items_assets", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets.STACItem <- function(items, simplify = deprecated()) {
-  check_items(items)
-  return(items_fields(items, field = "assets"))
+items_assets.doc_item <- function(items) {
+  check_item(items)
+  if (!"assets" %in% names(items))
+    .error("Item has no assets.")
+  names(items$assets)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets.STACItemCollection <- function(items, simplify = deprecated()) {
+items_assets.doc_items <- function(items) {
   check_items(items)
-  return(sort(unique(unlist(lapply(items$features, items_assets.STACItem)))))
+  sort(unique(unlist(lapply(items$features, items_assets.doc_item))))
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_assets.default <- items_assets.STACItem
+items_assets.default <- function(items) {
+  if (!"assets" %in% names(items))
+    .error("Item has no assets.")
+  names(items$assets)
+}
 
 #' @rdname items_functions
 #'
@@ -553,52 +469,29 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #' @rdname items_functions
 #'
 #' @export
-items_filter.STACItemCollection <- function(items, ..., filter_fn = NULL) {
-  check_items(items)
+items_filter.doc_items <- function(items, ..., filter_fn = NULL) {
+  init_length <- items_length(items)
   exprs <- unquote(
     expr = as.list(substitute(list(...), env = environment())[-1]),
     env =  parent.frame()
   )
-
   if (length(exprs) > 0) {
     if (!is.null(names(exprs)))
       .error("Filter expressions cannot be named.")
-
-    show_warning <- TRUE
     for (i in seq_along(exprs)) {
-      if (show_warning && check_old_expression(items, exprs[[i]])) {
-        # NOTE: this warning will be removed in next versions. We will no
-        # longer support the old way of filter evaluation
-        .warning(paste(
-          "In version 0.9.2, rstac changed how filter expressions are",
-          "evaluated. In future versions, the expression '%s' will be",
-          "evaluated against each feature in items intead of `properties`",
-          "field.\nSee ?items_filter for more details on how to change",
-          "your expression."
-        ), deparse(exprs[[i]]))
-        show_warning <- FALSE
-      }
       sel <- map_lgl(items$features, eval_filter_expr, expr = exprs[[i]])
+      items$features <- items$features[sel]
     }
-    items$features <- items$features[sel]
   }
-
   if (!is.null(filter_fn)) {
-    if (check_old_fn(items, filter_fn)) {
-      # NOTE: this warning will be removed in next versions. We will no
-      # longer support the old way of filter evaluation
-      .warning(paste(
-        "In version 0.9.2, rstac changed how filter function is",
-        "evaluated. In future versions, the `filter_fn` parameter will be",
-        "evaluated against each feature in items instead of `properties`",
-        "field.\nSee ?items_filter for more details on how to change your",
-        "function."
-      ))
-    }
     sel <- map_lgl(items$features, eval_filter_fn, filter_fn = filter_fn)
     items$features <- items$features[sel]
   }
-  return(items)
+  if (items_length(items) == 0 && init_length > 0)
+    .warning(paste("Filter criteria did not match any item.\n",
+                   "Please, see `?items_filter` for more details on",
+                   "how expressions are evaluated by `items_filter()`."))
+  items
 }
 
 #' @rdname items_functions
@@ -611,7 +504,7 @@ items_compact <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_compact.STACItemCollection <- function(items) {
+items_compact.doc_items <- function(items) {
   check_items(items)
   items_filter(items, filter_fn = has_assets)
 }
@@ -619,79 +512,53 @@ items_compact.STACItemCollection <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_reap <- function(items, field, ..., pick_fn = identity) {
+items_reap <- function(items, field, pick_fn = identity) {
   UseMethod("items_reap", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_reap.STACItem <- function(items, field, ..., pick_fn = identity) {
-  check_items(items)
-  dots <- list(...)
-  if (length(dots) > 0) {
-    deprec_parameter(
-      deprec_var = "...",
-      deprec_version = "0.9.2",
-      msg = "Please, use `field` parameter instead."
-    )
-    field = c(field, unlist(dots, use.names = FALSE))
-  }
-  values <- apply_deeply(items, i = field, fn = pick_fn)
-  return(values)
+items_reap.doc_item <- function(items, field, pick_fn = identity) {
+  check_item(items)
+  apply_deeply(items, i = field, fn = pick_fn)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_reap.STACItemCollection <- function(items,
-                                          field, ...,
-                                          pick_fn = identity) {
+items_reap.doc_items <- function(items, field, pick_fn = identity) {
   check_items(items)
   if (items_length(items) == 0) return(NULL)
-  dots <- list(...)
-  if (length(dots) > 0) {
-    deprec_parameter(
-      deprec_var = "...",
-      deprec_version = "0.9.2",
-      msg = "Please, use `field` parameter instead."
-    )
-    field = c(field, unlist(dots, use.names = FALSE))
-  }
-  val <- lapply(items$features, items_reap.STACItem, field = field,
-                pick_fn = pick_fn)
-  if (is.null(names(val)) &&
-      all(vapply(val, function(x) is.atomic(x) && length(x) == 1, logical(1))))
-    return(unlist(val))
-  return(val)
+  values <- lapply(items$features, items_reap.doc_item, field = field,
+                   pick_fn = pick_fn)
+  is_atomic <- all(vapply(values, function(x) {
+    is.atomic(x) && length(x) == 1
+  }, logical(1)))
+  if (is_atomic)
+    return(unlist(values))
+  values
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_reap.default <- items_reap.STACItem
+items_reap.default <- function(items, field, pick_fn = identity) {
+  apply_deeply(items, i = field, fn = pick_fn)
+}
 
 #' @rdname items_functions
 #'
 #' @export
-items_fields <- function(items, field = NULL, ...) {
+items_fields <- function(items, field = NULL) {
   UseMethod("items_fields", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_fields.STACItem <- function(items, field = NULL, ...) {
-  check_items(items)
-  dots <- list(...)
-  if (length(dots) > 0) {
-    deprec_parameter(
-      deprec_var = "...",
-      deprec_version = "0.9.2",
-      msg = "Please, use `field` parameter instead."
-    )
-    field = c(field, unlist(dots, use.names = FALSE))
-  }
+items_fields.doc_item <- function(items, field = NULL) {
+  check_item(items)
   if (length(field) == 0) {
     fields <- names(items)
   } else {
@@ -699,35 +566,19 @@ items_fields.STACItem <- function(items, field = NULL, ...) {
       items, i = field, fn = names
     ), use.names = FALSE))
   }
-  return(sort(fields))
+  sort(fields)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_fields.STACItemCollection <- function(items, field = NULL, ...) {
+items_fields.doc_items <- function(items, field = NULL) {
   check_items(items)
-  dots <- list(...)
-  if (length(dots) > 0) {
-    deprec_parameter(
-      deprec_var = "...",
-      deprec_version = "0.9.2",
-      msg = "Please, use `field` parameter instead."
-    )
-    field = c(field, unlist(dots, use.names = FALSE))
-  }
   if (items_length(items) == 0)
     return(NULL)
-
-  fields <- lapply(items$features, items_fields.STACItem, field = field)
-
-  return(sort(unique(unlist(unname(fields)))))
+  fields <- apply_deeply(items, i = c("features", "*", field), fn = names)
+  sort(unique(unlist(unname(fields))))
 }
-
-#' @rdname items_functions
-#'
-#' @export
-items_fields.default <- items_fields.STACItem
 
 #' @rdname items_functions
 #'
@@ -739,43 +590,194 @@ items_sign <- function(items, sign_fn) {
 #' @rdname items_functions
 #'
 #' @export
-items_sign.STACItem <- function(items, sign_fn) {
-  check_items(items)
-  return(sign_fn(items))
+items_sign.doc_item <- function(items, sign_fn) {
+  check_item(items)
+  sign_fn(items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_sign.STACItemCollection <- function(items, sign_fn) {
+items_sign.doc_items <- function(items, sign_fn) {
   check_items(items)
-  return(foreach_item(items, sign_fn))
+  foreach_item(items, sign_fn)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_sign.default <- items_sign.STACItem
+items_sign.default <- function(items, sign_fn) {
+  sign_fn(items)
+}
 
 #' @rdname items_functions
 #'
 #' @export
-items_as_sf <- function(items) {
+items_as_sf <- function(items, ..., crs = 4326) {
   UseMethod("items_as_sf", items)
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_as_sf.STACItem <- function(items) {
-  check_items(items)
-  geojsonsf::geojson_sf(to_json(items))
+items_as_sf.doc_item <- function(items, ..., crs = 4326) {
+  check_item(items)
+  data <- sf::st_sf(
+    items_as_tibble(items),
+    geometry = items_as_sfc(items, crs = crs)
+  )
+  class(data) <- c("sf", "tbl_df", "tbl", "data.frame")
+  data
 }
 
 #' @rdname items_functions
 #'
 #' @export
-items_as_sf.STACItemCollection <- function(items) {
+items_as_sf.doc_items <- function(items, ..., crs = 4326) {
   check_items(items)
-  geojsonsf::geojson_sf(to_json(items))
+  data <- sf::st_sf(
+    items_as_tibble(items),
+    geometry = items_as_sfc(items, crs = crs)
+  )
+  #class(data) <- c("sf", "tbl_df", "tbl", "data.frame")
+  data
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_sfc <- function(items, crs = 4326) {
+  UseMethod("items_as_sfc", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_sfc.doc_item <- function(items, crs = 4326) {
+  check_item(items)
+  sf::st_sfc(get_geom(items$geometry), crs = crs)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_sfc.doc_items <- function(items, crs = 4326) {
+  check_items(items)
+  sf::st_sfc(lapply(items$features, get_geom), crs = crs)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_tibble <- function(items) {
+  UseMethod("items_as_tibble", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_tibble.doc_item <- function(items) {
+  check_item(items)
+  non_atomic <- non_atomic_properties(items)
+  items$properties[non_atomic] <- lapply(items$properties[non_atomic], list)
+  data <- list(items$properties)
+  data <- do.call(mapply, args = c(list(FUN = c, SIMPLIFY = FALSE), data))
+  structure(
+    data,
+    class = c("tbl_df", "tbl", "data.frame"),
+    row.names = if (length(data)) c(NA, -length(data[[1]])) else integer(0)
+  )
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_as_tibble.doc_items <- function(items) {
+  check_items(items)
+  non_atomic <- non_atomic_properties(items)
+  data <- lapply(items$features, function(item) {
+    item$properties[non_atomic] <- lapply(item$properties[non_atomic], list)
+    item$properties
+  })
+  data <- do.call(mapply, args = c(list(FUN = c, SIMPLIFY = FALSE), data))
+  structure(
+    data,
+    class = c("tbl_df", "tbl", "data.frame"),
+    row.names = if (length(data)) c(NA, -length(data[[1]])) else integer(0)
+  )
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_intersects <- function(items, geom, ..., crs = 4326) {
+  UseMethod("items_intersects", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_intersects.doc_item <- function(items, geom, ..., crs = 4326) {
+  check_item(items)
+  items_geom <- items_as_sfc(items, crs = crs)
+  geom <- sf::st_transform(geom, crs = crs)
+  apply(sf::st_intersects(items_geom, geom), 1, any) > 0
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_intersects.doc_items <- function(items, geom, ..., crs = 4326) {
+  check_items(items)
+  items_geom <- items_as_sfc(items, crs = crs)
+  geom <- sf::st_transform(geom, crs = crs)
+  apply(sf::st_intersects(items_geom, geom), 1, any) > 0
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_properties <- function(items) {
+  UseMethod("items_properties", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_properties.doc_item <- function(items) {
+  check_item(items)
+  sort(names(items$properties))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_properties.doc_items <- function(items) {
+  check_items(items)
+  sort(unique(unlist(lapply(items$features, function(item) {
+    names(item$properties)
+  }))))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_select <- function(items, selection) {
+  UseMethod("items_select", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_select.doc_items <- function(items, selection) {
+  check_items(items)
+  items$features <- items$features[selection]
+  # clear numberMatched information
+  if ("search:metadata" %in% names(items))
+    items$`search:metadata`$matched <- NULL
+  if ("context" %in% names(items))
+    items$`context`$matched <- NULL
+  if ("numberMatched" %in% names(items))
+    items$numberMatched <- NULL
+  items
 }

@@ -7,7 +7,7 @@
 items(q, feature_id = NULL, datetime = NULL, bbox = NULL, limit = NULL)
 }
 \arguments{
-\item{q}{a \code{RSTACQuery} object expressing a STAC query
+\item{q}{a \code{rstac_query} object expressing a STAC query
 criteria.}
 
 \item{feature_id}{a \code{character} with item id to be fetched.
@@ -53,7 +53,7 @@ in cases where the box spans the antimeridian, the first value
 to return. If not informed, it defaults to the service implementation.}
 }
 \value{
-A \code{RSTACQuery} object with the subclass \code{items} for
+A \code{rstac_query} object with the subclass \code{items} for
 \code{/collections/{collection_id}/items} endpoint, or a
 \code{item_id} subclass for
 \code{/collections/{collection_id}/items/{feature_id}} endpoint,

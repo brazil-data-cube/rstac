@@ -96,8 +96,8 @@ get_spatial.character <- function(x) {
 get_spatial.list <- function(x) {
   if (!all(c("type", "coordinates") %in% names(x)))
     .error("Not a valid GeoJSON geometry.")
-  if (!x[["type"]] %in% spatial_types)
-    .error("GeoJSON type '%s' is not supported.", x[["type"]])
+  if (!x$type %in% spatial_types)
+    .error("GeoJSON type '%s' is not supported.", x$type)
   class(x) <- c("cql2_spatial", "list")
   x
 }
@@ -135,6 +135,11 @@ get_spatial.GEOMETRYCOLLECTION <- function(x) {
     list(type = "GeometryCollection", geometries = lapply(x, get_spatial)),
     class = c("cql2_spatial", "list")
   )
+}
+
+#' @export
+as.character.cql2_spatial <- function(x, ...) {
+  to_text(x)
 }
 
 # temporal_op

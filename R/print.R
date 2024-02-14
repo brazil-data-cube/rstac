@@ -3,20 +3,20 @@
 #' @description The print function covers all objects in the rstac package:
 #'
 #' \itemize{
-#' \item [stac()]: returns a `STACCatalog` document from
+#' \item [stac()]: returns a `doc_catalog` document from
 #'   `/stac` (v0.8.0) or `/` (v0.9.0 or v1.0.0) endpoint.
-#' \item [stac_search()]: returns a `STACItemCollection`
+#' \item [stac_search()]: returns a `doc_items`
 #'   document from `/stac/search` (v0.8.0) or `/search`
 #'   (v0.9.0 or v1.0.0) endpoint containing all Items that match
 #'   the provided search predicates.
 #' \item [collections()]: implements the `/collections` and
 #'   \code{/collections/\{collectionId\}} endpoints. The former returns
-#'   a `STACCollectionList` document that lists all collections published
-#'   by the server, and the later returns a single `STACCollection`
+#'   a `doc_collections` document that lists all collections published
+#'   by the server, and the later returns a single `doc_collection`
 #'   document that describes a unique collection.
-#' \item [items()]: retrieves a `STACItemCollection` document
+#' \item [items()]: retrieves a `doc_items` document
 #'   from \code{/collections/\{collectionId\}/items} endpoint and a
-#'   `STACItem` document from
+#'   `doc_item` document from
 #'   \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
 #' }
 #'
@@ -27,19 +27,19 @@
 #' Call `print()` function to print the rstac's objects.
 #' You can determine how many items will be printed using `n` parameter.
 #'
-#' @param x    either a `RSTACQuery` object expressing a STAC query
-#' criteria or any `RSTACDocument`.
+#' @param x    either a `rstac_query` object expressing a STAC query
+#' criteria or any `rstac_doc`.
 #'
 #' @param n    number of entries to print. Each object has its own rule of
-#' truncation: the `STACCollection` objects will print
+#' truncation: the `doc_collection` objects will print
 #' 10 links by default. If the object has less than 20 collections, all
-#' collections will be shown. In `STACItemCollection`, 10 features
+#' collections will be shown. In `doc_items`, 10 features
 #' will be printed by default. To show all entries, use `n = Inf`.
 #'
 #' @param ...  other parameters passed in the functions.
 #'
 #' @param tail A `logical` value indicating if last features in
-#' STACItemCollection object must be show.
+#' doc_items object must be show.
 #'
 #' @seealso
 #' [stac()] [stac_search()] [collections()]
@@ -47,7 +47,7 @@
 #'
 #' @examples
 #' \dontrun{
-#'  # STACItemCollection object
+#'  # doc_items object
 #'  stac_item_collection <-
 #'    stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'    stac_search(collections = "CB4-16D-2",
@@ -57,7 +57,7 @@
 #'
 #'  print(stac_item_collection, n = 10)
 #'
-#'  # STACCollectionList object
+#'  # doc_collections object
 #'  stac_collection <-
 #'      stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
 #'      collections() %>%
@@ -65,19 +65,19 @@
 #'
 #'  print(stac_collection, n = 5)
 #'
-#'  # RSTACQuery object
+#'  # rstac_query object
 #'  obj_rstac <- stac("https://brazildatacube.dpi.inpe.br/stac/")
 #'
 #'  print(obj_rstac)
 #' }
 NULL
 
-# ---- RSTACQuery ----
+# ---- rstac_query ----
 
 #' @rdname print
 #' @export
-print.RSTACQuery <- function(x, ...) {
-  cat(crayon::bold("###RSTACQuery"), fill = TRUE)
+print.rstac_query <- function(x, ...) {
+  cat(crayon::bold("###rstac_query"), fill = TRUE)
   cat("-", crayon::bold("url:"), x$base_url, fill = TRUE)
   cat("-", crayon::bold("params:"), fill = TRUE)
   for (n in names(x$params)) {
@@ -89,12 +89,12 @@ print.RSTACQuery <- function(x, ...) {
   invisible(x)
 }
 
-# ---- STACCatalog ----
+# ---- doc_catalog ----
 
 #' @rdname print
 #' @export
-print.STACCatalog <- function(x, ...) {
-  cat(crayon::bold("###STACCatalog"), fill = TRUE)
+print.doc_catalog <- function(x, ...) {
+  cat(crayon::bold("###Catalog"), fill = TRUE)
   cat("-", crayon::bold("id:"), x$id, fill = TRUE)
   if (!is.null(x$description) && x$description != "")
     cat("-", crayon::bold("description:"), x$description, fill = TRUE)
@@ -104,12 +104,12 @@ print.STACCatalog <- function(x, ...) {
   invisible(x)
 }
 
-# ---- STACCollectionList ----
+# ---- doc_collections ----
 
 #' @rdname print
 #' @export
-print.STACCollectionList <- function(x, n = 10, ...) {
-  cat(crayon::bold("###STACCollectionList"), fill = TRUE)
+print.doc_collections <- function(x, n = 10, ...) {
+  cat(crayon::bold("###Collections"), fill = TRUE)
   cat("-", crayon::bold("collections"),
       sprintf("(%s item(s)):", length(x$collections)), fill = TRUE)
 
@@ -128,12 +128,12 @@ print.STACCollectionList <- function(x, n = 10, ...) {
   invisible(x)
 }
 
-# ---- STACCollection ----
+# ---- doc_collection ----
 
 #' @rdname print
 #' @export
-print.STACCollection <- function(x, ...) {
-  cat(crayon::bold("###STACCollection"), fill = TRUE)
+print.doc_collection <- function(x, ...) {
+  cat(crayon::bold("###Collection"), fill = TRUE)
   cat("-", crayon::bold("id:"), x$id, fill = TRUE)
   if (!is.null(x$title) && x$title != "")
     cat("-", crayon::bold("title:"), x$title, fill = TRUE)
@@ -144,28 +144,24 @@ print.STACCollection <- function(x, ...) {
   invisible(x)
 }
 
-# ---- STACItemCollection ----
+# ---- doc_items ----
 
 #' @rdname print
 #' @export
-print.STACItemCollection <- function(x, n = 10, ..., tail = FALSE) {
-  cat(crayon::bold("###STACItemCollection"), fill = TRUE)
+print.doc_items <- function(x, n = 10, ..., tail = FALSE) {
+  cat(crayon::bold("###Items"), fill = TRUE)
   matched <- suppressWarnings(items_matched(x))
-  if (!is.null(matched))
+  if (!is.null(matched)) {
     cat("-", crayon::bold("matched feature(s):"), matched, fill = TRUE)
-
-  if (!is.null(matched))
     cat("-", crayon::bold("features"),
         sprintf("(%s item(s) / %s not fetched):",
                 length(x$features), matched - length(x$features)), fill = TRUE)
-  else
+  } else
     cat("-", crayon::bold("features"),
         sprintf("(%s item(s)):", length(x$features)), fill = TRUE)
-
   if (missing(n) && length(x$features) < 2 * n)
     n <- length(x$features)
   n <- min(n, length(x$features))
-
   seq_it <- seq_len(n)
   if (tail)
     seq_it <- seq.int(to = length(x$features), length.out = n)
@@ -177,7 +173,6 @@ print.STACItemCollection <- function(x, n = 10, ..., tail = FALSE) {
   if (n != length(x$features))
     cat(sprintf("  - ... with %s more feature(s).",
                 length(x$features) - n), fill = TRUE)
-
   cat("-", crayon::bold("assets:"),
       paste0(items_assets(x), collapse = ", "),
       fill = TRUE)
@@ -186,12 +181,12 @@ print.STACItemCollection <- function(x, n = 10, ..., tail = FALSE) {
   invisible(x)
 }
 
-# ---- STACItem ----
+# ---- doc_item ----
 
 #' @rdname print
 #' @export
-print.STACItem <- function(x, ...) {
-  cat(crayon::bold("###STACItem"), fill = TRUE)
+print.doc_item <- function(x, ...) {
+  cat(crayon::bold("###Item"), fill = TRUE)
   cat("-", crayon::bold("id:"), x$id, fill = TRUE)
   cat("-", crayon::bold("collection:"), x$collection, fill = TRUE)
   cat("-", crayon::bold("bbox:"), format_bbox(x$bbox), fill = TRUE)
@@ -204,48 +199,97 @@ print.STACItem <- function(x, ...) {
   invisible(x)
 }
 
-# ---- Queryables ----
+# ---- doc_queryables ----
 
 #' @rdname print
 #' @export
-print.Queryables <- function(x, n = 10, ...) {
+print.doc_queryables <- function(x, n = 10, ...) {
   cat(crayon::bold("###Queryables"), fill = TRUE)
-
   if (missing(n) && length(x$properties) < 2 * n) {
     n <- length(x$properties)
   }
   n <- min(n, length(x$properties))
+  cat("-", crayon::bold("properties"),
+      sprintf("(%s entries(s)):", length(x$properties)), fill = TRUE)
   if (n > 0) {
     seq_it <- seq_len(n)
-    cat("-", crayon::bold("properties"), fill = TRUE)
     for (i in seq_it) {
       e <- names(x$properties[i])
       cat(paste0("  - ", e), fill = TRUE)
     }
+    if (n != length(x$properties))
+      cat(sprintf("  - ... with %s more entry(ies).",
+                  length(x$properties) - n), fill = TRUE)
   }
+  cat("-", crayon::bold("field(s):"), paste0(names(x), collapse = ", "),
+      fill = TRUE)
+  invisible(x)
+}
+
+# ---- doc_conformance ----
+
+#' @rdname print
+#' @export
+print.doc_conformance <- function(x, n = 10, ...) {
+  cat(crayon::bold("###Conformance"), fill = TRUE)
+  if (missing(n) && length(x$conformsTo) < 2 * n) {
+    n <- length(x$conformsTo)
+  }
+  n <- min(n, length(x$conformsTo))
+  cat("-", crayon::bold("conformances"),
+      sprintf("(%s entries(s)):", length(x$conformsTo)), fill = TRUE)
+  if (n > 0) {
+    seq_it <- seq_len(n)
+    for (i in seq_it) {
+      e <- x$conformsTo[[i]]
+      cat(paste0("  - ", e), fill = TRUE)
+    }
+    if (n != length(x$conformsTo))
+      cat(sprintf("  - ... with %s more entry(ies).",
+                  length(x$conformsTo) - n), fill = TRUE)
+  }
+  invisible(x)
+}
+
+# ---- Links ----
+
+#' @rdname print
+#' @export
+print.doc_link <- function(x, ...) {
+  cat(crayon::bold("###Link"), fill = TRUE)
+  if ("title" %in% names(x))
+    cat("-", crayon::bold(x$title), fill = TRUE)
+  cat("-", crayon::bold("href:"), x$href, fill = TRUE)
+  cat("-", crayon::bold("rel:"), x$rel, fill = TRUE)
   cat("-", crayon::bold("field(s):"),
       paste0(names(x), collapse = ", "), fill = TRUE)
   invisible(x)
 }
 
-# ---- Conformance ----
-
 #' @rdname print
 #' @export
-print.Conformance <- function(x, n = 5, ...) {
-  cat(crayon::bold("###Conformance"), fill = TRUE)
-
-  if (missing(n) && length(x$conformsTo) < 2 * n) {
-    n <- length(x$conformsTo)
-  }
-  n <- min(n, length(x$conformsTo))
+print.doc_links <- function(x, n = 10, ...) {
+  cat(crayon::bold("###Links"), fill = TRUE)
+  if (missing(n) && length(x) < 2 * n)
+    n <- length(x)
+  n <- min(n, length(x))
+  cat("-", crayon::bold("links"),
+      sprintf("(%s entries(s)):", length(x)), fill = TRUE)
   if (n > 0) {
     seq_it <- seq_len(n)
-    cat("-", crayon::bold("conformsTo: "), fill = TRUE)
+    seq_format <- format(seq_it, width = min(3, floor(log10(n)) + 1))
     for (i in seq_it) {
-      e <- x$conformsTo[[i]]
-      cat(paste0("  - ", e), fill = TRUE)
+      if ("title" %in% names(x[[i]])) {
+        cat(seq_format[[i]], crayon::bold(x[[i]]$title),
+            paste0("(", x[[i]]$href, ")"), fill = TRUE)
+      } else if ("rel" %in% names(x[[i]])) {
+        cat(seq_format[[i]], crayon::bold(paste0("[", x[[i]]$rel, "]")),
+            paste0("(", x[[i]]$href, ")"), fill = TRUE)
+      } else
+        cat(seq_format[[i]], paste0("(", x[[i]]$href, ")"), fill = TRUE)
     }
+    if (n != length(x))
+      cat(sprintf("  ... with %s more link(s).", length(x) - n), fill = TRUE)
   }
   invisible(x)
 }

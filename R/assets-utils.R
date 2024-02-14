@@ -52,3 +52,23 @@ select_exec <- function(key, asset, select_fn) {
   select_check_eval(val)
   return(val)
 }
+
+asset_download <- function(asset,
+                           output_dir,
+                           overwrite, ...,
+                           download_fn = NULL) {
+  if (!is.null(download_fn))
+    return(download_fn(asset))
+  # create a full path name
+  path <- url_get_path(asset$href)
+  out_file <- path_normalize(output_dir, path)
+  dir_create(out_file)
+  make_get_request(
+    url = asset$href,
+    httr::write_disk(path = out_file, overwrite = overwrite),
+    ...,
+    error_msg = "Error while downloading"
+  )
+  asset$href <- path
+  asset
+}
