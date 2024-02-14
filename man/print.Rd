@@ -2,65 +2,71 @@
 % Please edit documentation in R/print.R
 \name{print}
 \alias{print}
-\alias{print.RSTACQuery}
-\alias{print.STACCatalog}
-\alias{print.STACCollectionList}
-\alias{print.STACCollection}
-\alias{print.STACItemCollection}
-\alias{print.STACItem}
-\alias{print.Queryables}
-\alias{print.Conformance}
+\alias{print.rstac_query}
+\alias{print.doc_catalog}
+\alias{print.doc_collections}
+\alias{print.doc_collection}
+\alias{print.doc_items}
+\alias{print.doc_item}
+\alias{print.doc_queryables}
+\alias{print.doc_conformance}
+\alias{print.doc_link}
+\alias{print.doc_links}
 \title{Printing functions}
 \usage{
-\method{print}{RSTACQuery}(x, ...)
+\method{print}{rstac_query}(x, ...)
 
-\method{print}{STACCatalog}(x, ...)
+\method{print}{doc_catalog}(x, ...)
 
-\method{print}{STACCollectionList}(x, n = 10, ...)
+\method{print}{doc_collections}(x, n = 10, ...)
 
-\method{print}{STACCollection}(x, ...)
+\method{print}{doc_collection}(x, ...)
 
-\method{print}{STACItemCollection}(x, n = 10, ..., tail = FALSE)
+\method{print}{doc_items}(x, n = 10, ..., tail = FALSE)
 
-\method{print}{STACItem}(x, ...)
+\method{print}{doc_item}(x, ...)
 
-\method{print}{Queryables}(x, n = 10, ...)
+\method{print}{doc_queryables}(x, n = 10, ...)
 
-\method{print}{Conformance}(x, n = 5, ...)
+\method{print}{doc_conformance}(x, n = 10, ...)
+
+\method{print}{doc_link}(x, ...)
+
+\method{print}{doc_links}(x, n = 10, ...)
 }
 \arguments{
-\item{x}{either a \code{RSTACQuery} object expressing a STAC query
-criteria or any \code{RSTACDocument}.}
+\item{x}{either a \code{rstac_query} object expressing a STAC query
+criteria or any \code{rstac_doc}.}
 
 \item{...}{other parameters passed in the functions.}
 
 \item{n}{number of entries to print. Each object has its own rule of
-truncation: the \code{STACCollection} objects will print
+truncation: the \code{doc_collection} objects will print
 10 links by default. If the object has less than 20 collections, all
-collections will be shown. In \code{STACItemCollection}, 10 features
+collections will be shown. In \code{doc_items}, 10 features
 will be printed by default. To show all entries, use \code{n = Inf}.}
 
 \item{tail}{A \code{logical} value indicating if last features in
-STACItemCollection object must be show.}
+doc_items object must be show.}
 }
 \description{
 The print function covers all objects in the rstac package:
 
 \itemize{
-\item \code{\link[=stac]{stac()}}: returns a \code{STACCatalog} document from
+\item \code{\link[=stac]{stac()}}: returns a \code{doc_catalog} document from
 \verb{/stac} (v0.8.0) or \code{/} (v0.9.0 or v1.0.0) endpoint.
-\item \code{\link[=stac_search]{stac_search()}}: returns a \code{STACItemCollection}
+\item \code{\link[=stac_search]{stac_search()}}: returns a \code{doc_items}
 document from \verb{/stac/search} (v0.8.0) or \verb{/search}
 (v0.9.0 or v1.0.0) endpoint containing all Items that match
 the provided search predicates.
 \item \code{\link[=collections]{collections()}}: implements the \verb{/collections} and
 \code{/collections/\{collectionId\}} endpoints. The former returns
-a \code{STACCollectionList} document that lists all collections published
-by the server, and the later returns a single \code{STACCollection}
+a \code{doc_collections} document that lists all collections published
+by the server, and the later returns a single \code{doc_collection}
 document that describes a unique collection.
-\item \code{\link[=items]{items()}}: retrieves a \code{STACItemCollection} document
+\item \code{\link[=items]{items()}}: retrieves a \code{doc_items} document
 from \code{/collections/\{collectionId\}/items} endpoint and a
-\code{STACItem} document from
+\code{doc_item} document from
 \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
 }
 
@@ -73,7 +79,7 @@ You can determine how many items will be printed using \code{n} parameter.
 }
 \examples{
 \dontrun{
- # STACItemCollection object
+ # doc_items object
  stac_item_collection <-
    stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
    stac_search(collections = "CB4-16D-2",
@@ -83,7 +89,7 @@ You can determine how many items will be printed using \code{n} parameter.
 
  print(stac_item_collection, n = 10)
 
- # STACCollectionList object
+ # doc_collections object
  stac_collection <-
      stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
      collections() \%>\%
@@ -91,7 +97,7 @@ You can determine how many items will be printed using \code{n} parameter.
 
  print(stac_collection, n = 5)
 
- # RSTACQuery object
+ # rstac_query object
  obj_rstac <- stac("https://brazildatacube.dpi.inpe.br/stac/")
 
  print(obj_rstac)

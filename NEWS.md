@@ -1,5 +1,17 @@
 # rstac (development version)
 
+# rstac 1.0.0 (Released 2024-02-14)
+
+* Add support to static catalogs;
+* `read_stac()`: read any STAC document from an URL (e.g. Catalog, Collection, Items, or Item);
+* `links()`: extract and filter links from a STAC document;
+* `link_open()`: open the document referenced by the provided link;
+* `read_items()`: read items listed in links section of the provided Collection document;
+* `read_collections()`: read collections listed in links section of the provided Catalog document;
+* Provide new functions to facilitate work with items;
+* `items_as_sf()` / `items_as_sfc()`: convert items into sf objects
+* `items_intersects()`: is a helper function to test what items intersect some given geometry.
+
 # rstac 0.9.2-4 (Released 2023-06-15)
 
 * Fix vignette BDC errors

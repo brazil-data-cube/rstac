@@ -1,8 +1,8 @@
 #' @title Assets functions
 #'
 #' @description
-#' These functions provide support to work with `STACItemCollection` and
-#' `STACItem` item objects.
+#' These functions provide support to work with `doc_items` and
+#' `doc_item` item objects.
 #'
 #' \itemize{
 #' \item `assets_download()`: Downloads the assets provided by the STAC API.
@@ -23,7 +23,7 @@
 #'  asset using a named list or a function.
 #' }
 #'
-#' @param items       a `STACItem` or `STACItemCollection` object
+#' @param items       a `doc_item` or `doc_items` object
 #' representing the result of `/stac/search`,
 #' \code{/collections/{collectionId}/items} or
 #' \code{/collections/{collectionId}/items/{itemId}} endpoints.
@@ -47,26 +47,23 @@
 #' each item to be downloaded. Using this function, you can change the
 #' hrefs for each asset, as well as the way download is done.
 #'
-#' @param fn          `r lifecycle::badge('deprecated')`
-#' use `download_fn` parameter instead.
-#'
 #' @param append_gdalvsi a `logical` value. If true, gdal drivers are
 #' included in the URL of each asset. The following schemes are supported:
 #' HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
 #'
 #' @param create_json a `logical` indicating if a JSON file with item
-#' metadata (`STACItem` or `STACItemCollection`) must be created in the
+#' metadata (`doc_item` or `doc_items`) must be created in the
 #' output directory.
 #'
 #' @param select_fn a `function` to select assets an item
-#' (`STACItem` or `STACItemCollection`). This function receives as parameter
+#' (`doc_item` or `doc_items`). This function receives as parameter
 #' the asset element and, optionally, the asset name. Asset elements
 #' contain metadata describing spatial-temporal objects. Users can provide
 #' a function to select assets based on this metadata by returning a
 #' logical value where `TRUE` selects the asset, and `FALSE` discards it.
 #'
 #' @param mapper      either a named `list` or a `function` to rename assets
-#' of an item (`STACItem` or `STACItemCollection`). In the case of a named
+#' of an item (`doc_item` or `doc_items`). In the case of a named
 #' list, use `<old name> = <new name>` to rename the assets. The function
 #' can be used to rename the assets by returning a `character` string using
 #' the metadata contained in the asset object.
@@ -104,17 +101,17 @@
 #'
 #' \itemize{
 #' \item `assets_download()`: returns the same input object item
-#' (`STACItem` or `STACItemCollection`) where `href` properties point to
+#' (`doc_item` or `doc_items`) where `href` properties point to
 #' the download assets.
 #'
 #' \item `assets_url()`: returns a character vector with all assets `href`
-#' of an item (`STACItem` or `STACItemCollection`).
+#' of an item (`doc_item` or `doc_items`).
 #'
 #' \item `assets_select()`: returns the same input object item
-#' (`STACItem` or `STACItemCollection`) with the selected assets.
+#' (`doc_item` or `doc_items`) with the selected assets.
 #'
 #' \item `assets_rename()`: returns the same input object item
-#' (`STACItemCollection` or `STACItem`) with the assets renamed.
+#' (`doc_items` or `doc_item`) with the assets renamed.
 #' }
 #'
 #' @examples
@@ -185,36 +182,23 @@ assets_download <- function(items,
                             asset_names = NULL,
                             output_dir = getwd(),
                             overwrite = FALSE, ...,
-                            download_fn = NULL,
-                            fn = deprecated()) {
-
+                            download_fn = NULL) {
   # check output dir
   if (!dir.exists(output_dir))
     .error(paste("The directory provided does not exist.",
-                 "Please specify a valid directory."))
-
+                 "Please, provide an existing directory."))
   UseMethod("assets_download", items)
 }
 
 #' @rdname assets_functions
 #'
 #' @export
-assets_download.STACItem <- function(items,
+assets_download.doc_item <- function(items,
                                      asset_names = NULL,
                                      output_dir = getwd(),
                                      overwrite = FALSE, ...,
                                      create_json = FALSE,
-                                     download_fn = NULL,
-                                     fn = deprecated()) {
-  if (!missing(fn)) {
-    deprec_parameter(
-      deprec_var = "fn",
-      deprec_version = "0.9.2",
-      msg = "Please, use `download_fn` parameter instead."
-    )
-    download_fn <- fn
-  }
-
+                                     download_fn = NULL) {
   if (!is.null(asset_names)) {
     in_assets <- asset_names %in% items_assets(items)
     if (!all(asset_names %in% items_assets(items))) {
@@ -223,12 +207,10 @@ assets_download.STACItem <- function(items,
     }
     items <- assets_select(items = items, asset_names = asset_names)
   }
-
   items$assets <- lapply(
     items$assets, asset_download, output_dir = output_dir,
     overwrite = overwrite, ..., download_fn = download_fn
   )
-
   if (create_json) {
     file <- "item.json"
     if ("id" %in% names(items)) {
@@ -236,67 +218,49 @@ assets_download.STACItem <- function(items,
     }
     cat(to_json(items), file = file.path(output_dir, file))
   }
-  return(items)
+  items
 }
 
 #' @rdname assets_functions
 #'
 #' @export
-assets_download.STACItemCollection <- function(items,
-                                               asset_names = NULL,
-                                               output_dir = getwd(),
-                                               overwrite = FALSE, ...,
-                                               download_fn = NULL,
-                                               create_json = TRUE,
-                                               items_max = Inf,
-                                               progress = TRUE,
-                                               fn = deprecated()) {
-  if (!missing(fn)) {
-    deprec_parameter(
-      deprec_var = "fn",
-      deprec_version = "0.9.2",
-      msg = "Please, use `download_fn` parameter instead."
-    )
-    download_fn <- fn
-  }
-
+assets_download.doc_items <- function(items,
+                                      asset_names = NULL,
+                                      output_dir = getwd(),
+                                      overwrite = FALSE, ...,
+                                      download_fn = NULL,
+                                      create_json = TRUE,
+                                      items_max = Inf,
+                                      progress = TRUE) {
   # remove empty items
   items <- items_compact(items)
   items_max <- max(0, min(items_length(items), items_max))
-
   # verify if progress bar can be shown
   progress <- progress && items_max > 1
-
   if (progress) {
     pb <- utils::txtProgressBar(max = items_max, style = 3)
+    # close progress bar when exit
+    on.exit(if (progress) close(pb))
   }
-
   items$features <- items$features[seq_len(items_max)]
   for (i in seq_len(items_max)) {
-    if (progress) {
+    if (progress)
       utils::setTxtProgressBar(pb, i)
-    }
-
     items$features[[i]] <- assets_download(
       items = items$features[[i]], asset_names = asset_names,
       output_dir = output_dir, overwrite = overwrite,
       create_json = FALSE, download_fn = download_fn, ...
     )
   }
-  # close progress bar
-  if (progress) {
-    close(pb)
-  }
-  if (create_json) {
+  if (create_json)
     cat(to_json(items), file = file.path(output_dir, "items.json"))
-  }
-  return(items)
+  items
 }
 
 #' @rdname assets_functions
 #'
 #' @export
-assets_download.default <- assets_download.STACItem
+assets_download.default <- assets_download.doc_item
 
 #' @rdname assets_functions
 #'
@@ -308,7 +272,7 @@ assets_url <- function(items, asset_names = NULL, append_gdalvsi = FALSE) {
 #' @rdname assets_functions
 #'
 #' @export
-assets_url.STACItem <- function(items,
+assets_url.doc_item <- function(items,
                                 asset_names = NULL,
                                 append_gdalvsi = FALSE) {
   if (is.null(asset_names)) {
@@ -332,9 +296,9 @@ assets_url.STACItem <- function(items,
 #' @rdname assets_functions
 #'
 #' @export
-assets_url.STACItemCollection <- function(items,
-                                          asset_names = NULL,
-                                          append_gdalvsi = FALSE) {
+assets_url.doc_items <- function(items,
+                                 asset_names = NULL,
+                                 append_gdalvsi = FALSE) {
   if (is.null(asset_names)) {
     asset_names <- items_assets(items)
   }
@@ -357,7 +321,7 @@ assets_url.STACItemCollection <- function(items,
 #' @rdname assets_functions
 #'
 #' @export
-assets_url.default <- assets_url.STACItem
+assets_url.default <- assets_url.doc_item
 
 #' @rdname assets_functions
 #'
@@ -369,33 +333,28 @@ assets_select <- function(items, ..., asset_names = NULL, select_fn = NULL) {
 #' @rdname assets_functions
 #'
 #' @export
-assets_select.STACItem <- function(items, ...,
+assets_select.doc_item <- function(items, ...,
                                    asset_names = NULL,
                                    select_fn = NULL) {
   exprs <- unquote(
     expr = as.list(substitute(list(...), env = environment())[-1]),
     env =  parent.frame()
   )
-
+  init_length <- length(items$assets)
   if (!is.null(asset_names)) {
     asset_names <- intersect(names(items$assets), asset_names)
     items$assets <- items$assets[asset_names]
   }
-
   if (length(exprs) > 0) {
     if (!is.null(names(exprs)))
       .error("Select expressions cannot be named.")
-
     for (i in seq_along(exprs)) {
       sel <- map_lgl(names(items$assets), function(key) {
-        val <- select_eval(key = key, asset = items$assets[[key]],
-                           expr = exprs[[i]])
-        return(val)
+        select_eval(key = key, asset = items$assets[[key]], expr = exprs[[i]])
       })
       items$assets <- items$assets[sel]
     }
   }
-
   if (!is.null(select_fn)) {
     sel <- map_lgl(names(items$assets), function(key) {
       val <- select_exec(key = key, asset = items$assets[[key]],
@@ -404,16 +363,19 @@ assets_select.STACItem <- function(items, ...,
     })
     items$assets <- items$assets[sel]
   }
-
-  return(items)
+  if (length(items$assets) == 0 && init_length > 0)
+    .warning(paste("Filter criteria did not match any asset.\n",
+                   "Please, see `?assets_select` for more details on",
+                   "how expressions are evaluated by `assets_select()`."))
+  items
 }
 
 #' @rdname assets_functions
 #'
 #' @export
-assets_select.STACItemCollection <- function(items, ...,
-                                             asset_names = NULL,
-                                             select_fn = NULL) {
+assets_select.doc_items <- function(items, ...,
+                                    asset_names = NULL,
+                                    select_fn = NULL) {
   items <- foreach_item(
     items, assets_select, asset_names = asset_names, ...,
     select_fn = select_fn
@@ -424,7 +386,7 @@ assets_select.STACItemCollection <- function(items, ...,
 #' @rdname assets_functions
 #'
 #' @export
-assets_select.default <- assets_select.STACItem
+assets_select.default <- assets_select.doc_item
 
 #' @rdname assets_functions
 #'
@@ -436,7 +398,7 @@ assets_rename <- function(items, mapper = NULL, ...) {
 #' @rdname assets_functions
 #'
 #' @export
-assets_rename.STACItem <- function(items, mapper = NULL, ...) {
+assets_rename.doc_item <- function(items, mapper = NULL, ...) {
   dots <- list(...)
   if (is.function(mapper)) {
     new_names <- as.list(map_chr(items$assets, mapper, use_names = TRUE))
@@ -466,14 +428,14 @@ assets_rename.STACItem <- function(items, mapper = NULL, ...) {
 #' @rdname assets_functions
 #'
 #' @export
-assets_rename.STACItemCollection <- function(items, mapper = NULL, ...) {
+assets_rename.doc_items <- function(items, mapper = NULL, ...) {
   return(foreach_item(items, assets_rename, mapper = mapper, ...))
 }
 
 #' @rdname assets_functions
 #'
 #' @export
-assets_rename.default <- assets_rename.STACItem
+assets_rename.default <- assets_rename.doc_item
 
 #' @rdname assets_functions
 #'
@@ -485,23 +447,21 @@ has_assets <- function(items) {
 #' @rdname assets_functions
 #'
 #' @export
-has_assets.STACItem <- function(items) {
-  if (!"assets" %in% names(items))
-    .error("Parameter `items` is not a valid.")
-  return(length(items$assets) > 0)
+has_assets.doc_item <- function(items) {
+  length(items$assets) > 0
 }
 
 #' @rdname assets_functions
 #'
 #' @export
-has_assets.STACItemCollection <- function(items) {
+has_assets.doc_items <- function(items) {
   map_lgl(items$features, has_assets)
 }
 
 #' @rdname assets_functions
 #'
 #' @export
-has_assets.default <- has_assets.STACItem
+has_assets.default <- has_assets.doc_item
 
 #' @rdname assets_functions
 #'

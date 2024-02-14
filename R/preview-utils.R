@@ -50,7 +50,7 @@ preview_read_file <- function(url) {
   make_get_request(
     url = url,
     httr::write_disk(path = temp_file, overwrite = TRUE),
-    error_msg = "Error in downloading"
+    error_msg = "Error while downloading"
   )
   preview_switch(
     url,

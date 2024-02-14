@@ -10,7 +10,7 @@ get_request(q, ...)
 post_request(q, ..., encode = c("json", "multipart", "form"))
 }
 \arguments{
-\item{q}{a \code{RSTACQuery} object expressing a STAC query
+\item{q}{a \code{rstac_query} object expressing a STAC query
 criteria.}
 
 \item{...}{config parameters to be passed to \link[httr:GET]{GET} or
@@ -24,8 +24,8 @@ and \code{'multipart'} (\code{'multipart/form-data'}). Defaults to
 \code{'json'}.}
 }
 \value{
-Either a \code{STACCatalog}, \code{STACCollection},
-\code{STACCollectionList}, \code{STACItemCollection} or \code{STACItem}
+Either a \code{doc_catalog}, \code{doc_collection},
+\code{doc_collections}, \code{doc_items} or \code{doc_item}
 object depending on the subclass and search fields parameters of \code{q}
 argument.
 }

@@ -1,6 +1,6 @@
 Package: rstac
 Title: Client Library for SpatioTemporal Asset Catalog
-Version: 0.9.2-5
+Version: 1.0.0
 Authors@R:
     c(person("Rolf", "Simoes",
              email = "rolfsimoes@gmail.com",
@@ -22,32 +22,23 @@ License: MIT + file LICENSE
 URL: https://brazil-data-cube.github.io/rstac/
 BugReports: https://github.com/brazil-data-cube/rstac/issues
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends:
     R (>= 3.5)
 Imports:
-    httr,
-    crayon,
     utils,
+    httr,
     jsonlite,
-    lifecycle,
-    magrittr
-Suggests:
-    testthat,
+    crayon,
     sf,
-    knitr,
-    rmarkdown,
     png,
     jpeg,
-    tibble,
-    dplyr,
-    purrr,
-    slider,
-    leaflet,
-    tmap,
-    stars,
-    ggplot2,
-    geojsonsf
+    grid,
+    magrittr
+Suggests:
+    lifecycle,
+    testthat,
+    knitr
 Collate:
     'cql2-expr-funs.R'
     'cql2-types.R'
@@ -65,10 +56,11 @@ Collate:
     'conformance-query.R'
     'collections-query.R'
     'deprec-funs.R'
-    'document-funs.R'
+    'doc-funs.R'
     'ext_filter.R'
     'ext_query.R'
     'extensions.R'
+    'geom-funs.R'
     'items-funs.R'
     'items-utils.R'
     'items-query.R'
@@ -80,10 +72,12 @@ Collate:
     'request.R'
     'signatures.R'
     'stac-query.R'
-    'stac_search.R'
-    'stac_version.R'
+    'search-query.R'
+    'stac-funs.R'
+    'static-funs.R'
     'url-utils.R'
     'utils.R'
     'rstac.R'
+    'rstac-funs.R'
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr

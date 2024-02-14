@@ -13,7 +13,7 @@ cql2_json(expr)
 cql2_text(expr)
 }
 \arguments{
-\item{q}{a \code{RSTACQuery} object expressing a STAC query
+\item{q}{a \code{rstac_query} object expressing a STAC query
 criteria.}
 
 \item{expr}{a valid R expression to be translated to CQL2 (see details).}
@@ -28,7 +28,7 @@ system used by geometry objects. If \code{NULL} (default), STAC services assume
 \code{"WGS 84"}.}
 }
 \value{
-A \code{RSTACQuery} object  with the subclass \code{ext_filter} containing
+A \code{rstac_query} object  with the subclass \code{ext_filter} containing
 all request parameters to be passed to \code{get_request()} or
 \code{post_request()} function.
 }
@@ -137,8 +137,8 @@ double quoted properties in R is to use the escape character (\verb{), for examp
 \dontrun{
 # Standard comparison operators in rstac:
 # Creating a stac search query
-req <- rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
-  rstac::stac_search(limit = 5)
+req <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
+  stac_search(limit = 5)
 
 # Equal operator '=' with collection property
 req \%>\% ext_filter(collection == "sentinel-2-l2a") \%>\% post_request()
@@ -236,6 +236,5 @@ cql2_json(collection == "landsat-c2-l2" &&
 }
 \seealso{
 \code{\link[=ext_query]{ext_query()}}, \code{\link[=stac_search]{stac_search()}}, \code{\link[=post_request]{post_request()}},
-\code{\link[=endpoint]{endpoint()}}, \code{\link[=before_request]{before_request()}},
-\code{\link[=after_response]{after_response()}}, \code{\link[=content_response]{content_response()}}
+\code{\link[=before_request]{before_request()}}, \code{\link[=after_response]{after_response()}}, \code{\link[=content_response]{content_response()}}
 }
