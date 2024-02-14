@@ -38,14 +38,7 @@ Imports:
 Suggests:
     lifecycle,
     testthat,
-    knitr,
-    tmap,
-    leaflet,
-    stars,
-    slider,
-    ggplot2,
-    purrr,
-    dplyr
+    knitr
 Collate:
     'cql2-expr-funs.R'
     'cql2-types.R'
