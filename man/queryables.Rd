@@ -7,10 +7,10 @@
 queryables(q)
 }
 \arguments{
-\item{q}{a \code{RSTACQuery} object expressing a STAC query criteria.}
+\item{q}{a \code{rstac_query} object expressing a STAC query criteria.}
 }
 \value{
-A \code{RSTACQuery} object with the subclass \code{queryables} for \verb{/queryables}
+A \code{rstac_query} object with the subclass \code{queryables} for \verb{/queryables}
 endpoint.
 }
 \description{
@@ -22,14 +22,14 @@ or from a collection (\verb{/collections/\{collection_id\}/queryables}).
 \examples{
 \dontrun{
 # Catalog's queryables
-rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
-  rstac::queryables() \%>\% rstac::get_request()
+stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
+  queryables() \%>\% get_request()
 
 # Collection's queryables
-rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
-  rstac::collections(collection_id = "sentinel-2-l2a") \%>\%
-  rstac::queryables() \%>\%
-  rstac::get_request()
+stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
+  collections(collection_id = "sentinel-2-l2a") \%>\%
+  queryables() \%>\%
+  get_request()
 }
 
 }

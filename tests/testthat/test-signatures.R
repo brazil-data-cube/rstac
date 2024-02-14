@@ -16,13 +16,13 @@ testthat::test_that("signature functions", {
     # return the same object after signature?
     testthat::expect_s3_class(
       object = stac_items %>% items_sign(sign_fn = sign_bdc("AAAA-BBB")),
-      class = c("STACItemCollection", "RSTACDocument")
+      class = c("doc_items", "rstac_doc")
     )
 
     # return the same object after signature?
     testthat::expect_s3_class(
       object = stac_item %>% items_sign(sign_fn = sign_bdc("AAAA-BBB")),
-      class = c("STACItem", "RSTACDocument")
+      class = c("doc_item", "rstac_doc")
     )
 
     items_signed <- items_sign(stac_items, sign_fn = sign_bdc("AAAA-BBB"))
@@ -91,7 +91,7 @@ testthat::test_that("signature functions", {
       object = suppressWarnings(
         items_sign(stac_items, sign_planetary_computer)
       ),
-      class = c("STACItemCollection", "RSTACDocument")
+      class = c("doc_items", "rstac_doc")
     )
 
     # provided wrong url
@@ -107,7 +107,7 @@ testthat::test_that("signature functions", {
       object = suppressWarnings(
         items_sign(stac_item, sign_fn = sign_planetary_computer())
       ),
-      class = c("STACItem", "RSTACDocument")
+      class = c("doc_item", "rstac_doc")
     )
 
     items_signed <- suppressWarnings(

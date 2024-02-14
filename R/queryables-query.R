@@ -6,64 +6,49 @@
 #' This endpoint can be accessed from the catalog (`/queryables`)
 #' or from a collection (`/collections/{collection_id}/queryables`).
 #'
-#' @param q  a `RSTACQuery` object expressing a STAC query criteria.
+#' @param q  a `rstac_query` object expressing a STAC query criteria.
 #'
 #' @seealso [ext_filter()],  [conformance()], [collections()]
 #'
 #' @return
-#' A `RSTACQuery` object with the subclass `queryables` for `/queryables`
+#' A `rstac_query` object with the subclass `queryables` for `/queryables`
 #' endpoint.
 #'
 #' @examples
 #' \dontrun{
 #' # Catalog's queryables
-#' rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
-#'   rstac::queryables() %>% rstac::get_request()
+#' stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+#'   queryables() %>% get_request()
 #'
 #' # Collection's queryables
-#' rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
-#'   rstac::collections(collection_id = "sentinel-2-l2a") %>%
-#'   rstac::queryables() %>%
-#'   rstac::get_request()
+#' stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+#'   collections(collection_id = "sentinel-2-l2a") %>%
+#'   queryables() %>%
+#'   get_request()
 #' }
 #'
 #' @export
 queryables <- function(q) {
-  # check q parameter
-  check_subclass(q, c("collection_id", "stac"))
-
-  RSTACQuery(version = q$version,
-             base_url = q$base_url,
-             params = q$params,
-             subclass = unique(c("queryables", subclass(q))))
-}
-
-#' @export
-endpoint.queryables <- function(q) {
-  if ("collection_id" %in% subclass(q)) {
-    col_id <- q$params[["collection_id"]]
-    return(paste("/collections", col_id, "queryables", sep = "/"))
-  }
-  return("/queryables")
+  check_query(q, c("collection_id", "stac"))
+  rstac_query(
+    version = q$version,
+    base_url = q$base_url,
+    params = q$params,
+    subclass = "queryables"
+  )
 }
 
 #' @export
 before_request.queryables <- function(q) {
   check_query_verb(q, verbs = c("GET", "POST"))
-  # don't send 'collection_id' in url's query string or content body
-  if ("collection_id" %in% subclass(q)) {
-    q <- omit_query_params(q, names = "collection_id")
-  }
-  return(q)
+  if ("collection_id" %in% names(q$params))
+    return(set_query_endpoint(q, endpoint = "./collections/%s/queryables",
+                              params = "collection_id"))
+  set_query_endpoint(q, endpoint = "./queryables")
 }
 
 #' @export
 after_response.queryables <- function(q, res) {
-  content <- content_response(
-    res,
-    status_codes = "200",
-    content_types = "application/.*json",
-    key_message = c("message", "description", "detail")
-  )
-  RSTACDocument(content = content, q = q, subclass = "Queryables")
+  content <- content_response_json(res)
+  doc_queryables(content)
 }

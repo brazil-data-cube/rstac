@@ -7,13 +7,13 @@
 ext_query(q, ...)
 }
 \arguments{
-\item{q}{a \code{RSTACQuery} object expressing a STAC query
+\item{q}{a \code{rstac_query} object expressing a STAC query
 criteria.}
 
 \item{...}{entries with format \verb{<field> <operator> <value>}.}
 }
 \value{
-A \code{RSTACQuery} object  with the subclass \code{ext_query} containing
+A \code{rstac_query} object  with the subclass \code{ext_query} containing
 all request parameters to be passed to \code{post_request()} function.
 }
 \description{
@@ -50,7 +50,6 @@ search operator.
 Besides this function, the following S3 generic methods were implemented
 to get things done for this extension:
 \itemize{
-\item The \code{endpoint()} for subclass \code{ext_query}
 \item The \code{before_request()} for subclass \code{ext_query}
 \item The \code{after_response()} for subclass \code{ext_query}
 }
@@ -68,6 +67,5 @@ extensions.
 }
 \seealso{
 \code{\link[=ext_filter]{ext_filter()}}, \code{\link[=stac_search]{stac_search()}}, \code{\link[=post_request]{post_request()}},
-\code{\link[=endpoint]{endpoint()}}, \code{\link[=before_request]{before_request()}},
-\code{\link[=after_response]{after_response()}}, \code{\link[=content_response]{content_response()}}
+\code{\link[=before_request]{before_request()}}, \code{\link[=after_response]{after_response()}}, \code{\link[=content_response]{content_response()}}
 }

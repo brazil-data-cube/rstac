@@ -19,7 +19,7 @@
 #' filter criteria using R language. For more details on how to create
 #' CQL2 expressions in `rstac`. See the details section.
 #'
-#' @param q    a `RSTACQuery` object expressing a STAC query
+#' @param q    a `rstac_query` object expressing a STAC query
 #' criteria.
 #' @param expr a valid R expression to be translated to CQL2 (see details).
 #' @param lang a character value indicating which CQL2 representation
@@ -101,11 +101,10 @@
 #' for example `"date"`.
 #'
 #' @seealso [ext_query()], [stac_search()], [post_request()],
-#' [endpoint()], [before_request()],
-#' [after_response()], [content_response()]
+#' [before_request()], [after_response()], [content_response()]
 #'
 #' @return
-#' A `RSTACQuery` object  with the subclass `ext_filter` containing
+#' A `rstac_query` object  with the subclass `ext_filter` containing
 #'  all request parameters to be passed to `get_request()` or
 #'  `post_request()` function.
 #'
@@ -113,8 +112,8 @@
 #' \dontrun{
 #' # Standard comparison operators in rstac:
 #' # Creating a stac search query
-#' req <- rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
-#'   rstac::stac_search(limit = 5)
+#' req <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+#'   stac_search(limit = 5)
 #'
 #' # Equal operator '=' with collection property
 #' req %>% ext_filter(collection == "sentinel-2-l2a") %>% post_request()
@@ -211,45 +210,36 @@
 #'
 #' @export
 ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
-
   # check parameter
-  check_subclass(q, c("stac", "search", "items"))
+  check_query(q, c("stac", "search", "items"))
   check_lang(lang)
-
   # get expression
   expr <- unquote(
     expr = substitute(expr = expr, env = environment()),
     env = parent.frame()
   )
   params <- cql2(expr, lang = lang, crs = crs)
-
-  if (any(c("seach", "items") %in% subclass(q)))
-    class <- unique(c("ext_filter", subclass(q)))
+  if (any(c("search", "items") %in% subclass(q)))
+    subclass <- unique(c("ext_filter", subclass(q)))
   else
-    class <- unique(c("ext_filter", "search", subclass(q)))
-
-  RSTACQuery(version = q$version,
-             base_url = q$base_url,
-             params = modify_list(q$params, params),
-             subclass = class)
+    subclass <- unique(c("ext_filter", "search", subclass(q)))
+  rstac_query(
+    version = q$version,
+    base_url = q$base_url,
+    params = modify_list(q$params, params),
+    subclass = subclass
+  )
 }
 
 check_lang <- function(lang) {
   if (!is.null(lang) && !lang[[1]] %in% c("cql2-json", "cql2-text"))
-    .error("Value '%s' lang is not supported", lang[[1]])
-}
-
-#' @export
-endpoint.ext_filter <- function(q) {
-  # using endpoint from search or items document
-  if (any(c("stac", "search") %in% subclass(q)))
-    return(endpoint.search(q))
-  return(endpoint.items(q))
+    .error("Language '%s' is not supported", lang[[1]])
 }
 
 #' @export
 before_request.ext_filter <- function(q) {
-  check_query_verb(q, verbs = c("GET", "POST"))
+  # call super class
+  q <- NextMethod("before_request", q)
   if (q$verb == "GET") {
     # transform list into string to provide as querystring in GET
     if (!is.null(cql2_lang(q$params)) && cql2_lang(q$params) == "cql2-json") {
@@ -265,12 +255,7 @@ before_request.ext_filter <- function(q) {
       cql2_lang(q$params) <- "cql2-json"
     }
   }
-
-  if ("items" %in% subclass(q)) {
-    # don't send 'collection_id' in url's query string or content body
-    q <- omit_query_params(q, names = "collection_id")
-  }
-  return(q)
+  q
 }
 
 #' @export
@@ -280,13 +265,10 @@ after_response.ext_filter <- function(q, res) {
 
 #' @export
 parse_params.ext_filter <- function(q, params) {
-
   # call super class
   params <- NextMethod("parse_params")
-
   params
 }
-
 
 #' @rdname ext_filter
 #' @export
@@ -297,7 +279,7 @@ cql2_json <- function(expr) {
   )
   filter_expr <- to_json(cql2(expr, lang = "cql2-json"))
   cat(filter_expr)
-  return(invisible(filter_expr))
+  invisible(filter_expr)
 }
 
 #' @rdname ext_filter
@@ -309,5 +291,5 @@ cql2_text <- function(expr) {
   )
   filter_expr <- to_text(cql2(expr, lang = "cql2-text"))
   cat(filter_expr)
-  return(invisible(filter_expr))
+  invisible(filter_expr)
 }

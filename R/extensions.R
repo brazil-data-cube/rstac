@@ -3,11 +3,11 @@
 #' @description
 #' Currently, there are five STAC documents defined in STAC spec:
 #' \itemize{
-#' \item `STACCatalog`
-#' \item `STACCollection`
-#' \item `STACCollectionList`
-#' \item `STACItem`
-#' \item `STACItemCollection`
+#' \item `doc_catalog`
+#' \item `doc_collection`
+#' \item `doc_collections`
+#' \item `doc_item`
+#' \item `doc_items`
 #' }
 #'
 #' Each document class is associated with STAC API endpoints.
@@ -44,22 +44,18 @@
 #' extensions. An extension must define a subclass name and implement all the
 #' following S3 generic methods for that subclass:
 #' \itemize{
-#' \item `endpoint()`: returns the endpoint value of the extension.
-#' Endpoints that vary between STAC API versions can be properly returned by
-#' checking the `version` field of `RSTACQuery` object.
 #' \item `before_request()`: allows handling query parameters before
-#' submit them to the HTTP server;
+#' submit them to the HTTP server, usually sets up the query endpoint;
 #' \item `after_request()`: allows to check and parse document received
 #' by the HTTP server;
 #' }
 #'
-#' These methods will work 'behind the scenes' when a `RSTACQuery` object
+#' These methods will work 'behind the scenes' when a `rstac_query` object
 #' representing a user query are passed to a request function
 #' (e.g. `get_request()` or `post_request()`). The calling order is:
 #' \enumerate{
 #' \item begin of `get_request()` or `post_request()`
 #' \item if STAC API version is not defined, try detect it
-#' \item call `endpoint()`
 #' \item call `before_request()`
 #' \item send HTTP request
 #' \item receive HTTP response
@@ -68,13 +64,13 @@
 #' }
 #'
 #' Besides that, the extension must expose a function to receive user
-#' parameters and return a `RSTACQuery` object with a subclass
+#' parameters and return a `rstac_query` object with a subclass
 #' associated with the above S3 methods. This function must accept as its
-#' first parameter a `RSTACQuery` object representing the actual query.
+#' first parameter a `rstac_query` object representing the actual query.
 #' To keep the command flow consistency, the function needs to check the
 #' subclass of the input query. After that, it must set new or changes the
 #' input query parameters according to the user input and, finally,
-#' return the new query as a `RSTACQuery` object.
+#' return the new query as a `rstac_query` object.
 #'
 #' You can see examples on how to implement an STAC API extension by looking at
 #' `stac.R`, `collections.R`, `items.R`, `stac_search.R`,
@@ -85,15 +81,14 @@
 #' section bellow that can help the extension development.
 #'
 #'
-#' @param q       a `RSTACQuery` object expressing a STAC query
+#' @param q       a `rstac_query` object expressing a STAC query
 #' criteria.
 #'
 #' @param res     a `httr` `response` object.
 #' @param params  a `list` with params to add in request.
 #'
 #' @return
-#' A `character` endpoint value for `endpoint()` function.
-#' A `RSTACQuery` object for `before_request()` and
+#' A `rstac_query` object for `before_request()` and
 #' `after_response()` functions.
 #'
 #' @seealso [ext_query()]
@@ -102,14 +97,6 @@
 #'
 #' @keywords internal
 NULL
-
-#' @title Extension development functions
-#'
-#' @rdname extensions
-endpoint <- function(q) {
-
-  UseMethod("endpoint", q)
-}
 
 #' @title Extension development functions
 #'
@@ -186,7 +173,7 @@ content_response <- function(res, status_codes, content_types, key_message) {
 #' verbs are allowed. It is useful for establishing which verbs will be
 #' supported by an extension.
 #'
-#' @param q       a `RSTACQuery` object.
+#' @param q       a `rstac_query` object.
 #'
 #' @param verbs   a `character` vector with allowed HTTP request methods
 #'
@@ -202,36 +189,57 @@ check_query_verb <- function(q, verbs, msg = NULL) {
 }
 
 #' @describeIn extensions
-#' The `check_subclass()` function specifies which type of query
-#' objects (`RSTACQuery`) or document objects (`RSTACDocument`)
-#' are expected in the function extension.
+#' The `check_query()` function specifies which type of query
+#' object (`rstac_query`) is expected in the function extension.
 #'
-#' @param x            either a `RSTACQuery` object expressing a STAC query
-#' criteria or any `RSTACDocument`.
+#' @param x         a `rstac_query` object expressing a STAC query
+#' criteria.
 #'
-#' @param subclasses   a `character` vector with all allowed S3 subclasses
-check_subclass <- function(x, subclasses) {
-  UseMethod("check_subclass", x)
+#' @param classes   a `character` vector with all allowed S3 sub-classes
+check_query <- function(x, classes = NULL) {
+  if (!inherits(x, "rstac_query"))
+    .error("Invalid rstac_query value.")
+  if (!is.null(classes) && !any(classes %in% subclass(x)))
+    .error("Expecting %s query.", paste0("`", classes, "`", collapse = " or "))
 }
 
 #' @describeIn extensions
 #' The `subclass()` function returns a `character` representing the
-#' subclass name of either `RSTACQuery` or `RSTACDocument` S3 classes.
+#' subclass name of `rstac_query` objects.
 subclass <- function(x) {
   UseMethod("subclass", x)
 }
 
 #' @describeIn extensions
-#' The `omit_query_params()` function was created to omit the paths that
-#'  are defined as query parameters to simplify the creation of a query.
-#'  Therefore, use this method only in endpoints that specify a parameter in
-#'  their paths.
+#' The `set_query_endpoint()` function defines the endpoint of a query.
+#'  If `params` parameter is passed, each value must be an entry of params
+#'  field of the given query. The corresponding param value will be used as
+#'  value replacement of `%s` occurrences in the `endpoint` string. After
+#'  the replacement, all params in this list will be removed.
 #'
-#' @param q       a `RSTACQuery` object.
+#' @param q          a `rstac_query` object.
 #'
-#' @param names   a `character` vector with the names do omit.
-omit_query_params <- function(q, names) {
-  .check_obj(names, "character")
-  q$omitted <- unname(names)
+#' @param endpoint   a `character` vector with the format string with the
+#'    endpoint url.
+#'
+#' @param params     a `character` vector with the params entries to replace
+#'    all `%s` occurrences in the endpoint string.
+#'
+set_query_endpoint <- function(q, endpoint, params = NULL) {
+  if (any(!params %in% names(q$params)))
+    .error("Invalid param(s) %s.",
+           paste("`", setdiff(params, names(q$params)), "`", collapse = ", "))
+  values <- unname(q$params[params])
+  q$endpoint <- do.call(sprintf, args = c(list(fmt = endpoint), values))
+  q$params[params] <- NULL
   q
+}
+
+content_response_json <- function(res) {
+  content_response(
+    res = res,
+    status_codes = "200",
+    content_types = "application/.*json",
+    key_message = c("message", "description", "detail")
+  )
 }

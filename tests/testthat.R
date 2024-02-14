@@ -2,6 +2,6 @@ library(testthat)
 library(rstac)
 library(magrittr)
 
-if (Sys.getenv("RSTAC_TESTS", unset = 0) == 1) {
+if (identical(Sys.getenv("NOT_CRAN"), "true")) {
   test_check("rstac")
 }

@@ -9,10 +9,10 @@
 #' It prepares query parameters used in the search API request, a
 #' `stac` object with all filter parameters to be provided to
 #' `get_request` or `post_request` functions. The GeoJSON content
-#' returned by these requests is a `STACItemCollection` object, a regular R
+#' returned by these requests is a `doc_items` object, a regular R
 #' `list` representing a STAC Item Collection document.
 #'
-#' @param q           a `RSTACQuery` object expressing a STAC query
+#' @param q           a `rstac_query` object expressing a STAC query
 #' criteria.
 #'
 #' @param collections a `character` vector of collection IDs to include in
@@ -58,8 +58,8 @@
 #'
 #' @param intersects  a `list` expressing GeoJSON geometries
 #' objects as specified in RFC 7946. Only returns items that intersect with
-#' the provided geometry. To turn a GeoJSON into a list the packages
-#' `geojsonsf` or `jsonlite` can be used.
+#' the provided geometry. To turn a GeoJSON into a list the package
+#' `jsonlite` can be used.
 #'
 #' @param limit       an `integer` defining the maximum number of results
 #' to return. If not informed, it defaults to the service implementation.
@@ -68,7 +68,7 @@
 #' [get_request()], [post_request()]
 #'
 #' @return
-#' A `RSTACQuery` object with the subclass `search` containing all
+#' A `rstac_query` object with the subclass `search` containing all
 #' search field parameters to be provided to STAC API web service.
 #'
 #' @examples
@@ -94,31 +94,21 @@ stac_search <- function(q,
                         datetime = NULL,
                         intersects = NULL,
                         limit = NULL) {
-
-  # check q parameter
-  check_subclass(q, c("stac", "search"))
-
+  check_query(q, c("stac", "search"))
   params <- list()
-
   if (!is.null(collections))
-    params[["collections"]] <- .parse_collections(collections)
-
+    params$collections <- .parse_collections(collections)
   if (!is.null(ids))
-    params[["ids"]] <- .parse_ids(ids)
-
+    params$ids <- .parse_ids(ids)
   if (!is.null(datetime))
-    params[["datetime"]] <- .parse_datetime(datetime)
-
+    params$datetime <- .parse_datetime(datetime)
   if (!is.null(bbox))
-    params[["bbox"]] <- .parse_bbox(bbox)
-
+    params$bbox <- .parse_bbox(bbox)
   if (!is.null(intersects))
-    params[["intersects"]] <- .parse_intersects(intersects)
-
+    params$intersects <- .parse_intersects(intersects)
   if (!is.null(limit))
-    params[["limit"]] <- .parse_limit(limit)
-
-  RSTACQuery(
+    params$limit <- .parse_limit(limit)
+  rstac_query(
     version = q$version,
     base_url = q$base_url,
     params = utils::modifyList(q$params, params),
@@ -128,46 +118,30 @@ stac_search <- function(q,
 
 #' @export
 parse_params.search <- function(q, params) {
-
-  if (!is.null(params[["collections"]]))
-    params[["collections"]] <- .parse_collections(params[["collections"]])
-
-  if (!is.null(params[["ids"]]))
-    params[["ids"]] <- .parse_ids(params[["ids"]])
-
-  if (!is.null(params[["datetime"]]))
-    params[["datetime"]] <- .parse_datetime(params[["datetime"]])
-
-  if (!is.null(params[["bbox"]]))
-    params[["bbox"]] <- .parse_bbox(params[["bbox"]])
-
-  if (!is.null(params[["intersects"]]))
-    params[["intersects"]] <- .parse_intersects(params[["intersects"]])
-
-  if (!is.null(params[["limit"]]))
-    params[["limit"]] <- .parse_limit(params[["limit"]])
-
+  if (!is.null(params$collections))
+    params$collections <- .parse_collections(params$collections)
+  if (!is.null(params$ids))
+    params$ids <- .parse_ids(params$ids)
+  if (!is.null(params$datetime))
+    params$datetime <- .parse_datetime(params$datetime)
+  if (!is.null(params$bbox))
+    params$bbox <- .parse_bbox(params$bbox)
+  if (!is.null(params$intersects))
+    params$intersects <- .parse_intersects(params$intersects)
+  if (!is.null(params$limit))
+    params$limit <- .parse_limit(params$limit)
   params
 }
 
 #' @export
-endpoint.search <- function(q) {
-
-  if (q$version < "0.9.0")
-    return("/stac/search")
-  return("/search")
-}
-
-#' @export
 before_request.search <- function(q) {
-
   check_query_verb(q, verbs = c("GET", "POST"))
-
-  if (!is.null(q$params[["intersects"]]) && q$verb == "GET")
+  if (!is.null(q$params$intersects) && q$verb == "GET")
     .error(paste0("Search param `intersects` is not supported by HTTP GET",
-                  "method. Try use `post_request` method instead."))
-
-  return(q)
+                  "method. Try use `post_request()` method instead."))
+  if (!is.null(q$version) && q$version < "0.9.0")
+    return(set_query_endpoint(q, endpoint = "./stac/search"))
+  set_query_endpoint(q, endpoint = "./search")
 }
 
 #' @export

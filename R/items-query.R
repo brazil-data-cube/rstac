@@ -16,7 +16,7 @@
 #' The endpoint \code{/collections/\{collectionId\}/items} accepts the same
 #' filters parameters of [stac_search()] function.
 #'
-#' @param q           a `RSTACQuery` object expressing a STAC query
+#' @param q           a `rstac_query` object expressing a STAC query
 #' criteria.
 #'
 #' @param feature_id  a `character` with item id to be fetched.
@@ -66,7 +66,7 @@
 #'  [collections()]
 #'
 #' @return
-#' A `RSTACQuery` object with the subclass `items` for
+#' A `rstac_query` object with the subclass `items` for
 #'  \code{/collections/{collection_id}/items} endpoint, or a
 #'  `item_id` subclass for
 #'  \code{/collections/{collection_id}/items/{feature_id}} endpoint,
@@ -87,112 +87,63 @@
 #' }
 #'
 #' @export
-items <- function(q, feature_id = NULL,
-                  datetime = NULL,
-                  bbox = NULL,
+items <- function(q, feature_id = NULL, datetime = NULL, bbox = NULL,
                   limit = NULL) {
-
-  # check q parameter
-  check_subclass(q, c("collection_id", "items"))
-
+  check_query(q, c("collection_id", "items"))
   params <- list()
-
   if (!is.null(datetime))
-    params[["datetime"]] <- .parse_datetime(datetime)
-
+    params$datetime <- .parse_datetime(datetime)
   if (!is.null(bbox))
-    params[["bbox"]] <- .parse_bbox(bbox)
-
+    params$bbox <- .parse_bbox(bbox)
   if (!is.null(limit) && !is.null(limit))
-    params[["limit"]] <- .parse_limit(limit)
-
+    params$limit <- .parse_limit(limit)
   # set subclass
   subclass <- "items"
   if (!is.null(feature_id)) {
-
-    params[["feature_id"]] <- .parse_feature_id(feature_id)
-
+    params$feature_id <- .parse_feature_id(feature_id)
     subclass <- "item_id"
   }
-
-  RSTACQuery(version = q$version,
-             base_url = q$base_url,
-             params = utils::modifyList(q$params, params),
-             subclass = subclass)
+  rstac_query(
+    version = q$version,
+    base_url = q$base_url,
+    params = utils::modifyList(q$params, params),
+    subclass = subclass
+  )
 }
 
 #' @export
 parse_params.items <- function(q, params) {
-  if (!is.null(params[["datetime"]]))
-    params[["datetime"]] <- .parse_datetime(params[["datetime"]])
-
-  if (!is.null(params[["bbox"]]))
-    params[["bbox"]] <- .parse_bbox(params[["bbox"]])
-
-  if (!is.null(params[["limit"]]))
-    params[["limit"]] <- .parse_limit(params[["limit"]])
-
+  if (!is.null(params$datetime))
+    params$datetime <- .parse_datetime(params$datetime)
+  if (!is.null(params$bbox))
+    params$bbox <- .parse_bbox(params$bbox)
+  if (!is.null(params$limit))
+    params$limit <- .parse_limit(params$limit)
   params
 }
 
 #' @export
-endpoint.items <- function(q) {
-
-  return(paste("/collections", q$params[["collection_id"]], "items", sep = "/"))
-}
-
-#' @export
 before_request.items <- function(q) {
-
   check_query_verb(q, verbs = c("GET", "POST"))
-
-  # don't send 'collection_id' in url's query string or content body
-  q <- omit_query_params(q, names = "collection_id")
-
-  return(q)
+  set_query_endpoint(q, endpoint = "./collections/%s/items",
+                     params = "collection_id")
 }
 
 #' @export
 after_response.items <- function(q, res) {
-  content <- content_response(
-    res,
-    status_codes = "200",
-    content_types = "application/.*json",
-    key_message = c("message", "description", "detail")
-  )
-  if ("features" %in% names(content)) {
-    content$features <- lapply(content$features, RSTACDocument,
-                               subclass = "STACItem")
-  }
-  RSTACDocument(content = content, q = q, subclass = "STACItemCollection")
-}
-
-#' @export
-endpoint.item_id <- function(q) {
-
-  return(paste("/collections", q$params[["collection_id"]], "items",
-               q$params[["feature_id"]], sep = "/"))
+  content <- content_response_json(res)
+  doc_items(content, query = q)
 }
 
 #' @export
 before_request.item_id <- function(q) {
-
   check_query_verb(q, verbs = c("GET", "POST"))
-
-  # don't send 'collection_id' and 'feature_id' in
-  # url's query string or content body
-  q <- omit_query_params(q, names = c("collection_id", "feature_id"))
-
-  return(q)
+  set_query_endpoint(q, endpoint = "./collections/%s/items/%s",
+                      params = c("collection_id", "feature_id"))
 }
 
 #' @export
 after_response.item_id <- function(q, res) {
-  content <- content_response(
-    res,
-    status_codes = "200",
-    content_types = "application/.*json",
-    key_message = c("message", "description", "detail")
-  )
-  RSTACDocument(content = content, q = q, subclass = "STACItem")
+  content <- content_response_json(res)
+  doc_item(content)
 }
