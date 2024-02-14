@@ -77,6 +77,9 @@
 #'
 #' @param geom       a `sf` or `sfc` object.
 #'
+#' @param selection  an `integer` vector containing the indices of the items
+#'   to select.
+#'
 #' @param ...             additional arguments. See details.
 #'
 #' @details
@@ -153,6 +156,8 @@
 #' \item `items_properties()`: returns a `character` value with all properties
 #' of all items.
 #'
+#' \item `items_select()`: select features from an items object.
+#'
 #' }
 #'
 #' @examples
@@ -214,6 +219,8 @@
 #' stac_item %>% items_as_sf()
 #'
 #' stac_item %>% items_as_tibble()
+#'
+#' stac_item %>% items_select(c(1, 4, 10, 20))
 #'
 #' }
 #'
@@ -750,4 +757,27 @@ items_properties.doc_items <- function(items) {
   sort(unique(unlist(lapply(items$features, function(item) {
     names(item$properties)
   }))))
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_select <- function(items, selection) {
+  UseMethod("items_select", items)
+}
+
+#' @rdname items_functions
+#'
+#' @export
+items_select.doc_items <- function(items, selection) {
+  check_items(items)
+  items$features <- items$features[selection]
+  # clear numberMatched information
+  if ("search:metadata" %in% names(items))
+    items$`search:metadata`$matched <- NULL
+  if ("context" %in% names(items))
+    items$`context`$matched <- NULL
+  if ("numberMatched" %in% names(items))
+    items$numberMatched <- NULL
+  items
 }

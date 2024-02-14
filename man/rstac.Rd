@@ -76,11 +76,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Rolf Simoes \email{rolfsimoes@gmail.com}
+\strong{Maintainer}: Felipe Carvalho \email{lipecaso@gmail.com}
 
 Authors:
 \itemize{
-  \item Felipe Carvalho \email{lipecaso@gmail.com}
+  \item Rolf Simoes \email{rolfsimoes@gmail.com}
   \item Brazil Data Cube Team \email{brazildatacube@inpe.br}
 }
 

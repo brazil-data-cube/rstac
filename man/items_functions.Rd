@@ -50,6 +50,8 @@
 \alias{items_properties}
 \alias{items_properties.doc_item}
 \alias{items_properties.doc_items}
+\alias{items_select}
+\alias{items_select.doc_items}
 \title{Items functions}
 \usage{
 items_length(items)
@@ -147,6 +149,10 @@ items_properties(items)
 \method{items_properties}{doc_item}(items)
 
 \method{items_properties}{doc_items}(items)
+
+items_select(items, selection)
+
+\method{items_select}{doc_items}(items, selection)
 }
 \arguments{
 \item{items}{a \code{doc_items} object.}
@@ -177,6 +183,9 @@ and returns an item signed.}
 \item{crs}{a \code{character} representing the geometry projection.}
 
 \item{geom}{a \code{sf} or \code{sfc} object.}
+
+\item{selection}{an \code{integer} vector containing the indices of the items
+to select.}
 }
 \value{
 \itemize{
@@ -215,6 +224,8 @@ otherwise or a \code{list}.
 
 \item \code{items_properties()}: returns a \code{character} value with all properties
 of all items.
+
+\item \code{items_select()}: select features from an items object.
 
 }
 }
@@ -362,6 +373,8 @@ stac_item \%>\% items_reap(field = c("properties", "datetime"))
 stac_item \%>\% items_as_sf()
 
 stac_item \%>\% items_as_tibble()
+
+stac_item \%>\% items_select(c(1, 4, 10, 20))
 
 }
 
