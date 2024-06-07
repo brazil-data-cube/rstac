@@ -38,7 +38,14 @@ Imports:
 Suggests:
     lifecycle,
     testthat,
-    knitr
+    knitr,
+    tmap,
+    leaflet,
+    stars,
+    slider,
+    ggplot2,
+    purrr,
+    dplyr
 Collate:
     'cql2-expr-funs.R'
     'cql2-types.R'
@@ -54,6 +61,7 @@ Collate:
     'assets-funs.R'
     'check-utils.R'
     'conformance-query.R'
+    'collections-funs.R'
     'collections-query.R'
     'deprec-funs.R'
     'doc-funs.R'
@@ -80,3 +88,4 @@ Collate:
     'rstac.R'
     'rstac-funs.R'
 Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr

@@ -171,8 +171,9 @@ shown or not. Defaults to \code{TRUE}.}
 \item{filter_fn}{a \code{function} that receives an item that should
 evaluate a \code{logical} value.}
 
-\item{field}{a \code{character} with the names of the field to
-get the subfields values.}
+\item{field}{A \code{character} vector specifying the path to the
+field from which to extract subfield values.
+For example, \code{c("assets", "*")} will traverse all assets from each item.}
 
 \item{pick_fn}{a \code{function} used to pick elements from items
 addressed by \code{field} parameter.}
@@ -259,8 +260,9 @@ field of a \code{doc_items} or a \code{doc_item} object.
 \item \code{items_filter()}: selects only items that match some criteria
 (see details section).
 
-\item \code{items_reap()}: extract key values by traversing all items
-in a \code{doc_items} object.
+\item \code{items_reap()}: traverses all items in a \code{doc_items} object and
+extracts values based on the specified field path. It is useful for
+retrieving nested elements from STAC items.
 
 \item \code{items_fields()}: lists field names inside an item.
 
@@ -366,9 +368,13 @@ stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
  stac_search(collections = "CB4-16D-2", limit = 100,
         datetime = "2017-08-01/2018-03-01",
         bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
- get_request() \%>\% items_fetch(progress = FALSE)
+ get_request() \%>\%
+ items_fetch(progress = FALSE)
 
-stac_item \%>\% items_reap(field = c("properties", "datetime"))
+stac_item \%>\% items_reap(c("properties", "datetime"))
+
+# Extract all asset URLs from each item
+stac_item \%>\% items_reap(c("assets", "*"), \(x) x$href)
 
 stac_item \%>\% items_as_sf()
 
