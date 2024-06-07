@@ -61,6 +61,7 @@ Collate:
     'assets-funs.R'
     'check-utils.R'
     'conformance-query.R'
+    'collections-funs.R'
     'collections-query.R'
     'deprec-funs.R'
     'doc-funs.R'

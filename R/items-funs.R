@@ -30,8 +30,9 @@
 #' \item `items_filter()`: selects only items that match some criteria
 #'  (see details section).
 #'
-#' \item `items_reap()`: extract key values by traversing all items
-#' in a `doc_items` object.
+#' \item `items_reap()`: traverses all items in a `doc_items` object and
+#' extracts values based on the specified field path. It is useful for
+#' retrieving nested elements from STAC items.
 #'
 #' \item `items_fields()`: lists field names inside an item.
 #'
@@ -61,8 +62,9 @@
 #' @param progress        a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
-#' @param field           a `character` with the names of the field to
-#' get the subfields values.
+#' @param field           A `character` vector specifying the path to the
+#' field from which to extract subfield values.
+#' For example, `c("assets", "*")` will traverse all assets from each item.
 #'
 #' @param pick_fn         a `function` used to pick elements from items
 #' addressed by `field` parameter.
@@ -212,9 +214,13 @@
 #'  stac_search(collections = "CB4-16D-2", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
 #'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
-#'  get_request() %>% items_fetch(progress = FALSE)
+#'  get_request() %>%
+#'  items_fetch(progress = FALSE)
 #'
-#' stac_item %>% items_reap(field = c("properties", "datetime"))
+#' stac_item %>% items_reap(c("properties", "datetime"))
+#'
+#' # Extract all asset URLs from each item
+#' stac_item %>% items_reap(c("assets", "*"), \(x) x$href)
 #'
 #' stac_item %>% items_as_sf()
 #'
