@@ -8,7 +8,7 @@
 \alias{collections_fetch}
 \title{Collections functions}
 \usage{
-collections_next(collection, ...)
+collections_next(collections, ...)
 
 collections_matched(collections, matched_field)
 
@@ -17,9 +17,9 @@ collections_length(collections)
 collections_fetch(collections, ..., progress = TRUE, matched_field = NULL)
 }
 \arguments{
-\item{...}{additional arguments. See details.}
-
 \item{collections}{a \code{doc_collections} object.}
+
+\item{...}{additional arguments. See details.}
 
 \item{matched_field}{a \code{character} vector with the path
 where is the number of collections returned.}

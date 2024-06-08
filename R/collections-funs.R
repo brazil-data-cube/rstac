@@ -71,11 +71,11 @@ NULL
 #' @rdname collections_functions
 #'
 #' @export
-collections_next <- function(collection, ...) {
-  check_collection(collection)
+collections_next <- function(collections, ...) {
+  check_collection(collections)
   # get url of the next page
   rel <- NULL
-  next_link <- links(collection, rel == "next")
+  next_link <- links(collections, rel == "next")
   if (length(next_link) == 0)
     .error("Cannot get next link URL.", class = "next_error")
   next_link <- next_link[[1]]
