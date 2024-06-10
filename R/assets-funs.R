@@ -342,10 +342,7 @@ assets_select <- function(items, ..., asset_names = NULL, select_fn = NULL) {
 assets_select.doc_item <- function(items, ...,
                                    asset_names = NULL,
                                    select_fn = NULL) {
-  exprs <- unquote(
-    expr = as.list(substitute(list(...), env = environment())[-1]),
-    env =  parent.frame()
-  )
+  exprs <- as.list(substitute(list(...), env = environment()))[-1]
   init_length <- length(items$assets)
   if (!is.null(asset_names)) {
     asset_names <- intersect(names(items$assets), asset_names)
@@ -354,9 +351,10 @@ assets_select.doc_item <- function(items, ...,
   if (length(exprs) > 0) {
     if (!is.null(names(exprs)))
       .error("Select expressions cannot be named.")
-    for (i in seq_along(exprs)) {
+    for (expr in exprs) {
+      expr <- unquote(expr = expr, env =  parent.frame())
       sel <- map_lgl(names(items$assets), function(key) {
-        select_eval(key = key, asset = items$assets[[key]], expr = exprs[[i]])
+        select_eval(key = key, asset = items$assets[[key]], expr = expr)
       })
       items$assets <- items$assets[sel]
     }

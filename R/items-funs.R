@@ -477,15 +477,13 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #' @export
 items_filter.doc_items <- function(items, ..., filter_fn = NULL) {
   init_length <- items_length(items)
-  exprs <- unquote(
-    expr = as.list(substitute(list(...), env = environment())[-1]),
-    env =  parent.frame()
-  )
+  exprs <- as.list(substitute(list(...), env = environment()))[-1]
   if (length(exprs) > 0) {
     if (!is.null(names(exprs)))
       .error("Filter expressions cannot be named.")
-    for (i in seq_along(exprs)) {
-      sel <- map_lgl(items$features, eval_filter_expr, expr = exprs[[i]])
+    for (expr in exprs) {
+      expr <- unquote(expr = expr, env =  parent.frame())
+      sel <- map_lgl(items$features, eval_filter_expr, expr = expr)
       items$features <- items$features[sel]
     }
   }
