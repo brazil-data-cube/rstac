@@ -2,7 +2,7 @@
 #'
 #' This is a helper function to plot preview assets
 #' (e.g. quicklook, thumbnail, rendered_preview).
-#' Currently, only png, jpeg and jpg formats are supported.
+#' Currently, only png and jpeg formats are supported.
 #'
 #' @param url   image URL to be plotted.
 #'
@@ -12,7 +12,7 @@
 preview_plot <- function(url) {
   preview_check(url)
   img <- preview_read_file(url)
-  plot(1:10, type = "n", axes = FALSE, xlab = "", ylab = "")
+  plot(1:10, ty = "n", axes = F, xlab = "", ylab = "")
   grid::grid.raster(img)
 }
 
@@ -39,12 +39,6 @@ preview_check <- function(url) {
         "This function requires `jpeg` package. Please, use",
         "install.packages('jpeg')."
       ))
-    ,
-    jpg = if (!requireNamespace("jpeg", quietly = TRUE))
-      .error(paste(
-        "This function requires `jpeg` package. Please, use",
-        "install.packages('jpeg')."
-      ))
   )
 }
 
@@ -61,8 +55,7 @@ preview_read_file <- function(url) {
   preview_switch(
     url,
     png = png::readPNG(temp_file),
-    jpeg = jpeg::readJPEG(temp_file),
-    jpg = jpeg::readJPEG(temp_file)
+    jpeg = jpeg::readJPEG(temp_file)
   )
 }
 
