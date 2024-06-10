@@ -33,6 +33,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   download_fn = NULL
 )
 
@@ -42,6 +43,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   create_json = FALSE,
   download_fn = NULL
 )
@@ -52,6 +54,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   download_fn = NULL,
   create_json = TRUE,
   items_max = Inf,
@@ -64,6 +67,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   create_json = FALSE,
   download_fn = NULL
 )
@@ -122,6 +126,9 @@ saved. Default is the working directory (\code{getwd()})}
 if FALSE, a warning message is shown.}
 
 \item{...}{additional arguments. See details.}
+
+\item{use_gdal}{a \code{logical} indicating if the file should be downloaded
+by GDAL instead httr package.}
 
 \item{download_fn}{a \code{function} to handle download of assets for
 each item to be downloaded. Using this function, you can change the

@@ -43,6 +43,9 @@
 #' @param progress    a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
+#' @param use_gdal    a `logical` indicating if the file should be downloaded
+#' by GDAL instead httr package.
+#'
 #' @param download_fn a `function` to handle download of assets for
 #' each item to be downloaded. Using this function, you can change the
 #' hrefs for each asset, as well as the way download is done.
