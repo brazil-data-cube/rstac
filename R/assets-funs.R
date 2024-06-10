@@ -43,6 +43,9 @@
 #' @param progress    a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
+#' @param use_gdal    a `logical` indicating if the file should be downloaded
+#' by GDAL instead httr package.
+#'
 #' @param download_fn a `function` to handle download of assets for
 #' each item to be downloaded. Using this function, you can change the
 #' hrefs for each asset, as well as the way download is done.
@@ -182,6 +185,7 @@ assets_download <- function(items,
                             asset_names = NULL,
                             output_dir = getwd(),
                             overwrite = FALSE, ...,
+                            use_gdal = FALSE,
                             download_fn = NULL) {
   # check output dir
   if (!dir.exists(output_dir))
@@ -197,6 +201,7 @@ assets_download.doc_item <- function(items,
                                      asset_names = NULL,
                                      output_dir = getwd(),
                                      overwrite = FALSE, ...,
+                                     use_gdal = FALSE,
                                      create_json = FALSE,
                                      download_fn = NULL) {
   if (!is.null(asset_names)) {
@@ -209,7 +214,7 @@ assets_download.doc_item <- function(items,
   }
   items$assets <- lapply(
     items$assets, asset_download, output_dir = output_dir,
-    overwrite = overwrite, ..., download_fn = download_fn
+    overwrite = overwrite, use_gdal = use_gdal, download_fn = download_fn, ...
   )
   if (create_json) {
     file <- "item.json"
@@ -228,6 +233,7 @@ assets_download.doc_items <- function(items,
                                       asset_names = NULL,
                                       output_dir = getwd(),
                                       overwrite = FALSE, ...,
+                                      use_gdal = FALSE,
                                       download_fn = NULL,
                                       create_json = TRUE,
                                       items_max = Inf,
@@ -249,7 +255,7 @@ assets_download.doc_items <- function(items,
     items$features[[i]] <- assets_download(
       items = items$features[[i]], asset_names = asset_names,
       output_dir = output_dir, overwrite = overwrite,
-      create_json = FALSE, download_fn = download_fn, ...
+      use_gdal = use_gdal, create_json = FALSE, download_fn = download_fn, ...
     )
   }
   if (create_json)

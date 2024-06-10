@@ -1,3 +1,5 @@
+# rstac (development version)
+
 # rstac 1.0.0 (Released 2024-02-14)
 
 * Add support to static catalogs;
