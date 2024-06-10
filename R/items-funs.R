@@ -701,9 +701,16 @@ items_as_tibble.doc_item <- function(items) {
 items_as_tibble.doc_items <- function(items) {
   check_items(items)
   non_atomic <- non_atomic_properties(items)
+  properties <- items_fields(items, "properties")
   data <- lapply(items$features, function(item) {
+    # fill unavailable properties
+    unavailable_properties <- setdiff(properties, names(item$properties))
+    item$properties[unavailable_properties] <- NA
+    # update non-atomic properties
     item$properties[non_atomic] <- lapply(item$properties[non_atomic], list)
-    item$properties
+    # return properties from items in the same order
+    # to avoid errors in the `mapply`
+    item$properties[properties]
   })
   data <- do.call(mapply, args = c(list(FUN = c, SIMPLIFY = FALSE), data))
   structure(
