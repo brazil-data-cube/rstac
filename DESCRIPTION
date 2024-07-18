@@ -1,6 +1,6 @@
 Package: rstac
 Title: Client Library for SpatioTemporal Asset Catalog
-Version: 1.0.0
+Version: 1.0.1
 Authors@R:
     c(person("Rolf", "Simoes",
              email = "rolfsimoes@gmail.com",
@@ -61,6 +61,7 @@ Collate:
     'assets-funs.R'
     'check-utils.R'
     'conformance-query.R'
+    'collections-funs.R'
     'collections-query.R'
     'deprec-funs.R'
     'doc-funs.R'

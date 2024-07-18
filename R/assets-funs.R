@@ -43,6 +43,9 @@
 #' @param progress    a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
+#' @param use_gdal    a `logical` indicating if the file should be downloaded
+#' by GDAL instead httr package.
+#'
 #' @param download_fn a `function` to handle download of assets for
 #' each item to be downloaded. Using this function, you can change the
 #' hrefs for each asset, as well as the way download is done.
@@ -88,7 +91,10 @@
 #' Multiple expressions are combine with `AND` operator. Expressions can
 #' use `asset` helper functions (i.e. `asset_key()`, `asset_eo_bands()`,
 #' and `asset_raster_bands()`). Multiple expressions are combined with
-#' `AND` operator.
+#' `AND` operator. `assets_select()` uses non-standard evaluation to evaluate
+#' its expressions. That means users must escape any variable or call to
+#' be able to use them in the expressions. The escape is done by using
+#' `double-curly-braces`, i.e., `{{variable}}`.
 #'
 #' **WARNING:** Errors in the evaluation of expressions are
 #' considered as `FALSE`.
@@ -182,6 +188,7 @@ assets_download <- function(items,
                             asset_names = NULL,
                             output_dir = getwd(),
                             overwrite = FALSE, ...,
+                            use_gdal = FALSE,
                             download_fn = NULL) {
   # check output dir
   if (!dir.exists(output_dir))
@@ -197,6 +204,7 @@ assets_download.doc_item <- function(items,
                                      asset_names = NULL,
                                      output_dir = getwd(),
                                      overwrite = FALSE, ...,
+                                     use_gdal = FALSE,
                                      create_json = FALSE,
                                      download_fn = NULL) {
   if (!is.null(asset_names)) {
@@ -209,7 +217,7 @@ assets_download.doc_item <- function(items,
   }
   items$assets <- lapply(
     items$assets, asset_download, output_dir = output_dir,
-    overwrite = overwrite, ..., download_fn = download_fn
+    overwrite = overwrite, use_gdal = use_gdal, download_fn = download_fn, ...
   )
   if (create_json) {
     file <- "item.json"
@@ -228,6 +236,7 @@ assets_download.doc_items <- function(items,
                                       asset_names = NULL,
                                       output_dir = getwd(),
                                       overwrite = FALSE, ...,
+                                      use_gdal = FALSE,
                                       download_fn = NULL,
                                       create_json = TRUE,
                                       items_max = Inf,
@@ -249,7 +258,7 @@ assets_download.doc_items <- function(items,
     items$features[[i]] <- assets_download(
       items = items$features[[i]], asset_names = asset_names,
       output_dir = output_dir, overwrite = overwrite,
-      create_json = FALSE, download_fn = download_fn, ...
+      use_gdal = use_gdal, create_json = FALSE, download_fn = download_fn, ...
     )
   }
   if (create_json)
@@ -336,10 +345,7 @@ assets_select <- function(items, ..., asset_names = NULL, select_fn = NULL) {
 assets_select.doc_item <- function(items, ...,
                                    asset_names = NULL,
                                    select_fn = NULL) {
-  exprs <- unquote(
-    expr = as.list(substitute(list(...), env = environment())[-1]),
-    env =  parent.frame()
-  )
+  exprs <- as.list(substitute(list(...), env = environment()))[-1]
   init_length <- length(items$assets)
   if (!is.null(asset_names)) {
     asset_names <- intersect(names(items$assets), asset_names)
@@ -348,9 +354,10 @@ assets_select.doc_item <- function(items, ...,
   if (length(exprs) > 0) {
     if (!is.null(names(exprs)))
       .error("Select expressions cannot be named.")
-    for (i in seq_along(exprs)) {
+    for (expr in exprs) {
+      expr <- unquote(expr = expr, env =  parent.frame())
       sel <- map_lgl(names(items$assets), function(key) {
-        select_eval(key = key, asset = items$assets[[key]], expr = exprs[[i]])
+        select_eval(key = key, asset = items$assets[[key]], expr = expr)
       })
       items$assets <- items$assets[sel]
     }
