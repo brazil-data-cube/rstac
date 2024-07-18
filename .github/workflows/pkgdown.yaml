@@ -3,8 +3,6 @@
 on:
   push:
     branches: [vignettes]
-  pull_request:
-    branches: [vignettes]
   release:
     types: [published]
   workflow_dispatch:
