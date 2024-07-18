@@ -15,5 +15,5 @@ A rastergrob grob from package \code{grid}.
 \description{
 This is a helper function to plot preview assets
 (e.g. quicklook, thumbnail, rendered_preview).
-Currently, only png, jpeg and jpg formats are supported.
+Currently, only png and jpeg formats are supported.
 }

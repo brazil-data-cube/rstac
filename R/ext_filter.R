@@ -36,6 +36,12 @@
 #' to CQL2 expressions. The following topics describe the correspondences
 #' between `rstac` expressions and CQL2 operators.
 #'
+#' ## Non-standard evaluation
+#' - `ext_filter()` uses non-standard evaluation to evaluate its expressions.
+#'   That means users must escape any variable or call to be able to use them
+#'   in the expressions. The escape is done by using `double-curly-braces`,
+#'   i.e., `{{variable}}`.
+#'
 #' ## Standard comparison operators
 #' - `==`, `>=`, `<=`, `>`, `<`, and `!=` operators correspond to
 #'   `=`, `>=`, `<=`, `>`, `<`, and `<>` in CQL2, respectively.

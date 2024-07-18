@@ -95,8 +95,15 @@
 #' methods, such as [add_headers][httr::add_headers] or
 #' [set_cookies][httr::set_cookies].
 #'
-#' \item `items_filter()`: ellipsis is used to pass logical
-#' expressions to be evaluated against a `doc_item` field as filter criteria.
+#' \item `items_filter()`: ellipsis is used to pass logical expressions to
+#' be evaluated against a `doc_item` field as filter criteria. Expressions
+#' must be evaluated as a logical value where `TRUE` selects the item
+#' and `FALSE` discards it. Multiple expressions are combine with `AND`
+#' operator. `items_filter()` uses non-standard evaluation to evaluate
+#' its expressions. That means users must escape any variable or call to
+#' be able to use them in the expressions. The escape is done by using
+#' `double-curly-braces`, i.e., `{{variable}}`.
+
 #'
 #' **WARNING:** the evaluation of filter expressions changed in `rstac` 0.9.2.
 #' Older versions of `rstac` used `properties` field to evaluate filter

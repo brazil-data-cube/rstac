@@ -88,4 +88,3 @@ Collate:
     'rstac.R'
     'rstac-funs.R'
 Roxygen: list(markdown = TRUE)
-VignetteBuilder: knitr

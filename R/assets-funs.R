@@ -91,7 +91,10 @@
 #' Multiple expressions are combine with `AND` operator. Expressions can
 #' use `asset` helper functions (i.e. `asset_key()`, `asset_eo_bands()`,
 #' and `asset_raster_bands()`). Multiple expressions are combined with
-#' `AND` operator.
+#' `AND` operator. `assets_select()` uses non-standard evaluation to evaluate
+#' its expressions. That means users must escape any variable or call to
+#' be able to use them in the expressions. The escape is done by using
+#' `double-curly-braces`, i.e., `{{variable}}`.
 #'
 #' **WARNING:** Errors in the evaluation of expressions are
 #' considered as `FALSE`.

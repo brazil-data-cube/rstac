@@ -218,7 +218,10 @@ a logical value where \code{TRUE} selects the asset and \code{FALSE} discards it
 Multiple expressions are combine with \code{AND} operator. Expressions can
 use \code{asset} helper functions (i.e. \code{asset_key()}, \code{asset_eo_bands()},
 and \code{asset_raster_bands()}). Multiple expressions are combined with
-\code{AND} operator.
+\code{AND} operator. \code{assets_select()} uses non-standard evaluation to evaluate
+its expressions. That means users must escape any variable or call to
+be able to use them in the expressions. The escape is done by using
+\code{double-curly-braces}, i.e., \code{{{variable}}}.
 
 \strong{WARNING:} Errors in the evaluation of expressions are
 considered as \code{FALSE}.
