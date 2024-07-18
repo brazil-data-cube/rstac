@@ -1,6 +1,6 @@
 Package: rstac
 Title: Client Library for SpatioTemporal Asset Catalog
-Version: 1.0.0.9000
+Version: 1.0.1
 Authors@R:
     c(person("Rolf", "Simoes",
              email = "rolfsimoes@gmail.com",
@@ -88,4 +88,3 @@ Collate:
     'rstac.R'
     'rstac-funs.R'
 Roxygen: list(markdown = TRUE)
-VignetteBuilder: knitr

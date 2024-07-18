@@ -95,8 +95,15 @@
 #' methods, such as [add_headers][httr::add_headers] or
 #' [set_cookies][httr::set_cookies].
 #'
-#' \item `items_filter()`: ellipsis is used to pass logical
-#' expressions to be evaluated against a `doc_item` field as filter criteria.
+#' \item `items_filter()`: ellipsis is used to pass logical expressions to
+#' be evaluated against a `doc_item` field as filter criteria. Expressions
+#' must be evaluated as a logical value where `TRUE` selects the item
+#' and `FALSE` discards it. Multiple expressions are combine with `AND`
+#' operator. `items_filter()` uses non-standard evaluation to evaluate
+#' its expressions. That means users must escape any variable or call to
+#' be able to use them in the expressions. The escape is done by using
+#' `double-curly-braces`, i.e., `{{variable}}`.
+
 #'
 #' **WARNING:** the evaluation of filter expressions changed in `rstac` 0.9.2.
 #' Older versions of `rstac` used `properties` field to evaluate filter
@@ -477,15 +484,13 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #' @export
 items_filter.doc_items <- function(items, ..., filter_fn = NULL) {
   init_length <- items_length(items)
-  exprs <- unquote(
-    expr = as.list(substitute(list(...), env = environment())[-1]),
-    env =  parent.frame()
-  )
+  exprs <- as.list(substitute(list(...), env = environment()))[-1]
   if (length(exprs) > 0) {
     if (!is.null(names(exprs)))
       .error("Filter expressions cannot be named.")
-    for (i in seq_along(exprs)) {
-      sel <- map_lgl(items$features, eval_filter_expr, expr = exprs[[i]])
+    for (expr in exprs) {
+      expr <- unquote(expr = expr, env =  parent.frame())
+      sel <- map_lgl(items$features, eval_filter_expr, expr = expr)
       items$features <- items$features[sel]
     }
   }
@@ -701,9 +706,16 @@ items_as_tibble.doc_item <- function(items) {
 items_as_tibble.doc_items <- function(items) {
   check_items(items)
   non_atomic <- non_atomic_properties(items)
+  properties <- items_fields(items, "properties")
   data <- lapply(items$features, function(item) {
+    # fill unavailable properties
+    unavailable_properties <- setdiff(properties, names(item$properties))
+    item$properties[unavailable_properties] <- NA
+    # update non-atomic properties
     item$properties[non_atomic] <- lapply(item$properties[non_atomic], list)
-    item$properties
+    # return properties from items in the same order
+    # to avoid errors in the `mapply`
+    item$properties[properties]
   })
   data <- do.call(mapply, args = c(list(FUN = c, SIMPLIFY = FALSE), data))
   structure(
