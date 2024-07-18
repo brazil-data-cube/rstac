@@ -1,5 +1,9 @@
 # rstac (development version)
 
+# rstac 1.0.1 (Released 2024-07-18)
+
+* Fix `limit` parameter as integer type in `stac_search()` and `items()`
+
 # rstac 1.0.0 (Released 2024-02-14)
 
 * Add support to static catalogs;
