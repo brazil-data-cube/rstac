@@ -1,10 +1,4 @@
-url: ~
+url: https://brazil-data-cube.github.io/rstac/
 template:
   bootstrap: 5
-  bslib:
-    base_font:
-        google: IBM Plex Serif
-    heading_font:
-        google: IBM Plex Serif
-    code_font:
-        google: IBM Plex Mono
+
