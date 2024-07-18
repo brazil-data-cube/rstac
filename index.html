@@ -5,11 +5,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Provides functions to access, search and download spacetime earth
-    observation data via SpatioTemporal Asset Catalog (STAC). This package 
-    supports the version 1.0.0 (and older) of the STAC specification
-    (&lt;https://github.com/radiantearth/stac-spec&gt;). 
-    For further details see Simoes et al. (2021) &lt;doi:10.1109/IGARSS47720.2021.9553518&gt;.">
 <title>Client Library for SpatioTemporal Asset Catalog • rstac</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -18,70 +13,51 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="deps/IBM_Plex_Serif-0.4.4/font.css" rel="stylesheet">
-<link href="deps/IBM_Plex_Mono-0.4.4/font.css" rel="stylesheet">
-<!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Client Library for SpatioTemporal Asset Catalog">
-<meta property="og:description" content="Provides functions to access, search and download spacetime earth
-    observation data via SpatioTemporal Asset Catalog (STAC). This package 
-    supports the version 1.0.0 (and older) of the STAC specification
-    (&lt;https://github.com/radiantearth/stac-spec&gt;). 
-    For further details see Simoes et al. (2021) &lt;doi:10.1109/IGARSS47720.2021.9553518&gt;.">
-<meta property="og:image" content="/logo.png">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Client Library for SpatioTemporal Asset Catalog">
+<meta name="description" content="Provides functions to access, search and download spacetime earth observation data via SpatioTemporal Asset Catalog (STAC). This package supports the version 1.0.0 (and older) of the STAC specification (&lt;https://github.com/radiantearth/stac-spec&gt;). For further details see Simoes et al. (2021) &lt;doi:10.1109/IGARSS47720.2021.9553518&gt;.">
+<meta property="og:description" content="Provides functions to access, search and download spacetime earth observation data via SpatioTemporal Asset Catalog (STAC). This package supports the version 1.0.0 (and older) of the STAC specification (&lt;https://github.com/radiantearth/stac-spec&gt;). For further details see Simoes et al. (2021) &lt;doi:10.1109/IGARSS47720.2021.9553518&gt;.">
+<meta property="og:image" content="https://brazil-data-cube.github.io/rstac/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="index.html">rstac</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.2-1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/rstac-01-intro.html">Introduction to rstac package</a>
-    <a class="dropdown-item" href="articles/rstac-02-cql2.html">CQL2 examples</a>
-    <a class="dropdown-item" href="articles/rstac-03-cql2-mpc.html">Reading Planetary Computer Data using CQL2 filter extension</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/rstac-01-intro.html">Introduction to rstac package</a></li>
+    <li><a class="dropdown-item" href="articles/rstac-02-cql2.html">CQL2 examples</a></li>
+    <li><a class="dropdown-item" href="articles/rstac-03-cql2-mpc.html">Reading Planetary Computer Data using CQL2 filter extension</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/brazil-data-cube/rstac/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/brazil-data-cube/rstac/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-home">
 <div class="row">
@@ -106,12 +82,10 @@
 </h3>
 <p>To install the development version of <code>rstac</code>, run the following commands</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># load necessary libraries</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"brazil-data-cube/rstac"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"brazil-data-cube/rstac"</span><span class="op">)</span></span></code></pre></div>
 <p>Importing <code>rstac</code> package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://brazil-data-cube.github.io/rstac/" class="external-link">rstac</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://brazil-data-cube.github.io/rstac/">rstac</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -184,39 +158,39 @@
 </tr>
 </tbody>
 </table>
-<p>These functions can be used to retrieve information from a STAC API service. The code below creates a <code>stac</code> object and list the available collections of the STAC API of the <a href="http://www.brazildatacube.org/en/home-page-2/" class="external-link">Brazil Data Cube</a> project of the Brazilian National Space Research Institute <a href="https://www.gov.br/inpe/pt-br/" class="external-link">INPE</a>.</p>
+<p>These functions can be used to retrieve information from a STAC API service. The code below creates a <code>stac</code> object and list the available collections of the STAC API of the <a href="http://www.brazildatacube.org/en/home-page-2/" class="external-link">Brazil Data Cube</a> project of the Brazilian National Space Research Institute (INPE).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/stac.html">stac</a></span><span class="op">(</span><span class="st">"https://brazildatacube.dpi.inpe.br/stac/"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/request.html">get_request</a></span><span class="op">(</span><span class="va">s_obj</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ###STACCatalog</span></span>
+<span><span class="co">#&gt; ###Catalog</span></span>
 <span><span class="co">#&gt; - id: bdc</span></span>
 <span><span class="co">#&gt; - description: Brazil Data Cube Catalog</span></span>
 <span><span class="co">#&gt; - field(s): description, id, stac_version, links</span></span></code></pre></div>
 <p>The variable <code>s_obj</code> stores information to connect to the Brazil Data Cube STAC web service. The <code>get_request</code> method makes a HTTP GET connection to it and retrieves a STAC Catalog document from the server. Each <code>links</code> entry is an available collection that can be accessed via STAC API.</p>
-<p>In the code below, we get some STAC items of <code>CB4_64_16D_STK-1</code> collection that intersects the bounding box passed to the <code>bbox</code> parameter. To do this, we call the <code>stac_search</code> function that implements the STAC <code>/search</code> endpoint. The returned document is a STAC Item Collection (a geojson containing a feature collection).</p>
+<p>In the code below, we get some STAC items of <code>CB4-16D-2</code> collection that intersects the bounding box passed to the <code>bbox</code> parameter. To do this, we call the <code>stac_search</code> function that implements the STAC <code>/search</code> endpoint. The returned document is a STAC Item Collection (a geojson containing a feature collection).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="va">it_obj</span> <span class="op">&lt;-</span> <span class="va">s_obj</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
+<span><span class="va">it_obj</span> <span class="op">&lt;-</span> <span class="va">s_obj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"CB4-16D-2"</span>,</span>
 <span>              bbox <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">47.02148</span>, <span class="op">-</span><span class="fl">17.35063</span>, <span class="op">-</span><span class="fl">42.53906</span>, <span class="op">-</span><span class="fl">12.98314</span><span class="op">)</span>,</span>
-<span>              limit <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>              limit <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/request.html">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">it_obj</span></span>
-<span><span class="co">#&gt; ###STACItemCollection</span></span>
-<span><span class="co">#&gt; - matched feature(s): 306</span></span>
-<span><span class="co">#&gt; - features (100 item(s) / 206 not fetched):</span></span>
-<span><span class="co">#&gt;   - CB4_64_16D_STK_v001_022024_2022-08-13_2022-08-28</span></span>
-<span><span class="co">#&gt;   - CB4_64_16D_STK_v001_022025_2022-08-13_2022-08-28</span></span>
-<span><span class="co">#&gt;   - CB4_64_16D_STK_v001_022024_2022-07-28_2022-08-12</span></span>
-<span><span class="co">#&gt;   - CB4_64_16D_STK_v001_022025_2022-07-28_2022-08-12</span></span>
-<span><span class="co">#&gt;   - CB4_64_16D_STK_v001_022024_2022-07-12_2022-07-27</span></span>
-<span><span class="co">#&gt;   - CB4_64_16D_STK_v001_022025_2022-07-12_2022-07-27</span></span>
-<span><span class="co">#&gt;   - CB4_64_16D_STK_v001_022024_2022-06-26_2022-07-11</span></span>
-<span><span class="co">#&gt;   - CB4_64_16D_STK_v001_022025_2022-06-26_2022-07-11</span></span>
-<span><span class="co">#&gt;   - CB4_64_16D_STK_v001_022024_2022-06-10_2022-06-25</span></span>
-<span><span class="co">#&gt;   - CB4_64_16D_STK_v001_022025_2022-06-10_2022-06-25</span></span>
+<span><span class="co">#&gt; ###Items</span></span>
+<span><span class="co">#&gt; - matched feature(s): 1096</span></span>
+<span><span class="co">#&gt; - features (100 item(s) / 996 not fetched):</span></span>
+<span><span class="co">#&gt;   - CB4-16D_V2_007004_20240101</span></span>
+<span><span class="co">#&gt;   - CB4-16D_V2_007005_20240101</span></span>
+<span><span class="co">#&gt;   - CB4-16D_V2_007006_20240101</span></span>
+<span><span class="co">#&gt;   - CB4-16D_V2_008004_20240101</span></span>
+<span><span class="co">#&gt;   - CB4-16D_V2_008006_20240101</span></span>
+<span><span class="co">#&gt;   - CB4-16D_V2_008005_20240101</span></span>
+<span><span class="co">#&gt;   - CB4-16D_V2_007004_20231219</span></span>
+<span><span class="co">#&gt;   - CB4-16D_V2_007006_20231219</span></span>
+<span><span class="co">#&gt;   - CB4-16D_V2_007005_20231219</span></span>
+<span><span class="co">#&gt;   - CB4-16D_V2_008004_20231219</span></span>
 <span><span class="co">#&gt;   - ... with 90 more feature(s).</span></span>
 <span><span class="co">#&gt; - assets: </span></span>
 <span><span class="co">#&gt; BAND13, BAND14, BAND15, BAND16, CLEAROB, CMASK, EVI, NDVI, PROVENANCE, thumbnail, TOTALOB</span></span>
@@ -224,10 +198,10 @@
 <span><span class="co">#&gt; assets, bbox, collection, geometry, id, links, properties, stac_extensions, stac_version, type</span></span></code></pre></div>
 <p>The <code>rstac</code> uses the <a href="https://github.com/r-lib/httr" class="external-link">httr</a> package to manage HTTP requests, allowing the use of tokens from the authorization protocols OAuth 1.0 or 2.0 as well as other configuration options. In the code below, we present an example of how to pass a parameter token on a HTTP request.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">it_obj</span> <span class="op">&lt;-</span> <span class="va">s_obj</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"CB4_64_16D_STK-1"</span>,</span>
-<span>              bbox <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">47.02148</span>, <span class="op">-</span><span class="fl">17.35063</span>, <span class="op">-</span><span class="fl">42.53906</span>, <span class="op">-</span><span class="fl">12.98314</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/request.html">get_request</a></span><span class="op">(</span><span class="fu"><a href="https://httr.r-lib.org/reference/add_headers.html" class="external-link">add_headers</a></span><span class="op">(</span><span class="st">"x-api-key"</span> <span class="op">=</span> <span class="st">"MY-TOKEN"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">it_obj</span> <span class="op">&lt;-</span> <span class="va">s_obj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="reference/stac_search.html">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"CB4-16D-2"</span>,</span>
+<span>              bbox <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">47.02148</span>, <span class="op">-</span><span class="fl">17.35063</span>, <span class="op">-</span><span class="fl">42.53906</span>, <span class="op">-</span><span class="fl">12.98314</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="reference/request.html">get_request</a></span><span class="op">(</span><span class="fu">add_headers</span><span class="op">(</span><span class="st">"x-api-key"</span> <span class="op">=</span> <span class="st">"MY-TOKEN"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>In addition to the functions mentioned above, the <code>rstac</code> package provides some extra functions for handling items and to bulk download the assets.</p>
 <div class="section level3">
 <h3 id="items-functions">Items functions<a class="anchor" aria-label="anchor" href="#items-functions"></a>
@@ -235,30 +209,30 @@
 <p><code>rstac</code> provides some functions that facilitates the interaction with STAC data. In the example below, we get how many items matched the search criteria:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># it_obj variable from the last code example</span></span>
-<span><span class="va">it_obj</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">it_obj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/items_functions.html">items_matched</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 306</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1096</span></span></code></pre></div>
 <p>However, if we count how many items there are in <code>it_obj</code> variable, we get <code>10</code>, meaning that more items could be fetched from the STAC service:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">it_obj</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">it_obj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/items_functions.html">items_length</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 100</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># fetch all items from server </span></span>
 <span><span class="co"># (but don't stored them back in it_obj)</span></span>
-<span><span class="va">it_obj</span> <span class="op">&lt;-</span> <span class="va">it_obj</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">it_obj</span> <span class="op">&lt;-</span> <span class="va">it_obj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/items_functions.html">items_fetch</a></span><span class="op">(</span>progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span>
 <span></span>
-<span><span class="va">it_obj</span> <span class="op">|&gt;</span></span>
+<span><span class="va">it_obj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/items_functions.html">items_length</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 306</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1096</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="download-assets">Download assets<a class="anchor" aria-label="anchor" href="#download-assets"></a>
 </h3>
 <p>All we’ve got in previous example was metadata to STAC Items, including links to geospatial data called <code>assets</code>. To download all <code>assets</code> in a STAC Item Collection we can use <code><a href="reference/assets_functions.html">assets_download()</a></code> function, that returns an update STAC Item Collection referring to the downloaded assets. The code below downloads the <code>thumbnail</code> assets (.png files) of <code>10</code> items stored in <code>it_obj</code> variable.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">download_items</span> <span class="op">&lt;-</span> <span class="va">it_obj</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">download_items</span> <span class="op">&lt;-</span> <span class="va">it_obj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/assets_functions.html">assets_download</a></span><span class="op">(</span>assets_name <span class="op">=</span> <span class="st">"thumbnail"</span>, items_max <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -268,12 +242,12 @@
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/stac.html">stac</a></span><span class="op">(</span><span class="st">"https://planetarycomputer.microsoft.com/api/stac/v1"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">it_obj</span> <span class="op">&lt;-</span> <span class="va">s_obj</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">it_obj</span> <span class="op">&lt;-</span> <span class="va">s_obj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/ext_filter.html">ext_filter</a></span><span class="op">(</span></span>
 <span>    <span class="va">collection</span> <span class="op">==</span> <span class="st">"sentinel-2-l2a"</span> <span class="op">&amp;&amp;</span> <span class="va">`s2:vegetation_percentage`</span> <span class="op">&gt;=</span> <span class="fl">50</span> <span class="op">&amp;&amp;</span></span>
 <span>      <span class="va">`eo:cloud_cover`</span> <span class="op">&lt;=</span> <span class="fl">10</span> <span class="op">&amp;&amp;</span> <span class="va">`s2:mgrs_tile`</span> <span class="op">==</span> <span class="st">"20LKP"</span> <span class="op">&amp;&amp;</span> </span>
 <span>      <span class="fu">anyinteracts</span><span class="op">(</span><span class="va">datetime</span>, <span class="fu">interval</span><span class="op">(</span><span class="st">"2020-06-01"</span>, <span class="st">"2020-09-30"</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="reference/request.html">post_request</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -295,6 +269,11 @@
 <ul>
 <li><p>Amazon Fund, established by the Brazilian government with financial contribution from Norway, through the project contract between the Brazilian Development Bank (BNDES) and the Foundation for Science, Technology and Space Applications (FUNCATE), for the establishment of the Brazil Data Cube, process 17.2.0536.1.</p></li>
 <li><p>Radiant Earth Foundation and STAC Project Steering Committee for the advance of STAC ecosystem programme.</p></li>
+<li>
+<p>OpenGeoHub Foundation and the European Commission (EC) through the project Open-Earth-Monitor Cyberinfrastructure: Environmental information to support EU’s Green Deal (1 Jun. 2022 – 31 May 2026 -</p>
+<ol start="101059548" style="list-style-type: decimal"><li>
+</li></ol>
+</li>
 </ul>
 </div>
 <div class="section level2">
@@ -304,9 +283,8 @@
 <ol style="list-style-type: decimal">
 <li>Make a project <a href="https://docs.github.com/en/github/getting-started-with-github/fork-a-repo" class="external-link">fork</a>.</li>
 <li>Create a file inside the <code>R/</code> directory called <code>ext_{extension_name}.R</code>.</li>
-<li>In the code, you need to specify a subclass name (e.g.<code>ext_subclass</code>) for your extension in <a href="https://github.com/OldLipe/rstac/blob/49370251033cca26c6da5b1a38f6d4fa4a83bb96/R/documents.R#L33-L40" class="external-link"><code>RSTACQuery</code></a> function constructor, and implement the S3 generics methods: <a href="https://github.com/OldLipe/rstac/blob/49370251033cca26c6da5b1a38f6d4fa4a83bb96/R/extensions.R#L87-L90" class="external-link"><code>get_endpoint</code></a>, <a href="https://github.com/OldLipe/rstac/blob/49370251033cca26c6da5b1a38f6d4fa4a83bb96/R/extensions.R#L93-L96" class="external-link"><code>before_request</code></a>, and <a href="https://github.com/OldLipe/rstac/blob/49370251033cca26c6da5b1a38f6d4fa4a83bb96/R/extensions.R#L99-L102" class="external-link"><code>after_response</code></a>. Using these S3 generics methods you can define how parameters must be submitted to the HTTP request and the types of the returned documents responses. See the implemented <a href="https://github.com/brazil-data-cube/rstac/blob/master/R/ext_query.R" class="external-link">ext_query</a> API extension as an example.<br>
-</li>
-<li>Make a <a href="https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request" class="external-link">Pull Request</a> on the branch <a href="https://github.com/OldLipe/rstac/tree/dev" class="external-link">dev</a>.</li>
+<li>In the code, you need to specify a subclass name (e.g.<code>my_subclass</code>) for your extension and use it when calling <a href="https://github.com/brazil-data-cube/rstac/blob/master/R/query-funs.R" class="external-link"><code>rstac_query()</code></a> function. You also need to implement for your subclass the following S3 generic functions: <a href="https://github.com/brazil-data-cube/rstac/blob/master/R/extensions.R" class="external-link"><code>before_request()</code></a>, <a href="https://github.com/brazil-data-cube/rstac/blob/master/R/extensions.R" class="external-link"><code>after_response()</code></a>, and <a href="https://github.com/brazil-data-cube/rstac/blob/master/R/extensions.R" class="external-link"><code>parse_params()</code></a>. With these S3 generics methods you can define how parameters should be submitted to the HTTP request and the types of the returned documents. See the implemented <a href="https://github.com/brazil-data-cube/rstac/blob/master/R/ext_filter.R" class="external-link">ext_filter</a> API extension as an example.</li>
+<li>Make a <a href="https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request" class="external-link">Pull Request</a> on the most recent <a href="https://github.com/brazil-data-cube/rstac/" class="external-link">development branch</a>.</li>
 </ol>
 </div>
 </div>
@@ -350,7 +328,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/brazil-data-cube/rstac/blob/master/LICENSE" class="external-link"><img src="https://img.shields.io/badge/license-MIT-green" alt="Software License"></a></li>
-<li><a href="https://cloud.drone.io/OldLipe/rstac" class="external-link"><img src="https://cloud.drone.io/api/badges/OldLipe/rstac/status.svg" alt="Build Status"></a></li>
+<li><a href="https://github.com/brazil-data-cube/rstac/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/brazil-data-cube/rstac/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://ci.appveyor.com/project/OldLipe/rstac" class="external-link"><img src="https://ci.appveyor.com/api/projects/status/73w7h6u46l1587jj?svg=true" alt="Build status"></a></li>
 <li><a href="https://app.codecov.io/gh/brazil-data-cube/rstac" class="external-link"><img src="https://codecov.io/gh/brazil-data-cube/rstac/branch/master/graph/badge.svg?token=ILQLPW19UT" alt="codecov"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Software Life Cycle"></a></li>
@@ -365,21 +343,19 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Rolf Simoes, Felipe Carvalho, Brazil Data Cube Team.</p>
+  <p>Developed by Rolf Simoes, Felipe Carvalho, Brazil Data Cube Team.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
