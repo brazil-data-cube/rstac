@@ -292,8 +292,14 @@ additional \code{httr} options to \link[httr:GET]{GET} or \link[httr:POST]{POST}
 methods, such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.
 
-\item \code{items_filter()}: ellipsis is used to pass logical
-expressions to be evaluated against a \code{doc_item} field as filter criteria.
+\item \code{items_filter()}: ellipsis is used to pass logical expressions to
+be evaluated against a \code{doc_item} field as filter criteria. Expressions
+must be evaluated as a logical value where \code{TRUE} selects the item
+and \code{FALSE} discards it. Multiple expressions are combine with \code{AND}
+operator. \code{items_filter()} uses non-standard evaluation to evaluate
+its expressions. That means users must escape any variable or call to
+be able to use them in the expressions. The escape is done by using
+\code{double-curly-braces}, i.e., \code{{{variable}}}.
 
 \strong{WARNING:} the evaluation of filter expressions changed in \code{rstac} 0.9.2.
 Older versions of \code{rstac} used \code{properties} field to evaluate filter

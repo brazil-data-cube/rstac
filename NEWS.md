@@ -2,7 +2,10 @@
 
 # rstac 1.0.1 (Released 2024-07-18)
 
+* Add support to `jpg` in `preview_plot()` function (#161)
+* Fix variable in filter expressions (non-standard evaluation) (#160)
 * Fix `limit` parameter as integer type in `stac_search()` and `items()`
+* Improve `items_reap()` documentation (#152)
 
 # rstac 1.0.0 (Released 2024-02-14)
 
