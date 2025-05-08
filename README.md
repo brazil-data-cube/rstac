@@ -34,7 +34,7 @@ API v1.0.0. It also supports earlier versions (\>= v0.8.0).
 ## Installation
 
 ``` r
-# install via CRAN 
+# install via CRAN
 install.packages("rstac")
 ```
 
@@ -72,18 +72,20 @@ library(rstac)
 
 These functions can be used to retrieve information from a STAC API
 service. The code below creates a `stac` object and list the available
-collections of the STAC API of the [Brazil Data
-Cube](http://www.brazildatacube.org/en/home-page-2/) project of the
-Brazilian National Space Research Institute (INPE).
+collections of the STAC API of the Brazilian National Space Research Institute (INPE), which
+contains data from several image collections as well as datacubes of the the [Brazil Data 
+Cube](https://data.inpe.br/bdc/web/en/home-page-2/) Project.
 
 ``` r
-s_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
+s_obj <- stac("https://data.inpe.br/bdc/stac/v1/")
 
 get_request(s_obj)
 #> ###Catalog
-#> - id: bdc
-#> - description: Brazil Data Cube Catalog
-#> - field(s): description, id, stac_version, links
+#> - id: INPE
+#> - description:
+#> This is the landing page for the INPE STAC server. The SpatioTemporal Asset Catalogs (STAC) provide a standardized way to expose collections of spatial temporal data. Here you will find collections of data provided by projects and areas of INPE.
+#> - field(s):
+#> type, title, description, id, stac_version, links, conformsTo
 ```
 
 The variable `s_obj` stores information to connect to the Brazil Data
@@ -92,7 +94,7 @@ connection to it and retrieves a STAC Catalog document from the server.
 Each `links` entry is an available collection that can be accessed via
 STAC API.
 
-In the code below, we get some STAC items of `CB4-16D-2` collection that
+In the code below, we get some STAC items of `CBERS4-WFI-16D-2` collection that
 intersects the bounding box passed to the `bbox` parameter. To do this,
 we call the `stac_search` function that implements the STAC `/search`
 endpoint. The returned document is a STAC Item Collection (a geojson
@@ -101,29 +103,29 @@ containing a feature collection).
 ``` r
 
 it_obj <- s_obj %>%
-  stac_search(collections = "CB4-16D-2",
+  stac_search(collections = "CBERS4-WFI-16D-2",
               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
               limit = 100) %>% 
   get_request()
 
 it_obj
 #> ###Items
-#> - matched feature(s): 1096
-#> - features (100 item(s) / 996 not fetched):
-#>   - CB4-16D_V2_007004_20240101
-#>   - CB4-16D_V2_007005_20240101
-#>   - CB4-16D_V2_007006_20240101
-#>   - CB4-16D_V2_008004_20240101
-#>   - CB4-16D_V2_008006_20240101
-#>   - CB4-16D_V2_008005_20240101
-#>   - CB4-16D_V2_007004_20231219
-#>   - CB4-16D_V2_007006_20231219
-#>   - CB4-16D_V2_007005_20231219
-#>   - CB4-16D_V2_008004_20231219
+#> - matched feature(s): 1284
+#> - features (100 item(s) / 1184 not fetched):
+#>   - CB4-16D_V2_007004_20250407
+#>   - CB4-16D_V2_007005_20250407
+#>   - CB4-16D_V2_007006_20250407
+#>   - CB4-16D_V2_008004_20250407
+#>   - CB4-16D_V2_008006_20250407
+#>   - CB4-16D_V2_008005_20250407
+#>   - CB4-16D_V2_007004_20250322
+#>   - CB4-16D_V2_007005_20250322
+#>   - CB4-16D_V2_007006_20250322
+#>   - CB4-16D_V2_008004_20250322
 #>   - ... with 90 more feature(s).
-#> - assets: 
+#> - assets:
 #> BAND13, BAND14, BAND15, BAND16, CLEAROB, CMASK, EVI, NDVI, PROVENANCE, thumbnail, TOTALOB
-#> - item's fields: 
+#> - item's fields:
 #> assets, bbox, collection, geometry, id, links, properties, stac_extensions, stac_version, type
 ```
 
@@ -135,7 +137,7 @@ on a HTTP request.
 
 ``` r
 it_obj <- s_obj %>%
-  stac_search(collections = "CB4-16D-2",
+  stac_search(collections = "CBERS4-WFI-16D-2",
               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
   get_request(add_headers("x-api-key" = "MY-TOKEN"))
 ```
