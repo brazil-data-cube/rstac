@@ -72,7 +72,7 @@ NULL
 #'
 #' @export
 collections_next <- function(collections, ...) {
-  check_collection(collections)
+  check_collections(collections)
   # get url of the next page
   rel <- NULL
   next_link <- links(collections, rel == "next")
