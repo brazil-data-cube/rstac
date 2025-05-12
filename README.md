@@ -71,10 +71,10 @@ library(rstac)
 | `/collections/{collectionId}/queryables`     | `queryables()`               | \>= 1.0.0   |
 
 These functions can be used to retrieve information from a STAC API
-service. The code below creates a `stac` object and list the available
-collections of the STAC API of the Brazilian National Space Research Institute (INPE), which
+service. The code below creates a `stac` object and list the available collections of the STAC API of the Brazilian National Space Research Institute (INPE), which
 contains data from several image collections as well as datacubes of the the [Brazil Data 
 Cube](https://data.inpe.br/bdc/web/en/home-page-2/) Project.
+
 
 ``` r
 s_obj <- stac("https://data.inpe.br/bdc/stac/v1/")
