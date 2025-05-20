@@ -30,8 +30,9 @@
 #' \item `items_filter()`: selects only items that match some criteria
 #'  (see details section).
 #'
-#' \item `items_reap()`: extract key values by traversing all items
-#' in a `doc_items` object.
+#' \item `items_reap()`: traverses all items in a `doc_items` object and
+#' extracts values based on the specified field path. It is useful for
+#' retrieving nested elements from STAC items.
 #'
 #' \item `items_fields()`: lists field names inside an item.
 #'
@@ -61,8 +62,9 @@
 #' @param progress        a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
-#' @param field           a `character` with the names of the field to
-#' get the subfields values.
+#' @param field           A `character` vector specifying the path to the
+#' field from which to extract subfield values.
+#' For example, `c("assets", "*")` will traverse all assets from each item.
 #'
 #' @param pick_fn         a `function` used to pick elements from items
 #' addressed by `field` parameter.
@@ -93,8 +95,15 @@
 #' methods, such as [add_headers][httr::add_headers] or
 #' [set_cookies][httr::set_cookies].
 #'
-#' \item `items_filter()`: ellipsis is used to pass logical
-#' expressions to be evaluated against a `doc_item` field as filter criteria.
+#' \item `items_filter()`: ellipsis is used to pass logical expressions to
+#' be evaluated against a `doc_item` field as filter criteria. Expressions
+#' must be evaluated as a logical value where `TRUE` selects the item
+#' and `FALSE` discards it. Multiple expressions are combine with `AND`
+#' operator. `items_filter()` uses non-standard evaluation to evaluate
+#' its expressions. That means users must escape any variable or call to
+#' be able to use them in the expressions. The escape is done by using
+#' `double-curly-braces`, i.e., `{{variable}}`.
+
 #'
 #' **WARNING:** the evaluation of filter expressions changed in `rstac` 0.9.2.
 #' Older versions of `rstac` used `properties` field to evaluate filter
@@ -212,9 +221,13 @@
 #'  stac_search(collections = "CB4-16D-2", limit = 100,
 #'         datetime = "2017-08-01/2018-03-01",
 #'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
-#'  get_request() %>% items_fetch(progress = FALSE)
+#'  get_request() %>%
+#'  items_fetch(progress = FALSE)
 #'
-#' stac_item %>% items_reap(field = c("properties", "datetime"))
+#' stac_item %>% items_reap(c("properties", "datetime"))
+#'
+#' # Extract all asset URLs from each item
+#' stac_item %>% items_reap(c("assets", "*"), \(x) x$href)
 #'
 #' stac_item %>% items_as_sf()
 #'
@@ -471,15 +484,13 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #' @export
 items_filter.doc_items <- function(items, ..., filter_fn = NULL) {
   init_length <- items_length(items)
-  exprs <- unquote(
-    expr = as.list(substitute(list(...), env = environment())[-1]),
-    env =  parent.frame()
-  )
+  exprs <- as.list(substitute(list(...), env = environment()))[-1]
   if (length(exprs) > 0) {
     if (!is.null(names(exprs)))
       .error("Filter expressions cannot be named.")
-    for (i in seq_along(exprs)) {
-      sel <- map_lgl(items$features, eval_filter_expr, expr = exprs[[i]])
+    for (expr in exprs) {
+      expr <- unquote(expr = expr, env =  parent.frame())
+      sel <- map_lgl(items$features, eval_filter_expr, expr = expr)
       items$features <- items$features[sel]
     }
   }

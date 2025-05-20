@@ -73,7 +73,7 @@ library(rstac)
 These functions can be used to retrieve information from a STAC API
 service. The code below creates a `stac` object and list the available
 collections of the STAC API of the [Brazil Data
-Cube](http://www.brazildatacube.org/en/home-page-2/) project of the
+Cube](https://data.inpe.br/bdc/web/en/home-page-2/) project of the
 Brazilian National Space Research Institute (INPE).
 
 ``` r

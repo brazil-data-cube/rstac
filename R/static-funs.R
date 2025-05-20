@@ -227,12 +227,10 @@ links <- function(x, ...) {
 
 #' @export
 links.rstac_doc <- function(x, ...) {
-  exprs <- unquote(
-    expr = as.list(substitute(list(...), env = environment())[-1]),
-    env =  parent.frame()
-  )
+  exprs <- as.list(substitute(list(...), env = environment()))[-1]
   sel <- !logical(length(x$links))
   for (expr in exprs) {
+    expr <- unquote(expr = expr, env =  parent.frame())
     sel <- sel & map_lgl(x$links, function(x) {
       tryCatch(
         eval(expr, envir = x),
