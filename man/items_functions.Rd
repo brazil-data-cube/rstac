@@ -228,6 +228,8 @@ of all items.
 
 \item \code{items_select()}: select features from an items object.
 
+\item \code{items_compact()}: Remove items from the items object that do not
+contain any assets.
 }
 }
 \description{
