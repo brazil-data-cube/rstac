@@ -2,7 +2,7 @@ testthat::test_that("internals functions", {
   # skip cran check test
   testthat::skip_on_cran()
 
-  stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
+  stac_obj <- stac("https://data.inpe.br/bdc/stac/v1/")
 
   # check_query object
   testthat::expect_null(
@@ -53,8 +53,8 @@ testthat::test_that("internals functions", {
 })
 
 testthat::test_that("internals response", {
-    bdc_catalog <- httr::GET("https://brazildatacube.dpi.inpe.br/stac/")
-    bdc_wrong_path <- httr::GET("https://brazildatacube.dpi.inpe.br/stac/dddd")
+    bdc_catalog <- httr::GET("https://data.inpe.br/bdc/stac/v1/")
+    bdc_wrong_path <- httr::GET("https://data.inpe.br/bdc/stac/v1/dddd")
 
     testthat::expect_error(
       content_response(res = bdc_catalog,
