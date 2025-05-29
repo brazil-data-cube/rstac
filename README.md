@@ -57,24 +57,25 @@ library(rstac)
 
 `rstac` implements the following STAC endpoints:
 
-| **STAC** endpoints                           | `rstac` functions            | API version |
-|:---------------------------------------------|:-----------------------------|:------------|
-| `/`                                          | `stac()`                     | \>= 0.9.0   |
-| `/stac`                                      | `stac()`                     | \< 0.9.0    |
-| `/collections`                               | `collections()`              | \>= 0.9.0   |
-| `/collections/{collectionId}`                | `collections(collection_id)` | \>= 0.9.0   |
-| `/collections/{collectionId}/items`          | `items()`                    | \>= 0.9.0   |
-| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)`          | \>= 0.9.0   |
-| `/search`                                    | `stac_search()`              | \>= 0.9.0   |
-| `/stac/search`                               | `stac_search()`              | \< 0.9.0    |
-| `/conformance`                               | `conformance()`              | \>= 0.9.0   |
-| `/collections/{collectionId}/queryables`     | `queryables()`               | \>= 1.0.0   |
+| **STAC** endpoints | `rstac` functions | API version |
+|:---|:---|:---|
+| `/` | `stac()` | \>= 0.9.0 |
+| `/stac` | `stac()` | \< 0.9.0 |
+| `/collections` | `collections()` | \>= 0.9.0 |
+| `/collections/{collectionId}` | `collections(collection_id)` | \>= 0.9.0 |
+| `/collections/{collectionId}/items` | `items()` | \>= 0.9.0 |
+| `/collections/{collectionId}/items/{itemId}` | `items(feature_id)` | \>= 0.9.0 |
+| `/search` | `stac_search()` | \>= 0.9.0 |
+| `/stac/search` | `stac_search()` | \< 0.9.0 |
+| `/conformance` | `conformance()` | \>= 0.9.0 |
+| `/collections/{collectionId}/queryables` | `queryables()` | \>= 1.0.0 |
 
 These functions can be used to retrieve information from a STAC API
-service. The code below creates a `stac` object and list the available collections of the STAC API of the Brazilian National Space Research Institute (INPE), which
-contains data from several image collections as well as datacubes of the the [Brazil Data 
+service. The code below creates a `stac` object and list the available
+collections of the STAC API of the Brazilian National Space Research
+Institute (INPE), which contains data from several image collections as
+well as datacubes of the the [Brazil Data
 Cube](https://data.inpe.br/bdc/web/en/home-page-2/) Project.
-
 
 ``` r
 s_obj <- stac("https://data.inpe.br/bdc/stac/v1/")
@@ -82,10 +83,9 @@ s_obj <- stac("https://data.inpe.br/bdc/stac/v1/")
 get_request(s_obj)
 #> ###Catalog
 #> - id: INPE
-#> - description:
+#> - description: 
 #> This is the landing page for the INPE STAC server. The SpatioTemporal Asset Catalogs (STAC) provide a standardized way to expose collections of spatial temporal data. Here you will find collections of data provided by projects and areas of INPE.
-#> - field(s):
-#> type, title, description, id, stac_version, links, conformsTo
+#> - field(s): type, title, description, id, stac_version, links, conformsTo
 ```
 
 The variable `s_obj` stores information to connect to the Brazil Data
@@ -94,11 +94,11 @@ connection to it and retrieves a STAC Catalog document from the server.
 Each `links` entry is an available collection that can be accessed via
 STAC API.
 
-In the code below, we get some STAC items of `CBERS4-WFI-16D-2` collection that
-intersects the bounding box passed to the `bbox` parameter. To do this,
-we call the `stac_search` function that implements the STAC `/search`
-endpoint. The returned document is a STAC Item Collection (a geojson
-containing a feature collection).
+In the code below, we get some STAC items of `CBERS4-WFI-16D-2`
+collection that intersects the bounding box passed to the `bbox`
+parameter. To do this, we call the `stac_search` function that
+implements the STAC `/search` endpoint. The returned document is a STAC
+Item Collection (a geojson containing a feature collection).
 
 ``` r
 
@@ -123,9 +123,9 @@ it_obj
 #>   - CB4-16D_V2_007006_20250322
 #>   - CB4-16D_V2_008004_20250322
 #>   - ... with 90 more feature(s).
-#> - assets:
+#> - assets: 
 #> BAND13, BAND14, BAND15, BAND16, CLEAROB, CMASK, EVI, NDVI, PROVENANCE, thumbnail, TOTALOB
-#> - item's fields:
+#> - item's fields: 
 #> assets, bbox, collection, geometry, id, links, properties, stac_extensions, stac_version, type
 ```
 
@@ -156,7 +156,7 @@ search criteria:
 # it_obj variable from the last code example
 it_obj %>% 
   items_matched()
-#> [1] 1096
+#> [1] 1284
 ```
 
 However, if we count how many items there are in `it_obj` variable, we
@@ -177,7 +177,7 @@ it_obj <- it_obj %>%
 
 it_obj %>%
   items_length()
-#> [1] 1096
+#> [1] 1284
 ```
 
 ### Download assets
