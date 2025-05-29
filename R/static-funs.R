@@ -4,7 +4,7 @@
 #' These functions provide support to work with static catalogs.
 #'
 #' \itemize{
-#' \item `stac_read()`: open a STAC document from an URL.
+#' \item `read_stac()`: open a STAC document from an URL.
 #'
 #' \item `read_items()`: opens (statically) all items referred in `links`
 #'   key entry of a given collection document (`doc_collection`).

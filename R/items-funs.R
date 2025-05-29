@@ -167,6 +167,8 @@
 #'
 #' \item `items_select()`: select features from an items object.
 #'
+#' \item `items_compact()`: Remove items from the items object that do not
+#' contain any assets.
 #' }
 #'
 #' @examples

@@ -55,7 +55,7 @@ internal metadata.}
 These functions provide support to work with static catalogs.
 
 \itemize{
-\item \code{stac_read()}: open a STAC document from an URL.
+\item \code{read_stac()}: open a STAC document from an URL.
 
 \item \code{read_items()}: opens (statically) all items referred in \code{links}
 key entry of a given collection document (\code{doc_collection}).

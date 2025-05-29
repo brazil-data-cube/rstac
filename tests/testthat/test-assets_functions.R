@@ -4,9 +4,9 @@ testthat::test_that("assets functions", {
 
   # assets_download-----------------------------------------------------------
   testthat::expect_equal(
-    object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    object = stac("https://data.inpe.br/bdc/stac/v1/") %>%
       stac_search(
-        collections = "CB4-16D-2",
+        collections = "CBERS4-WFI-16D-2",
         datetime    = "2019-09-01/2019-11-01",
         bbox        = c(-47.02148, -12.98314, -42.53906, -17.35063),
         limit       = 0) %>%
@@ -18,16 +18,16 @@ testthat::test_that("assets functions", {
   )
 
   testthat::expect_error(
-    stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    stac("https://data.inpe.br/bdc/stac/v1/") %>%
       get_request() %>%
       assets_download(asset_names = c("blue", "evi"))
   )
 
   # error - wrong path
   testthat::expect_error(
-    stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    stac("https://data.inpe.br/bdc/stac/v1/") %>%
       stac_search(
-        collections = "CB4-16D-2",
+        collections = "CBERS4-WFI-16D-2",
         datetime    = "2019-09-01/2019-11-01",
         limit       = 1) %>%
       get_request() %>%
@@ -38,9 +38,9 @@ testthat::test_that("assets functions", {
   # verify output object
   testthat::expect_equal(
     object = {
-      x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+      x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
         stac_search(
-          collections = "CB4-16D-2",
+          collections = "CBERS4-WFI-16D-2",
           datetime    = "2019-09-01/2019-11-01",
           limit       = 1) %>%
         get_request() %>%
@@ -54,9 +54,9 @@ testthat::test_that("assets functions", {
 
   testthat::expect_equal(
     object = {
-      x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+      x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
         stac_search(
-          collections = "CB4-16D-2",
+          collections = "CBERS4-WFI-16D-2",
           datetime    = "2019-09-01/2019-11-01",
           limit       = 1) %>%
         get_request() %>%
@@ -73,8 +73,8 @@ testthat::test_that("assets functions", {
 
   testthat::expect_equal(
     object = {
-      x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        collections("CB4-16D-2") %>%
+      x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+        collections("CBERS4-WFI-16D-2") %>%
         items("CB4-16D_V2_000002_20230509") %>%
         get_request() %>%
         assets_download(asset_names = c("thumbnail"),
@@ -88,8 +88,8 @@ testthat::test_that("assets functions", {
 
   testthat::expect_equal(
     object = {
-      x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        collections("CB4-16D-2") %>%
+      x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+        collections("CBERS4-WFI-16D-2") %>%
         items("CB4-16D_V2_000002_20230509") %>%
         get_request() %>%
         assets_download(asset_names = c("thumbnail"),
@@ -103,13 +103,13 @@ testthat::test_that("assets functions", {
     expected = "doc_item"
   )
 
-  stac_items <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
-    stac_search(collections = "CB4-16D-2") %>%
+  stac_items <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+    stac_search(collections = "CBERS4-WFI-16D-2") %>%
     stac_search(limit = 2) %>%
     get_request()
 
-  stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-    collections("CB4-16D-2") %>%
+  stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+    collections("CBERS4-WFI-16D-2") %>%
     items("CB4-16D_V2_000002_20230509") %>%
     get_request()
 
@@ -134,14 +134,6 @@ testthat::test_that("assets functions", {
 
   # were the asset selected?
   testthat::expect_equal(
-    object = items_assets(assets_select(stac_items,
-                                        asset_names = c("BAND14", "EVI"),
-                                        `eo:bands` == 8)),
-    expected = "EVI"
-  )
-
-  # were the asset selected?
-  testthat::expect_equal(
     object = items_assets(assets_select(stac_item, asset_names = "BAND13")),
     expected = "BAND13"
   )
@@ -150,26 +142,6 @@ testthat::test_that("assets functions", {
   expect_error(assets_select(stac_item, select_fn = function(x) c(TRUE, FALSE)))
 
   expect_error(asset_get("eo:bands"))
-  expect_equal(
-    object = items_assets(
-      assets_select(stac_item, 1 %in% asset_get("eo:bands"))
-    ),
-    expected = "BAND14"
-  )
-
-  expect_length(
-    object = items_assets(
-      suppressWarnings(assets_select(stac_item, 10 %in% asset_get("eo:band")))
-    ),
-    n = 0
-  )
-
-  expect_length(
-    object = items_assets(
-      suppressWarnings(assets_select(stac_item, "B1" %in% asset_get("eo:band")))
-    ),
-    n = 0
-  )
 
   # assets_rename-------------------------------------------------------------
   selected_items <- assets_select(stac_items,
@@ -235,7 +207,7 @@ testthat::test_that("assets functions", {
 
   testthat::expect_equal(
     object = items_assets(
-      assets_rename(selected_item, mapper = function(x) paste0(x[["eo:bands"]]))
+      assets_rename(selected_item, BAND13 = "0", BAND14 = "1")
     ),
     expected = c("0", "1")
   )
@@ -295,7 +267,7 @@ testthat::test_that("assets functions", {
   testthat::expect_s3_class(
     object = assets_select(stac_item, select_fn = function(x) {
       if ("eo:bands" %in% names(x))
-        return(x$`eo:bands` < 6)
+        return(x[["eo:bands"]][[1]][["name"]] == "EVI")
       return(FALSE)
     }),
     class = c("doc_item", "rstac_doc")
@@ -305,29 +277,31 @@ testthat::test_that("assets functions", {
   testthat::expect_error(
     object = assets_select(stac_items, filter_fn = function(x) {
       if ("eo:bands" %in% names(x))
-        return(x$`eo:bands` < 6)
+        return(x[["eo:bands"]][[1]][["name"]] == "EVI")
       return(FALSE)
     })
   )
 
   # assets_select-----------------------------------------------------------
   testthat::expect_equal(
-    object = {class(assets_select(stac_items, `eo:bands` < 6))},
+    object = {class(
+      assets_select(stac_items, `eo:bands`[[1]][["name"]] %in% c("EVI", "NDVI"))
+    )},
     expected = c("doc_items", "rstac_doc", "list")
   )
 
-  testthat::expect_equal(
-    object = {class(assets_select(stac_items, select_fn = function(x) {
+  testthat::expect_s3_class(
+    object = {assets_select(stac_items, select_fn = function(x) {
       if ("eo:bands" %in% names(x))
-        return(x$`eo:bands` < 6)
+        return(x[["eo:bands"]][[1]][["name"]] == "EVI")
       return(FALSE)
-    }))},
-    expected = c("doc_items", "rstac_doc", "list")
+    })},
+    class = c("doc_items", "rstac_doc", "list")
   )
 
-  testthat::expect_equal(
-    object = class(assets_select(stac_item, `eo:bands` < 6)),
-    expected = c("doc_item", "rstac_doc", "list")
+  testthat::expect_s3_class(
+    object = assets_select(stac_item, `eo:bands`[[1]][["name"]] == "EVI"),
+    class = c("doc_item", "rstac_doc", "list")
   )
 
   testthat::expect_error(
@@ -346,14 +320,14 @@ testthat::test_that("assets functions", {
     object = assets_select(stac_items, `eo:dbandsd` < 6),
   )
 
-  testthat::expect_equal(
+  testthat::expect_s3_class(
     object = {
-      class(assets_select(stac_item, select_fn = function(x) {
+      assets_select(stac_item, select_fn = function(x) {
         if ("eo:bands" %in% names(x))
-          return(x$`eo:bands` < 6)
+          return(x$`eo:bands`[[1]][["name"]] == "EVI")
         return(FALSE)
-      }))
+      })
     },
-    expected = c("doc_item", "rstac_doc", "list")
+    class = c("doc_item", "rstac_doc", "list")
   )
 })
