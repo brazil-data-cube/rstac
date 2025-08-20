@@ -130,8 +130,8 @@ before_request.items <- function(q) {
 }
 
 #' @export
-after_response.items <- function(q, res) {
-  content <- content_response_json(res)
+after_response.items <- function(q, res, simplify_vector = TRUE) {
+  content <- content_response_json(res, simplify_vector)
   doc_items(content, query = q)
 }
 
@@ -143,7 +143,7 @@ before_request.item_id <- function(q) {
 }
 
 #' @export
-after_response.item_id <- function(q, res) {
-  content <- content_response_json(res)
+after_response.item_id <- function(q, res, simplify_vector = TRUE) {
+  content <- content_response_json(res, simplify_vector)
   doc_item(content)
 }

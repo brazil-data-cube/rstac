@@ -57,7 +57,7 @@ before_request.stac <- function(q) {
 }
 
 #' @export
-after_response.stac <- function(q, res) {
-  content <- content_response_json(res)
+after_response.stac <- function(q, res, simplify_vector = TRUE) {
+  content <- content_response_json(res, simplify_vector)
   doc_catalog(content)
 }

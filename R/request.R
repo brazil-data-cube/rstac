@@ -41,7 +41,7 @@
 #'   post_request()
 #' }
 #' @export
-get_request <- function(q, ...) {
+get_request <- function(q, simplify_vector = TRUE, ...) {
   check_query(q)
   q$verb <- "GET"
   q$encode <- NULL
@@ -54,12 +54,12 @@ get_request <- function(q, ...) {
     error_msg = "Error while requesting"
   )
   # process content and return
-  after_response(q, res = res)
+  after_response(q, res = res, simplify_vector = simplify_vector)
 }
 
 #' @rdname request
 #' @export
-post_request <- function(q, ..., encode = c("json", "multipart", "form")) {
+post_request <- function(q, simplify_vector = TRUE, ..., encode = c("json", "multipart", "form")) {
   check_query(q)
   # check request settings
   encode <- encode[[1]]
@@ -76,5 +76,5 @@ post_request <- function(q, ..., encode = c("json", "multipart", "form")) {
     error_msg = "Error while requesting"
   )
   # process content and return
-  after_response(q, res = res)
+  after_response(q, res = res, simplify_vector = simplify_vector)
 }

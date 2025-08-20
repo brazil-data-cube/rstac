@@ -48,7 +48,7 @@ before_request.queryables <- function(q) {
 }
 
 #' @export
-after_response.queryables <- function(q, res) {
-  content <- content_response_json(res)
+after_response.queryables <- function(q, res, simplify_vector = TRUE) {
+  content <- content_response_json(res, simplify_vector)
   doc_queryables(content)
 }

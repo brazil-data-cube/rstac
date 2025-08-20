@@ -108,7 +108,7 @@ before_request <- function(q) {
 #' @title Extension development functions
 #'
 #' @rdname extensions
-after_response <- function(q, res) {
+after_response <- function(q, res, simplify_vector = TRUE) {
   UseMethod("after_response", q)
 }
 
@@ -138,7 +138,7 @@ parse_params <- function(q, params) {
 #' @return
 #' The `content_response()` function returns a `list` data structure
 #' representing the JSON file received in HTTP response
-content_response <- function(res, status_codes, content_types, key_message) {
+content_response <- function(res, status_codes, content_types, key_message, simplify_vector = TRUE) {
   # convert any json extension
   if (!grepl(content_types, httr::http_type(res))) {
     .error("HTTP content type response '%s' not defined for this operation.",
@@ -149,7 +149,7 @@ content_response <- function(res, status_codes, content_types, key_message) {
   content <- httr::content(res,
                            type = "application/json",
                            encoding = "UTF-8",
-                           simplifyVector = TRUE,
+                           simplifyVector = simplify_vector,
                            simplifyDataFrame = FALSE,
                            simplifyMatrix = FALSE)
 
@@ -235,11 +235,12 @@ set_query_endpoint <- function(q, endpoint, params = NULL) {
   q
 }
 
-content_response_json <- function(res) {
+content_response_json <- function(res, simplify_vector = TRUE) {
   content_response(
     res = res,
     status_codes = "200",
     content_types = "application/.*json",
-    key_message = c("message", "description", "detail")
+    key_message = c("message", "description", "detail"),
+    simplify_vector = simplify_vector
   )
 }

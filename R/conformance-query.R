@@ -37,7 +37,7 @@ before_request.conformance <- function(q) {
 }
 
 #' @export
-after_response.conformance <- function(q, res) {
-  content <- content_response_json(res)
+after_response.conformance <- function(q, res, simplify_vector = TRUE) {
+  content <- content_response_json(res, simplify_vector)
   doc_conformance(content)
 }
