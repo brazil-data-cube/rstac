@@ -289,4 +289,79 @@ testthat::test_that("items functions", {
 
     testthat::expect_null(items_reap(res, FALSE))
     testthat::expect_null(items_reap(res, FALSE, field = FALSE))
+
+    # simplify_vector option ---------------------------------------------------
+    # `instrument` is a string by default (where simplify_vector is TRUE),
+    # but not set in argument
+    testthat::expect_identical({
+      item <- stac("https://stac.core.eopf.eodc.eu/") %>%
+        collections(collection_id = "sentinel-2-l2a") %>%
+        items(limit = 1) %>%
+        get_request()
+
+      item$features[[1]]$properties$instrument
+    },
+    "msi"
+    )
+
+    # `instrument` is a string where simplify_vector is TRUE, set via argument
+    testthat::expect_identical({
+      item <- stac("https://stac.core.eopf.eodc.eu/") %>%
+        collections(collection_id = "sentinel-2-l2a") %>%
+        items(limit = 1) %>%
+        get_request(TRUE)
+
+      item$features[[1]]$properties$instrument
+    },
+    "msi"
+    )
+
+    # `instrument` is a list where simplify_vector is FALSE, set via argument
+    testthat::expect_identical({
+      item <- stac("https://stac.core.eopf.eodc.eu/") %>%
+        collections(collection_id = "sentinel-2-l2a") %>%
+        items(limit = 1) %>%
+        get_request(FALSE)
+
+      item$features[[1]]$properties$instrument
+    },
+    list("msi")
+    )
+
+    # `instrument` is a list where simplify_vector is FALSE, set via option,
+    # with simplify_vector NOT set via argument
+    testthat::expect_identical({
+    options(rstac.simplify_vector = FALSE)
+
+      item <- stac("https://stac.core.eopf.eodc.eu/") %>%
+        collections(collection_id = "sentinel-2-l2a") %>%
+        items(limit = 1) %>%
+        get_request()
+
+      item$features[[1]]$properties$instrument
+    },
+    list("msi")
+    )
+
+    # Reset option
+    options(rstac.simplify_vector = NULL)
+
+    # `instrument` is a list where simplify_vector is TRUE, set via argument,
+    # with simplify_vector set to FALSE via option
+    # This ensures any function specific argument does override the global option
+    testthat::expect_identical({
+    options(rstac.simplify_vector = FALSE)
+
+      item <- stac("https://stac.core.eopf.eodc.eu/") %>%
+        collections(collection_id = "sentinel-2-l2a") %>%
+        items(limit = 1) %>%
+        get_request(TRUE)
+
+      item$features[[1]]$properties$instrument
+    },
+    "msi"
+    )
+
+    # Reset option
+    options(rstac.simplify_vector = NULL)
 })
