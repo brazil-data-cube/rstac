@@ -41,7 +41,9 @@
 #'   post_request()
 #' }
 #' @export
-get_request <- function(q, simplify_vector = TRUE, ...) {
+get_request <- function(q, simplify_vector = NULL, ...) {
+  simplify_vector <- simplify_vector_argument(simplify_vector)
+
   check_query(q)
   q$verb <- "GET"
   q$encode <- NULL
@@ -59,7 +61,9 @@ get_request <- function(q, simplify_vector = TRUE, ...) {
 
 #' @rdname request
 #' @export
-post_request <- function(q, simplify_vector = TRUE, ..., encode = c("json", "multipart", "form")) {
+post_request <- function(q, simplify_vector = NULL, ..., encode = c("json", "multipart", "form")) {
+  simplify_vector <- simplify_vector_argument(simplify_vector)
+
   check_query(q)
   # check request settings
   encode <- encode[[1]]
@@ -77,4 +81,8 @@ post_request <- function(q, simplify_vector = TRUE, ..., encode = c("json", "mul
   )
   # process content and return
   after_response(q, res = res, simplify_vector = simplify_vector)
+}
+
+simplify_vector_argument <- function(simplify_vector = NULL) {
+  ifelse(!is.null(simplify_vector), simplify_vector, getOption("rstac.simplify_vector", default = TRUE))
 }
