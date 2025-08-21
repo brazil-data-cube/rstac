@@ -8,16 +8,20 @@
 #' The `post_request` is function that makes HTTP POST
 #' requests to STAC web services, retrieves, and parse the data.
 #'
-#' @param q         a `rstac_query` object expressing a STAC query
+#' @param q                a `rstac_query` object expressing a STAC query
 #' criteria.
 #'
-#' @param encode    a `character` informing the request body
+#' @param encode           a `character` informing the request body
 #' Content-Type. Accepted types are `'json'` (`'application/json'`),
 #' `'form'` (`'application/x-www-form-urlencoded'`),
 #' and `'multipart'` (`'multipart/form-data'`). Defaults to
 #' `'json'`.
 #'
-#' @param ...       config parameters to be passed to [GET][httr::GET] or
+#' @param simplify_vector  a `logical` describing whether length-one nested
+#' lists should be simplified into vectors. Defaults to TRUE. Can also be set
+#' for an entire session via e.g. \code{options(rstac.simplify_vector = FALSE)}.
+#'
+#' @param ...              config parameters to be passed to [GET][httr::GET] or
 #' [POST][httr::POST] methods, such as [add_headers][httr::add_headers] or
 #' [set_cookies][httr::set_cookies].
 #'

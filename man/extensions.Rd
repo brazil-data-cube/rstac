@@ -15,11 +15,17 @@
 \usage{
 before_request(q)
 
-after_response(q, res)
+after_response(q, res, simplify_vector = TRUE)
 
 parse_params(q, params)
 
-content_response(res, status_codes, content_types, key_message)
+content_response(
+  res,
+  status_codes,
+  content_types,
+  key_message,
+  simplify_vector = TRUE
+)
 
 check_query_verb(q, verbs, msg = NULL)
 
@@ -35,6 +41,10 @@ rstac_query(version = NULL, base_url, params = list(), subclass)
 \item{q}{a \code{rstac_query} object.}
 
 \item{res}{a \code{httr} \code{response} object.}
+
+\item{simplify_vector}{a \code{logical} describing whether length-one nested
+lists should be simplified into vectors. Defaults to TRUE. Can also be set
+for an entire session via e.g. \code{options(rstac.simplify_vector = FALSE)}.}
 
 \item{params}{a named \code{list} with all URL query parameters to be
 appended in the URL.}

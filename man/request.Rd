@@ -5,13 +5,22 @@
 \alias{post_request}
 \title{STAC API request functions}
 \usage{
-get_request(q, ...)
+get_request(q, simplify_vector = NULL, ...)
 
-post_request(q, ..., encode = c("json", "multipart", "form"))
+post_request(
+  q,
+  simplify_vector = NULL,
+  ...,
+  encode = c("json", "multipart", "form")
+)
 }
 \arguments{
 \item{q}{a \code{rstac_query} object expressing a STAC query
 criteria.}
+
+\item{simplify_vector}{a \code{logical} describing whether length-one nested
+lists should be simplified into vectors. Defaults to TRUE. Can also be set
+for an entire session via e.g. \code{options(rstac.simplify_vector = FALSE)}.}
 
 \item{...}{config parameters to be passed to \link[httr:GET]{GET} or
 \link[httr:POST]{POST} methods, such as \link[httr:add_headers]{add_headers} or
