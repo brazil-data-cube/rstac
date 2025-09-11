@@ -40,7 +40,7 @@ stac_type.rstac_doc <- function(x) {
     doc_collections = "Collections",
     doc_item = "Item",
     doc_items = "Items",
-    doc_openapi_schema = "OpenAPI Schema"
+    doc_openapi_specification = "OpenAPI specification"
   )
 }
 
@@ -68,7 +68,7 @@ stac_subclass <- function(obj) {
     if ("links" %in% names(obj))
       return("doc_catalog")
     if ("openapi" %in% names(obj))
-      return("doc_openapi_schema")
+      return("doc_openapi_specification")
     .error("Invalid STAC document.")
   }
 }
@@ -83,7 +83,7 @@ as_rstac_doc <- function(x, base_url = NULL) {
     doc_collections = doc_collections(x, base_url = base_url),
     doc_item = doc_item(x, base_url = base_url),
     doc_items = doc_items(x, base_url = base_url),
-    doc_openapi_schema = doc_openapi_schema(x)
+    doc_openapi_specification = doc_openapi_specification(x)
   )
 }
 
@@ -162,9 +162,9 @@ doc_items <- function(x, base_url = NULL, query = NULL) {
   items
 }
 
-doc_openapi_schema <- function(x, base_url = NULL) {
+doc_openapi_specification <- function(x, base_url = NULL) {
   if (!is.list(x) || !"openapi" %in% names(x))
-    .error("Invalid Item object.")
-  x <- rstac_doc(x, subclass = c("doc_openapi_schema", "rstac_doc"))
+    .error("Invalid OpenAPI specification object.")
+  x <- rstac_doc(x, subclass = c("doc_openapi_specification", "rstac_doc"))
   x
 }
