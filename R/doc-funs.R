@@ -66,6 +66,8 @@ stac_subclass <- function(obj) {
       return("doc_collection")
     if ("links" %in% names(obj))
       return("doc_catalog")
+    if ("openapi" %in% names(obj))
+      return("openapi_schema")
     .error("Invalid STAC document.")
   }
 }
