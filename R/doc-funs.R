@@ -165,6 +165,5 @@ doc_items <- function(x, base_url = NULL, query = NULL) {
 doc_openapi_specification <- function(x, base_url = NULL) {
   if (!is.list(x) || !"openapi" %in% names(x))
     .error("Invalid OpenAPI specification object.")
-  x <- rstac_doc(x, subclass = c("doc_openapi_specification", "rstac_doc"))
-  x
+  rstac_doc(x, subclass = c("doc_openapi_specification", "rstac_doc"))
 }

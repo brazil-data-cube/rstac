@@ -12,6 +12,7 @@
 \alias{print.doc_conformance}
 \alias{print.doc_link}
 \alias{print.doc_links}
+\alias{print.doc_openapi_specification}
 \title{Printing functions}
 \usage{
 \method{print}{rstac_query}(x, ...)
@@ -33,6 +34,8 @@
 \method{print}{doc_link}(x, ...)
 
 \method{print}{doc_links}(x, n = 10, ...)
+
+\method{print}{doc_openapi_specification}(x, n = 10, ...)
 }
 \arguments{
 \item{x}{either a \code{rstac_query} object expressing a STAC query
