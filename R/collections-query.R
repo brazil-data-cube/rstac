@@ -14,10 +14,13 @@
 #'     Collection object
 #' }
 #'
-#' @param q             a `rstac_query` object expressing a STAC query
+#' @param q       a `rstac_query` object expressing a STAC query
 #' criteria.
 #'
 #' @param collection_id a `character` collection id to be retrieved.
+#'
+#' @param limit   an `integer` defining the maximum number of results
+#' to return. If not informed, it defaults to the service implementation.
 #'
 #' @seealso
 #' [get_request()], [post_request()], [items()]
@@ -30,17 +33,17 @@
 #'
 #' @examples
 #' \dontrun{
-#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'  stac("https://data.inpe.br/bdc/stac/v1/") %>%
 #'    collections() %>%
 #'    get_request()
 #'
-#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'    collections(collection_id = "CB4-16D-2") %>%
+#'  stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'    collections("CBERS4-WFI-16D-2") %>%
 #'    get_request()
 #' }
 #'
 #' @export
-collections <- function(q, collection_id = NULL) {
+collections <- function(q, collection_id = NULL, limit = NULL) {
   check_query(q, "stac")
   params <- list()
   subclass <- "collections"
@@ -49,6 +52,8 @@ collections <- function(q, collection_id = NULL) {
       .error("Parameter `collection_id` must be a single value.")
     params$collection_id <- collection_id
     subclass <- "collection_id"
+  } else if (!is.null(limit)) {
+    params$limit <- limit
   }
   rstac_query(
     version = q$version,

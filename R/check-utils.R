@@ -74,6 +74,14 @@ check_collection <- function(collection) {
   collection
 }
 
+check_collections <- function(collections) {
+  if (!is.list(collections) || is.null(names(collections)))
+    .error("Invalid doc_collections object.")
+  if (!"links" %in% names(collections))
+    .error("Invalid doc_collections object. Expecting `links` key.")
+  collections
+}
+
 check_character <- function(x, msg, ...) {
   if (!is.character(x))
     .error(msg, ...)

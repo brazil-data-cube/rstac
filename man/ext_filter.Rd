@@ -56,6 +56,15 @@ To allow users to express filter criteria in R language, \code{rstac} takes
 advantage of the abstract syntax tree (AST) to translate R expressions
 to CQL2 expressions. The following topics describe the correspondences
 between \code{rstac} expressions and CQL2 operators.
+\subsection{Non-standard evaluation}{
+\itemize{
+\item \code{ext_filter()} uses non-standard evaluation to evaluate its expressions.
+That means users must escape any variable or call to be able to use them
+in the expressions. The escape is done by using \code{double-curly-braces},
+i.e., \code{{{variable}}}.
+}
+}
+
 \subsection{Standard comparison operators}{
 \itemize{
 \item \code{==}, \code{>=}, \code{<=}, \code{>}, \code{<}, and \code{!=} operators correspond to

@@ -55,7 +55,7 @@ internal metadata.}
 These functions provide support to work with static catalogs.
 
 \itemize{
-\item \code{stac_read()}: open a STAC document from an URL.
+\item \code{read_stac()}: open a STAC document from an URL.
 
 \item \code{read_items()}: opens (statically) all items referred in \code{links}
 key entry of a given collection document (\code{doc_collection}).
@@ -81,8 +81,8 @@ evaluated against a \code{doc_link} item as a filter criteria. See examples.
 }
 \examples{
 \dontrun{
- x <- stac("https://brazildatacube.dpi.inpe.br/stac") \%>\%
-     collections("CB4-16D-2") \%>\%
+ x <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+     collections("CBERS4-WFI-16D-2") \%>\%
      get_request()
 
  link <- links(x, rel == "items")
