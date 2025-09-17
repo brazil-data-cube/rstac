@@ -45,9 +45,8 @@
 .parse_limit <- function(limit) {
   if (length(limit) != 1)
     .error("Parameter `limit` must be a single value.")
-  limit <- as.character(limit)
-  limit_int <- suppressWarnings(as.integer(limit))
-  if (any(is.na(as.integer(limit))) || as.character(limit_int) != limit)
+  limit <- suppressWarnings(as.integer(limit))
+  if (is.na(limit))
     .error("Param `limit` must be an integer.")
   return(limit_int)
 }

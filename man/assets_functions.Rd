@@ -33,6 +33,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   download_fn = NULL
 )
 
@@ -42,6 +43,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   create_json = FALSE,
   download_fn = NULL
 )
@@ -52,6 +54,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   download_fn = NULL,
   create_json = TRUE,
   items_max = Inf,
@@ -64,6 +67,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   create_json = FALSE,
   download_fn = NULL
 )
@@ -122,6 +126,9 @@ saved. Default is the working directory (\code{getwd()})}
 if FALSE, a warning message is shown.}
 
 \item{...}{additional arguments. See details.}
+
+\item{use_gdal}{a \code{logical} indicating if the file should be downloaded
+by GDAL instead httr package.}
 
 \item{download_fn}{a \code{function} to handle download of assets for
 each item to be downloaded. Using this function, you can change the
@@ -211,7 +218,10 @@ a logical value where \code{TRUE} selects the asset and \code{FALSE} discards it
 Multiple expressions are combine with \code{AND} operator. Expressions can
 use \code{asset} helper functions (i.e. \code{asset_key()}, \code{asset_eo_bands()},
 and \code{asset_raster_bands()}). Multiple expressions are combined with
-\code{AND} operator.
+\code{AND} operator. \code{assets_select()} uses non-standard evaluation to evaluate
+its expressions. That means users must escape any variable or call to
+be able to use them in the expressions. The escape is done by using
+\code{double-curly-braces}, i.e., \code{{{variable}}}.
 
 \strong{WARNING:} Errors in the evaluation of expressions are
 considered as \code{FALSE}.

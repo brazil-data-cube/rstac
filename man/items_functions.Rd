@@ -171,8 +171,9 @@ shown or not. Defaults to \code{TRUE}.}
 \item{filter_fn}{a \code{function} that receives an item that should
 evaluate a \code{logical} value.}
 
-\item{field}{a \code{character} with the names of the field to
-get the subfields values.}
+\item{field}{A \code{character} vector specifying the path to the
+field from which to extract subfield values.
+For example, \code{c("assets", "*")} will traverse all assets from each item.}
 
 \item{pick_fn}{a \code{function} used to pick elements from items
 addressed by \code{field} parameter.}
@@ -259,8 +260,9 @@ field of a \code{doc_items} or a \code{doc_item} object.
 \item \code{items_filter()}: selects only items that match some criteria
 (see details section).
 
-\item \code{items_reap()}: extract key values by traversing all items
-in a \code{doc_items} object.
+\item \code{items_reap()}: traverses all items in a \code{doc_items} object and
+extracts values based on the specified field path. It is useful for
+retrieving nested elements from STAC items.
 
 \item \code{items_fields()}: lists field names inside an item.
 
@@ -290,8 +292,14 @@ additional \code{httr} options to \link[httr:GET]{GET} or \link[httr:POST]{POST}
 methods, such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.
 
-\item \code{items_filter()}: ellipsis is used to pass logical
-expressions to be evaluated against a \code{doc_item} field as filter criteria.
+\item \code{items_filter()}: ellipsis is used to pass logical expressions to
+be evaluated against a \code{doc_item} field as filter criteria. Expressions
+must be evaluated as a logical value where \code{TRUE} selects the item
+and \code{FALSE} discards it. Multiple expressions are combine with \code{AND}
+operator. \code{items_filter()} uses non-standard evaluation to evaluate
+its expressions. That means users must escape any variable or call to
+be able to use them in the expressions. The escape is done by using
+\code{double-curly-braces}, i.e., \code{{{variable}}}.
 
 \strong{WARNING:} the evaluation of filter expressions changed in \code{rstac} 0.9.2.
 Older versions of \code{rstac} used \code{properties} field to evaluate filter
@@ -375,7 +383,10 @@ stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
     bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
   get_request() \%>\% items_fetch(progress = FALSE)
 
-stac_item \%>\% items_reap(field = c("properties", "datetime"))
+stac_item \%>\% items_reap(c("properties", "datetime"))
+
+# Extract all asset URLs from each item
+stac_item \%>\% items_reap(c("assets", "*"), \(x) x$href)
 
 stac_item \%>\% items_as_sf()
 
