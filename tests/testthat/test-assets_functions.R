@@ -131,9 +131,10 @@ testthat::test_that("assets functions", {
 
   # were the asset selected?
   testthat::expect_equal(
-    object = items_assets(assets_select(stac_items,
-                                        asset_names = c("BAND14", "EVI"),
-                                        `eo:bands` == 8)),
+    object = items_assets(
+      assets_select(stac_items,
+                    `eo:bands`[[1]]$min == -10000,
+                    asset_names = c("BAND14", "EVI"))),
     expected = "EVI"
   )
 
@@ -149,7 +150,8 @@ testthat::test_that("assets functions", {
   expect_error(asset_get("eo:bands"))
   expect_equal(
     object = items_assets(
-      assets_select(stac_item, 1 %in% asset_get("eo:bands"))
+      assets_select(stac_item,
+                    "green" %in% asset_get("eo:bands")[[1]]$common_name)
     ),
     expected = "BAND14"
   )
@@ -232,9 +234,11 @@ testthat::test_that("assets functions", {
 
   testthat::expect_equal(
     object = items_assets(
-      assets_rename(selected_item, mapper = function(x) paste0(x[["eo:bands"]]))
+      assets_rename(selected_item, mapper = function(x) {
+        paste0(x[["eo:bands"]][[1]]$common_name)
+      })
     ),
-    expected = c("0", "1")
+    expected = c("blue", "green")
   )
 
   # assets_url----------------------------------------------------------
@@ -292,7 +296,7 @@ testthat::test_that("assets functions", {
   testthat::expect_s3_class(
     object = assets_select(stac_item, select_fn = function(x) {
       if ("eo:bands" %in% names(x))
-        return(x$`eo:bands` < 6)
+        return(x$`eo:bands`[[1]]$min == 0)
       return(FALSE)
     }),
     class = c("doc_item", "rstac_doc")
@@ -302,28 +306,28 @@ testthat::test_that("assets functions", {
   testthat::expect_error(
     object = assets_select(stac_items, filter_fn = function(x) {
       if ("eo:bands" %in% names(x))
-        return(x$`eo:bands` < 6)
+        return(x$`eo:bands`[[1]]$min == 0)
       return(FALSE)
     })
   )
 
   # assets_select-----------------------------------------------------------
   testthat::expect_equal(
-    object = {class(assets_select(stac_items, `eo:bands` < 6))},
+    object = {class(assets_select(stac_items, `eo:bands`[[1]]$min == 0))},
     expected = c("doc_items", "rstac_doc", "list")
   )
 
   testthat::expect_equal(
     object = {class(assets_select(stac_items, select_fn = function(x) {
       if ("eo:bands" %in% names(x))
-        return(x$`eo:bands` < 6)
+        return(x$`eo:bands`[[1]]$min == 0)
       return(FALSE)
     }))},
     expected = c("doc_items", "rstac_doc", "list")
   )
 
   testthat::expect_equal(
-    object = class(assets_select(stac_item, `eo:bands` < 6)),
+    object = class(assets_select(stac_item, `eo:bands`[[1]]$min == 0)),
     expected = c("doc_item", "rstac_doc", "list")
   )
 
@@ -347,7 +351,7 @@ testthat::test_that("assets functions", {
     object = {
       class(assets_select(stac_item, select_fn = function(x) {
         if ("eo:bands" %in% names(x))
-          return(x$`eo:bands` < 6)
+          return(x$`eo:bands`[[1]]$min == 0)
         return(FALSE)
       }))
     },

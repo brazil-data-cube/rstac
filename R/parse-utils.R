@@ -49,7 +49,7 @@
   limit_int <- suppressWarnings(as.integer(limit))
   if (any(is.na(as.integer(limit))) || as.character(limit_int) != limit)
     .error("Param `limit` must be an integer.")
-  return(limit)
+  return(limit_int)
 }
 
 #' @title Utility functions

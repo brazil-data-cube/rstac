@@ -371,7 +371,7 @@ testthat::test_that("stac collection object", {
 
   testthat::expect_equal(
     object   =  stac_version(s_col),
-    expected = "0.9.0"
+    expected = "1.0.0"
   )
 
   testthat::expect_equal(object = {
@@ -379,7 +379,7 @@ testthat::test_that("stac collection object", {
     attributes(mock_obj)$query <- NULL
     stac_version(mock_obj)
   },
-  expected = "0.9.0"
+  expected = "1.0.0"
   )
 
   # check print stac object
@@ -431,7 +431,7 @@ testthat::test_that("stac object", {
 
   testthat::expect_equal(
     object = stac_version(stac_catalog),
-    expected = "0.9.0"
+    expected = "1.0.0"
   )
 
   # check object class of stac

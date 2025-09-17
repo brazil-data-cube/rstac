@@ -81,24 +81,25 @@ You can determine how many items will be printed using \code{n} parameter.
 \dontrun{
  # doc_items object
  stac_item_collection <-
-   stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-   stac_search(collections = "CB4-16D-2",
-          bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
-          limit = 15) \%>\%
+   stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+   stac_search(
+     collections = "CBERS4-WFI-16D-2",
+     bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
+     limit = 15) \%>\%
    get_request()
 
  print(stac_item_collection, n = 10)
 
  # doc_collections object
  stac_collection <-
-     stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-     collections() \%>\%
-     get_request()
+   stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+   collections() \%>\%
+   get_request()
 
  print(stac_collection, n = 5)
 
  # rstac_query object
- obj_rstac <- stac("https://brazildatacube.dpi.inpe.br/stac/")
+ obj_rstac <- stac("https://data.inpe.br/bdc/stac/v1/")
 
  print(obj_rstac)
 }

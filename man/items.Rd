@@ -78,13 +78,13 @@ filters parameters of \code{\link[=stac_search]{stac_search()}} function.
 }
 \examples{
 \dontrun{
- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-   collections("CB4-16D-2") \%>\%
+ stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+   collections("CBERS4-WFI-16D-2") \%>\%
    items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
    get_request()
 
- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-   collections("CB4-16D-2") \%>\%
+ stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+   collections("CBERS4-WFI-16D-2") \%>\%
    items("CB4-16D_V2_000002_20230509") \%>\%
    get_request()
 }

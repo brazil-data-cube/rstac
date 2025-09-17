@@ -316,10 +316,10 @@ Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 }
 \examples{
 \dontrun{
- x <- stac("https://brazildatacube.dpi.inpe.br/stac") \%>\%
-     stac_search(collections = "CB4-16D-2") \%>\%
-     stac_search(datetime = "2020-01-01/2021-01-01", limit = 500) \%>\%
-     get_request()
+ x <- stac(https://data.inpe.br/bdc/stac/v1/) \%>\%
+   stac_search(collections = "CBERS4-WFI-16D-2") \%>\%
+   stac_search(datetime = "2020-01-01/2021-01-01", limit = 500) \%>\%
+   get_request()
 
  x \%>\% items_length()
  x \%>\% items_matched()
@@ -333,40 +333,47 @@ Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 Sys.setenv("BDC_ACCESS_KEY" = "token-123")
 
 # doc_item object
-stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-    stac_search(collections = "CB4-16D-2", limit = 100,
-        datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
-    get_request() \%>\% items_sign(sign_fn = sign_bdc())
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CB4-16D-2",
+    limit = 100,
+    datetime = "2017-08-01/2018-03-01",
+    bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
+  get_request() \%>\% items_sign(sign_fn = sign_bdc())
 
 }
 
 \dontrun{
 # doc_items object
-stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-    stac_search(collections = "CB4-16D-2", limit = 100,
-        datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
-    get_request() \%>\%
-    items_filter(properties$`eo:cloud_cover` < 10)
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    limit = 100,
+    datetime = "2017-08-01/2018-03-01",
+    bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
+  get_request() \%>\%
+  items_filter(properties$`eo:cloud_cover` < 10)
 
 # Example with AWS STAC
 stac("https://earth-search.aws.element84.com/v0") \%>\%
-  stac_search(collections = "sentinel-s2-l2a-cogs",
-              bbox = c(-48.206, -14.195, -45.067, -12.272),
-              datetime = "2018-06-01/2018-06-30",
-              limit = 500) \%>\%
+  stac_search(
+    collections = "sentinel-s2-l2a-cogs",
+    bbox = c(-48.206, -14.195, -45.067, -12.272),
+    datetime = "2018-06-01/2018-06-30",
+    limit = 500) \%>\%
   post_request() \%>\%
   items_filter(filter_fn = function(x) {x$properties$`eo:cloud_cover` < 10})
 }
 
 \dontrun{
 # doc_items object
-stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
- stac_search(collections = "CB4-16D-2", limit = 100,
-        datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
- get_request() \%>\% items_fetch(progress = FALSE)
+stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    limit = 100,
+    datetime = "2017-08-01/2018-03-01",
+    bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
+  get_request() \%>\% items_fetch(progress = FALSE)
 
 stac_item \%>\% items_reap(field = c("properties", "datetime"))
 

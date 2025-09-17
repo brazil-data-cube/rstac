@@ -32,12 +32,12 @@ Collection object
 }
 \examples{
 \dontrun{
- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+ stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
    collections() \%>\%
    get_request()
 
- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-   collections(collection_id = "CB4-16D-2") \%>\%
+ stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+   collections("CBERS4-WFI-16D-2") \%>\%
    get_request()
 }
 
