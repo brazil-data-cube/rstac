@@ -48,7 +48,7 @@
   limit <- suppressWarnings(as.integer(limit))
   if (is.na(limit))
     .error("Param `limit` must be an integer.")
-  return(limit_int)
+  return(limit)
 }
 
 #' @title Utility functions
