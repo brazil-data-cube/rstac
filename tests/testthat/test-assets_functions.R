@@ -4,9 +4,9 @@ testthat::test_that("assets functions", {
 
   # assets_download-----------------------------------------------------------
   testthat::expect_equal(
-    object = stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    object = stac("https://data.inpe.br/bdc/stac/v1/") %>%
       stac_search(
-        collections = "CB4-16D-2",
+        collections = "CBERS4-WFI-16D-2",
         datetime    = "2019-09-01/2019-11-01",
         bbox        = c(-47.02148, -12.98314, -42.53906, -17.35063),
         limit       = 0) %>%
@@ -18,18 +18,17 @@ testthat::test_that("assets functions", {
   )
 
   testthat::expect_error(
-    stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+    stac("https://data.inpe.br/bdc/stac/v1/") %>%
       get_request() %>%
       assets_download(asset_names = c("blue", "evi"))
   )
 
   # error - wrong path
   testthat::expect_error(
-    stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-      stac_search(
-        collections = "CB4-16D-2",
-        datetime    = "2019-09-01/2019-11-01",
-        limit       = 1) %>%
+    stac("https://data.inpe.br/bdc/stac/v1/") %>%
+      stac_search(collections = "CBERS4-WFI-16D-2",
+                  datetime    = "2019-09-01/2019-11-01",
+                  limit       = 1) %>%
       get_request() %>%
       assets_download(asset_names = c("thumbnail"),
                       output_dir = "./non-existing-dir/")
@@ -38,11 +37,10 @@ testthat::test_that("assets functions", {
   # verify output object
   testthat::expect_equal(
     object = {
-      x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        stac_search(
-          collections = "CB4-16D-2",
-          datetime    = "2019-09-01/2019-11-01",
-          limit       = 1) %>%
+      x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+        stac_search(collections = "CBERS4-WFI-16D-2",
+                    datetime    = "2019-09-01/2019-11-01",
+                    limit       = 1) %>%
         get_request() %>%
         assets_download(asset_names = c("thumbnail"),
                         output_dir = tempdir(),
@@ -54,11 +52,10 @@ testthat::test_that("assets functions", {
 
   testthat::expect_equal(
     object = {
-      x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        stac_search(
-          collections = "CB4-16D-2",
-          datetime    = "2019-09-01/2019-11-01",
-          limit       = 1) %>%
+      x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+        stac_search(collections = "CBERS4-WFI-16D-2",
+                    datetime    = "2019-09-01/2019-11-01",
+                    limit       = 1) %>%
         get_request() %>%
         assets_download(asset_names = c("thumbnail"),
                         items_max = 2,
@@ -73,8 +70,8 @@ testthat::test_that("assets functions", {
 
   testthat::expect_equal(
     object = {
-      x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        collections("CB4-16D-2") %>%
+      x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+        collections("CBERS4-WFI-16D-2") %>%
         items("CB4-16D_V2_000002_20230509") %>%
         get_request() %>%
         assets_download(asset_names = c("thumbnail"),
@@ -88,8 +85,8 @@ testthat::test_that("assets functions", {
 
   testthat::expect_equal(
     object = {
-      x <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-        collections("CB4-16D-2") %>%
+      x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+        collections("CBERS4-WFI-16D-2") %>%
         items("CB4-16D_V2_000002_20230509") %>%
         get_request() %>%
         assets_download(asset_names = c("thumbnail"),
@@ -103,13 +100,13 @@ testthat::test_that("assets functions", {
     expected = "doc_item"
   )
 
-  stac_items <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
-    stac_search(collections = "CB4-16D-2") %>%
+  stac_items <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+    stac_search(collections = "CBERS4-WFI-16D-2") %>%
     stac_search(limit = 2) %>%
     get_request()
 
-  stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-    collections("CB4-16D-2") %>%
+  stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+    collections("CBERS4-WFI-16D-2") %>%
     items("CB4-16D_V2_000002_20230509") %>%
     get_request()
 

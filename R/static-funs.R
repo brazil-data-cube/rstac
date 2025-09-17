@@ -62,8 +62,8 @@
 #'
 #' @examples
 #' \dontrun{
-#'  x <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
-#'      collections("CB4-16D-2") %>%
+#'  x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'      collections("CBERS4-WFI-16D-2") %>%
 #'      get_request()
 #'
 #'  link <- links(x, rel == "items")

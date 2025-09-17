@@ -86,7 +86,7 @@ the STAC API of the [Brazil Data Cube](http://www.brazildatacube.org/en/home-pag
 the Brazilian National Space Research Institute (INPE).
 
 ```{R stac-obj, echo=TRUE}
-s_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/")
+s_obj <- stac("https://data.inpe.br/bdc/stac/v1/")
 
 get_request(s_obj)
 ```
