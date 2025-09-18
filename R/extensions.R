@@ -140,26 +140,39 @@ parse_params <- function(q, params) {
 #' representing the JSON file received in HTTP response
 content_response <- function(res, status_codes, content_types, key_message) {
   # convert any json extension
-  if (!grepl(content_types, httr::http_type(res))) {
-    .error("HTTP content type response '%s' not defined for this operation.",
-           httr::http_type(res))
+  returned_content_type <- httr::http_type(res)
+  if (!grepl(content_types, returned_content_type)) {
+    .error(
+      paste(
+        "HTTP content type response '%s' not defined for this operation.",
+        ifelse(
+          returned_content_type == "text/plain",
+          as.character(httr::content(res)),
+          ""
+        ),
+        sep = "\n"
+      ),
+      returned_content_type
+    )
   }
 
   # parse content
-  content <- httr::content(res,
-                           type = "application/json",
-                           encoding = "UTF-8",
-                           simplifyVector = TRUE,
-                           simplifyDataFrame = FALSE,
-                           simplifyMatrix = FALSE)
+  content <- httr::content(
+    res,
+    type = "application/json",
+    encoding = "UTF-8",
+    simplifyVector = TRUE,
+    simplifyDataFrame = FALSE,
+    simplifyMatrix = FALSE
+  )
 
   # test for allowed status codes
   status_code <- as.character(httr::status_code(res))
   if (!status_code %in% status_codes) {
     message <- ""
-    if (is.atomic(content))
+    if (is.atomic(content)) {
       message <- content
-    else if (any(key_message %in% names(content))) {
+    } else if (any(key_message %in% names(content))) {
       message <- content[[which(names(content) %in% key_message)[[1]]]]
     }
     .error("HTTP status '%s'. %s", status_code, message)
@@ -179,11 +192,14 @@ content_response <- function(res, status_codes, content_types, key_message) {
 #'
 #' @param msg     a `character` with a personalized error message
 check_query_verb <- function(q, verbs, msg = NULL) {
-
   if (!q$verb %in% verbs) {
-    if (is.null(msg))
-      msg <- sprintf("HTTP verb '%s' is not defined for the query '%s'.",
-                     q$verb, subclass(q))
+    if (is.null(msg)) {
+      msg <- sprintf(
+        "HTTP verb '%s' is not defined for the query '%s'.",
+        q$verb,
+        subclass(q)
+      )
+    }
     .error(msg)
   }
 }
@@ -197,10 +213,12 @@ check_query_verb <- function(q, verbs, msg = NULL) {
 #'
 #' @param classes   a `character` vector with all allowed S3 sub-classes
 check_query <- function(x, classes = NULL) {
-  if (!inherits(x, "rstac_query"))
+  if (!inherits(x, "rstac_query")) {
     .error("Invalid rstac_query value.")
-  if (!is.null(classes) && !any(classes %in% subclass(x)))
+  }
+  if (!is.null(classes) && !any(classes %in% subclass(x))) {
     .error("Expecting %s query.", paste0("`", classes, "`", collapse = " or "))
+  }
 }
 
 #' @describeIn extensions
@@ -226,9 +244,12 @@ subclass <- function(x) {
 #'    all `%s` occurrences in the endpoint string.
 #'
 set_query_endpoint <- function(q, endpoint, params = NULL) {
-  if (any(!params %in% names(q$params)))
-    .error("Invalid param(s) %s.",
-           paste("`", setdiff(params, names(q$params)), "`", collapse = ", "))
+  if (any(!params %in% names(q$params))) {
+    .error(
+      "Invalid param(s) %s.",
+      paste("`", setdiff(params, names(q$params)), "`", collapse = ", ")
+    )
+  }
   values <- unname(q$params[params])
   q$endpoint <- do.call(sprintf, args = c(list(fmt = endpoint), values))
   q$params[params] <- NULL
