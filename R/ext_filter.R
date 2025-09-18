@@ -265,8 +265,8 @@ before_request.ext_filter <- function(q) {
 }
 
 #' @export
-after_response.ext_filter <- function(q, res) {
-  after_response.items(q, res)
+after_response.ext_filter <- function(q, res, simplify_vector = TRUE) {
+  after_response.items(q, res, simplify_vector)
 }
 
 #' @export

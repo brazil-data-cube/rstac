@@ -320,7 +320,7 @@ testthat::test_that("items functions", {
       item <- stac("https://stac.core.eopf.eodc.eu/") %>%
         collections(collection_id = "sentinel-2-l2a") %>%
         items(limit = 1) %>%
-        get_request(FALSE)
+        get_request(simplify_vector = FALSE)
 
       item$features[[1]]$properties$instrument
     },

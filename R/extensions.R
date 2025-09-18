@@ -165,7 +165,7 @@ content_response <- function(res, status_codes, content_types, key_message,
     res,
     type = "application/json",
     encoding = "UTF-8",
-    simplifyVector = TRUE,
+    simplifyVector = simplify_vector,
     simplifyDataFrame = FALSE,
     simplifyMatrix = FALSE
   )

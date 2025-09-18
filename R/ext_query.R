@@ -118,8 +118,8 @@ before_request.ext_query <- function(q) {
 }
 
 #' @export
-after_response.ext_query <- function(q, res) {
-  after_response.items(q, res)
+after_response.ext_query <- function(q, res, simplify_vector = TRUE) {
+  after_response.items(q, res, simplify_vector)
 }
 
 #' @export
