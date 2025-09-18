@@ -148,6 +148,6 @@ before_request.search <- function(q) {
 }
 
 #' @export
-after_response.search <- function(q, res) {
-  after_response.items(q, res)
+after_response.search <- function(q, res, simplify_vector = TRUE) {
+  after_response.items(q, res, simplify_vector)
 }
