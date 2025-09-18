@@ -81,11 +81,14 @@
 #' section bellow that can help the extension development.
 #'
 #'
-#' @param q       a `rstac_query` object expressing a STAC query
+#' @param q                a `rstac_query` object expressing a STAC query
 #' criteria.
 #'
-#' @param res     a `httr` `response` object.
-#' @param params  a `list` with params to add in request.
+#' @param res              a `httr` `response` object.
+#' @param simplify_vector  a `logical` describing whether length-one nested
+#' lists should be simplified into vectors. Defaults to TRUE. Can also be set
+#' for an entire session via e.g. \code{options(rstac.simplify_vector = FALSE)}.
+#' @param params           a `list` with params to add in request.
 #'
 #' @return
 #' A `rstac_query` object for `before_request()` and
@@ -108,7 +111,7 @@ before_request <- function(q) {
 #' @title Extension development functions
 #'
 #' @rdname extensions
-after_response <- function(q, res) {
+after_response <- function(q, res, simplify_vector = TRUE) {
   UseMethod("after_response", q)
 }
 
@@ -124,7 +127,7 @@ parse_params <- function(q, params) {
 #' response is in accordance with the allowed status codes and content-types.
 #' It returns the parsed content response.
 #'
-#' @param res     a `httr` `response` object.
+#' @param res           a `httr` `response` object.
 #'
 #' @param status_codes  a `character` vector with successful
 #' status codes.
@@ -132,13 +135,14 @@ parse_params <- function(q, params) {
 #' @param content_types a `character` vector with all acceptable
 #' responses' content type.
 #'
-#' @param key_message  a `character` vector with the JSON keys to show the
+#' @param key_message   a `character` vector with the JSON keys to show the
 #' requested API message.
 #'
 #' @return
 #' The `content_response()` function returns a `list` data structure
 #' representing the JSON file received in HTTP response
-content_response <- function(res, status_codes, content_types, key_message) {
+content_response <- function(res, status_codes, content_types, key_message,
+                             simplify_vector = TRUE) {
   # convert any json extension
   returned_content_type <- httr::http_type(res)
   if (!grepl(content_types, returned_content_type)) {
@@ -256,11 +260,12 @@ set_query_endpoint <- function(q, endpoint, params = NULL) {
   q
 }
 
-content_response_json <- function(res) {
+content_response_json <- function(res, simplify_vector = TRUE) {
   content_response(
     res = res,
     status_codes = "200",
     content_types = "application/.*json",
-    key_message = c("message", "description", "detail")
+    key_message = c("message", "description", "detail"),
+    simplify_vector = simplify_vector
   )
 }

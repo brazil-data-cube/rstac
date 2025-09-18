@@ -70,8 +70,8 @@ before_request.collections <- function(q) {
 }
 
 #' @export
-after_response.collections <- function(q, res) {
-  content <- content_response_json(res)
+after_response.collections <- function(q, res, simplify_vector = TRUE) {
+  content <- content_response_json(res, simplify_vector)
   doc_collections(content)
 }
 
@@ -82,7 +82,7 @@ before_request.collection_id <- function(q) {
 }
 
 #' @export
-after_response.collection_id <- function(q, res) {
-  content <- content_response_json(res)
+after_response.collection_id <- function(q, res, simplify_vector = TRUE) {
+  content <- content_response_json(res, simplify_vector)
   doc_collection(content)
 }
