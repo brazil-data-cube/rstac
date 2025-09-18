@@ -1,6 +1,6 @@
 Package: rstac
 Title: Client Library for SpatioTemporal Asset Catalog
-Version: 1.0.0
+Version: 1.0.1
 Authors@R:
     c(person("Rolf", "Simoes",
              email = "rolfsimoes@gmail.com",
@@ -22,7 +22,7 @@ License: MIT + file LICENSE
 URL: https://brazil-data-cube.github.io/rstac/
 BugReports: https://github.com/brazil-data-cube/rstac/issues
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Depends:
     R (>= 3.5)
 Imports:
@@ -38,7 +38,14 @@ Imports:
 Suggests:
     lifecycle,
     testthat,
-    knitr
+    knitr,
+    tmap,
+    leaflet,
+    stars,
+    slider,
+    ggplot2,
+    purrr,
+    dplyr
 Collate:
     'cql2-expr-funs.R'
     'cql2-types.R'
@@ -54,6 +61,7 @@ Collate:
     'assets-funs.R'
     'check-utils.R'
     'conformance-query.R'
+    'collections-funs.R'
     'collections-query.R'
     'deprec-funs.R'
     'doc-funs.R'

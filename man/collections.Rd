@@ -4,13 +4,16 @@
 \alias{collections}
 \title{Endpoint functions}
 \usage{
-collections(q, collection_id = NULL)
+collections(q, collection_id = NULL, limit = NULL)
 }
 \arguments{
 \item{q}{a \code{rstac_query} object expressing a STAC query
 criteria.}
 
 \item{collection_id}{a \code{character} collection id to be retrieved.}
+
+\item{limit}{an \code{integer} defining the maximum number of results
+to return. If not informed, it defaults to the service implementation.}
 }
 \value{
 A \code{rstac_query} object with the subclass \code{collections} for
@@ -32,12 +35,12 @@ Collection object
 }
 \examples{
 \dontrun{
- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
+ stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
    collections() \%>\%
    get_request()
 
- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-   collections(collection_id = "CB4-16D-2") \%>\%
+ stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+   collections("CBERS4-WFI-16D-2") \%>\%
    get_request()
 }
 

@@ -25,7 +25,7 @@
 #'
 #' @examples
 #' \dontrun{
-#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
+#'  stac("https://data.inpe.br/bdc/stac/v1/") %>%
 #'    get_request()
 #' }
 #'

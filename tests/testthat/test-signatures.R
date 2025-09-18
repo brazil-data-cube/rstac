@@ -1,15 +1,14 @@
 testthat::test_that("signature functions", {
     #---- BDC provider ----#
     # stac item collection from bdc
-    stac_items <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-      stac_search(collections = "CB4-16D-2",
-                  limit = 1) %>%
+    stac_items <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+      stac_search(collections = "CBERS4-WFI-16D-2", limit = 1) %>%
       ext_query("bdc:tile" == "007004") %>%
       post_request()
 
     # stac item from bdc
-    stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-      collections("CB4-16D-2") %>%
+    stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+      collections("CBERS4-WFI-16D-2") %>%
       items("CB4-16D_V2_000002_20230509") %>%
       get_request()
 

@@ -48,8 +48,8 @@ environment variable in \code{BDC_ACCESS_KEY}or use \code{acess_token} parameter
 \examples{
 \dontrun{
  # doc_items object
- stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-   stac_search(collections = "CB4-16D-2",
+ stac_obj <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+   stac_search(collections = "CBERS4-WFI-16D-2",
                datetime = "2019-06-01/2019-08-01") \%>\%
    stac_search() \%>\%
    get_request()
