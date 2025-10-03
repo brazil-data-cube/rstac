@@ -305,6 +305,10 @@ cql2_text <- function(expr) {
 check_filter_schema <- function(q, params) {
   schema <- openapi_schema(q$base_url)
 
+  if (is.null(schema)) {
+    return()
+  }
+
   # Go through each filter, extract the variable being filtered and the operation being used
   # Get its type (if available) from the schema
   # Check if the operation matches the variable schema
@@ -354,10 +358,11 @@ openapi_schema <- function(url) {
   service_desc_link <- api_res |>
     links(rel == "service-desc")
 
-  # TODO: handle if there is no open api spec
-
-  openapi_spec <- service_desc_link[[1]] |>
-    link_open()
-
-  openapi_spec$components$schemas$ItemProperties$properties
+  # Checking if specification exists
+  if (length(service_desc_link) != 0) {
+    openapi_spec <- tryCatch(link_open(service_desc_link[[1]]), error = function(error) {
+      return(NULL)
+    })
+    openapi_spec$components$schemas$ItemProperties$properties
+  }
 }
