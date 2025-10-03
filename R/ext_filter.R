@@ -225,6 +225,8 @@ ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
     env = parent.frame()
   )
   params <- cql2(expr, lang = lang, crs = crs)
+  # check filter expression is appropriate for types based on schema
+  check_filter_schema(q, params)
   if (any(c("search", "items") %in% subclass(q)))
     subclass <- unique(c("ext_filter", subclass(q)))
   else
@@ -298,4 +300,64 @@ cql2_text <- function(expr) {
   filter_expr <- to_text(cql2(expr, lang = "cql2-text"))
   cat(filter_expr)
   invisible(filter_expr)
+}
+
+check_filter_schema <- function(q, params) {
+  schema <- openapi_schema(q$base_url)
+
+  # Go through each filter, extract the variable being filtered and the operation being used
+  # Get its type (if available) from the schema
+  # Check if the operation matches the variable schema
+  # Only checking array variable vs not
+  # i.e. if an array, check that the operation is an array operator (starts with "a_")
+  # if it is _not_ an array, check that the operation is _not_ an array operation
+
+  # The CQL2 logic looks a bit different depending on whether there is more than one filter or not:
+  # if there is more than one filter, it is in e.g. params$filter$args[[1]]$args[[1]]
+  # if there is only one, it is in e.g. params$filter$args[[1]]
+  multiple_filters <- is.list(params$filter$args) & ("args" %in% names(params$filter$args[[1]]))
+
+  if (multiple_filters) {
+    for (params_filter in params$filter$args) {
+      check_variable_op(params_filter, schema)
+    }
+  } else {
+    params_filter <- params$filter
+    check_variable_op(params_filter, schema)
+  }
+}
+
+check_variable_op <- function(params_filter, schema) {
+  filter_variable <- as.character(params_filter$args[[1]])
+  filter_op <- params_filter$op
+  filter_variable_schema <- schema[[filter_variable]]
+
+  if (!is.null(filter_variable_schema)) {
+    filter_variable_type <- filter_variable_schema$anyOf[[1]]$type
+
+    if (filter_variable_type == "array") {
+      if (!grepl("a_", filter_op)) {
+        stop(paste0("`", filter_variable, "` is an array, must use an array operator in `ext_filter()`. See ?ext_filter for details."), call. = FALSE)
+      }
+    } else {
+      if (grepl("a_", filter_op)) {
+        stop(paste0("`", filter_variable, "` not is an array, cannot use an array operator in `ext_filter()`. See ?ext_filter for details."), call. = FALSE)
+      }
+    }
+  }
+}
+
+openapi_schema <- function(url) {
+  api_res <- stac(url) |>
+    get_request()
+
+  service_desc_link <- api_res |>
+    links(rel == "service-desc")
+
+  # TODO: handle if there is no open api spec
+
+  openapi_spec <- service_desc_link[[1]] |>
+    link_open()
+
+  openapi_spec$components$schemas$ItemProperties$properties
 }
