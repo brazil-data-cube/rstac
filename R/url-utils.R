@@ -137,6 +137,11 @@ path_normalize <- function(...) {
   path <- gsub("\\\\", "/", path)
   path <- gsub("/{2,}", "/", path)
   path <- gsub("/+$", "", path)
+  path <- gsub("[/\\?<>\\:*|\":]", "", path)
+  path <- gsub("[[:cntrl:]]", "", path)
+  path <- gsub("^[.]+$", "", path)
+  path <- gsub("^(con|prn|aux|nul|com[0-9]|lpt[0-9])([.].*)?$", "", path)
+  path <- gsub("[. ]+$", "", path)
   return(path.expand(path))
 }
 
