@@ -88,5 +88,5 @@ post_request <- function(q, simplify_vector = NULL, ..., encode = c("json", "mul
 }
 
 simplify_vector_argument <- function(simplify_vector = NULL) {
-  ifelse(!is.null(simplify_vector), simplify_vector, getOption("rstac.simplify_vector", default = TRUE))
+  if (!is.null(simplify_vector)) simplify_vector else getOption("rstac.simplify_vector", default = TRUE)
 }
