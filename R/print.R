@@ -294,3 +294,46 @@ print.doc_links <- function(x, n = 10, ...) {
   }
   invisible(x)
 }
+
+# ---- OpenAPI specification ----
+
+#' @rdname print
+#' @export
+print.doc_openapi_specification <- function(x, n = 10, ...) {
+  cat(crayon::bold("###OpenAPI Specification"), fill = TRUE)
+  cat("-", crayon::bold("OpenAPI version:"), x$openapi, fill = TRUE) # "openapi" field is required
+  cat("-", crayon::bold("API title:"), x$info$title, fill = TRUE) # "info" "title" field is required
+  cat("-", crayon::bold("API version:"), x$info$version, fill = TRUE) # "info" "version" field is required
+
+  if ("components" %in% names(x)) {
+    if ("schemas" %in% names(x$components)) {
+      if (missing(n) && length(x$components$schemas) < 2 * n) {
+        n <- length(x$components$schemas)
+      }
+      n <- min(n, length(x$components$schemas))
+      cat("-", crayon::bold("schemas"),
+        sprintf("(%s entries(s)):", length(x$components$schemas)),
+        fill = TRUE
+      )
+      if (n > 0) {
+        seq_it <- seq_len(n)
+        for (i in seq_it) {
+          e <- names(x$components$schemas[i])
+          cat(paste0("  - ", e), fill = TRUE)
+        }
+        if (n != length(x$components$schemas)) {
+          cat(sprintf(
+            "  - ... with %s more entry(ies).",
+            length(x$components$schemas) - n
+          ), fill = TRUE)
+        }
+      }
+    }
+  }
+
+  cat("-", crayon::bold("field(s):"), paste0(names(x), collapse = ", "),
+    fill = TRUE
+  )
+
+  invisible(x)
+}
