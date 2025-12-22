@@ -4,7 +4,7 @@
 #'
 #' @description
 #' The `collections()` function implements the OGC API - Features (formerly
-#' WFS 3) `/collections`
+#' `WFS3`) `/collections`
 #'  and \code{/collections/\{collectionId\}} endpoints.
 #'
 #' Each endpoint retrieves specific STAC objects:

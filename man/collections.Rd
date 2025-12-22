@@ -23,7 +23,7 @@ parameters to be provided to a STAC API web service.
 }
 \description{
 The \code{collections()} function implements the OGC API - Features (formerly
-WFS 3) \verb{/collections}
+\code{WFS3}) \verb{/collections}
 and \code{/collections/\{collectionId\}} endpoints.
 
 Each endpoint retrieves specific STAC objects:

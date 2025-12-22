@@ -8,7 +8,7 @@
 #' \item `assets_download()`: downloads the assets provided by the STAC API.
 #'
 #' \item `assets_url()`: `r lifecycle::badge('experimental')` returns a
-#'  `character` vector with each asset's `href`. You can prepend GDAL VSI
+#'  `character` vector with each asset's `href`. You can prepend `GDAL VSI`
 #'  prefixes for the following schemes: `HTTP`/`HTTPS`, S3 (`AWS` S3), and `GS`
 #'  (Google Cloud Storage).
 #'
@@ -50,8 +50,8 @@
 #' each item to be downloaded. Using this function, you can change the
 #' `href` for each asset, as well as how the download is performed.
 #'
-#' @param append_gdalvsi a `logical` value. If `TRUE`, GDAL VSI prefixes are
-#' included in the URL of each asset. The following schemes are supported:
+#' @param append_gdalvsi a `logical` value. If `TRUE`, `GDAL VSI` prefixes
+#' are included in the URL of each asset. The following schemes are supported:
 #' `HTTP`/`HTTPS` files, S3 (`AWS` S3) and `GS` (Google Cloud Storage).
 #'
 #' @param create_json a `logical` indicating if a JSON file with item

@@ -144,8 +144,8 @@ downloaded.}
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
-\item{append_gdalvsi}{a \code{logical} value. If \code{TRUE}, GDAL VSI prefixes are
-included in the URL of each asset. The following schemes are supported:
+\item{append_gdalvsi}{a \code{logical} value. If \code{TRUE}, \verb{GDAL VSI} prefixes
+are included in the URL of each asset. The following schemes are supported:
 \code{HTTP}/\code{HTTPS} files, S3 (\code{AWS} S3) and \code{GS} (Google Cloud Storage).}
 
 \item{select_fn}{a \code{function} to select assets from an item
@@ -187,7 +187,7 @@ objects.
 \item \code{assets_download()}: downloads the assets provided by the STAC API.
 
 \item \code{assets_url()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} returns a
-\code{character} vector with each asset's \code{href}. You can prepend GDAL VSI
+\code{character} vector with each asset's \code{href}. You can prepend \verb{GDAL VSI}
 prefixes for the following schemes: \code{HTTP}/\code{HTTPS}, S3 (\code{AWS} S3), and \code{GS}
 (Google Cloud Storage).
 
