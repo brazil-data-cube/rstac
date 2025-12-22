@@ -86,6 +86,7 @@ Authors:
 
 Other contributors:
 \itemize{
+  \item Sharla Gelfand \email{sharla.gelfand@gmail.com} [contributor]
   \item National Institute for Space Research (INPE) [copyright holder]
 }
 

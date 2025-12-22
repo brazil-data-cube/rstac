@@ -62,30 +62,30 @@
 #'
 #' @examples
 #' \dontrun{
-#'  x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
-#'      collections("CBERS4-WFI-16D-2") %>%
-#'      get_request()
+#' x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   collections("CBERS4-WFI-16D-2") %>%
+#'   get_request()
 #'
-#'  link <- links(x, rel == "items")
-#'  link_open(link[[1]])
+#' link <- links(x, rel == "items")
+#' link_open(link[[1]])
 #' }
 #'
 #' \dontrun{
-#'  wv_url <- paste0(
-#'    "https://s3.eu-central-1.wasabisys.com",
-#'    "/stac/openlandmap/wv_mcd19a2v061.seasconv/collection.json"
-#'  )
-#'  wv <- read_stac(wv_url)
-#'  stac_type(wv)  # Collection
+#' wv_url <- paste0(
+#'   "https://s3.eu-central-1.wasabisys.com",
+#'   "/stac/openlandmap/wv_mcd19a2v061.seasconv/collection.json"
+#' )
+#' wv <- read_stac(wv_url)
+#' stac_type(wv) # Collection
 #'
-#'  # reads the second page of 5 links
-#'  wv_items <- read_items(wv, limit = 5, page = 2)
+#' # reads the second page of 5 links
+#' wv_items <- read_items(wv, limit = 5, page = 2)
 #'
-#'  # lists all links of the collection document that are not items
-#'  links(wv, rel != "item")
+#' # lists all links of the collection document that are not items
+#' links(wv, rel != "item")
 #'
-#'  # lists all links of the items document
-#'  links(wv_items)
+#' # lists all links of the items document
+#' links(wv_items)
 #' }
 #'
 #' @name static_functions
@@ -119,13 +119,15 @@ read_items.doc_collection <- function(collection, ...,
   check_collection(collection)
   rel <- NULL
   link_items <- links(collection, rel == "item", ...)
-  if (is.null(limit) || limit < 1)
+  if (is.null(limit) || limit < 1) {
     limit <- length(link_items)
+  }
   limit <- max(1, as.integer(limit))
   page <- max(1, as.integer(page))
   pages <- ceiling(length(link_items) / limit)
-  if (page > pages)
+  if (page > pages) {
     return(NULL)
+  }
   if (length(link_items) > limit) {
     previous_len <- (page - 1) * limit
     len <- min(limit, length(link_items) - previous_len)
@@ -141,8 +143,9 @@ read_items.doc_collection <- function(collection, ...,
   }
   features <- list()
   for (i in seq_along(link_items)) {
-    if (progress)
+    if (progress) {
       utils::setTxtProgressBar(pb, i)
+    }
     item <- link_open(link_items[[i]])
     features <- c(features, list(item))
   }
@@ -178,13 +181,15 @@ read_collections.catalog <- function(catalog, ...,
   check_catalog(catalog)
   rel <- NULL
   link_collections <- links(catalog, rel == "child", ...)
-  if (is.null(limit) || limit < 1)
+  if (is.null(limit) || limit < 1) {
     limit <- length(link_collections)
+  }
   limit <- max(1, as.integer(limit))
   page <- max(1, as.integer(page))
   pages <- ceiling(length(link_collections) / limit)
-  if (page > pages)
+  if (page > pages) {
     return(NULL)
+  }
   if (length(link_collections) > limit) {
     previous_len <- (page - 1) * limit
     len <- min(limit, length(link_collections) - previous_len)
@@ -200,8 +205,9 @@ read_collections.catalog <- function(catalog, ...,
   }
   collections <- list()
   for (i in seq_along(link_collections)) {
-    if (progress)
+    if (progress) {
       utils::setTxtProgressBar(pb, i)
+    }
     collection <- link_open(link_collections[[i]])
     collections <- c(collections, list(collection))
   }
@@ -230,7 +236,7 @@ links.rstac_doc <- function(x, ...) {
   exprs <- as.list(substitute(list(...), env = environment()))[-1]
   sel <- !logical(length(x$links))
   for (expr in exprs) {
-    expr <- unquote(expr = expr, env =  parent.frame())
+    expr <- unquote(expr = expr, env = parent.frame())
     sel <- sel & map_lgl(x$links, function(x) {
       tryCatch(
         eval(expr, envir = x),
@@ -254,10 +260,13 @@ link_open <- function(link, base_url = NULL) {
 link_open.doc_link <- function(link, base_url = NULL) {
   check_link(link)
   url <- link$href
-  if (!is.null(base_url))
+  if (!is.null(base_url)) {
     url <- resolve_url(base_url, url)
-  else if ("rstac:base_url" %in% names(link))
+  } else if ("rstac:base_url" %in% names(link)) {
     url <- resolve_url(link[["rstac:base_url"]], url)
+  } else {
+    url <- resolve_url(url, NULL)
+  }
   content <- jsonlite::read_json(url)
   # create an rstac doc from content and return
   as_rstac_doc(content, base_url = url)

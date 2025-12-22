@@ -122,27 +122,40 @@
 #'   stac_search(limit = 5)
 #'
 #' # Equal operator '=' with collection property
-#' req %>% ext_filter(collection == "sentinel-2-l2a") %>% post_request()
+#' req %>%
+#'   ext_filter(collection == "sentinel-2-l2a") %>%
+#'   post_request()
 #'
 #' # Not equal operator '!=' with collection property
-#' req %>% ext_filter(collection != "sentinel-2-l2a") %>% post_request()
+#' req %>%
+#'   ext_filter(collection != "sentinel-2-l2a") %>%
+#'   post_request()
 #'
 #' # Less than or equal operator '<=' with datetime property
-#' req %>% ext_filter(datetime <= "1986-01-01") %>% post_request()
+#' req %>%
+#'   ext_filter(collection == "landsat-c2-l2" &&
+#'     datetime <= "1986-01-01") %>%
+#'   post_request()
 #'
 #' # Greater than or equal '>=' with AND operator
-#' req %>% ext_filter(collection == "sentinel-2-l2a"   &&
-#'                    `s2:vegetation_percentage` >= 50 &&
-#'                    `eo:cloud_cover` <= 10) %>% post_request()
+#' req %>%
+#'   ext_filter(collection == "sentinel-2-l2a" &&
+#'     `s2:vegetation_percentage` >= 50 &&
+#'     `eo:cloud_cover` <= 10) %>%
+#'   post_request()
 #' # Advanced comparison operators
 #' # 'LIKE' operator
-#' req %>% ext_filter(collection %like% "modis%") %>% post_request()
+#' req %>%
+#'   ext_filter(collection %like% "modis%") %>%
+#'   post_request()
 #'
 #' # 'IN' operator
-#' req %>% ext_filter(
-#'   collection %in% c("landsat-c2-l2", "sentinel-2-l2a") &&
-#'     datetime > "2019-01-01" &&
-#'     datetime < "2019-06-01") %>%
+#' req %>%
+#'   ext_filter(
+#'     collection %in% c("landsat-c2-l2", "sentinel-2-l2a") &&
+#'       datetime > "2019-01-01" &&
+#'       datetime < "2019-06-01"
+#'   ) %>%
 #'   post_request()
 #'
 #' # Spatial operator
@@ -150,68 +163,84 @@
 #' polygon <- list(
 #'   type = "Polygon",
 #'   coordinates = list(
-#'     matrix(c(-62.34499836, -8.57414572,
-#'              -62.18858174, -8.57414572,
-#'              -62.18858174, -8.15351185,
-#'              -62.34499836, -8.15351185,
-#'              -62.34499836, -8.57414572),
-#'            ncol = 2, byrow = TRUE)
+#'     matrix(
+#'       c(
+#'         -62.34499836, -8.57414572,
+#'         -62.18858174, -8.57414572,
+#'         -62.18858174, -8.15351185,
+#'         -62.34499836, -8.15351185,
+#'         -62.34499836, -8.57414572
+#'       ),
+#'       ncol = 2, byrow = TRUE
+#'     )
 #'   )
 #' )
 #' # 'S_INTERSECTS' spatial operator with polygon and geometry property
-#' req %>% ext_filter(collection == "sentinel-2-l2a" &&
-#'                    s_intersects(geometry, {{polygon}})) %>% post_request()
+#' req %>%
+#'   ext_filter(collection == "sentinel-2-l2a" &&
+#'     s_intersects(geometry, {{ polygon }})) %>%
+#'   post_request()
 #'
 #' # 'S_CONTAINS' spatial operator with point and geometry property
 #' point <- list(type = "Point", coordinates = c(-62.45792211, -8.61158488))
-#' req %>% ext_filter(collection == "landsat-c2-l2" &&
-#'                    s_contains(geometry, {{point}})) %>% post_request()
+#' req %>%
+#'   ext_filter(collection == "landsat-c2-l2" &&
+#'     s_contains(geometry, {{ point }})) %>%
+#'   post_request()
 #'
 #' # 'S_CROSSES' spatial operator with linestring and geometry property
 #' linestring <- list(
 #'   type = "LineString",
 #'   coordinates = matrix(
-#'          c(-62.55735320, -8.43329465, -62.21791603, -8.36815014),
-#'          ncol = 2, byrow = TRUE
+#'     c(-62.55735320, -8.43329465, -62.21791603, -8.36815014),
+#'     ncol = 2, byrow = TRUE
 #'   )
 #' )
-#' req %>% ext_filter(collection == "landsat-c2-l2" &&
-#'                    s_crosses(geometry, {{linestring}})) %>% post_request()
+#' req %>%
+#'   ext_filter(collection == "landsat-c2-l2" &&
+#'     s_crosses(geometry, {{ linestring }})) %>%
+#'   post_request()
 #'
 #' # Temporal operator
 #' # 'T_INTERSECTS' temporal operator with datetime property
-#' req %>% ext_filter(
-#'   collection == "landsat-c2-l2" &&
-#'     t_intersects(datetime, interval("1985-07-16T05:32:00Z",
-#'                                     "1985-07-24T16:50:35Z"))) %>%
-#'  post_request()
+#' req %>%
+#'   ext_filter(
+#'     collection == "landsat-c2-l2" &&
+#'       t_intersects(datetime, interval(
+#'         "1985-07-16T05:32:00Z",
+#'         "1985-07-24T16:50:35Z"
+#'       ))
+#'   ) %>%
+#'   post_request()
 #'
 #' # 'T_DURING' temporal operator with datetime property
 #' req %>%
-#'  ext_filter(collection == "landsat-c2-l2" &&
-#'             t_during(datetime,
-#'             interval("2022-07-16T05:32:00Z", ".."))) %>%
-#'  post_request()
+#'   ext_filter(collection == "landsat-c2-l2" &&
+#'     t_during(
+#'       datetime,
+#'       interval("2022-07-16T05:32:00Z", "..")
+#'     )) %>%
+#'   post_request()
 #'
 #' # 'T_BEFORE' temporal operator with datetime property
 #' req %>%
-#'  ext_filter(collection == "landsat-c2-l2" &&
-#'             t_before(datetime, timestamp("2022-07-16T05:32:00Z"))) %>%
-#'  post_request()
+#'   ext_filter(collection == "landsat-c2-l2" &&
+#'     t_before(datetime, timestamp("2022-07-16T05:32:00Z"))) %>%
+#'   post_request()
 #'
 #' # 'T_AFTER' temporal operator with datetime property
 #' req %>%
-#'  ext_filter(collection == "landsat-c2-l2" &&
-#'             t_after(datetime, timestamp("2022-07-16T05:32:00Z"))) %>%
+#'   ext_filter(collection == "landsat-c2-l2" &&
+#'     t_after(datetime, timestamp("2022-07-16T05:32:00Z"))) %>%
 #'   post_request()
 #'
 #' # Shows how CQL2 expression (TEXT format)
 #' cql2_text(collection == "landsat-c2-l2" &&
-#'   s_crosses(geometry, {{linestring}}))
+#'   s_crosses(geometry, {{ linestring }}))
 #'
 #' # Shows how CQL2 expression (JSON format)
 #' cql2_json(collection == "landsat-c2-l2" &&
-#'             t_after(datetime, timestamp("2022-07-16T05:32:00Z")))
+#'   t_after(datetime, timestamp("2022-07-16T05:32:00Z")))
 #' }
 #'
 #' @export
@@ -227,10 +256,11 @@ ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
   params <- cql2(expr, lang = lang, crs = crs)
   # check filter expression is appropriate for types based on schema
   check_filter_schema(q, params)
-  if (any(c("search", "items") %in% subclass(q)))
+  if (any(c("search", "items") %in% subclass(q))) {
     subclass <- unique(c("ext_filter", subclass(q)))
-  else
+  } else {
     subclass <- unique(c("ext_filter", "search", subclass(q)))
+  }
   rstac_query(
     version = q$version,
     base_url = q$base_url,
@@ -240,8 +270,9 @@ ext_filter <- function(q, expr, lang = NULL, crs = NULL) {
 }
 
 check_lang <- function(lang) {
-  if (!is.null(lang) && !lang[[1]] %in% c("cql2-json", "cql2-text"))
+  if (!is.null(lang) && !lang[[1]] %in% c("cql2-json", "cql2-text")) {
     .error("Language '%s' is not supported", lang[[1]])
+  }
 }
 
 #' @export
@@ -303,23 +334,29 @@ cql2_text <- function(expr) {
 }
 
 check_filter_schema <- function(q, params) {
-  schema <- openapi_schema(q$base_url)
+  schema <- openapi_schema(q$base_url, q$version)
 
   if (is.null(schema)) {
-    return()
+    return(invisible(NULL))
   }
 
-  # Go through each filter, extract the variable being filtered and the operation being used
+  # Go through each filter, extract the variable being filtered and the
+  # operation being used
   # Get its type (if available) from the schema
   # Check if the operation matches the variable schema
   # Only checking array variable vs not
-  # i.e. if an array, check that the operation is an array operator (starts with "a_")
-  # if it is _not_ an array, check that the operation is _not_ an array operation
+  # i.e. if an array, check that the operation is an array operator
+  # (starts with "a_")
+  # if it is _not_ an array, check that the operation is _not_ an array
+  # operation
 
-  # The CQL2 logic looks a bit different depending on whether there is more than one filter or not:
-  # if there is more than one filter, it is in e.g. params$filter$args[[1]]$args[[1]]
+  # The CQL2 logic looks a bit different depending on whether there is more
+  # than one filter or not:
+  # if there is more than one filter, it is in e.g.
+  #   params$filter$args[[1]]$args[[1]]
   # if there is only one, it is in e.g. params$filter$args[[1]]
-  multiple_filters <- is.list(params$filter$args) & ("args" %in% names(params$filter$args[[1]]))
+  multiple_filters <- is.list(params$filter$args) &
+    ("args" %in% names(params$filter$args[[1]]))
 
   if (multiple_filters) {
     for (params_filter in params$filter$args) {
@@ -341,28 +378,45 @@ check_variable_op <- function(params_filter, schema) {
 
     if (filter_variable_type == "array") {
       if (!grepl("a_", filter_op)) {
-        stop(paste0("`", filter_variable, "` is an array, must use an array operator in `ext_filter()`. See ?ext_filter for details."), call. = FALSE)
+        stop(
+          paste0(
+            "`", filter_variable, "` is an array, must use an array",
+            "operator in `ext_filter()`. See ?ext_filter for details."
+          ),
+          call. = FALSE
+        )
       }
     } else {
       if (grepl("a_", filter_op)) {
-        stop(paste0("`", filter_variable, "` not is an array, cannot use an array operator in `ext_filter()`. See ?ext_filter for details."), call. = FALSE)
+        stop(
+          paste0(
+            "`", filter_variable, "` not is an array, cannot use an",
+            "array operator in `ext_filter()`. See ?ext_filter for details."
+          ),
+          call. = FALSE
+        )
       }
     }
   }
 }
 
-openapi_schema <- function(url) {
-  api_res <- stac(url) |>
+openapi_schema <- function(url, force_version = NULL) {
+  api_res <- stac(url, force_version = force_version) %>%
     get_request()
 
-  service_desc_link <- api_res |>
-    links(rel == "service-desc")
+  rel <- NULL # Avoid notes
+  service_desc_link <- links(api_res, rel == "service-desc")
 
   # Checking if specification exists
   if (length(service_desc_link) != 0) {
-    openapi_spec <- tryCatch(link_open(service_desc_link[[1]]), error = function(error) {
-      return(NULL)
-    })
+    openapi_spec <- tryCatch(
+      {
+        link_open(service_desc_link[[1]])
+      },
+      error = function(error) {
+        return(NULL)
+      }
+    )
     openapi_spec$components$schemas$ItemProperties$properties
   }
 }

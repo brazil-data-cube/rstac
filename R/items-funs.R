@@ -171,16 +171,16 @@
 #'
 #' @examples
 #' \dontrun{
-#'  x <- stac(https://data.inpe.br/bdc/stac/v1/) %>%
-#'    stac_search(collections = "CBERS4-WFI-16D-2") %>%
-#'    stac_search(datetime = "2020-01-01/2021-01-01", limit = 500) %>%
-#'    get_request()
+#' x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   stac_search(collections = "CBERS4-WFI-16D-2") %>%
+#'   stac_search(datetime = "2020-01-01/2021-01-01", limit = 500) %>%
+#'   get_request()
 #'
-#'  x %>% items_length()
-#'  x %>% items_matched()
-#'  x %>% items_datetime()
-#'  x %>% items_bbox()
-#'  x %>% items_fetch()
+#' x %>% items_length()
+#' x %>% items_matched()
+#' x %>% items_datetime()
+#' x %>% items_bbox()
+#' x %>% items_fetch()
 #' }
 #'
 #' \dontrun{
@@ -193,9 +193,10 @@
 #'     collections = "CB4-16D-2",
 #'     limit = 100,
 #'     datetime = "2017-08-01/2018-03-01",
-#'     bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
-#'   get_request() %>% items_sign(sign_fn = sign_bdc())
-#'
+#'     bbox = c(-48.206, -14.195, -45.067, -12.272)
+#'   ) %>%
+#'   get_request() %>%
+#'   items_sign(sign_fn = sign_bdc())
 #' }
 #'
 #' \dontrun{
@@ -205,7 +206,8 @@
 #'     collections = "CBERS4-WFI-16D-2",
 #'     limit = 100,
 #'     datetime = "2017-08-01/2018-03-01",
-#'     bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
+#'     bbox = c(-48.206, -14.195, -45.067, -12.272)
+#'   ) %>%
 #'   get_request() %>%
 #'   items_filter(properties$`eo:cloud_cover` < 10)
 #'
@@ -215,9 +217,12 @@
 #'     collections = "sentinel-s2-l2a-cogs",
 #'     bbox = c(-48.206, -14.195, -45.067, -12.272),
 #'     datetime = "2018-06-01/2018-06-30",
-#'     limit = 500) %>%
+#'     limit = 500
+#'   ) %>%
 #'   post_request() %>%
-#'   items_filter(filter_fn = function(x) {x$properties$`eo:cloud_cover` < 10})
+#'   items_filter(filter_fn = function(x) {
+#'     x$properties$`eo:cloud_cover` < 10
+#'   })
 #' }
 #'
 #' \dontrun{
@@ -227,8 +232,10 @@
 #'     collections = "CBERS4-WFI-16D-2",
 #'     limit = 100,
 #'     datetime = "2017-08-01/2018-03-01",
-#'     bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
-#'   get_request() %>% items_fetch(progress = FALSE)
+#'     bbox = c(-48.206, -14.195, -45.067, -12.272)
+#'   ) %>%
+#'   get_request() %>%
+#'   items_fetch(progress = FALSE)
 #'
 #' stac_item %>% items_reap(c("properties", "datetime"))
 #'
@@ -240,7 +247,6 @@
 #' stac_item %>% items_as_tibble()
 #'
 #' stac_item %>% items_select(c(1, 4, 10, 20))
-#'
 #' }
 #'
 #' @name items_functions
@@ -264,7 +270,7 @@ items_length.doc_items <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_matched  <- function(items, matched_field = NULL) {
+items_matched <- function(items, matched_field = NULL) {
   UseMethod("items_matched", items)
 }
 
@@ -276,15 +282,19 @@ items_matched.doc_items <- function(items, matched_field = NULL) {
   matched <- NULL
   # try by the matched_field provided by user. This allow users specify a
   # non-standard field for matched items.
-  if (is.character(matched_field) && matched_field %in% names(items))
+  if (is.character(matched_field) && matched_field %in% names(items)) {
     matched <- as.numeric(items[[matched_field]])
-  if (is.null(matched) && "search:metadata" %in% names(items))
+  }
+  if (is.null(matched) && "search:metadata" %in% names(items)) {
     matched <- items$`search:metadata`$matched
-  if (is.null(matched) && "context" %in% names(items))
+  }
+  if (is.null(matched) && "context" %in% names(items)) {
     matched <- items$`context`$matched
+  }
   # try the last resort: OGC features core spec
-  if (is.null(matched))
+  if (is.null(matched)) {
     matched <- items$numberMatched
+  }
   matched
 }
 
@@ -323,21 +333,30 @@ items_fetch.doc_items <- function(items, ...,
   next_items <- items
   while (TRUE) {
     # check if features is complete
-    if (!is.null(matched) && (items_length(items) == matched))
+    if (!is.null(matched) && (items_length(items) == matched)) {
       break
+    }
     # protect against infinite loop
-    if (!is.null(matched) && (items_length(items) > matched))
-      .error(paste("Length of returned items (%s) is different",
-                   "from matched items (%s)."), items_length(items), matched)
-    next_items <- tryCatch({
-      items_next(next_items, ...)
-    }, next_error = function(e) NULL)
-    if (is.null(next_items))
+    if (!is.null(matched) && (items_length(items) > matched)) {
+      .error(paste(
+        "Length of returned items (%s) is different",
+        "from matched items (%s)."
+      ), items_length(items), matched)
+    }
+    next_items <- tryCatch(
+      {
+        items_next(next_items, ...)
+      },
+      next_error = function(e) NULL
+    )
+    if (is.null(next_items)) {
       break
+    }
     items$features <- c(items$features, next_items$features)
     # update progress bar
-    if (progress)
+    if (progress) {
       utils::setTxtProgressBar(pb, length(next_items))
+    }
   }
   items
 }
@@ -357,21 +376,24 @@ items_next.doc_items <- function(items, ...) {
   # get url of the next page
   rel <- NULL
   next_link <- links(items, rel == "next")
-  if (length(next_link) == 0)
+  if (length(next_link) == 0) {
     .error("Cannot get next link URL.", class = "next_error")
+  }
   next_link <- next_link[[1]]
   # check for body implementation in next link
   verb <- "GET"
-  if ("method" %in% names(next_link) && next_link$method %in% c("GET", "POST"))
+  if ("method" %in% names(next_link) && next_link$method %in% c("GET", "POST")) {
     verb <- next_link$method
+  }
   q <- NULL
   if (verb == "POST") {
     # POST
     q <- attr(items, "query")
     if (!is.null(q)) {
       # merge content body to next body field
-      if ("merge" %in% names(next_link) && next_link$merge)
+      if ("merge" %in% names(next_link) && next_link$merge) {
         next_link$body <- modify_list(q$params, next_link$body)
+      }
       next_link$body <- parse_params(q, next_link$body)
     }
     res <- make_post_request(
@@ -456,8 +478,9 @@ items_assets <- function(items) {
 #' @export
 items_assets.doc_item <- function(items) {
   check_item(items)
-  if (!"assets" %in% names(items))
+  if (!"assets" %in% names(items)) {
     .error("Item has no assets.")
+  }
   names(items$assets)
 }
 
@@ -473,8 +496,9 @@ items_assets.doc_items <- function(items) {
 #'
 #' @export
 items_assets.default <- function(items) {
-  if (!"assets" %in% names(items))
+  if (!"assets" %in% names(items)) {
     .error("Item has no assets.")
+  }
   names(items$assets)
 }
 
@@ -492,10 +516,11 @@ items_filter.doc_items <- function(items, ..., filter_fn = NULL) {
   init_length <- items_length(items)
   exprs <- as.list(substitute(list(...), env = environment()))[-1]
   if (length(exprs) > 0) {
-    if (!is.null(names(exprs)))
+    if (!is.null(names(exprs))) {
       .error("Filter expressions cannot be named.")
+    }
     for (expr in exprs) {
-      expr <- unquote(expr = expr, env =  parent.frame())
+      expr <- unquote(expr = expr, env = parent.frame())
       sel <- map_lgl(items$features, eval_filter_expr, expr = expr)
       items$features <- items$features[sel]
     }
@@ -504,10 +529,13 @@ items_filter.doc_items <- function(items, ..., filter_fn = NULL) {
     sel <- map_lgl(items$features, eval_filter_fn, filter_fn = filter_fn)
     items$features <- items$features[sel]
   }
-  if (items_length(items) == 0 && init_length > 0)
-    .warning(paste("Filter criteria did not match any item.\n",
-                   "Please, see `?items_filter` for more details on",
-                   "how expressions are evaluated by `items_filter()`."))
+  if (items_length(items) == 0 && init_length > 0) {
+    .warning(paste(
+      "Filter criteria did not match any item.\n",
+      "Please, see `?items_filter` for more details on",
+      "how expressions are evaluated by `items_filter()`."
+    ))
+  }
   items
 }
 
@@ -546,14 +574,19 @@ items_reap.doc_item <- function(items, field, pick_fn = identity) {
 #' @export
 items_reap.doc_items <- function(items, field, pick_fn = identity) {
   check_items(items)
-  if (items_length(items) == 0) return(NULL)
-  values <- lapply(items$features, items_reap.doc_item, field = field,
-                   pick_fn = pick_fn)
+  if (items_length(items) == 0) {
+    return(NULL)
+  }
+  values <- lapply(items$features, items_reap.doc_item,
+    field = field,
+    pick_fn = pick_fn
+  )
   is_atomic <- all(vapply(values, function(x) {
     is.atomic(x) && length(x) == 1
   }, logical(1)))
-  if (is_atomic)
+  if (is_atomic) {
     return(unlist(values))
+  }
   values
 }
 
@@ -580,7 +613,8 @@ items_fields.doc_item <- function(items, field = NULL) {
     fields <- names(items)
   } else {
     fields <- unique(unlist(apply_deeply(
-      items, i = field, fn = names
+      items,
+      i = field, fn = names
     ), use.names = FALSE))
   }
   sort(fields)
@@ -591,8 +625,9 @@ items_fields.doc_item <- function(items, field = NULL) {
 #' @export
 items_fields.doc_items <- function(items, field = NULL) {
   check_items(items)
-  if (items_length(items) == 0)
+  if (items_length(items) == 0) {
     return(NULL)
+  }
   fields <- apply_deeply(items, i = c("features", "*", field), fn = names)
   sort(unique(unlist(unname(fields))))
 }
@@ -656,7 +691,7 @@ items_as_sf.doc_items <- function(items, ..., crs = 4326) {
     items_as_tibble(items),
     geometry = items_as_sfc(items, crs = crs)
   )
-  #class(data) <- c("sf", "tbl_df", "tbl", "data.frame")
+  # class(data) <- c("sf", "tbl_df", "tbl", "data.frame")
   data
 }
 
@@ -797,11 +832,14 @@ items_select.doc_items <- function(items, selection) {
   check_items(items)
   items$features <- items$features[selection]
   # clear numberMatched information
-  if ("search:metadata" %in% names(items))
+  if ("search:metadata" %in% names(items)) {
     items$`search:metadata`$matched <- NULL
-  if ("context" %in% names(items))
+  }
+  if ("context" %in% names(items)) {
     items$`context`$matched <- NULL
-  if ("numberMatched" %in% names(items))
+  }
+  if ("numberMatched" %in% names(items)) {
     items$numberMatched <- NULL
+  }
   items
 }

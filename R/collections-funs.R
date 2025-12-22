@@ -57,9 +57,9 @@
 #' @examples
 #' \dontrun{
 #' # doc_items object
-#' stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |>
-#'   collections() |>
-#'   get_request() |>
+#' stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") %>%
+#'   collections() %>%
+#'   get_request() %>%
 #'   collections_fetch()
 #' }
 #'
@@ -72,12 +72,13 @@ NULL
 #'
 #' @export
 collections_next <- function(collections, ...) {
-  check_collection(collections)
+  check_collections(collections)
   # get url of the next page
   rel <- NULL
   next_link <- links(collections, rel == "next")
-  if (length(next_link) == 0)
+  if (length(next_link) == 0) {
     .error("Cannot get next link URL.", class = "next_error")
+  }
   next_link <- next_link[[1]]
   res <- make_get_request(
     url = next_link$href,
@@ -96,8 +97,9 @@ collections_next <- function(collections, ...) {
 collections_matched <- function(collections, matched_field) {
   check_collections(collections)
   matched <- NULL
-  if (is.character(matched_field) && matched_field %in% names(collections))
+  if (is.character(matched_field) && matched_field %in% names(collections)) {
     matched <- as.numeric(collections[[matched_field]])
+  }
   matched
 }
 
@@ -138,24 +140,36 @@ collections_fetch <- function(collections, ...,
   next_collections <- collections
   while (TRUE) {
     # check if features is complete
-    if (!is.null(matched) && (collections_length(collections) == matched))
+    if (!is.null(matched) && (collections_length(collections) == matched)) {
       break
+    }
     # protect against infinite loop
-    if (!is.null(matched) && (collections_length(collections) > matched))
-      .error(paste(
-        "Length of returned collections (%s) is different",
-        "from matched collections (%s)."),
-        collections_length(collections), matched)
-    next_collections <- tryCatch({
-      collections_next(next_collections, ...)
-    }, next_error = function(e) NULL)
-    if (is.null(next_collections))
+    if (!is.null(matched) && (collections_length(collections) > matched)) {
+      .error(
+        paste(
+          "Length of returned collections (%s) is different",
+          "from matched collections (%s)."
+        ),
+        collections_length(collections), matched
+      )
+    }
+    next_collections <- tryCatch(
+      {
+        collections_next(next_collections, ...)
+      },
+      next_error = function(e) NULL
+    )
+    if (is.null(next_collections)) {
       break
-    collections$collections <- c(collections$collections,
-                                 next_collections$collections)
+    }
+    collections$collections <- c(
+      collections$collections,
+      next_collections$collections
+    )
     # update progress bar
-    if (progress)
+    if (progress) {
       utils::setTxtProgressBar(pb, length(next_collections))
+    }
   }
   collections
 }

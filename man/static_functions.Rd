@@ -81,30 +81,30 @@ evaluated against a \code{doc_link} item as a filter criteria. See examples.
 }
 \examples{
 \dontrun{
- x <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-     collections("CBERS4-WFI-16D-2") \%>\%
-     get_request()
+x <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  collections("CBERS4-WFI-16D-2") \%>\%
+  get_request()
 
- link <- links(x, rel == "items")
- link_open(link[[1]])
+link <- links(x, rel == "items")
+link_open(link[[1]])
 }
 
 \dontrun{
- wv_url <- paste0(
-   "https://s3.eu-central-1.wasabisys.com",
-   "/stac/openlandmap/wv_mcd19a2v061.seasconv/collection.json"
- )
- wv <- read_stac(wv_url)
- stac_type(wv)  # Collection
+wv_url <- paste0(
+  "https://s3.eu-central-1.wasabisys.com",
+  "/stac/openlandmap/wv_mcd19a2v061.seasconv/collection.json"
+)
+wv <- read_stac(wv_url)
+stac_type(wv) # Collection
 
- # reads the second page of 5 links
- wv_items <- read_items(wv, limit = 5, page = 2)
+# reads the second page of 5 links
+wv_items <- read_items(wv, limit = 5, page = 2)
 
- # lists all links of the collection document that are not items
- links(wv, rel != "item")
+# lists all links of the collection document that are not items
+links(wv, rel != "item")
 
- # lists all links of the items document
- links(wv_items)
+# lists all links of the items document
+links(wv_items)
 }
 
 }

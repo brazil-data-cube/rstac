@@ -73,9 +73,9 @@ pass additional \code{httr} options to \link[httr:GET]{GET} method, such as
 \examples{
 \dontrun{
 # doc_items object
-stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |>
-  collections() |>
-  get_request() |>
+stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") \%>\%
+  collections() \%>\%
+  get_request() \%>\%
   collections_fetch()
 }
 

@@ -324,16 +324,16 @@ Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 }
 \examples{
 \dontrun{
- x <- stac(https://data.inpe.br/bdc/stac/v1/) \%>\%
-   stac_search(collections = "CBERS4-WFI-16D-2") \%>\%
-   stac_search(datetime = "2020-01-01/2021-01-01", limit = 500) \%>\%
-   get_request()
+x <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(collections = "CBERS4-WFI-16D-2") \%>\%
+  stac_search(datetime = "2020-01-01/2021-01-01", limit = 500) \%>\%
+  get_request()
 
- x \%>\% items_length()
- x \%>\% items_matched()
- x \%>\% items_datetime()
- x \%>\% items_bbox()
- x \%>\% items_fetch()
+x \%>\% items_length()
+x \%>\% items_matched()
+x \%>\% items_datetime()
+x \%>\% items_bbox()
+x \%>\% items_fetch()
 }
 
 \dontrun{
@@ -346,9 +346,10 @@ stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
     collections = "CB4-16D-2",
     limit = 100,
     datetime = "2017-08-01/2018-03-01",
-    bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
-  get_request() \%>\% items_sign(sign_fn = sign_bdc())
-
+    bbox = c(-48.206, -14.195, -45.067, -12.272)
+  ) \%>\%
+  get_request() \%>\%
+  items_sign(sign_fn = sign_bdc())
 }
 
 \dontrun{
@@ -358,7 +359,8 @@ stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
     collections = "CBERS4-WFI-16D-2",
     limit = 100,
     datetime = "2017-08-01/2018-03-01",
-    bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
+    bbox = c(-48.206, -14.195, -45.067, -12.272)
+  ) \%>\%
   get_request() \%>\%
   items_filter(properties$`eo:cloud_cover` < 10)
 
@@ -368,9 +370,12 @@ stac("https://earth-search.aws.element84.com/v0") \%>\%
     collections = "sentinel-s2-l2a-cogs",
     bbox = c(-48.206, -14.195, -45.067, -12.272),
     datetime = "2018-06-01/2018-06-30",
-    limit = 500) \%>\%
+    limit = 500
+  ) \%>\%
   post_request() \%>\%
-  items_filter(filter_fn = function(x) {x$properties$`eo:cloud_cover` < 10})
+  items_filter(filter_fn = function(x) {
+    x$properties$`eo:cloud_cover` < 10
+  })
 }
 
 \dontrun{
@@ -380,8 +385,10 @@ stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
     collections = "CBERS4-WFI-16D-2",
     limit = 100,
     datetime = "2017-08-01/2018-03-01",
-    bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
-  get_request() \%>\% items_fetch(progress = FALSE)
+    bbox = c(-48.206, -14.195, -45.067, -12.272)
+  ) \%>\%
+  get_request() \%>\%
+  items_fetch(progress = FALSE)
 
 stac_item \%>\% items_reap(c("properties", "datetime"))
 
@@ -393,7 +400,6 @@ stac_item \%>\% items_as_sf()
 stac_item \%>\% items_as_tibble()
 
 stac_item \%>\% items_select(c(1, 4, 10, 20))
-
 }
 
 }
