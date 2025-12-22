@@ -57,9 +57,9 @@
 #' @examples
 #' \dontrun{
 #' # doc_items object
-#' stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |>
-#'   collections() |>
-#'   get_request() |>
+#' stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") %>%
+#'   collections() %>%
+#'   get_request() %>%
 #'   collections_fetch()
 #' }
 #'
