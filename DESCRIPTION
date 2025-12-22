@@ -11,6 +11,9 @@ Authors@R:
       person("Brazil Data Cube Team",
              email = "brazildatacube@inpe.br",
              role = c("aut")),
+      person("Sharla", "Gelfand",
+             email = "sharla.gelfand@gmail.com",
+             role = c("ctb")),
       person(given = "National Institute for Space Research (INPE)",
              role = c("cph")))
 Description: Provides functions to access, search and download spacetime earth

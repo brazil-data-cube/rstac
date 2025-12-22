@@ -167,7 +167,7 @@ path_normalize <- function(...) {
   path <- gsub("^[.]+$", "", path)
   path <- gsub("^(con|prn|aux|nul|com[0-9]|lpt[0-9])([.].*)?$", "", path)
   path <- gsub("[. ]+$", "", path)
-  return(path.expand(path))
+  return(normalizePath(path.expand(path), mustWork = FALSE))
 }
 
 url_get_path <- function(url) {
