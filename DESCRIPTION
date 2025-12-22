@@ -41,7 +41,8 @@ Imports:
 Suggests:
     lifecycle,
     testthat,
-    knitr
+    knitr,
+    vctrs
 Collate:
     'cql2-expr-funs.R'
     'cql2-types.R'
