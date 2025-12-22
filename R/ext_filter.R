@@ -340,17 +340,23 @@ check_filter_schema <- function(q, params) {
     return(invisible(NULL))
   }
 
-  # Go through each filter, extract the variable being filtered and the operation being used
+  # Go through each filter, extract the variable being filtered and the
+  # operation being used
   # Get its type (if available) from the schema
   # Check if the operation matches the variable schema
   # Only checking array variable vs not
-  # i.e. if an array, check that the operation is an array operator (starts with "a_")
-  # if it is _not_ an array, check that the operation is _not_ an array operation
+  # i.e. if an array, check that the operation is an array operator
+  # (starts with "a_")
+  # if it is _not_ an array, check that the operation is _not_ an array
+  # operation
 
-  # The CQL2 logic looks a bit different depending on whether there is more than one filter or not:
-  # if there is more than one filter, it is in e.g. params$filter$args[[1]]$args[[1]]
+  # The CQL2 logic looks a bit different depending on whether there is more
+  # than one filter or not:
+  # if there is more than one filter, it is in e.g.
+  #   params$filter$args[[1]]$args[[1]]
   # if there is only one, it is in e.g. params$filter$args[[1]]
-  multiple_filters <- is.list(params$filter$args) & ("args" %in% names(params$filter$args[[1]]))
+  multiple_filters <- is.list(params$filter$args) &
+    ("args" %in% names(params$filter$args[[1]]))
 
   if (multiple_filters) {
     for (params_filter in params$filter$args) {
@@ -372,28 +378,45 @@ check_variable_op <- function(params_filter, schema) {
 
     if (filter_variable_type == "array") {
       if (!grepl("a_", filter_op)) {
-        stop(paste0("`", filter_variable, "` is an array, must use an array operator in `ext_filter()`. See ?ext_filter for details."), call. = FALSE)
+        stop(
+          paste0(
+            "`", filter_variable, "` is an array, must use an array",
+            "operator in `ext_filter()`. See ?ext_filter for details."
+          ),
+          call. = FALSE
+        )
       }
     } else {
       if (grepl("a_", filter_op)) {
-        stop(paste0("`", filter_variable, "` not is an array, cannot use an array operator in `ext_filter()`. See ?ext_filter for details."), call. = FALSE)
+        stop(
+          paste0(
+            "`", filter_variable, "` not is an array, cannot use an",
+            "array operator in `ext_filter()`. See ?ext_filter for details."
+          ),
+          call. = FALSE
+        )
       }
     }
   }
 }
 
 openapi_schema <- function(url, force_version = NULL) {
-  api_res <- stac(url, force_version = force_version) |>
+  api_res <- stac(url, force_version = force_version) %>%
     get_request()
 
-  service_desc_link <- api_res |>
-    links(rel == "service-desc")
+  rel <- NULL # Avoid notes
+  service_desc_link <- links(api_res, rel == "service-desc")
 
   # Checking if specification exists
   if (length(service_desc_link) != 0) {
-    openapi_spec <- tryCatch(link_open(service_desc_link[[1]]), error = function(error) {
-      return(NULL)
-    })
+    openapi_spec <- tryCatch(
+      {
+        link_open(service_desc_link[[1]])
+      },
+      error = function(error) {
+        return(NULL)
+      }
+    )
     openapi_spec$components$schemas$ItemProperties$properties
   }
 }
