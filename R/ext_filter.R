@@ -133,7 +133,8 @@
 #'
 #' # Less than or equal operator '<=' with datetime property
 #' req %>%
-#'   ext_filter(datetime <= "1986-01-01") %>%
+#'   ext_filter(collection == "landsat-c2-l2" &&
+#'     datetime <= "1986-01-01") %>%
 #'   post_request()
 #'
 #' # Greater than or equal '>=' with AND operator
