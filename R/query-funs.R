@@ -36,19 +36,23 @@
 #' subclass defined by `subclass` parameter.
 rstac_query <- function(version = NULL, base_url, params = list(), subclass) {
   structure(
-    list(version = version,
-         base_url = base_url,
-         endpoint = NULL,
-         params = params,
-         verb = "GET",
-         encode = NULL),
-    class = c(subclass, "rstac_query"))
+    list(
+      version = version,
+      base_url = base_url,
+      endpoint = NULL,
+      params = params,
+      verb = "GET",
+      encode = NULL
+    ),
+    class = c(subclass, "rstac_query")
+  )
 }
 
 #' @export
 stac_version.rstac_query <- function(x, ...) {
-  if (!is.null(x$version))
+  if (!is.null(x$version)) {
     return(x$version)
+  }
   version <- NULL
   # check in '/' endpoint
   res <- make_get_request(
@@ -61,20 +65,33 @@ stac_version.rstac_query <- function(x, ...) {
   }
   # if no version was found, try './stac' endpoint
   if (is.null(version)) {
-    res <- make_get_request(
-      url = resolve_url(x$base_url, "./stac"),
-      ...
+    res <- tryCatch(
+      {
+        make_get_request(
+          url = resolve_url(x$base_url, "./stac"),
+          ...
+        )
+      },
+      error = function(e) NULL
     )
     if (!is.null(res)) {
-      content <- content_response_json(res)
-      version <- content$stac_version
+      content <- tryCatch(
+        {
+          content_response_json(res)
+        },
+        error = function(e) NULL
+      )
+      if (!is.null(content)) {
+        version <- content$stac_version
+      }
     }
   }
-  if (is.null(version))
+  if (is.null(version)) {
     .error(paste(
       "Could not determine STAC version in URL '%s'.",
       "Please, use 'force_version' parameter in stac() function"
     ), x$base_url)
+  }
   version
 }
 
