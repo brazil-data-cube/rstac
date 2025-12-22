@@ -1,6 +1,6 @@
 #' @title Printing functions
 #' @name print
-#' @description The print function covers all objects in the `rstac` package:
+#' @description The `print()` methods cover all objects in the `rstac` package:
 #'
 #' \itemize{
 #' \item [stac()]: returns a `doc_catalog` document from
@@ -12,7 +12,7 @@
 #' \item [collections()]: implements the `/collections` and
 #'   \code{/collections/\{collectionId\}} endpoints. The former returns
 #'   a `doc_collections` document that lists all collections published
-#'   by the server, and the later returns a single `doc_collection`
+#'   by the server, and the latter returns a single `doc_collection`
 #'   document that describes a unique collection.
 #' \item [items()]: retrieves a `doc_items` document
 #'   from \code{/collections/\{collectionId\}/items} endpoint and a
@@ -20,12 +20,11 @@
 #'   \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
 #' }
 #'
-#' The `rstac` package objects visualization is based on markdown, a
-#' lightweight markup language. You can paste the output into any
-#' markdown editor for a better visualization.
+#' Printing `rstac` objects uses Markdown, a lightweight markup language.
+#' You can paste the output into any Markdown editor for better visualization.
 #'
-#' Call `print()` function to print the `rstac` objects.
-#' You can determine how many items will be printed using `n` parameter.
+#' Call `print()` to print `rstac` objects. You can determine how many items
+#' are printed using the `n` parameter.
 #'
 #' @param x    either a `rstac_query` object expressing a STAC query
 #' criteria or any `rstac_doc`.
@@ -36,10 +35,10 @@
 #' collections will be shown. In `doc_items`, 10 features
 #' will be printed by default. To show all entries, use `n = Inf`.
 #'
-#' @param ...  other parameters passed in the functions.
+#' @param ...  additional arguments passed to the method.
 #'
-#' @param tail A `logical` value indicating if last features in
-#' doc_items object must be show.
+#' @param tail A `logical` value indicating whether the last features in a
+#' `doc_items` object should be shown.
 #'
 #' @seealso
 #' [stac()] [stac_search()] [collections()]

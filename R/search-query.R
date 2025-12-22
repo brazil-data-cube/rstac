@@ -6,9 +6,9 @@
 #'
 #' The `stac_search` function implements `/stac/search` API endpoint
 #' (v0.8.1) and `/search` (v0.9.0 or v1.0.0).
-#' It prepares query parameters used in the search API request, a
-#' `stac` object with all filter parameters to be provided to
-#' `get_request` or `post_request` functions. The `GeoJSON` content
+#' It prepares query parameters for a search API request and returns a
+#' `rstac_query` object with all filter parameters to be provided to
+#' `get_request()` or `post_request()` functions. The `GeoJSON` content
 #' returned by these requests is a `doc_items` object, a regular R
 #' `list` representing a STAC Item Collection document.
 #'
@@ -19,13 +19,13 @@
 #' the search for items. Only items in one of the provided collections will be
 #' searched.
 #'
-#' @param ids         a `character` vector with item IDs. All other filters
+#' @param ids         a `character` vector with item IDs. All other filter
 #' parameters that further restrict the number of search results are ignored.
 #'
 #' @param datetime    a `character` with a date-time or an interval. Date
-#'  and time strings needs to conform to RFC 3339. Intervals are expressed by
-#'  separating two date-time strings by `'/'` character. Open intervals are
-#'  expressed by using `'..'` in place of date-time.
+#' and time strings need to conform to RFC 3339. Intervals are expressed by
+#' separating two date-time strings using the `'/'` character. Open intervals
+#' are expressed by using `'..'` in place of a date-time.
 #'
 #' Examples:
 #' \itemize{
@@ -36,11 +36,12 @@
 #' }
 #'
 #' Only features that have a `datetime` property that intersects the
-#' interval or date-time informed in `datetime` are selected.
+#' interval or date-time provided in `datetime` are selected.
 #'
-#' @param bbox        a `numeric` vector with only features that have a
-#' geometry that intersects the bounding box are selected. The bounding box is
-#' provided as four or six numbers, depending on whether the coordinate
+#' @param bbox        a `numeric` vector specifying a bounding box. Only
+#' features with geometry that intersects the bounding box are selected. The
+#' bounding box is provided as four or six numbers, depending on whether the
+#' coordinate
 #' reference system includes a vertical axis (elevation or depth):
 #' \itemize{ \item Lower left corner, coordinate axis 1
 #'           \item Lower left corner, coordinate axis 2
@@ -58,7 +59,7 @@
 #'
 #' @param intersects  a `list` expressing `GeoJSON` geometries
 #' objects as specified in RFC 7946. Only returns items that intersect with
-#' the provided geometry. To turn a `GeoJSON` into a list the package
+#' the provided geometry. To turn a `GeoJSON` into a list, the package
 #' `jsonlite` can be used.
 #'
 #' @param limit       an `integer` defining the maximum number of results
@@ -69,7 +70,7 @@
 #'
 #' @return
 #' A `rstac_query` object with the subclass `search` containing all
-#' search field parameters to be provided to STAC API web service.
+#' search field parameters to be provided to a STAC API web service.
 #'
 #' @examples
 #' \dontrun{

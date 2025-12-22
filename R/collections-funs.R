@@ -2,27 +2,28 @@
 #'
 #' @description
 #' These functions provide support to work with
-#' `doc_collections`objects.
+#' `doc_collections` objects.
 #'
 #' \itemize{
 #' \item `collections_length()`: `r lifecycle::badge('experimental')`
-#' shows how many items there are in the `doc_items` object.
+#' shows how many collections there are in a `doc_collections` object.
 #'
 #' \item `collections_matched()`: `r lifecycle::badge('experimental')`
-#' shows how many items matched the search criteria.
+#' shows how many collections matched the query criteria (when the service
+#' provides this information).
 #'
 #' \item `collections_fetch()`: `r lifecycle::badge('experimental')`
-#' request all STAC Items through pagination.
+#' requests all collections through pagination.
 #'
 #' \item `collections_next()`: `r lifecycle::badge('experimental')`
-#' fetches a new page from STAC service.
+#' fetches a new page from the STAC service.
 #'
 #' }
 #'
 #' @param collections     a `doc_collections` object.
 #'
 #' @param matched_field   a `character` vector with the path
-#' where is the number of collections returned.
+#' identifying the field containing the number of matched collections.
 #'
 #' @param progress        a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
@@ -30,7 +31,7 @@
 #' @param ...             additional arguments. See details.
 #'
 #' @details
-#' Ellipsis argument (`...`) appears in different items functions and
+#' Ellipsis argument (`...`) appears in different collection functions and
 #' has distinct purposes:
 #'
 #' \itemize{
@@ -46,11 +47,12 @@
 #' \item `collections_length()`: an `integer` value.
 #'
 #' \item `collections_matched()`: returns an `integer` value if the STAC web
-#' server does support this extension. Otherwise returns `NULL`.
+#' server supports this extension. Otherwise, returns `NULL`.
 #'
-#' \item `collections_fetch()`: a `doc_items` with all matched items.
+#' \item `collections_fetch()`: a `doc_collections` object with all matched
+#' collections.
 #'
-#' \item `collections_next()`: fetches a new page from STAC service.
+#' \item `collections_next()`: fetches a new page from the STAC service.
 #'
 #' }
 #'

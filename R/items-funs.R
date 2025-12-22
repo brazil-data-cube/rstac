@@ -10,12 +10,13 @@
 #'
 #' \item `items_matched()`: shows how many items matched the
 #' search criteria. It supports `search:metadata` (v0.8.0),
-#' `context` (v0.9.0), and `numberMatched` (OGC `WFS3` core spec).
+#' `context` (v0.9.0), and `numberMatched` (OGC API - Features core
+#' specification).
 #'
-#' \item `items_fetch()`: request all STAC Items through
+#' \item `items_fetch()`: requests all STAC Items through
 #' pagination.
 #'
-#' \item `items_next()`: fetches a new page from STAC service.
+#' \item `items_next()`: fetches a new page from the STAC service.
 #'
 #' \item `items_datetime()`: retrieves the `datetime`
 #' field in `properties` from `doc_items` and
@@ -24,7 +25,7 @@
 #' \item `items_bbox()`: retrieves the `bbox`
 #' field of a `doc_items` or a `doc_item` object.
 #'
-#' \item `item_assets()`: returns the assets name from
+#' \item `items_assets()`: returns the asset names from
 #' `doc_items` and `doc_item` objects.
 #'
 #' \item `items_filter()`: selects only items that match some criteria
@@ -36,18 +37,18 @@
 #'
 #' \item `items_fields()`: lists field names inside an item.
 #'
-#' \item `items_sign()`: allow access assets by preparing its url.
+#' \item `items_sign()`: allows access to assets by preparing their URLs.
 #'
-#' \item `items_as_sf()`: `r lifecycle::badge('experimental')` convert items
-#'   to `sf` object.
+#' \item `items_as_sf()`: `r lifecycle::badge('experimental')` converts items
+#'   to an `sf` object.
 #'
-#' \item `items_as_sfc()`: `r lifecycle::badge('experimental')` convert items
-#'   to `sfc` object.
+#' \item `items_as_sfc()`: `r lifecycle::badge('experimental')` converts items
+#'   to an `sfc` object.
 #'
 #' \item `items_intersects()`: `r lifecycle::badge('experimental')` indicates
-#'   which items intersects a given geometry.
+#'   which items intersect a given geometry.
 #'
-#' \item `items_properties()`: lists properties names inside an item.
+#' \item `items_properties()`: lists property names inside an item.
 #'
 #' }
 #'
@@ -85,7 +86,7 @@
 #' @param ...             additional arguments. See details.
 #'
 #' @details
-#' Ellipsis argument (`...`) appears in different items functions and
+#' Ellipsis argument (`...`) appears in different item functions and
 #' has distinct purposes:
 #' \itemize{
 #' \item `items_matched()` and `items_assets()`: ellipsis is not used.
@@ -98,7 +99,7 @@
 #' \item `items_filter()`: ellipsis is used to pass logical expressions to
 #' be evaluated against a `doc_item` field as filter criteria. Expressions
 #' must be evaluated as a logical value where `TRUE` selects the item
-#' and `FALSE` discards it. Multiple expressions are combine with `AND`
+#' and `FALSE` discards it. Multiple expressions are combined with `AND`
 #' operator. `items_filter()` uses non-standard evaluation to evaluate
 #' its expressions. That means users must escape any variable or call to
 #' be able to use them in the expressions. The escape is done by using
@@ -118,7 +119,7 @@
 #' ```
 #'
 #' \item `items_sign()`: in the near future, ellipsis will be used to append
-#' key-value pairs to the url query string of an asset.
+#' key-value pairs to the URL query string of an asset.
 #' }
 #'
 #' `items_sign()` has `sign_fn` parameter that must be a function that
@@ -132,27 +133,27 @@
 #' \item `items_length()`: an `integer` value.
 #'
 #' \item `items_matched()`: returns an `integer` value if the STAC web server
-#' does support this extension. Otherwise returns `NULL`.
+#' supports this extension. Otherwise, returns `NULL`.
 #'
 #' \item `items_fetch()`: a `doc_items` with all matched items.
 #'
-#' \item `items_next()`: fetches a new page from STAC service.
+#' \item `items_next()`: fetches a new page from the STAC service.
 #'
 #' \item `items_datetime()`: a `list` of all items' datetime.
 #'
 #' \item `items_bbox()`: returns a `list` with all items' bounding boxes.
 #'
-#' \item `item_assets()`: returns a `character` value with all assets names
+#' \item `items_assets()`: returns a `character` value with all asset names
 #' of all items.
 #'
 #' \item `items_filter()`: a `doc_items` object.
 #'
-#' \item `items_reap()`: a `vector` if the supplied field is atomic,
-#' otherwise or a `list`.
+#' \item `items_reap()`: a `vector` if the supplied field is atomic;
+#' otherwise, a `list`.
 #'
 #' \item `items_fields()`: a `character` vector.
 #'
-#' \item `items_sign()`: a `doc_items` object with signed assets url.
+#' \item `items_sign()`: a `doc_items` object with signed asset URLs.
 #'
 #' \item `items_as_sf()`: a `sf` object.
 #'
@@ -165,7 +166,7 @@
 #' \item `items_properties()`: returns a `character` value with all properties
 #' of all items.
 #'
-#' \item `items_select()`: select features from an items object.
+#' \item `items_select()`: selects features from a `doc_items` object.
 #'
 #' }
 #'

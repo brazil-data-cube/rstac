@@ -41,7 +41,7 @@
 \item{x}{either a \code{rstac_query} object expressing a STAC query
 criteria or any \code{rstac_doc}.}
 
-\item{...}{other parameters passed in the functions.}
+\item{...}{additional arguments passed to the method.}
 
 \item{n}{number of entries to print. Each object has its own rule of
 truncation: the \code{doc_collection} objects will print
@@ -49,11 +49,11 @@ truncation: the \code{doc_collection} objects will print
 collections will be shown. In \code{doc_items}, 10 features
 will be printed by default. To show all entries, use \code{n = Inf}.}
 
-\item{tail}{A \code{logical} value indicating if last features in
-doc_items object must be show.}
+\item{tail}{A \code{logical} value indicating whether the last features in a
+\code{doc_items} object should be shown.}
 }
 \description{
-The print function covers all objects in the \code{rstac} package:
+The \code{print()} methods cover all objects in the \code{rstac} package:
 
 \itemize{
 \item \code{\link[=stac]{stac()}}: returns a \code{doc_catalog} document from
@@ -65,7 +65,7 @@ the provided search predicates.
 \item \code{\link[=collections]{collections()}}: implements the \verb{/collections} and
 \code{/collections/\{collectionId\}} endpoints. The former returns
 a \code{doc_collections} document that lists all collections published
-by the server, and the later returns a single \code{doc_collection}
+by the server, and the latter returns a single \code{doc_collection}
 document that describes a unique collection.
 \item \code{\link[=items]{items()}}: retrieves a \code{doc_items} document
 from \code{/collections/\{collectionId\}/items} endpoint and a
@@ -73,12 +73,11 @@ from \code{/collections/\{collectionId\}/items} endpoint and a
 \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
 }
 
-The \code{rstac} package objects visualization is based on markdown, a
-lightweight markup language. You can paste the output into any
-markdown editor for a better visualization.
+Printing \code{rstac} objects uses Markdown, a lightweight markup language.
+You can paste the output into any Markdown editor for better visualization.
 
-Call \code{print()} function to print the \code{rstac} objects.
-You can determine how many items will be printed using \code{n} parameter.
+Call \code{print()} to print \code{rstac} objects. You can determine how many items
+are printed using the \code{n} parameter.
 }
 \examples{
 \dontrun{

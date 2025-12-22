@@ -1,31 +1,31 @@
 #' @title Endpoint functions
 #'
 #' @description
-#' The `items` function implements `WFS3`
+#' The `items()` function implements the OGC API - Features
 #' \code{/collections/\{collectionId\}/items}, and
-#' \code{/collections/\{collectionId\}/items/\{featureId\}} endpoints.
+#' \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{
-#'   \item \code{/collections/\{collectionId\}/items}: Returns a STAC Items
-#'     collection (`GeoJSON`)
-#'   \item \code{/collections/\{collectionId\}/items/\{itemId\}}: Returns a
-#'     STAC Item (`GeoJSON` Feature)
+#'   \item \code{/collections/\{collectionId\}/items}: Returns a STAC Item
+#'     Collection (`GeoJSON`)
+#'   \item \code{/collections/\{collectionId\}/items/\{itemId\}}: Returns a STAC
+#'     Item (`GeoJSON` Feature)
 #' }
 #'
 #' The endpoint \code{/collections/\{collectionId\}/items} accepts the same
-#' filters parameters of [stac_search()] function.
+#' filter parameters as the [stac_search()] function.
 #'
 #' @param q           a `rstac_query` object expressing a STAC query
 #' criteria.
 #'
-#' @param feature_id  a `character` with item id to be fetched.
-#' Only works if the `collection_id` is informed. This is equivalent to
-#' the endpoint \code{/collections/\{collectionId\}/items/\{featureId\}}.
+#' @param feature_id  a `character` item ID to fetch.
+#' Only works when `collection_id` is provided. This is equivalent to the
+#' endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.
 #'
 #' @param datetime    a `character` with a date-time or an interval.
-#' Date and time strings needs to conform to RFC 3339. Intervals are
-#' expressed by separating two date-time strings by `'/'` character.
+#' Date and time strings need to conform to RFC 3339. Intervals are
+#' expressed by separating two date-time strings using the `'/'` character.
 #' Open intervals are expressed by using `'..'` in place of date-time.
 #'
 #' Examples:
@@ -37,11 +37,12 @@
 #' }
 #'
 #' Only features that have a `datetime` property that intersects
-#' the interval or date-time informed in `datetime` are selected.
+#' the interval or date-time provided in `datetime` are selected.
 #'
-#' @param bbox        a `numeric` vector with only features that have a
-#' geometry that intersects the bounding box are selected. The bounding box is
-#' provided as four or six numbers, depending on whether the coordinate
+#' @param bbox        a `numeric` vector specifying a bounding box. Only
+#' features with geometry that intersects the bounding box are selected. The
+#' bounding box is provided as four or six numbers, depending on whether the
+#' coordinate
 #' reference system includes a vertical axis (elevation or depth):
 #' \itemize{ \item Lower left corner, coordinate axis 1
 #'           \item Lower left corner, coordinate axis 2
@@ -66,12 +67,11 @@
 #'  [collections()]
 #'
 #' @return
-#' A `rstac_query` object with the subclass `items` for
-#'  \code{/collections/{collection_id}/items} endpoint, or a
-#'  `item_id` subclass for
-#'  \code{/collections/{collection_id}/items/{feature_id}} endpoint,
-#'  containing all search field parameters to be provided to STAC API web
-#'  service.
+#' A `rstac_query` object with the subclass `items` for the
+#' \code{/collections/\{collectionId\}/items} endpoint, or an `item_id` subclass
+#' for the \code{/collections/\{collectionId\}/items/\{itemId\}} endpoint,
+#' containing all search field parameters to be provided to a STAC API web
+#' service.
 #'
 #' @examples
 #' \dontrun{

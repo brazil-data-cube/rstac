@@ -122,17 +122,17 @@ to be selected.}
 \item{output_dir}{a \code{character} directory in which the assets will be
 saved. Default is the working directory (\code{getwd()})}
 
-\item{overwrite}{a \code{logical} if TRUE will replace the existing file,
-if FALSE, a warning message is shown.}
+\item{overwrite}{a \code{logical} value. If \code{TRUE}, replaces the existing file;
+if \code{FALSE}, a warning message is shown.}
 
 \item{...}{additional arguments. See details.}
 
-\item{use_gdal}{a \code{logical} indicating if the file should be downloaded
-by \code{GDAL} instead \code{httr} package.}
+\item{use_gdal}{a \code{logical} indicating whether the file should be
+downloaded with \code{GDAL} instead of the \code{httr} package.}
 
 \item{download_fn}{a \code{function} to handle download of assets for
 each item to be downloaded. Using this function, you can change the
-\code{href} for each asset, as well as the way download is done.}
+\code{href} for each asset, as well as how the download is performed.}
 
 \item{create_json}{a \code{logical} indicating if a JSON file with item
 metadata (\code{doc_item} or \code{doc_items}) must be created in the
@@ -144,11 +144,11 @@ downloaded.}
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
-\item{append_gdalvsi}{a \code{logical} value. If true, \code{GDAL} drivers are
+\item{append_gdalvsi}{a \code{logical} value. If \code{TRUE}, GDAL VSI prefixes are
 included in the URL of each asset. The following schemes are supported:
 \code{HTTP}/\code{HTTPS} files, S3 (\code{AWS} S3) and \code{GS} (Google Cloud Storage).}
 
-\item{select_fn}{a \code{function} to select assets an item
+\item{select_fn}{a \code{function} to select assets from an item
 (\code{doc_item} or \code{doc_items}). This function receives as parameter
 the asset element and, optionally, the asset name. Asset elements
 contain metadata describing spatial-temporal objects. Users can provide
@@ -166,9 +166,8 @@ return.}
 }
 \value{
 \itemize{
-\item \code{assets_download()}: returns the same input object item
-(\code{doc_item} or \code{doc_items}) where \code{href} properties point to
-the download assets.
+\item \code{assets_download()}: returns the input item object (\code{doc_item} or
+\code{doc_items}), where \code{href} properties point to the downloaded assets.
 
 \item \code{assets_url()}: returns a character vector with all assets \code{href}
 of an item (\code{doc_item} or \code{doc_items}).
@@ -181,16 +180,16 @@ of an item (\code{doc_item} or \code{doc_items}).
 }
 }
 \description{
-These functions provide support to work with \code{doc_items} and
-\code{doc_item} item objects.
+These functions provide support for working with \code{doc_items} and \code{doc_item}
+objects.
 
 \itemize{
-\item \code{assets_download()}: Downloads the assets provided by the STAC API.
+\item \code{assets_download()}: downloads the assets provided by the STAC API.
 
-\item \code{assets_url()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Returns a
-character vector with each asset's \code{href}. For the URL, you can add the
-\code{GDAL} library drivers for the following schemes: \code{HTTP}/\code{HTTPS} files,
-S3 (\code{AWS} S3) and \code{GS} (Google Cloud Storage).
+\item \code{assets_url()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} returns a
+\code{character} vector with each asset's \code{href}. You can prepend GDAL VSI
+prefixes for the following schemes: \code{HTTP}/\code{HTTPS}, S3 (\code{AWS} S3), and \code{GS}
+(Google Cloud Storage).
 
 \item \code{assets_select()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Selects the
 assets of each item by its name (\code{asset_names} parameter), by expressions
@@ -199,12 +198,12 @@ Note: This function can produce items with empty assets. In this case,
 users can use the \code{items_compact()} function to remove items with no
 assets.
 
-\item \code{assets_rename()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Rename each
+\item \code{assets_rename()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} renames each
 asset using a named list or a function.
 }
 }
 \details{
-Ellipsis argument (\code{...}) appears in different assets functions and
+Ellipsis argument (\code{...}) appears in different asset functions and
 has distinct purposes:
 \itemize{
 \item \code{assets_download()}: ellipsis is used to pass
@@ -215,10 +214,9 @@ methods, such as \link[httr:add_headers]{add_headers} or
 \item \code{assets_select()}: ellipsis is used to pass expressions that will
 be evaluated against each asset metadata. Expressions must be evaluated as
 a logical value where \code{TRUE} selects the asset and \code{FALSE} discards it.
-Multiple expressions are combine with \code{AND} operator. Expressions can
-use \code{asset} helper functions (i.e. \code{asset_key()}, \code{asset_eo_bands()},
-and \code{asset_raster_bands()}). Multiple expressions are combined with
-\code{AND} operator. \code{assets_select()} uses non-standard evaluation to evaluate
+Multiple expressions are combined with the \code{AND} operator. Expressions can
+use \code{asset} helper functions (e.g., \code{asset_key()}, \code{asset_eo_bands()},
+and \code{asset_raster_bands()}). \code{assets_select()} uses non-standard evaluation to evaluate
 its expressions. That means users must escape any variable or call to
 be able to use them in the expressions. The escape is done by using
 \code{double-curly-braces}, i.e., \code{{{variable}}}.

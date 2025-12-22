@@ -2,11 +2,11 @@
 #'
 #' @rdname request
 #'
-#' @description The `get_request` is function that makes HTTP GET
-#' requests to STAC web services, retrieves, and parse the data.
+#' @description The `get_request()` function makes HTTP GET requests to STAC web
+#' services, retrieves the response, and parses the data.
 #'
-#' The `post_request` is function that makes HTTP POST
-#' requests to STAC web services, retrieves, and parse the data.
+#' The `post_request()` function makes HTTP POST requests to STAC web services,
+#' retrieves the response, and parses the data.
 #'
 #' @param q                a `rstac_query` object expressing a STAC query
 #' criteria.
@@ -21,7 +21,7 @@
 #' lists should be simplified into vectors. Defaults to TRUE. Can also be set
 #' for an entire session via e.g. \code{options(rstac.simplify_vector = FALSE)}.
 #'
-#' @param ...              config parameters to be passed to [GET][httr::GET] or
+#' @param ...              configuration parameters to be passed to [GET][httr::GET] or
 #' [POST][httr::POST] methods, such as [add_headers][httr::add_headers] or
 #' [set_cookies][httr::set_cookies].
 #'

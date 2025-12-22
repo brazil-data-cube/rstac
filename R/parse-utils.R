@@ -1,8 +1,9 @@
 #' @title Utility functions
 #'
-#' @param bbox        a `numeric` vector with only features that have a
-#' geometry that intersects the bounding box are selected. The bounding box is
-#' provided as four or six numbers, depending on whether the coordinate
+#' @param bbox        a `numeric` vector specifying a bounding box. Only
+#' features with geometry that intersects the bounding box are selected. The
+#' bounding box is provided as four or six numbers, depending on whether the
+#' coordinate
 #' reference system includes a vertical axis (elevation or depth):
 #' \itemize{ \item Lower left corner, coordinate axis 1
 #'           \item Lower left corner, coordinate axis 2
@@ -12,7 +13,7 @@
 #'           \item Upper right corner, coordinate axis 3 (optional) }
 #'
 #'
-#' @return A `numeric` with the bbox provided,or an error if the supplied
+#' @return A `numeric` with the bbox provided, or an error if the supplied
 #'   `bbox` does not meet the specifications.
 #'
 #' @noRd
@@ -41,9 +42,9 @@
 #' @title Utility functions
 #'
 #' @param limit       an `integer` defining the maximum number of results
-#' to return. If not informed it defaults to the service implementation.
+#' to return. If not informed, it defaults to the service implementation.
 #'
-#' @return A `integer` with the limit provided,or an error if the supplied
+#' @return A `integer` with the limit provided, or an error if the supplied
 #'  `limit` has a length different from 1.
 #'
 #' @noRd
@@ -60,11 +61,11 @@
 
 #' @title Utility functions
 #'
-#' @param feature_id  a `character` with item id to be fetched.
-#' Only works if the `collection_id` is informed. This is equivalent to
-#' the endpoint \code{/collections/\{collectionId\}/items/\{featureId\}}.
+#' @param feature_id  a `character` item ID to fetch.
+#' Only works when `collection_id` is provided. This is equivalent to the
+#' endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.
 #'
-#' @return A `character` with the parameter provided,or an error if the
+#' @return A `character` with the parameter provided, or an error if the
 #'  supplied `feature_id` has a length different from 1.
 #'
 #' @noRd

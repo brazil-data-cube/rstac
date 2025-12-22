@@ -3,7 +3,8 @@
 #' @rdname collections
 #'
 #' @description
-#' The `collections` function implements the `WFS3` `/collections`
+#' The `collections()` function implements the OGC API - Features (formerly
+#' WFS 3) `/collections`
 #'  and \code{/collections/\{collectionId\}} endpoints.
 #'
 #' Each endpoint retrieves specific STAC objects:
@@ -17,7 +18,7 @@
 #' @param q       a `rstac_query` object expressing a STAC query
 #' criteria.
 #'
-#' @param collection_id a `character` collection id to be retrieved.
+#' @param collection_id a `character` collection ID to retrieve.
 #'
 #' @param limit   an `integer` defining the maximum number of results
 #' to return. If not informed, it defaults to the service implementation.
@@ -29,7 +30,7 @@
 #' A `rstac_query` object with the subclass `collections` for
 #'  `/collections/` endpoint, or a `collection_id` subclass for
 #'  \code{/collections/{collection_id}} endpoint, containing all search field
-#'  parameters to be provided to STAC API web service.
+#'  parameters to be provided to a STAC API web service.
 #'
 #' @examples
 #' \dontrun{

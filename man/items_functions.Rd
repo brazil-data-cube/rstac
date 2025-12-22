@@ -193,27 +193,27 @@ to select.}
 \item \code{items_length()}: an \code{integer} value.
 
 \item \code{items_matched()}: returns an \code{integer} value if the STAC web server
-does support this extension. Otherwise returns \code{NULL}.
+supports this extension. Otherwise, returns \code{NULL}.
 
 \item \code{items_fetch()}: a \code{doc_items} with all matched items.
 
-\item \code{items_next()}: fetches a new page from STAC service.
+\item \code{items_next()}: fetches a new page from the STAC service.
 
 \item \code{items_datetime()}: a \code{list} of all items' datetime.
 
 \item \code{items_bbox()}: returns a \code{list} with all items' bounding boxes.
 
-\item \code{item_assets()}: returns a \code{character} value with all assets names
+\item \code{items_assets()}: returns a \code{character} value with all asset names
 of all items.
 
 \item \code{items_filter()}: a \code{doc_items} object.
 
-\item \code{items_reap()}: a \code{vector} if the supplied field is atomic,
-otherwise or a \code{list}.
+\item \code{items_reap()}: a \code{vector} if the supplied field is atomic;
+otherwise, a \code{list}.
 
 \item \code{items_fields()}: a \code{character} vector.
 
-\item \code{items_sign()}: a \code{doc_items} object with signed assets url.
+\item \code{items_sign()}: a \code{doc_items} object with signed asset URLs.
 
 \item \code{items_as_sf()}: a \code{sf} object.
 
@@ -226,7 +226,7 @@ otherwise or a \code{list}.
 \item \code{items_properties()}: returns a \code{character} value with all properties
 of all items.
 
-\item \code{items_select()}: select features from an items object.
+\item \code{items_select()}: selects features from a \code{doc_items} object.
 
 }
 }
@@ -240,12 +240,13 @@ the \code{doc_items} object.
 
 \item \code{items_matched()}: shows how many items matched the
 search criteria. It supports \code{search:metadata} (v0.8.0),
-\code{context} (v0.9.0), and \code{numberMatched} (OGC \code{WFS3} core spec).
+\code{context} (v0.9.0), and \code{numberMatched} (OGC API - Features core
+specification).
 
-\item \code{items_fetch()}: request all STAC Items through
+\item \code{items_fetch()}: requests all STAC Items through
 pagination.
 
-\item \code{items_next()}: fetches a new page from STAC service.
+\item \code{items_next()}: fetches a new page from the STAC service.
 
 \item \code{items_datetime()}: retrieves the \code{datetime}
 field in \code{properties} from \code{doc_items} and
@@ -254,7 +255,7 @@ field in \code{properties} from \code{doc_items} and
 \item \code{items_bbox()}: retrieves the \code{bbox}
 field of a \code{doc_items} or a \code{doc_item} object.
 
-\item \code{item_assets()}: returns the assets name from
+\item \code{items_assets()}: returns the asset names from
 \code{doc_items} and \code{doc_item} objects.
 
 \item \code{items_filter()}: selects only items that match some criteria
@@ -266,23 +267,23 @@ retrieving nested elements from STAC items.
 
 \item \code{items_fields()}: lists field names inside an item.
 
-\item \code{items_sign()}: allow access assets by preparing its url.
+\item \code{items_sign()}: allows access to assets by preparing their URLs.
 
-\item \code{items_as_sf()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} convert items
-to \code{sf} object.
+\item \code{items_as_sf()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} converts items
+to an \code{sf} object.
 
-\item \code{items_as_sfc()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} convert items
-to \code{sfc} object.
+\item \code{items_as_sfc()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} converts items
+to an \code{sfc} object.
 
 \item \code{items_intersects()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} indicates
-which items intersects a given geometry.
+which items intersect a given geometry.
 
-\item \code{items_properties()}: lists properties names inside an item.
+\item \code{items_properties()}: lists property names inside an item.
 
 }
 }
 \details{
-Ellipsis argument (\code{...}) appears in different items functions and
+Ellipsis argument (\code{...}) appears in different item functions and
 has distinct purposes:
 \itemize{
 \item \code{items_matched()} and \code{items_assets()}: ellipsis is not used.
@@ -295,7 +296,7 @@ methods, such as \link[httr:add_headers]{add_headers} or
 \item \code{items_filter()}: ellipsis is used to pass logical expressions to
 be evaluated against a \code{doc_item} field as filter criteria. Expressions
 must be evaluated as a logical value where \code{TRUE} selects the item
-and \code{FALSE} discards it. Multiple expressions are combine with \code{AND}
+and \code{FALSE} discards it. Multiple expressions are combined with \code{AND}
 operator. \code{items_filter()} uses non-standard evaluation to evaluate
 its expressions. That means users must escape any variable or call to
 be able to use them in the expressions. The escape is done by using
@@ -314,7 +315,7 @@ items_filter(stac_obj, properties[["eo:cloud_cover"]] < 10)
 }\if{html}{\out{</div>}}
 
 \item \code{items_sign()}: in the near future, ellipsis will be used to append
-key-value pairs to the url query string of an asset.
+key-value pairs to the URL query string of an asset.
 }
 
 \code{items_sign()} has \code{sign_fn} parameter that must be a function that

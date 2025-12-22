@@ -25,11 +25,11 @@ Discord](https://img.shields.io/discord/689541907621085198?logo=discord&logoColo
 <!-- badges: end -->
 
 STAC is a specification of files and web services used to describe
-geospatial information assets. The specification can be consulted in
+geospatial information assets. The specification can be consulted at
 <https://stacspec.org/>.
 
-R client library for STAC (`rstac`) was designed to fully support STAC
-API v1.0.0. It also supports earlier versions (\>= v0.8.0).
+The R client library for STAC (`rstac`) was designed to fully support
+STAC API v1.0.0. It also supports earlier versions (\>= v0.8.0).
 
 ## Installation
 
@@ -41,13 +41,13 @@ install.packages("rstac")
 ### Development version
 
 To install the development version of `rstac`, run the following
-commands
+command:
 
 ``` r
 remotes::install_github("brazil-data-cube/rstac")
 ```
 
-Importing `rstac` package:
+Load the `rstac` package:
 
 ``` r
 library(rstac)
@@ -55,7 +55,7 @@ library(rstac)
 
 ## Usage
 
-`rstac` implements the following STAC endpoints:
+`rstac` supports the following STAC endpoints:
 
 | **STAC** endpoints | `rstac` functions | API version |
 |:---|:---|:---|
@@ -71,7 +71,7 @@ library(rstac)
 | `/collections/{collectionId}/queryables` | `queryables()` | \>= 1.0.0 |
 
 These functions can be used to retrieve information from a STAC API
-service. The code below creates a `stac` object and list the available
+service. The code below creates a `stac` object and lists the available
 collections of the STAC API of the [Brazil Data
 Cube](https://data.inpe.br/bdc/en/home-page-2/) project of the Brazilian
 National Space Research Institute (INPE).
@@ -87,17 +87,17 @@ get_request(s_obj)
 #> - field(s): type, title, description, id, stac_version, links, conformsTo
 ```
 
-The variable `s_obj` stores information to connect to the Brazil Data
-Cube STAC web service. The `get_request` method makes a HTTP GET
-connection to it and retrieves a STAC Catalog document from the server.
-Each `links` entry is an available collection that can be accessed via
-STAC API.
+The variable `s_obj` stores the information needed to connect to the
+Brazil Data Cube STAC web service. The `get_request` method makes an
+HTTP GET request and retrieves a STAC Catalog document from the server.
+Each `links` entry refers to an available collection that can be
+accessed via the STAC API.
 
-In the code below, we get some STAC items of `CB4-16D-2` collection that
-intersects the bounding box passed to the `bbox` parameter. To do this,
-we call the `stac_search` function that implements the STAC `/search`
-endpoint. The returned document is a STAC Item Collection (a `GeoJSON`
-containing a feature collection).
+In the code below, we get some STAC items from the `CB4-16D-2`
+collection that intersects the bounding box passed to the `bbox`
+parameter. To do this, we call the `stac_search` function, which
+implements the STAC `/search` endpoint. The returned document is a STAC
+Item Collection (a `GeoJSON` containing a feature collection).
 
 ``` r
 
@@ -115,11 +115,11 @@ it_obj
 #> - item's fields:
 ```
 
-The `rstac` uses the [`httr`](https://github.com/r-lib/httr) package to
+`rstac` uses the [`httr`](https://github.com/r-lib/httr) package to
 manage HTTP requests, allowing the use of tokens from the authorization
 protocols `OAuth` 1.0 or 2.0 as well as other configuration options. In
-the code below, we present an example of how to pass a parameter token
-on a HTTP request.
+the code below, we present an example of how to pass a token in an HTTP
+request header.
 
 ``` r
 it_obj <- s_obj %>%
@@ -129,14 +129,13 @@ it_obj <- s_obj %>%
 ```
 
 In addition to the functions mentioned above, the `rstac` package
-provides some extra functions for handling items and to bulk download
-the assets.
+provides additional functions for handling items and bulk-downloading
+assets.
 
-### Items functions
+### Item functions
 
-`rstac` provides some functions that facilitates the interaction with
-STAC data. In the example below, we get how many items matched the
-search criteria:
+`rstac` provides functions that facilitate interaction with STAC data.
+In the example below, we get how many items matched the search criteria:
 
 ``` r
 # it_obj variable from the last code example
@@ -145,9 +144,9 @@ it_obj %>%
 #> [1] 0
 ```
 
-However, if we count how many items there are in `it_obj` variable, we
-get `10`, meaning that more items could be fetched from the STAC
-service:
+However, `items_length()` counts only the items currently stored in
+`it_obj`. If this value is smaller than `items_matched()`, more items
+can be fetched from the STAC service:
 
 ``` r
 it_obj %>% 
@@ -157,7 +156,7 @@ it_obj %>%
 
 ``` r
 # fetch all items from server 
-# (but don't stored them back in it_obj)
+# (and store them back in `it_obj`)
 it_obj <- it_obj %>% 
   items_fetch(progress = FALSE) 
 
@@ -168,12 +167,12 @@ it_obj %>%
 
 ### Download assets
 
-All we’ve got in previous example was metadata to STAC Items, including
-links to geospatial data called `assets`. To download all `assets` in a
-STAC Item Collection we can use `assets_download()` function, that
-returns an update STAC Item Collection referring to the downloaded
-assets. The code below downloads the `thumbnail` assets (`.png` files)
-of `10` items stored in `it_obj` variable.
+All we got in the previous example was metadata for STAC Items,
+including links to geospatial data called `assets`. To download all
+`assets` in a STAC Item Collection, you can use `assets_download()`,
+which returns an updated STAC Item Collection referring to the
+downloaded assets. The code below downloads the `thumbnail` assets
+(`.png` files) of up to `10` items stored in `it_obj`.
 
 ``` r
 download_items <- it_obj %>%
@@ -182,9 +181,10 @@ download_items <- it_obj %>%
 
 ### `CQL2` query filter
 
-`rstac` also supports advanced query filter using common query language
-(`CQL2`). Users can write complex filter expressions using R code in an
-easy and natural way. For a complete
+`rstac` also supports advanced query filtering using the Common Query
+Language (`CQL2`). Users can write complex filter expressions using R
+code in an easy and natural way. For a complete list of supported
+operators and helper functions, see `?ext_filter`.
 
 ``` r
 s_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1")
@@ -200,16 +200,16 @@ it_obj <- s_obj %>%
 
 ## Getting help
 
-You can get a full explanation about each STAC (v1.0.0) endpoint at
-[STAC API
+You can get a full explanation of each STAC (v1.0.0) endpoint at [STAC
+API
 spec](https://github.com/radiantearth/stac-api-spec/tree/master/ogcapi-features).
-A detailed documentation with examples on how to use each endpoint and
+Detailed documentation with examples on how to use each endpoint and
 other functions available in the `rstac` package can be obtained by
-typing `?rstac` in R console.
+typing `?rstac` in the R console.
 
 ## Citation
 
-To cite rstac in publications use:
+To cite `rstac` in publications, use:
 
 R. Simoes, F. C. de Souza, M. Zaglia, G. R. de Queiroz, R. D. C. dos
 Santos and K. R. Ferreira, “Rstac: An R Package to Access Spatiotemporal
@@ -228,40 +228,40 @@ material support:
   Technology and Space Applications (FUNCATE), for the establishment of
   the Brazil Data Cube, process 17.2.0536.1.
 
-- Radiant Earth Foundation and STAC Project Steering Committee for the
-  advance of STAC ecosystem programme.
+- Radiant Earth Foundation and STAC Project Steering Committee for
+  advancing the STAC ecosystem.
 
 - OpenGeoHub Foundation and the European Commission (EC) through the
   project Open-Earth-Monitor Cyberinfrastructure: Environmental
   information to support EU’s Green Deal (1 Jun. 2022 – 31 May 2026 -
   101059548)
 
-## How to contribute?
+## How to contribute
 
 The `rstac` package was implemented based on an extensible architecture,
 so feel free to contribute by implementing new STAC API
 [extensions/fragments](https://github.com/radiantearth/stac-api-spec/tree/master/fragments)
 based on the STAC API specifications.
 
-1.  Make a project
+1.  Fork the project by creating a
     [fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo).
 2.  Create a file inside the `R/` directory called
     `ext_{extension_name}.R`.
-3.  In the code, you need to specify a subclass name (e.g.`my_subclass`)
-    for your extension and use it when calling
-    [`rstac_query()`](https://github.com/brazil-data-cube/rstac/blob/master/R/query-funs.R)
-    function. You also need to implement for your subclass the following
-    S3 generic functions:
+3.  In the code, specify a subclass name (e.g., `my_subclass`) for your
+    extension and use it when calling
+    [`rstac_query()`](https://github.com/brazil-data-cube/rstac/blob/master/R/query-funs.R).
+    You also need to implement the following S3 generic methods for your
+    subclass:
     [`before_request()`](https://github.com/brazil-data-cube/rstac/blob/master/R/extensions.R),
     [`after_response()`](https://github.com/brazil-data-cube/rstac/blob/master/R/extensions.R),
     and
     [`parse_params()`](https://github.com/brazil-data-cube/rstac/blob/master/R/extensions.R).
-    With these S3 generics methods you can define how parameters should
-    be submitted to the HTTP request and the types of the returned
-    documents. See the implemented
-    [ext_filter](https://github.com/brazil-data-cube/rstac/blob/master/R/ext_filter.R)
+    With these S3 generic methods, you can define how parameters are
+    submitted in HTTP requests and how returned documents are parsed.
+    See the implemented
+    [`ext_filter`](https://github.com/brazil-data-cube/rstac/blob/master/R/ext_filter.R)
     API extension as an example.
 4.  Make a [Pull
     Request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)
-    on the most recent [development
+    against the most recent [development
     branch](https://github.com/brazil-data-cube/rstac/).

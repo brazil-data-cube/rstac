@@ -1,16 +1,16 @@
 #' @title Assets functions
 #'
 #' @description
-#' These functions provide support to work with `doc_items` and
-#' `doc_item` item objects.
+#' These functions provide support for working with `doc_items` and `doc_item`
+#' objects.
 #'
 #' \itemize{
-#' \item `assets_download()`: Downloads the assets provided by the STAC API.
+#' \item `assets_download()`: downloads the assets provided by the STAC API.
 #'
-#' \item `assets_url()`: `r lifecycle::badge('experimental')` Returns a
-#'  character vector with each asset's `href`. For the URL, you can add the
-#'  `GDAL` library drivers for the following schemes: `HTTP`/`HTTPS` files,
-#'  S3 (`AWS` S3) and `GS` (Google Cloud Storage).
+#' \item `assets_url()`: `r lifecycle::badge('experimental')` returns a
+#'  `character` vector with each asset's `href`. You can prepend GDAL VSI
+#'  prefixes for the following schemes: `HTTP`/`HTTPS`, S3 (`AWS` S3), and `GS`
+#'  (Google Cloud Storage).
 #'
 #' \item `assets_select()`: `r lifecycle::badge('experimental')` Selects the
 #'  assets of each item by its name (`asset_names` parameter), by expressions
@@ -19,7 +19,7 @@
 #'  users can use the `items_compact()` function to remove items with no
 #'  assets.
 #'
-#' \item `assets_rename()`: `r lifecycle::badge('experimental')` Rename each
+#' \item `assets_rename()`: `r lifecycle::badge('experimental')` renames each
 #'  asset using a named list or a function.
 #' }
 #'
@@ -34,8 +34,8 @@
 #' @param output_dir  a `character` directory in which the assets will be
 #' saved. Default is the working directory (`getwd()`)
 #'
-#' @param overwrite   a `logical` if TRUE will replace the existing file,
-#' if FALSE, a warning message is shown.
+#' @param overwrite   a `logical` value. If `TRUE`, replaces the existing file;
+#' if `FALSE`, a warning message is shown.
 #'
 #' @param items_max   a `numeric` corresponding to how many items will be
 #' downloaded.
@@ -43,14 +43,14 @@
 #' @param progress    a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
-#' @param use_gdal    a `logical` indicating if the file should be downloaded
-#' by `GDAL` instead `httr` package.
+#' @param use_gdal    a `logical` indicating whether the file should be
+#' downloaded with `GDAL` instead of the `httr` package.
 #'
 #' @param download_fn a `function` to handle download of assets for
 #' each item to be downloaded. Using this function, you can change the
-#' `href` for each asset, as well as the way download is done.
+#' `href` for each asset, as well as how the download is performed.
 #'
-#' @param append_gdalvsi a `logical` value. If true, `GDAL` drivers are
+#' @param append_gdalvsi a `logical` value. If `TRUE`, GDAL VSI prefixes are
 #' included in the URL of each asset. The following schemes are supported:
 #' `HTTP`/`HTTPS` files, S3 (`AWS` S3) and `GS` (Google Cloud Storage).
 #'
@@ -58,7 +58,7 @@
 #' metadata (`doc_item` or `doc_items`) must be created in the
 #' output directory.
 #'
-#' @param select_fn a `function` to select assets an item
+#' @param select_fn a `function` to select assets from an item
 #' (`doc_item` or `doc_items`). This function receives as parameter
 #' the asset element and, optionally, the asset name. Asset elements
 #' contain metadata describing spatial-temporal objects. Users can provide
@@ -77,7 +77,7 @@
 #' @param ...         additional arguments. See details.
 #'
 #' @details
-#' Ellipsis argument (`...`) appears in different assets functions and
+#' Ellipsis argument (`...`) appears in different asset functions and
 #' has distinct purposes:
 #' \itemize{
 #' \item `assets_download()`: ellipsis is used to pass
@@ -88,10 +88,9 @@
 #' \item `assets_select()`: ellipsis is used to pass expressions that will
 #' be evaluated against each asset metadata. Expressions must be evaluated as
 #' a logical value where `TRUE` selects the asset and `FALSE` discards it.
-#' Multiple expressions are combine with `AND` operator. Expressions can
-#' use `asset` helper functions (i.e. `asset_key()`, `asset_eo_bands()`,
-#' and `asset_raster_bands()`). Multiple expressions are combined with
-#' `AND` operator. `assets_select()` uses non-standard evaluation to evaluate
+#' Multiple expressions are combined with the `AND` operator. Expressions can
+#' use `asset` helper functions (e.g., `asset_key()`, `asset_eo_bands()`,
+#' and `asset_raster_bands()`). `assets_select()` uses non-standard evaluation to evaluate
 #' its expressions. That means users must escape any variable or call to
 #' be able to use them in the expressions. The escape is done by using
 #' `double-curly-braces`, i.e., `{{variable}}`.
@@ -106,9 +105,8 @@
 #' @return
 #'
 #' \itemize{
-#' \item `assets_download()`: returns the same input object item
-#' (`doc_item` or `doc_items`) where `href` properties point to
-#' the download assets.
+#' \item `assets_download()`: returns the input item object (`doc_item` or
+#' `doc_items`), where `href` properties point to the downloaded assets.
 #'
 #' \item `assets_url()`: returns a character vector with all assets `href`
 #' of an item (`doc_item` or `doc_items`).
