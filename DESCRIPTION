@@ -1,6 +1,6 @@
 Package: rstac
 Title: Client Library for SpatioTemporal Asset Catalog
-Version: 1.0.1
+Version: 1.1.0
 Authors@R:
     c(person("Rolf", "Simoes",
              email = "rolfsimoes@gmail.com",
@@ -41,14 +41,7 @@ Imports:
 Suggests:
     lifecycle,
     testthat,
-    knitr,
-    tmap,
-    leaflet,
-    stars,
-    slider,
-    ggplot2,
-    purrr,
-    dplyr
+    knitr
 Collate:
     'cql2-expr-funs.R'
     'cql2-types.R'
