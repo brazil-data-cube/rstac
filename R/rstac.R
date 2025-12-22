@@ -19,7 +19,7 @@
 #'   \item [stac_search()]: implements STAC `/stac/search`
 #'   endpoint for version 0.8.1 or below, and `/search` endpoint for
 #'   versions 0.9.0 or higher.
-#'   \item [ext_filter()]: implements `/filter` CQL2 endpoint.
+#'   \item [ext_filter()]: implements `/filter` `CQL2` endpoint.
 #' }
 #'
 #' @section Data access and organization functions:

@@ -234,17 +234,17 @@ subclass <- function(x) {
 
 #' @describeIn extensions
 #' The `set_query_endpoint()` function defines the endpoint of a query.
-#'  If `params` parameter is passed, each value must be an entry of params
-#'  field of the given query. The corresponding param value will be used as
+#'  If `params` parameter is passed, each value must be an entry of `params`
+#'  field of the given query. The corresponding `params` value will be used as
 #'  value replacement of `%s` occurrences in the `endpoint` string. After
-#'  the replacement, all params in this list will be removed.
+#'  the replacement, all `params` in this list will be removed.
 #'
 #' @param q          a `rstac_query` object.
 #'
 #' @param endpoint   a `character` vector with the format string with the
 #'    endpoint url.
 #'
-#' @param params     a `character` vector with the params entries to replace
+#' @param params     a `character` vector with the `params` entries to replace
 #'    all `%s` occurrences in the endpoint string.
 #'
 set_query_endpoint <- function(q, endpoint, params = NULL) {

@@ -96,7 +96,7 @@ STAC API.
 In the code below, we get some STAC items of `CB4-16D-2` collection that
 intersects the bounding box passed to the `bbox` parameter. To do this,
 we call the `stac_search` function that implements the STAC `/search`
-endpoint. The returned document is a STAC Item Collection (a geojson
+endpoint. The returned document is a STAC Item Collection (a `GeoJSON`
 containing a feature collection).
 
 ``` r
@@ -115,9 +115,9 @@ it_obj
 #> - item's fields:
 ```
 
-The `rstac` uses the [httr](https://github.com/r-lib/httr) package to
+The `rstac` uses the [`httr`](https://github.com/r-lib/httr) package to
 manage HTTP requests, allowing the use of tokens from the authorization
-protocols OAuth 1.0 or 2.0 as well as other configuration options. In
+protocols `OAuth` 1.0 or 2.0 as well as other configuration options. In
 the code below, we present an example of how to pass a parameter token
 on a HTTP request.
 
@@ -172,18 +172,18 @@ All we’ve got in previous example was metadata to STAC Items, including
 links to geospatial data called `assets`. To download all `assets` in a
 STAC Item Collection we can use `assets_download()` function, that
 returns an update STAC Item Collection referring to the downloaded
-assets. The code below downloads the `thumbnail` assets (.png files) of
-`10` items stored in `it_obj` variable.
+assets. The code below downloads the `thumbnail` assets (`.png` files)
+of `10` items stored in `it_obj` variable.
 
 ``` r
 download_items <- it_obj %>%
   assets_download(assets_name = "thumbnail", items_max = 10)
 ```
 
-### CQL2 query filter
+### `CQL2` query filter
 
 `rstac` also supports advanced query filter using common query language
-(CQL2). Users can write complex filter expressions using R code in an
+(`CQL2`). Users can write complex filter expressions using R code in an
 easy and natural way. For a complete
 
 ``` r
@@ -217,7 +217,7 @@ Asset Catalog Satellite Imagery,” 2021 IEEE International Geoscience and
 Remote Sensing Symposium IGARSS, 2021, pp. 7674-7677, doi:
 10.1109/IGARSS47720.2021.9553518.
 
-## Acknowledgements for financial support
+## Acknowledgments for financial support
 
 We acknowledge and thank the project funders that provided financial and
 material support:

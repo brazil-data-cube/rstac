@@ -8,7 +8,7 @@
 #'
 #' The `params` parameter is a named `list` where user parameters
 #' must be stored. It is important to know if previous query parameters needs
-#' to be keeped in the new query. If so, it is recommended do use
+#' to be kept in the new query. If so, it is recommended do use
 #' [utils::modifyList()] function to merge the old and new
 #' query parameters.
 #'

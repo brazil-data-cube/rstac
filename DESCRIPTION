@@ -84,3 +84,4 @@ Collate:
     'rstac.R'
     'rstac-funs.R'
 Roxygen: list(markdown = TRUE)
+Language: en-US

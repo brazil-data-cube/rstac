@@ -8,9 +8,9 @@
 #' \item `assets_download()`: Downloads the assets provided by the STAC API.
 #'
 #' \item `assets_url()`: `r lifecycle::badge('experimental')` Returns a
-#'  character vector with each asset href. For the URL, you can add the
-#'  GDAL library drivers for the following schemes: HTTP/HTTPS files,
-#'  S3 (AWS S3) and GS (Google Cloud Storage).
+#'  character vector with each asset's `href`. For the URL, you can add the
+#'  `GDAL` library drivers for the following schemes: `HTTP`/`HTTPS` files,
+#'  S3 (`AWS` S3) and `GS` (Google Cloud Storage).
 #'
 #' \item `assets_select()`: `r lifecycle::badge('experimental')` Selects the
 #'  assets of each item by its name (`asset_names` parameter), by expressions
@@ -44,15 +44,15 @@
 #' shown or not. Defaults to `TRUE`.
 #'
 #' @param use_gdal    a `logical` indicating if the file should be downloaded
-#' by GDAL instead httr package.
+#' by `GDAL` instead `httr` package.
 #'
 #' @param download_fn a `function` to handle download of assets for
 #' each item to be downloaded. Using this function, you can change the
-#' hrefs for each asset, as well as the way download is done.
+#' `href` for each asset, as well as the way download is done.
 #'
-#' @param append_gdalvsi a `logical` value. If true, gdal drivers are
+#' @param append_gdalvsi a `logical` value. If true, `GDAL` drivers are
 #' included in the URL of each asset. The following schemes are supported:
-#' HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).
+#' `HTTP`/`HTTPS` files, S3 (`AWS` S3) and `GS` (Google Cloud Storage).
 #'
 #' @param create_json a `logical` indicating if a JSON file with item
 #' metadata (`doc_item` or `doc_items`) must be created in the
@@ -122,59 +122,71 @@
 #'
 #' @examples
 #' \dontrun{
-#'  # assets_download function
-#'  stac("https://data.inpe.br/bdc/stac/v1/") %>%
-#'    stac_search(collections = "CBERS4-WFI-16D-2",
-#'                datetime = "2019-06-01/2019-08-01") %>%
-#'    stac_search() %>%
-#'    get_request() %>%
-#'    assets_download(asset_names = "thumbnail", output_dir = tempdir())
+#' # assets_download function
+#' stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   stac_search(
+#'     collections = "CBERS4-WFI-16D-2",
+#'     datetime = "2019-06-01/2019-08-01"
+#'   ) %>%
+#'   stac_search() %>%
+#'   get_request() %>%
+#'   assets_download(asset_names = "thumbnail", output_dir = tempdir())
 #' }
 #'
 #' \dontrun{
-#'  # assets_url function
-#'  stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
-#'    stac_search(
-#'      collections = "CBERS4-WFI-16D-2",
-#'      limit = 100,
-#'      datetime = "2017-08-01/2018-03-01",
-#'      bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
-#'    get_request() %>% items_fetch(progress = FALSE)
+#' # assets_url function
+#' stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   stac_search(
+#'     collections = "CBERS4-WFI-16D-2",
+#'     limit = 100,
+#'     datetime = "2017-08-01/2018-03-01",
+#'     bbox = c(-48.206, -14.195, -45.067, -12.272)
+#'   ) %>%
+#'   get_request() %>%
+#'   items_fetch(progress = FALSE)
 #'
-#'  stac_item %>% assets_url()
+#' stac_item %>% assets_url()
 #' }
 #'
 #' \dontrun{
-#'  # assets_select function
-#'  stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
-#'    stac_search(
-#'      collections = "CBERS4-WFI-16D-2",
-#'      limit = 100,
-#'      datetime = "2017-08-01/2018-03-01",
-#'      bbox = c(-48.206,-14.195,-45.067,-12.272)) %>%
-#'    get_request() %>% items_fetch(progress = FALSE)
+#' # assets_select function
+#' stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   stac_search(
+#'     collections = "CBERS4-WFI-16D-2",
+#'     limit = 100,
+#'     datetime = "2017-08-01/2018-03-01",
+#'     bbox = c(-48.206, -14.195, -45.067, -12.272)
+#'   ) %>%
+#'   get_request() %>%
+#'   items_fetch(progress = FALSE)
 #'
-#'  stac_item %>% assets_select(asset_names = "NDVI")
+#' stac_item %>% assets_select(asset_names = "NDVI")
 #' }
 #'
 #' \dontrun{
 #' items <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
-#'   stac_search(collections = c("landsat-8-c2-l2", "sentinel-2-l2a"),
-#'               bbox = c(xmin = -64.85976089, ymin = -10.49199395,
-#'                        xmax = -64.79272527, ymax =-10.44736091),
-#'               datetime = "2019-01-01/2019-06-28",
-#'               limit = 50) %>%
+#'   stac_search(
+#'     collections = c("landsat-8-c2-l2", "sentinel-2-l2a"),
+#'     bbox = c(
+#'       xmin = -64.85976089, ymin = -10.49199395,
+#'       xmax = -64.79272527, ymax = -10.44736091
+#'     ),
+#'     datetime = "2019-01-01/2019-06-28",
+#'     limit = 50
+#'   ) %>%
 #'   post_request()
 #'
 #' # Selects assets by name
 #' items <- assets_select(items,
-#'                        asset_names = c("B02", "B03", "SR_B1", "SR_B2"))
+#'   asset_names = c("B02", "B03", "SR_B1", "SR_B2")
+#' )
 #' # Renames the landsat assets
 #' items <- assets_rename(items,
-#'                        SR_B1 = "blue",
-#'                        SR_B2 = "green",
-#'                        B02   = "blue",
-#'                        B03   = "green")
+#'   SR_B1 = "blue",
+#'   SR_B2 = "green",
+#'   B02   = "blue",
+#'   B03   = "green"
+#' )
 #' # Get the assets url's
 #' assets_url(items)
 #' }
@@ -195,9 +207,12 @@ assets_download <- function(items,
                             use_gdal = FALSE,
                             download_fn = NULL) {
   # check output dir
-  if (!dir.exists(output_dir))
-    .error(paste("The directory provided does not exist.",
-                 "Please, provide an existing directory."))
+  if (!dir.exists(output_dir)) {
+    .error(paste(
+      "The directory provided does not exist.",
+      "Please, provide an existing directory."
+    ))
+  }
   UseMethod("assets_download", items)
 }
 
@@ -214,13 +229,16 @@ assets_download.doc_item <- function(items,
   if (!is.null(asset_names)) {
     in_assets <- asset_names %in% items_assets(items)
     if (!all(asset_names %in% items_assets(items))) {
-      .warning("Item does not have asset(s) '%s'.",
-               paste(asset_names[!in_assets], collapse = ", "))
+      .warning(
+        "Item does not have asset(s) '%s'.",
+        paste(asset_names[!in_assets], collapse = ", ")
+      )
     }
     items <- assets_select(items = items, asset_names = asset_names)
   }
   items$assets <- lapply(
-    items$assets, asset_download, output_dir = output_dir,
+    items$assets, asset_download,
+    output_dir = output_dir,
     overwrite = overwrite, use_gdal = use_gdal, download_fn = download_fn, ...
   )
   if (create_json) {
@@ -257,16 +275,18 @@ assets_download.doc_items <- function(items,
   }
   items$features <- items$features[seq_len(items_max)]
   for (i in seq_len(items_max)) {
-    if (progress)
+    if (progress) {
       utils::setTxtProgressBar(pb, i)
+    }
     items$features[[i]] <- assets_download(
       items = items$features[[i]], asset_names = asset_names,
       output_dir = output_dir, overwrite = overwrite,
       use_gdal = use_gdal, create_json = FALSE, download_fn = download_fn, ...
     )
   }
-  if (create_json)
+  if (create_json) {
     cat(to_json(items), file = file.path(output_dir, "items.json"))
+  }
   items
 }
 
@@ -356,10 +376,11 @@ assets_select.doc_item <- function(items, ...,
     items$assets <- items$assets[asset_names]
   }
   if (length(exprs) > 0) {
-    if (!is.null(names(exprs)))
+    if (!is.null(names(exprs))) {
       .error("Select expressions cannot be named.")
+    }
     for (expr in exprs) {
-      expr <- unquote(expr = expr, env =  parent.frame())
+      expr <- unquote(expr = expr, env = parent.frame())
       sel <- map_lgl(names(items$assets), function(key) {
         select_eval(key = key, asset = items$assets[[key]], expr = expr)
       })
@@ -368,16 +389,21 @@ assets_select.doc_item <- function(items, ...,
   }
   if (!is.null(select_fn)) {
     sel <- map_lgl(names(items$assets), function(key) {
-      val <- select_exec(key = key, asset = items$assets[[key]],
-                         select_fn = select_fn)
+      val <- select_exec(
+        key = key, asset = items$assets[[key]],
+        select_fn = select_fn
+      )
       return(val)
     })
     items$assets <- items$assets[sel]
   }
-  if (length(items$assets) == 0 && init_length > 0)
-    .warning(paste("Filter criteria did not match any asset.\n",
-                   "Please, see `?assets_select` for more details on",
-                   "how expressions are evaluated by `assets_select()`."))
+  if (length(items$assets) == 0 && init_length > 0) {
+    .warning(paste(
+      "Filter criteria did not match any asset.\n",
+      "Please, see `?assets_select` for more details on",
+      "how expressions are evaluated by `assets_select()`."
+    ))
+  }
   items
 }
 
@@ -388,7 +414,8 @@ assets_select.doc_items <- function(items, ...,
                                     asset_names = NULL,
                                     select_fn = NULL) {
   items <- foreach_item(
-    items, assets_select, asset_names = asset_names, ...,
+    items, assets_select,
+    asset_names = asset_names, ...,
     select_fn = select_fn
   )
   return(items)
@@ -478,8 +505,9 @@ has_assets.default <- has_assets.doc_item
 #'
 #' @export
 asset_key <- function() {
-  if (!"key" %in% names(asset_context))
+  if (!"key" %in% names(asset_context)) {
     .error("Must be used inside `assets_select()`")
+  }
   asset_context$key
 }
 
@@ -488,8 +516,9 @@ asset_key <- function() {
 #' @export
 asset_eo_bands <- function(field) {
   val <- asset_get("eo:bands")[[1]]
-  if (missing(field))
+  if (missing(field)) {
     return(val)
+  }
   val[[field]]
 }
 
@@ -498,7 +527,8 @@ asset_eo_bands <- function(field) {
 #' @export
 asset_raster_bands <- function(field) {
   val <- asset_get("raster:bands")[[1]]
-  if (missing(field))
+  if (missing(field)) {
     return(val)
+  }
   val[[field]]
 }

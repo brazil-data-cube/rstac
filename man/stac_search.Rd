@@ -59,9 +59,9 @@ Examples:
 Only features that have a \code{datetime} property that intersects the
 interval or date-time informed in \code{datetime} are selected.}
 
-\item{intersects}{a \code{list} expressing GeoJSON geometries
+\item{intersects}{a \code{list} expressing \code{GeoJSON} geometries
 objects as specified in RFC 7946. Only returns items that intersect with
-the provided geometry. To turn a GeoJSON into a list the package
+the provided geometry. To turn a \code{GeoJSON} into a list the package
 \code{jsonlite} can be used.}
 
 \item{limit}{an \code{integer} defining the maximum number of results
@@ -80,26 +80,28 @@ The \code{stac_search} function implements \verb{/stac/search} API endpoint
 (v0.8.1) and \verb{/search} (v0.9.0 or v1.0.0).
 It prepares query parameters used in the search API request, a
 \code{stac} object with all filter parameters to be provided to
-\code{get_request} or \code{post_request} functions. The GeoJSON content
+\code{get_request} or \code{post_request} functions. The \code{GeoJSON} content
 returned by these requests is a \code{doc_items} object, a regular R
 \code{list} representing a STAC Item Collection document.
 }
 \examples{
 \dontrun{
- # GET request
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   stac_search(
-     collections = "CBERS4-WFI-16D-2",
-     limit = 10,
-     datetime = "2017-08-01/2018-03-01") \%>\%
-   get_request()
+# GET request
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    limit = 10,
+    datetime = "2017-08-01/2018-03-01"
+  ) \%>\%
+  get_request()
 
- # POST request
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   stac_search(
-     collections = "CBERS4-WFI-16D-2",
-     bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
-   post_request()
+# POST request
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)
+  ) \%>\%
+  post_request()
 }
 
 }

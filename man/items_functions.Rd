@@ -172,7 +172,7 @@ shown or not. Defaults to \code{TRUE}.}
 evaluate a \code{logical} value.}
 
 \item{field}{A \code{character} vector specifying the path to the
-field from which to extract subfield values.
+field from which to extract sub-field values.
 For example, \code{c("assets", "*")} will traverse all assets from each item.}
 
 \item{pick_fn}{a \code{function} used to pick elements from items
@@ -240,7 +240,7 @@ the \code{doc_items} object.
 
 \item \code{items_matched()}: shows how many items matched the
 search criteria. It supports \code{search:metadata} (v0.8.0),
-\code{context} (v0.9.0), and \code{numberMatched} (OGC WFS3 core spec).
+\code{context} (v0.9.0), and \code{numberMatched} (OGC \code{WFS3} core spec).
 
 \item \code{items_fetch()}: request all STAC Items through
 pagination.

@@ -1,12 +1,12 @@
 #' Plot preview images
 #'
 #' This is a helper function to plot preview assets
-#' (e.g. quicklook, thumbnail, rendered_preview).
-#' Currently, only png and jpeg formats are supported.
+#' (e.g. `quicklook`, `thumbnail`, `rendered_preview`).
+#' Currently, only `png` and `jpeg` formats are supported.
 #'
 #' @param url   image URL to be plotted.
 #'
-#' @return A rastergrob grob from package `grid`.
+#' @return A `rastergrob` from package `grid`.
 #'
 #' @export
 preview_plot <- function(url) {
@@ -22,23 +22,27 @@ preview_file_type <- function(url) {
 
 preview_switch <- function(url, ...) {
   type <- preview_file_type(url)
-  switch(type, ..., .error("File type '%s' not supported", type))
+  switch(type,
+    ...,
+    .error("File type '%s' not supported", type)
+  )
 }
 
 preview_check <- function(url) {
   preview_switch(
     url,
-    png = if (!requireNamespace("png", quietly = TRUE))
+    png = if (!requireNamespace("png", quietly = TRUE)) {
       .error(paste(
         "This function requires `png` package. Please, use",
         "install.packages('png')."
       ))
-    ,
-    jpeg = if (!requireNamespace("jpeg", quietly = TRUE))
+    },
+    jpeg = if (!requireNamespace("jpeg", quietly = TRUE)) {
       .error(paste(
         "This function requires `jpeg` package. Please, use",
         "install.packages('jpeg')."
       ))
+    }
   )
 }
 

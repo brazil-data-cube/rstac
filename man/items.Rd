@@ -61,16 +61,16 @@ containing all search field parameters to be provided to STAC API web
 service.
 }
 \description{
-The \code{items} function implements WFS3
+The \code{items} function implements \code{WFS3}
 \code{/collections/\{collectionId\}/items}, and
 \code{/collections/\{collectionId\}/items/\{featureId\}} endpoints.
 
 Each endpoint retrieves specific STAC objects:
 \itemize{
 \item \code{/collections/\{collectionId\}/items}: Returns a STAC Items
-collection (GeoJSON)
+collection (\code{GeoJSON})
 \item \code{/collections/\{collectionId\}/items/\{itemId\}}: Returns a
-STAC Item (GeoJSON Feature)
+STAC Item (\code{GeoJSON} Feature)
 }
 
 The endpoint \code{/collections/\{collectionId\}/items} accepts the same
@@ -78,15 +78,15 @@ filters parameters of \code{\link[=stac_search]{stac_search()}} function.
 }
 \examples{
 \dontrun{
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   collections("CBERS4-WFI-16D-2") \%>\%
-   items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
-   get_request()
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  collections("CBERS4-WFI-16D-2") \%>\%
+  items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
+  get_request()
 
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   collections("CBERS4-WFI-16D-2") \%>\%
-   items("CB4-16D_V2_000002_20230509") \%>\%
-   get_request()
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  collections("CBERS4-WFI-16D-2") \%>\%
+  items("CB4-16D_V2_000002_20230509") \%>\%
+  get_request()
 }
 
 }

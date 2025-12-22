@@ -10,7 +10,7 @@
 #'
 #' \item `items_matched()`: shows how many items matched the
 #' search criteria. It supports `search:metadata` (v0.8.0),
-#' `context` (v0.9.0), and `numberMatched` (OGC WFS3 core spec).
+#' `context` (v0.9.0), and `numberMatched` (OGC `WFS3` core spec).
 #'
 #' \item `items_fetch()`: request all STAC Items through
 #' pagination.
@@ -63,7 +63,7 @@
 #' shown or not. Defaults to `TRUE`.
 #'
 #' @param field           A `character` vector specifying the path to the
-#' field from which to extract subfield values.
+#' field from which to extract sub-field values.
 #' For example, `c("assets", "*")` will traverse all assets from each item.
 #'
 #' @param pick_fn         a `function` used to pick elements from items

@@ -1,16 +1,16 @@
 #' @title Endpoint functions
 #'
 #' @description
-#' The `items` function implements WFS3
+#' The `items` function implements `WFS3`
 #' \code{/collections/\{collectionId\}/items}, and
 #' \code{/collections/\{collectionId\}/items/\{featureId\}} endpoints.
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{
 #'   \item \code{/collections/\{collectionId\}/items}: Returns a STAC Items
-#'     collection (GeoJSON)
+#'     collection (`GeoJSON`)
 #'   \item \code{/collections/\{collectionId\}/items/\{itemId\}}: Returns a
-#'     STAC Item (GeoJSON Feature)
+#'     STAC Item (`GeoJSON` Feature)
 #' }
 #'
 #' The endpoint \code{/collections/\{collectionId\}/items} accepts the same
@@ -75,15 +75,15 @@
 #'
 #' @examples
 #' \dontrun{
-#'  stac("https://data.inpe.br/bdc/stac/v1/") %>%
-#'    collections("CBERS4-WFI-16D-2") %>%
-#'    items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
-#'    get_request()
+#' stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   collections("CBERS4-WFI-16D-2") %>%
+#'   items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
+#'   get_request()
 #'
-#'  stac("https://data.inpe.br/bdc/stac/v1/") %>%
-#'    collections("CBERS4-WFI-16D-2") %>%
-#'    items("CB4-16D_V2_000002_20230509") %>%
-#'    get_request()
+#' stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   collections("CBERS4-WFI-16D-2") %>%
+#'   items("CB4-16D_V2_000002_20230509") %>%
+#'   get_request()
 #' }
 #'
 #' @export
@@ -91,12 +91,15 @@ items <- function(q, feature_id = NULL, datetime = NULL, bbox = NULL,
                   limit = NULL) {
   check_query(q, c("collection_id", "items"))
   params <- list()
-  if (!is.null(datetime))
+  if (!is.null(datetime)) {
     params$datetime <- .parse_datetime(datetime)
-  if (!is.null(bbox))
+  }
+  if (!is.null(bbox)) {
     params$bbox <- .parse_bbox(bbox)
-  if (!is.null(limit) && !is.null(limit))
+  }
+  if (!is.null(limit) && !is.null(limit)) {
     params$limit <- .parse_limit(limit)
+  }
   # set subclass
   subclass <- "items"
   if (!is.null(feature_id)) {
@@ -113,20 +116,25 @@ items <- function(q, feature_id = NULL, datetime = NULL, bbox = NULL,
 
 #' @export
 parse_params.items <- function(q, params) {
-  if (!is.null(params$datetime))
+  if (!is.null(params$datetime)) {
     params$datetime <- .parse_datetime(params$datetime)
-  if (!is.null(params$bbox))
+  }
+  if (!is.null(params$bbox)) {
     params$bbox <- .parse_bbox(params$bbox)
-  if (!is.null(params$limit))
+  }
+  if (!is.null(params$limit)) {
     params$limit <- .parse_limit(params$limit)
+  }
   params
 }
 
 #' @export
 before_request.items <- function(q) {
   check_query_verb(q, verbs = c("GET", "POST"))
-  set_query_endpoint(q, endpoint = "./collections/%s/items",
-                     params = "collection_id")
+  set_query_endpoint(q,
+    endpoint = "./collections/%s/items",
+    params = "collection_id"
+  )
 }
 
 #' @export
@@ -138,8 +146,10 @@ after_response.items <- function(q, res, simplify_vector = TRUE) {
 #' @export
 before_request.item_id <- function(q) {
   check_query_verb(q, verbs = c("GET", "POST"))
-  set_query_endpoint(q, endpoint = "./collections/%s/items/%s",
-                      params = c("collection_id", "feature_id"))
+  set_query_endpoint(q,
+    endpoint = "./collections/%s/items/%s",
+    params = c("collection_id", "feature_id")
+  )
 }
 
 #' @export

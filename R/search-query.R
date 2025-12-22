@@ -8,7 +8,7 @@
 #' (v0.8.1) and `/search` (v0.9.0 or v1.0.0).
 #' It prepares query parameters used in the search API request, a
 #' `stac` object with all filter parameters to be provided to
-#' `get_request` or `post_request` functions. The GeoJSON content
+#' `get_request` or `post_request` functions. The `GeoJSON` content
 #' returned by these requests is a `doc_items` object, a regular R
 #' `list` representing a STAC Item Collection document.
 #'
@@ -56,9 +56,9 @@
 #' antimeridian, the first value (west-most box edge) is larger than the third
 #' value (east-most box edge).
 #'
-#' @param intersects  a `list` expressing GeoJSON geometries
+#' @param intersects  a `list` expressing `GeoJSON` geometries
 #' objects as specified in RFC 7946. Only returns items that intersect with
-#' the provided geometry. To turn a GeoJSON into a list the package
+#' the provided geometry. To turn a `GeoJSON` into a list the package
 #' `jsonlite` can be used.
 #'
 #' @param limit       an `integer` defining the maximum number of results
@@ -73,20 +73,22 @@
 #'
 #' @examples
 #' \dontrun{
-#'  # GET request
-#'  stac("https://data.inpe.br/bdc/stac/v1/") %>%
-#'    stac_search(
-#'      collections = "CBERS4-WFI-16D-2",
-#'      limit = 10,
-#'      datetime = "2017-08-01/2018-03-01") %>%
-#'    get_request()
+#' # GET request
+#' stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   stac_search(
+#'     collections = "CBERS4-WFI-16D-2",
+#'     limit = 10,
+#'     datetime = "2017-08-01/2018-03-01"
+#'   ) %>%
+#'   get_request()
 #'
-#'  # POST request
-#'  stac("https://data.inpe.br/bdc/stac/v1/") %>%
-#'    stac_search(
-#'      collections = "CBERS4-WFI-16D-2",
-#'      bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
-#'    post_request()
+#' # POST request
+#' stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   stac_search(
+#'     collections = "CBERS4-WFI-16D-2",
+#'     bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)
+#'   ) %>%
+#'   post_request()
 #' }
 #'
 #' @export
@@ -99,18 +101,24 @@ stac_search <- function(q,
                         limit = NULL) {
   check_query(q, c("stac", "search"))
   params <- list()
-  if (!is.null(collections))
+  if (!is.null(collections)) {
     params$collections <- .parse_collections(collections)
-  if (!is.null(ids))
+  }
+  if (!is.null(ids)) {
     params$ids <- .parse_ids(ids)
-  if (!is.null(datetime))
+  }
+  if (!is.null(datetime)) {
     params$datetime <- .parse_datetime(datetime)
-  if (!is.null(bbox))
+  }
+  if (!is.null(bbox)) {
     params$bbox <- .parse_bbox(bbox)
-  if (!is.null(intersects))
+  }
+  if (!is.null(intersects)) {
     params$intersects <- .parse_intersects(intersects)
-  if (!is.null(limit))
+  }
+  if (!is.null(limit)) {
     params$limit <- .parse_limit(limit)
+  }
   rstac_query(
     version = q$version,
     base_url = q$base_url,
@@ -121,29 +129,39 @@ stac_search <- function(q,
 
 #' @export
 parse_params.search <- function(q, params) {
-  if (!is.null(params$collections))
+  if (!is.null(params$collections)) {
     params$collections <- .parse_collections(params$collections)
-  if (!is.null(params$ids))
+  }
+  if (!is.null(params$ids)) {
     params$ids <- .parse_ids(params$ids)
-  if (!is.null(params$datetime))
+  }
+  if (!is.null(params$datetime)) {
     params$datetime <- .parse_datetime(params$datetime)
-  if (!is.null(params$bbox))
+  }
+  if (!is.null(params$bbox)) {
     params$bbox <- .parse_bbox(params$bbox)
-  if (!is.null(params$intersects))
+  }
+  if (!is.null(params$intersects)) {
     params$intersects <- .parse_intersects(params$intersects)
-  if (!is.null(params$limit))
+  }
+  if (!is.null(params$limit)) {
     params$limit <- .parse_limit(params$limit)
+  }
   params
 }
 
 #' @export
 before_request.search <- function(q) {
   check_query_verb(q, verbs = c("GET", "POST"))
-  if (!is.null(q$params$intersects) && q$verb == "GET")
-    .error(paste0("Search param `intersects` is not supported by HTTP GET",
-                  "method. Try use `post_request()` method instead."))
-  if (!is.null(q$version) && q$version < "0.9.0")
+  if (!is.null(q$params$intersects) && q$verb == "GET") {
+    .error(paste0(
+      "Search param `intersects` is not supported by HTTP GET",
+      "method. Try use `post_request()` method instead."
+    ))
+  }
+  if (!is.null(q$version) && q$version < "0.9.0") {
     return(set_query_endpoint(q, endpoint = "./stac/search"))
+  }
   set_query_endpoint(q, endpoint = "./search")
 }
 

@@ -128,11 +128,11 @@ if FALSE, a warning message is shown.}
 \item{...}{additional arguments. See details.}
 
 \item{use_gdal}{a \code{logical} indicating if the file should be downloaded
-by GDAL instead httr package.}
+by \code{GDAL} instead \code{httr} package.}
 
 \item{download_fn}{a \code{function} to handle download of assets for
 each item to be downloaded. Using this function, you can change the
-hrefs for each asset, as well as the way download is done.}
+\code{href} for each asset, as well as the way download is done.}
 
 \item{create_json}{a \code{logical} indicating if a JSON file with item
 metadata (\code{doc_item} or \code{doc_items}) must be created in the
@@ -144,9 +144,9 @@ downloaded.}
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
-\item{append_gdalvsi}{a \code{logical} value. If true, gdal drivers are
+\item{append_gdalvsi}{a \code{logical} value. If true, \code{GDAL} drivers are
 included in the URL of each asset. The following schemes are supported:
-HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
+\code{HTTP}/\code{HTTPS} files, S3 (\code{AWS} S3) and \code{GS} (Google Cloud Storage).}
 
 \item{select_fn}{a \code{function} to select assets an item
 (\code{doc_item} or \code{doc_items}). This function receives as parameter
@@ -188,9 +188,9 @@ These functions provide support to work with \code{doc_items} and
 \item \code{assets_download()}: Downloads the assets provided by the STAC API.
 
 \item \code{assets_url()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Returns a
-character vector with each asset href. For the URL, you can add the
-GDAL library drivers for the following schemes: HTTP/HTTPS files,
-S3 (AWS S3) and GS (Google Cloud Storage).
+character vector with each asset's \code{href}. For the URL, you can add the
+\code{GDAL} library drivers for the following schemes: \code{HTTP}/\code{HTTPS} files,
+S3 (\code{AWS} S3) and \code{GS} (Google Cloud Storage).
 
 \item \code{assets_select()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Selects the
 assets of each item by its name (\code{asset_names} parameter), by expressions
@@ -232,59 +232,71 @@ to be processed in the same way as the named list in \code{mapper} argument.
 }
 \examples{
 \dontrun{
- # assets_download function
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   stac_search(collections = "CBERS4-WFI-16D-2",
-               datetime = "2019-06-01/2019-08-01") \%>\%
-   stac_search() \%>\%
-   get_request() \%>\%
-   assets_download(asset_names = "thumbnail", output_dir = tempdir())
+# assets_download function
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    datetime = "2019-06-01/2019-08-01"
+  ) \%>\%
+  stac_search() \%>\%
+  get_request() \%>\%
+  assets_download(asset_names = "thumbnail", output_dir = tempdir())
 }
 
 \dontrun{
- # assets_url function
- stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   stac_search(
-     collections = "CBERS4-WFI-16D-2",
-     limit = 100,
-     datetime = "2017-08-01/2018-03-01",
-     bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
-   get_request() \%>\% items_fetch(progress = FALSE)
+# assets_url function
+stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    limit = 100,
+    datetime = "2017-08-01/2018-03-01",
+    bbox = c(-48.206, -14.195, -45.067, -12.272)
+  ) \%>\%
+  get_request() \%>\%
+  items_fetch(progress = FALSE)
 
- stac_item \%>\% assets_url()
+stac_item \%>\% assets_url()
 }
 
 \dontrun{
- # assets_select function
- stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   stac_search(
-     collections = "CBERS4-WFI-16D-2",
-     limit = 100,
-     datetime = "2017-08-01/2018-03-01",
-     bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
-   get_request() \%>\% items_fetch(progress = FALSE)
+# assets_select function
+stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    limit = 100,
+    datetime = "2017-08-01/2018-03-01",
+    bbox = c(-48.206, -14.195, -45.067, -12.272)
+  ) \%>\%
+  get_request() \%>\%
+  items_fetch(progress = FALSE)
 
- stac_item \%>\% assets_select(asset_names = "NDVI")
+stac_item \%>\% assets_select(asset_names = "NDVI")
 }
 
 \dontrun{
 items <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
-  stac_search(collections = c("landsat-8-c2-l2", "sentinel-2-l2a"),
-              bbox = c(xmin = -64.85976089, ymin = -10.49199395,
-                       xmax = -64.79272527, ymax =-10.44736091),
-              datetime = "2019-01-01/2019-06-28",
-              limit = 50) \%>\%
+  stac_search(
+    collections = c("landsat-8-c2-l2", "sentinel-2-l2a"),
+    bbox = c(
+      xmin = -64.85976089, ymin = -10.49199395,
+      xmax = -64.79272527, ymax = -10.44736091
+    ),
+    datetime = "2019-01-01/2019-06-28",
+    limit = 50
+  ) \%>\%
   post_request()
 
 # Selects assets by name
 items <- assets_select(items,
-                       asset_names = c("B02", "B03", "SR_B1", "SR_B2"))
+  asset_names = c("B02", "B03", "SR_B1", "SR_B2")
+)
 # Renames the landsat assets
 items <- assets_rename(items,
-                       SR_B1 = "blue",
-                       SR_B2 = "green",
-                       B02   = "blue",
-                       B03   = "green")
+  SR_B1 = "blue",
+  SR_B2 = "green",
+  B02   = "blue",
+  B03   = "green"
+)
 # Get the assets url's
 assets_url(items)
 }

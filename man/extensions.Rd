@@ -185,10 +185,10 @@ object (\code{rstac_query}) is expected in the function extension.
 subclass name of \code{rstac_query} objects.
 
 \item \code{set_query_endpoint()}: The \code{set_query_endpoint()} function defines the endpoint of a query.
-If \code{params} parameter is passed, each value must be an entry of params
-field of the given query. The corresponding param value will be used as
+If \code{params} parameter is passed, each value must be an entry of \code{params}
+field of the given query. The corresponding \code{params} value will be used as
 value replacement of \verb{\%s} occurrences in the \code{endpoint} string. After
-the replacement, all params in this list will be removed.
+the replacement, all \code{params} in this list will be removed.
 
 \item \code{rstac_query()}: The \code{rstac_query()} function is a constructor of \code{rstac_query}
 objects. Every extension must implement a subclass of \code{rstac_query} to
@@ -197,7 +197,7 @@ parameter the extension's subclass name.
 
 The \code{params} parameter is a named \code{list} where user parameters
 must be stored. It is important to know if previous query parameters needs
-to be keeped in the new query. If so, it is recommended do use
+to be kept in the new query. If so, it is recommended do use
 \code{\link[utils:modifyList]{utils::modifyList()}} function to merge the old and new
 query parameters.
 

@@ -2,9 +2,9 @@
 #'
 #' @description
 #' `r lifecycle::badge('experimental')`
-#' `ext_filter()` implements Common Query Language (CQL2) filter extension
+#' `ext_filter()` implements Common Query Language (`CQL2`) filter extension
 #' on `rstac`. This extension expands the filter capabilities providing a
-#' query language to construct more complex expressions. CQL2 is an OGC
+#' query language to construct more complex expressions. `CQL2` is an OGC
 #' standard and defines how filters can be constructed. It supports predicates
 #' for standard data types like strings, numbers, and boolean as well as
 #' for spatial geometries (point, lines, polygons) and temporal
@@ -12,17 +12,17 @@
 #'
 #' `r lifecycle::badge('experimental')`
 #' `cql2_json()` and `cql2_text()` are helper functions that can be used
-#' to show how expressions are converted into CQL2 standard, either
+#' to show how expressions are converted into `CQL2` standard, either
 #' JSON or TEXT formats.
 #'
-#' `rstac` translates R expressions to CQL2, allowing users to express their
+#' `rstac` translates R expressions to `CQL2`, allowing users to express their
 #' filter criteria using R language. For more details on how to create
-#' CQL2 expressions in `rstac`. See the details section.
+#' `CQL2` expressions in `rstac`. See the details section.
 #'
 #' @param q    a `rstac_query` object expressing a STAC query
 #' criteria.
-#' @param expr a valid R expression to be translated to CQL2 (see details).
-#' @param lang a character value indicating which CQL2 representation
+#' @param expr a valid R expression to be translated to `CQL2` (see details).
+#' @param lang a character value indicating which `CQL2` representation
 #' to be used. It can be either `"cql2-text"` (for plain text) or
 #' `"cql2-json"` (for JSON format). If `NULL` (default), `"cql2-text"` is
 #' used for HTTP `GET` requests and `"cql2-json"` for `POST` requests.
@@ -32,9 +32,9 @@
 #'
 #' @details
 #' To allow users to express filter criteria in R language, `rstac` takes
-#' advantage of the abstract syntax tree (AST) to translate R expressions
-#' to CQL2 expressions. The following topics describe the correspondences
-#' between `rstac` expressions and CQL2 operators.
+#' advantage of the abstract syntax tree (`AST`) to translate R expressions
+#' to `CQL2` expressions. The following topics describe the correspondences
+#' between `rstac` expressions and `CQL2` operators.
 #'
 #' ## Non-standard evaluation
 #' - `ext_filter()` uses non-standard evaluation to evaluate its expressions.
@@ -44,37 +44,37 @@
 #'
 #' ## Standard comparison operators
 #' - `==`, `>=`, `<=`, `>`, `<`, and `!=` operators correspond to
-#'   `=`, `>=`, `<=`, `>`, `<`, and `<>` in CQL2, respectively.
+#'   `=`, `>=`, `<=`, `>`, `<`, and `<>` in `CQL2`, respectively.
 #' - function `is_null(a)` and `!is_null(a)` corresponds to `a IS NULL` and
-#'   `a IS NOT NULL` CQL2 operators, respectively.
+#'   `a IS NOT NULL` `CQL2` operators, respectively.
 #'
 #' ## Advanced comparison operators
-#' - `a %like% b` corresponds to CQL2 `a LIKE b`, `a` and `b` `strings` values.
-#' - `between(a, b, c)` corresponds to CQL2 `a BETWEEN b AND c`, where
+#' - `a %like% b` corresponds to `CQL2` `a LIKE b`, `a` and `b` `strings` values.
+#' - `between(a, b, c)` corresponds to `CQL2` `a BETWEEN b AND c`, where
 #'   `b` and `c` `integer` values.
-#' - `a %in% b` corresponds to CQL2 `a IN (b)`, where `b` should be
+#' - `a %in% b` corresponds to `CQL2` `a IN (b)`, where `b` should be
 #'   a list of values of the same type as `a`.
 #'
 #' ## Spatial operators
 #' - functions `s_intersects(a, b)`, `s_touches(a, b)`, `s_within(a, b)`,
 #'   `s_overlaps(a, b)`, `s_crosses(a, b)`, and `s_contains(a, b)` corresponds
-#'   to CQL2 `S_INTERSECTS(a, b)`, `S_TOUCHES(a, b)`, `S_WITHIN(a, b)`,
+#'   to `CQL2` `S_INTERSECTS(a, b)`, `S_TOUCHES(a, b)`, `S_WITHIN(a, b)`,
 #'   `S_OVERLAPS(a, b)`, `S_CROSSES(a, b)`, and `S_CONTAINS(a, b)` operators,
 #'   respectively. Here, `a` and `b` should be `geometry` objects. `rstac`
-#'   accepts `sf`, `sfc`, `sfg`, `list` (representing GeoJSON objects), or
-#'   `character` (representing either GeoJSON or WKT).
+#'   accepts `sf`, `sfc`, `sfg`, `list` (representing `GeoJSON` objects), or
+#'   `character` (representing either `GeoJSON` or `WKT`).
 #'
 #' - **NOTE**: All of the above spatial object types, except for the
-#'   `character`, representing a WKT, may lose precision due to numeric
-#'   truncation when R converts numbers to JSON text. WKT strings are
+#'   `character`, representing a `WKT`, may lose precision due to numeric
+#'   truncation when R converts numbers to `JSON` text. `WKT` strings are
 #'   sent "as is" to the service. Therefore, the only way for users to
-#'   retain precision on spatial objects is to represent them as a WKT
+#'   retain precision on spatial objects is to represent them as a `WKT`
 #'   string. However, user can control numeric precision using the
 #'   `options(stac_digits = ...)`. The default value is 15 digits.
 #'
 #' ## Temporal operators
 #' - functions `date(a)`, `timestamp(a)`, and `interval(a, b)` corresponds to
-#'   CQL2 `DATE(a)`, `TIMESTAMP(a)`, and `INTERVAL(a, b)` operators,
+#'   `CQL2` `DATE(a)`, `TIMESTAMP(a)`, and `INTERVAL(a, b)` operators,
 #'   respectively. These functions create literal `temporal` values.
 #'   The first two define an `instant` type, and the third an `interval` type.
 #' - functions `t_after(a, b)`, `t_before(a, b)`, `t_contains(a, b)`,
@@ -82,7 +82,7 @@
 #'   `t_finishedby(a, b)`, `t_finishes(a, b)`, `t_intersects(a, b)`,
 #'   `t_meets(a, b)`, `t_meet(a, b)`, `t_metby(a, b)`, `t_overlappedby(a, b)`,
 #'   `t_overlaps(a, b)`, `t_startedby(a, b)`, and `t_starts(a, b)` corresponds
-#'   to CQL2 `T_AFTER(a, b)`, `T_BEFORE(a, b)`, `T_CONTAINS(a, b)`,
+#'   to `CQL2` `T_AFTER(a, b)`, `T_BEFORE(a, b)`, `T_CONTAINS(a, b)`,
 #'   `T_DISJOINT(a, b)`, `T_DURING(a, b)`, `T_EQUALS(a, b)`,
 #'   `T_FINISHEDBY(a, b)`, `T_FINISHES(a, b)`, `T_INTERSECTS(a, b)`,
 #'   `T_MEETS(a, b)`, `T_MEET(a, b)`, `T_METBY(a, b)`, `T_OVERLAPPEDBY(a, b)`,
@@ -93,9 +93,9 @@
 #' ## Array Operators
 #' - R unnamed lists (or vectors of size > 1) are translated to arrays by
 #'   `rstac`. `list()` and `c()` functions always create `array` values
-#'   in CQL2 context, no matter the number of its arguments.
+#'   in `CQL2` context, no matter the number of its arguments.
 #' - functions `a_equals(a, b)`, `a_contains(a, b)`, `a_containedby(a, b)`,
-#'   and `a_overlaps(a, b)` corresponds to CQL2 `A_EQUALS(a, b)`,
+#'   and `a_overlaps(a, b)` corresponds to `CQL2` `A_EQUALS(a, b)`,
 #'   `A_CONTAINS(a, b)`, `A_CONTAINEDBY(a, b)`, and `A_OVERLAPS(a, b)`
 #'   operators, respectively. Here, `a` and `b` should be `arrays`.
 #'

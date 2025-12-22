@@ -22,7 +22,7 @@ A \code{rstac_query} object with the subclass \code{collections} for
 parameters to be provided to STAC API web service.
 }
 \description{
-The \code{collections} function implements the WFS3 \verb{/collections}
+The \code{collections} function implements the \code{WFS3} \verb{/collections}
 and \code{/collections/\{collectionId\}} endpoints.
 
 Each endpoint retrieves specific STAC objects:
@@ -35,13 +35,13 @@ Collection object
 }
 \examples{
 \dontrun{
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   collections() \%>\%
-   get_request()
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  collections() \%>\%
+  get_request()
 
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   collections("CBERS4-WFI-16D-2") \%>\%
-   get_request()
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  collections("CBERS4-WFI-16D-2") \%>\%
+  get_request()
 }
 
 }

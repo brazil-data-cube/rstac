@@ -25,13 +25,13 @@
 
 # rstac 0.9.2-3 (Released 2023-04-17)
 
-* Fix renewing mpc tokens per session
-* Include support to check package with github actions
+* Fix renewing MPC tokens per session
+* Include support to check package with GitHub actions
 * Add issue template
 
 # rstac 0.9.2-2 (Released 2023-02-02)
 
-* Fix mpc vignette
+* Fix MPC vignette
 
 # rstac 0.9.2-1 (Released 2023-01-21)
 
@@ -69,7 +69,7 @@
 * Add feature name on print items objects
 * Create `items_next` function to do a single pagination request 
 * Adjust download helpers to access data from Microsoft's Planetary Computer
-* Update news.md of v0.9.0-1 
+* Update `NEWS.md` of v0.9.0-1 
 
 # rstac 0.9.1-4 (Released 2021-09-14)
 
@@ -104,9 +104,9 @@
 * Update `assets_download.R` and others functions
 * Add function 'get_assets_name'
 * Add overwrite and items_max parameter; solve issue #10
-* Fix bug in stac_matched and update documentation
+* Fix bug in `stac_matched()` and update documentation
 * Change function name `.verify_datime()'` to `parse_datetime()`
-* Rename function `extension_query` to `ext_query`
+* Rename function `extension_query()` to `ext_query()`
 
 # rstac 0.9.0 (Released 2020-09-18)
 

@@ -53,7 +53,7 @@ will be printed by default. To show all entries, use \code{n = Inf}.}
 doc_items object must be show.}
 }
 \description{
-The print function covers all objects in the rstac package:
+The print function covers all objects in the \code{rstac} package:
 
 \itemize{
 \item \code{\link[=stac]{stac()}}: returns a \code{doc_catalog} document from
@@ -73,38 +73,39 @@ from \code{/collections/\{collectionId\}/items} endpoint and a
 \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
 }
 
-The rstac package objects visualization is based on markdown, a
+The \code{rstac} package objects visualization is based on markdown, a
 lightweight markup language. You can paste the output into any
 markdown editor for a better visualization.
 
-Call \code{print()} function to print the rstac's objects.
+Call \code{print()} function to print the \code{rstac} objects.
 You can determine how many items will be printed using \code{n} parameter.
 }
 \examples{
 \dontrun{
- # doc_items object
- stac_item_collection <-
-   stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   stac_search(
-     collections = "CBERS4-WFI-16D-2",
-     bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
-     limit = 15) \%>\%
-   get_request()
+# doc_items object
+stac_item_collection <-
+  stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    bbox = c(-47.02148, -17.35063, -42.53906, -12.98314),
+    limit = 15
+  ) \%>\%
+  get_request()
 
- print(stac_item_collection, n = 10)
+print(stac_item_collection, n = 10)
 
- # doc_collections object
- stac_collection <-
-   stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   collections() \%>\%
-   get_request()
+# doc_collections object
+stac_collection <-
+  stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  collections() \%>\%
+  get_request()
 
- print(stac_collection, n = 5)
+print(stac_collection, n = 5)
 
- # rstac_query object
- obj_rstac <- stac("https://data.inpe.br/bdc/stac/v1/")
+# rstac_query object
+obj_rstac <- stac("https://data.inpe.br/bdc/stac/v1/")
 
- print(obj_rstac)
+print(obj_rstac)
 }
 }
 \seealso{

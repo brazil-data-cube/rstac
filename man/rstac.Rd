@@ -32,7 +32,7 @@ and \code{/collections/\{collectionId\}} endpoints.
 \item \code{\link[=stac_search]{stac_search()}}: implements STAC \verb{/stac/search}
 endpoint for version 0.8.1 or below, and \verb{/search} endpoint for
 versions 0.9.0 or higher.
-\item \code{\link[=ext_filter]{ext_filter()}}: implements \verb{/filter} CQL2 endpoint.
+\item \code{\link[=ext_filter]{ext_filter()}}: implements \verb{/filter} \code{CQL2} endpoint.
 }
 }
 

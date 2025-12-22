@@ -3,7 +3,7 @@
 #' @rdname collections
 #'
 #' @description
-#' The `collections` function implements the WFS3 `/collections`
+#' The `collections` function implements the `WFS3` `/collections`
 #'  and \code{/collections/\{collectionId\}} endpoints.
 #'
 #' Each endpoint retrieves specific STAC objects:
@@ -33,13 +33,13 @@
 #'
 #' @examples
 #' \dontrun{
-#'  stac("https://data.inpe.br/bdc/stac/v1/") %>%
-#'    collections() %>%
-#'    get_request()
+#' stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   collections() %>%
+#'   get_request()
 #'
-#'  stac("https://data.inpe.br/bdc/stac/v1/") %>%
-#'    collections("CBERS4-WFI-16D-2") %>%
-#'    get_request()
+#' stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   collections("CBERS4-WFI-16D-2") %>%
+#'   get_request()
 #' }
 #'
 #' @export
@@ -48,8 +48,9 @@ collections <- function(q, collection_id = NULL, limit = NULL) {
   params <- list()
   subclass <- "collections"
   if (!is.null(collection_id)) {
-    if (length(collection_id) != 1)
+    if (length(collection_id) != 1) {
       .error("Parameter `collection_id` must be a single value.")
+    }
     params$collection_id <- collection_id
     subclass <- "collection_id"
   } else if (!is.null(limit)) {
