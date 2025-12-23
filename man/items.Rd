@@ -10,13 +10,13 @@ items(q, feature_id = NULL, datetime = NULL, bbox = NULL, limit = NULL)
 \item{q}{a \code{rstac_query} object expressing a STAC query
 criteria.}
 
-\item{feature_id}{a \code{character} with item id to be fetched.
-Only works if the \code{collection_id} is informed. This is equivalent to
-the endpoint \code{/collections/\{collectionId\}/items/\{featureId\}}.}
+\item{feature_id}{a \code{character} item ID to fetch.
+Only works when \code{collection_id} is provided. This is equivalent to the
+endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.}
 
 \item{datetime}{a \code{character} with a date-time or an interval.
-Date and time strings needs to conform to RFC 3339. Intervals are
-expressed by separating two date-time strings by \code{'/'} character.
+Date and time strings need to conform to RFC 3339. Intervals are
+expressed by separating two date-time strings using the \code{'/'} character.
 Open intervals are expressed by using \code{'..'} in place of date-time.
 
 Examples:
@@ -28,11 +28,12 @@ Examples:
 }
 
 Only features that have a \code{datetime} property that intersects
-the interval or date-time informed in \code{datetime} are selected.}
+the interval or date-time provided in \code{datetime} are selected.}
 
-\item{bbox}{a \code{numeric} vector with only features that have a
-geometry that intersects the bounding box are selected. The bounding box is
-provided as four or six numbers, depending on whether the coordinate
+\item{bbox}{a \code{numeric} vector specifying a bounding box. Only
+features with geometry that intersects the bounding box are selected. The
+bounding box is provided as four or six numbers, depending on whether the
+coordinate
 reference system includes a vertical axis (elevation or depth):
 \itemize{ \item Lower left corner, coordinate axis 1
 \item Lower left corner, coordinate axis 2
@@ -53,40 +54,39 @@ in cases where the box spans the antimeridian, the first value
 to return. If not informed, it defaults to the service implementation.}
 }
 \value{
-A \code{rstac_query} object with the subclass \code{items} for
-\code{/collections/{collection_id}/items} endpoint, or a
-\code{item_id} subclass for
-\code{/collections/{collection_id}/items/{feature_id}} endpoint,
-containing all search field parameters to be provided to STAC API web
+A \code{rstac_query} object with the subclass \code{items} for the
+\code{/collections/\{collectionId\}/items} endpoint, or an \code{item_id} subclass
+for the \code{/collections/\{collectionId\}/items/\{itemId\}} endpoint,
+containing all search field parameters to be provided to a STAC API web
 service.
 }
 \description{
-The \code{items} function implements WFS3
+The \code{items()} function implements the OGC API - Features
 \code{/collections/\{collectionId\}/items}, and
-\code{/collections/\{collectionId\}/items/\{featureId\}} endpoints.
+\code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
 
 Each endpoint retrieves specific STAC objects:
 \itemize{
-\item \code{/collections/\{collectionId\}/items}: Returns a STAC Items
-collection (GeoJSON)
-\item \code{/collections/\{collectionId\}/items/\{itemId\}}: Returns a
-STAC Item (GeoJSON Feature)
+\item \code{/collections/\{collectionId\}/items}: Returns a STAC Item
+Collection (\code{GeoJSON})
+\item \code{/collections/\{collectionId\}/items/\{itemId\}}: Returns a STAC
+Item (\code{GeoJSON} Feature)
 }
 
 The endpoint \code{/collections/\{collectionId\}/items} accepts the same
-filters parameters of \code{\link[=stac_search]{stac_search()}} function.
+filter parameters as the \code{\link[=stac_search]{stac_search()}} function.
 }
 \examples{
 \dontrun{
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   collections("CBERS4-WFI-16D-2") \%>\%
-   items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
-   get_request()
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  collections("CBERS4-WFI-16D-2") \%>\%
+  items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
+  get_request()
 
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   collections("CBERS4-WFI-16D-2") \%>\%
-   items("CB4-16D_V2_000002_20230509") \%>\%
-   get_request()
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  collections("CBERS4-WFI-16D-2") \%>\%
+  items("CB4-16D_V2_000002_20230509") \%>\%
+  get_request()
 }
 
 }

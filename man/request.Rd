@@ -22,7 +22,7 @@ criteria.}
 lists should be simplified into vectors. Defaults to TRUE. Can also be set
 for an entire session via e.g. \code{options(rstac.simplify_vector = FALSE)}.}
 
-\item{...}{config parameters to be passed to \link[httr:GET]{GET} or
+\item{...}{configuration parameters to be passed to \link[httr:GET]{GET} or
 \link[httr:POST]{POST} methods, such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.}
 
@@ -39,11 +39,11 @@ object depending on the subclass and search fields parameters of \code{q}
 argument.
 }
 \description{
-The \code{get_request} is function that makes HTTP GET
-requests to STAC web services, retrieves, and parse the data.
+The \code{get_request()} function makes HTTP GET requests to STAC web
+services, retrieves the response, and parses the data.
 
-The \code{post_request} is function that makes HTTP POST
-requests to STAC web services, retrieves, and parse the data.
+The \code{post_request()} function makes HTTP POST requests to STAC web services,
+retrieves the response, and parses the data.
 }
 \examples{
 \dontrun{

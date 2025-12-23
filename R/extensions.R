@@ -1,7 +1,7 @@
 #' @title Extension development functions
 #'
 #' @description
-#' Currently, there are five STAC documents defined in STAC spec:
+#' Currently, five STAC document types are defined in the STAC specification:
 #' \itemize{
 #' \item `doc_catalog`
 #' \item `doc_collection`
@@ -14,9 +14,9 @@
 #' As soon as new STAC documents are proposed in the specification, new
 #' classes can be created in the `rstac` package.
 #'
-#' Let `version` parameter `NULL` to detect version automatically.
+#' Leave the `version` parameter as `NULL` to detect the version automatically.
 #'
-#' Basically, there are two types of extensions in STAC specification:
+#' Basically, there are two types of extensions in the STAC specification:
 #' \enumerate{
 #' \item STAC documents extensions: these extensions can be defined in
 #' different elements of the document specification.
@@ -27,14 +27,14 @@
 #' }
 #' Here, we will focus on the second type of extension.
 #'
-#' To let `rstac` package perform some behavior according to an
-#' STAC API extension we need define some functions. These functions
+#' To make the `rstac` package behave according to a STAC API extension, you
+#' need to define a few functions. These functions
 #' can be implemented in three environments:
 #' \enumerate{
-#' \item In `rstac` package by including new functions make a
-#' GitHub pull request on `rstac` repository
+#' \item In the `rstac` package by adding new functions and opening a
+#' GitHub pull request on the `rstac` repository
 #' (<https://github.com/brazil-data-cube/rstac>)
-#' \item In a new package by using `rstac` as dependent package
+#' \item In a new package that depends on `rstac`
 #' \item In a script that loads `rstac` into the environment
 #' }
 #' All these places may impose specific requirements, however the core
@@ -45,19 +45,19 @@
 #' following S3 generic methods for that subclass:
 #' \itemize{
 #' \item `before_request()`: allows handling query parameters before
-#' submit them to the HTTP server, usually sets up the query endpoint;
-#' \item `after_request()`: allows to check and parse document received
-#' by the HTTP server;
+#' submitting them to the HTTP server, usually setting up the query endpoint;
+#' \item `after_response()`: checks and parses documents received from the
+#' HTTP server;
 #' }
 #'
-#' These methods will work 'behind the scenes' when a `rstac_query` object
-#' representing a user query are passed to a request function
+#' These methods work "behind the scenes" when a `rstac_query` object
+#' representing a user query is passed to a request function
 #' (e.g. `get_request()` or `post_request()`). The calling order is:
 #' \enumerate{
-#' \item begin of `get_request()` or `post_request()`
-#' \item if STAC API version is not defined, try detect it
+#' \item beginning of `get_request()` or `post_request()`
+#' \item if STAC API version is not defined, try to detect it
 #' \item call `before_request()`
-#' \item send HTTP request
+#' \item send the HTTP request
 #' \item receive HTTP response
 #' \item `after_response()`
 #' \item end of `get_request()` or `post_request()`
@@ -68,8 +68,9 @@
 #' associated with the above S3 methods. This function must accept as its
 #' first parameter a `rstac_query` object representing the actual query.
 #' To keep the command flow consistency, the function needs to check the
-#' subclass of the input query. After that, it must set new or changes the
-#' input query parameters according to the user input and, finally,
+#' subclass of the input query. After that, it must set new parameters or change
+#' existing ones, update the input query parameters according to the user input,
+#' and, finally,
 #' return the new query as a `rstac_query` object.
 #'
 #' You can see examples on how to implement an STAC API extension by looking at
@@ -78,7 +79,7 @@
 #' endpoints, as well as the query API extension.
 #'
 #' There are also some utility functions described in **Functions**
-#' section bellow that can help the extension development.
+#' section below that can help the extension development.
 #'
 #'
 #' @param q                a `rstac_query` object expressing a STAC query
@@ -88,7 +89,7 @@
 #' @param simplify_vector  a `logical` describing whether length-one nested
 #' lists should be simplified into vectors. Defaults to TRUE. Can also be set
 #' for an entire session via e.g. \code{options(rstac.simplify_vector = FALSE)}.
-#' @param params           a `list` with params to add in request.
+#' @param params           a `list` with parameters to add to the request.
 #'
 #' @return
 #' A `rstac_query` object for `before_request()` and
@@ -234,17 +235,17 @@ subclass <- function(x) {
 
 #' @describeIn extensions
 #' The `set_query_endpoint()` function defines the endpoint of a query.
-#'  If `params` parameter is passed, each value must be an entry of params
-#'  field of the given query. The corresponding param value will be used as
+#'  If `params` parameter is passed, each value must be an entry of `params`
+#'  field of the given query. The corresponding `params` value will be used as
 #'  value replacement of `%s` occurrences in the `endpoint` string. After
-#'  the replacement, all params in this list will be removed.
+#'  the replacement, all `params` in this list will be removed.
 #'
 #' @param q          a `rstac_query` object.
 #'
 #' @param endpoint   a `character` vector with the format string with the
 #'    endpoint url.
 #'
-#' @param params     a `character` vector with the params entries to replace
+#' @param params     a `character` vector with the `params` entries to replace
 #'    all `%s` occurrences in the endpoint string.
 #'
 set_query_endpoint <- function(q, endpoint, params = NULL) {

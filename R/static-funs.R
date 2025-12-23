@@ -4,9 +4,9 @@
 #' These functions provide support to work with static catalogs.
 #'
 #' \itemize{
-#' \item `read_stac()`: open a STAC document from an URL.
+#' \item `read_stac()`: opens a STAC document from a URL.
 #'
-#' \item `read_items()`: opens (statically) all items referred in `links`
+#' \item `read_items()`: opens (statically) all items referred to in the `links`
 #'   key entry of a given collection document (`doc_collection`).
 #'
 #' \item `links()`: extracts and filters the links of any STAC document.
@@ -22,7 +22,7 @@
 #' @param collection  a `doc_collection` object to fetch all
 #'   `rel=="item"` links.
 #'
-#' @param limit     an `integer` with defining the page size of items to fetch.
+#' @param limit     an `integer` defining the page size of items to fetch.
 #'
 #' @param page      an `integer` with the page number to fetch the items.
 #'
@@ -34,21 +34,21 @@
 #' @param link    a `doc_link` object, usually an element of `links` key entry.
 #'
 #' @param base_url  a `character` with the base URL to resolve relative links.
-#'   If `NULL` (default) `rstac` will try resolve relative links using
+#'   If `NULL` (default), `rstac` will try to resolve relative links using
 #'   internal metadata.
 #'
 #' @param ...     additional arguments. See details.
 #'
 #' @details
-#' Ellipsis argument (`...`) may appears in different items functions and
+#' Ellipsis argument (`...`) may appear in different functions and
 #' has distinct purposes:
 #' \itemize{
 #'
-#' \item `stac_read()`: ellipsis is used to pass any additional parameters
+#' \item `read_stac()`: ellipsis is used to pass any additional parameters
 #' to [read_json][jsonlite::read_json] function.
 #'
 #' \item `links()`: ellipsis is used to pass logical expressions to be
-#' evaluated against a `doc_link` item as a filter criteria. See examples.
+#' evaluated against a `doc_link` item as filter criteria. See examples.
 #'
 #' }
 #'

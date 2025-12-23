@@ -89,7 +89,7 @@ The \code{rstac_query()} function returns a \code{STACQuery} object with
 subclass defined by \code{subclass} parameter.
 }
 \description{
-Currently, there are five STAC documents defined in STAC spec:
+Currently, five STAC document types are defined in the STAC specification:
 \itemize{
 \item \code{doc_catalog}
 \item \code{doc_collection}
@@ -102,9 +102,9 @@ Each document class is associated with STAC API endpoints.
 As soon as new STAC documents are proposed in the specification, new
 classes can be created in the \code{rstac} package.
 
-Let \code{version} parameter \code{NULL} to detect version automatically.
+Leave the \code{version} parameter as \code{NULL} to detect the version automatically.
 
-Basically, there are two types of extensions in STAC specification:
+Basically, there are two types of extensions in the STAC specification:
 \enumerate{
 \item STAC documents extensions: these extensions can be defined in
 different elements of the document specification.
@@ -115,14 +115,14 @@ in the documents.
 }
 Here, we will focus on the second type of extension.
 
-To let \code{rstac} package perform some behavior according to an
-STAC API extension we need define some functions. These functions
+To make the \code{rstac} package behave according to a STAC API extension, you
+need to define a few functions. These functions
 can be implemented in three environments:
 \enumerate{
-\item In \code{rstac} package by including new functions make a
-GitHub pull request on \code{rstac} repository
+\item In the \code{rstac} package by adding new functions and opening a
+GitHub pull request on the \code{rstac} repository
 (\url{https://github.com/brazil-data-cube/rstac})
-\item In a new package by using \code{rstac} as dependent package
+\item In a new package that depends on \code{rstac}
 \item In a script that loads \code{rstac} into the environment
 }
 All these places may impose specific requirements, however the core
@@ -133,19 +133,19 @@ extensions. An extension must define a subclass name and implement all the
 following S3 generic methods for that subclass:
 \itemize{
 \item \code{before_request()}: allows handling query parameters before
-submit them to the HTTP server, usually sets up the query endpoint;
-\item \code{after_request()}: allows to check and parse document received
-by the HTTP server;
+submitting them to the HTTP server, usually setting up the query endpoint;
+\item \code{after_response()}: checks and parses documents received from the
+HTTP server;
 }
 
-These methods will work 'behind the scenes' when a \code{rstac_query} object
-representing a user query are passed to a request function
+These methods work "behind the scenes" when a \code{rstac_query} object
+representing a user query is passed to a request function
 (e.g. \code{get_request()} or \code{post_request()}). The calling order is:
 \enumerate{
-\item begin of \code{get_request()} or \code{post_request()}
-\item if STAC API version is not defined, try detect it
+\item beginning of \code{get_request()} or \code{post_request()}
+\item if STAC API version is not defined, try to detect it
 \item call \code{before_request()}
-\item send HTTP request
+\item send the HTTP request
 \item receive HTTP response
 \item \code{after_response()}
 \item end of \code{get_request()} or \code{post_request()}
@@ -156,8 +156,9 @@ parameters and return a \code{rstac_query} object with a subclass
 associated with the above S3 methods. This function must accept as its
 first parameter a \code{rstac_query} object representing the actual query.
 To keep the command flow consistency, the function needs to check the
-subclass of the input query. After that, it must set new or changes the
-input query parameters according to the user input and, finally,
+subclass of the input query. After that, it must set new parameters or change
+existing ones, update the input query parameters according to the user input,
+and, finally,
 return the new query as a \code{rstac_query} object.
 
 You can see examples on how to implement an STAC API extension by looking at
@@ -166,7 +167,7 @@ and \code{ext_query.R} source files. These files implement core STAC API
 endpoints, as well as the query API extension.
 
 There are also some utility functions described in \strong{Functions}
-section bellow that can help the extension development.
+section below that can help the extension development.
 }
 \section{Functions}{
 \itemize{
@@ -185,10 +186,10 @@ object (\code{rstac_query}) is expected in the function extension.
 subclass name of \code{rstac_query} objects.
 
 \item \code{set_query_endpoint()}: The \code{set_query_endpoint()} function defines the endpoint of a query.
-If \code{params} parameter is passed, each value must be an entry of params
-field of the given query. The corresponding param value will be used as
+If \code{params} parameter is passed, each value must be an entry of \code{params}
+field of the given query. The corresponding \code{params} value will be used as
 value replacement of \verb{\%s} occurrences in the \code{endpoint} string. After
-the replacement, all params in this list will be removed.
+the replacement, all \code{params} in this list will be removed.
 
 \item \code{rstac_query()}: The \code{rstac_query()} function is a constructor of \code{rstac_query}
 objects. Every extension must implement a subclass of \code{rstac_query} to
@@ -197,7 +198,7 @@ parameter the extension's subclass name.
 
 The \code{params} parameter is a named \code{list} where user parameters
 must be stored. It is important to know if previous query parameters needs
-to be keeped in the new query. If so, it is recommended do use
+to be kept in the new query. If so, it is recommended do use
 \code{\link[utils:modifyList]{utils::modifyList()}} function to merge the old and new
 query parameters.
 

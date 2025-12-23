@@ -27,7 +27,7 @@ link_open(link, base_url = NULL)
 \item{collection}{a \code{doc_collection} object to fetch all
 \code{rel=="item"} links.}
 
-\item{limit}{an \code{integer} with defining the page size of items to fetch.}
+\item{limit}{an \code{integer} defining the page size of items to fetch.}
 
 \item{page}{an \code{integer} with the page number to fetch the items.}
 
@@ -41,7 +41,7 @@ shown or not. Defaults to \code{TRUE}.}
 \item{link}{a \code{doc_link} object, usually an element of \code{links} key entry.}
 
 \item{base_url}{a \code{character} with the base URL to resolve relative links.
-If \code{NULL} (default) \code{rstac} will try resolve relative links using
+If \code{NULL} (default), \code{rstac} will try to resolve relative links using
 internal metadata.}
 }
 \value{
@@ -55,9 +55,9 @@ internal metadata.}
 These functions provide support to work with static catalogs.
 
 \itemize{
-\item \code{read_stac()}: open a STAC document from an URL.
+\item \code{read_stac()}: opens a STAC document from a URL.
 
-\item \code{read_items()}: opens (statically) all items referred in \code{links}
+\item \code{read_items()}: opens (statically) all items referred to in the \code{links}
 key entry of a given collection document (\code{doc_collection}).
 
 \item \code{links()}: extracts and filters the links of any STAC document.
@@ -67,15 +67,15 @@ the link. This function can resolve any relative URL.
 }
 }
 \details{
-Ellipsis argument (\code{...}) may appears in different items functions and
+Ellipsis argument (\code{...}) may appear in different functions and
 has distinct purposes:
 \itemize{
 
-\item \code{stac_read()}: ellipsis is used to pass any additional parameters
+\item \code{read_stac()}: ellipsis is used to pass any additional parameters
 to \link[jsonlite:read_json]{read_json} function.
 
 \item \code{links()}: ellipsis is used to pass logical expressions to be
-evaluated against a \code{doc_link} item as a filter criteria. See examples.
+evaluated against a \code{doc_link} item as filter criteria. See examples.
 
 }
 }

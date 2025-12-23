@@ -22,12 +22,13 @@ criteria.}
 the search for items. Only items in one of the provided collections will be
 searched.}
 
-\item{ids}{a \code{character} vector with item IDs. All other filters
+\item{ids}{a \code{character} vector with item IDs. All other filter
 parameters that further restrict the number of search results are ignored.}
 
-\item{bbox}{a \code{numeric} vector with only features that have a
-geometry that intersects the bounding box are selected. The bounding box is
-provided as four or six numbers, depending on whether the coordinate
+\item{bbox}{a \code{numeric} vector specifying a bounding box. Only
+features with geometry that intersects the bounding box are selected. The
+bounding box is provided as four or six numbers, depending on whether the
+coordinate
 reference system includes a vertical axis (elevation or depth):
 \itemize{ \item Lower left corner, coordinate axis 1
 \item Lower left corner, coordinate axis 2
@@ -44,9 +45,9 @@ antimeridian, the first value (west-most box edge) is larger than the third
 value (east-most box edge).}
 
 \item{datetime}{a \code{character} with a date-time or an interval. Date
-and time strings needs to conform to RFC 3339. Intervals are expressed by
-separating two date-time strings by \code{'/'} character. Open intervals are
-expressed by using \code{'..'} in place of date-time.
+and time strings need to conform to RFC 3339. Intervals are expressed by
+separating two date-time strings using the \code{'/'} character. Open intervals
+are expressed by using \code{'..'} in place of a date-time.
 
 Examples:
 \itemize{
@@ -57,11 +58,11 @@ Examples:
 }
 
 Only features that have a \code{datetime} property that intersects the
-interval or date-time informed in \code{datetime} are selected.}
+interval or date-time provided in \code{datetime} are selected.}
 
-\item{intersects}{a \code{list} expressing GeoJSON geometries
+\item{intersects}{a \code{list} expressing \code{GeoJSON} geometries
 objects as specified in RFC 7946. Only returns items that intersect with
-the provided geometry. To turn a GeoJSON into a list the package
+the provided geometry. To turn a \code{GeoJSON} into a list, the package
 \code{jsonlite} can be used.}
 
 \item{limit}{an \code{integer} defining the maximum number of results
@@ -69,7 +70,7 @@ to return. If not informed, it defaults to the service implementation.}
 }
 \value{
 A \code{rstac_query} object with the subclass \code{search} containing all
-search field parameters to be provided to STAC API web service.
+search field parameters to be provided to a STAC API web service.
 }
 \description{
 (This document is based on STAC specification documentation
@@ -78,28 +79,30 @@ and reproduces some of its parts)
 
 The \code{stac_search} function implements \verb{/stac/search} API endpoint
 (v0.8.1) and \verb{/search} (v0.9.0 or v1.0.0).
-It prepares query parameters used in the search API request, a
-\code{stac} object with all filter parameters to be provided to
-\code{get_request} or \code{post_request} functions. The GeoJSON content
+It prepares query parameters for a search API request and returns a
+\code{rstac_query} object with all filter parameters to be provided to
+\code{get_request()} or \code{post_request()} functions. The \code{GeoJSON} content
 returned by these requests is a \code{doc_items} object, a regular R
 \code{list} representing a STAC Item Collection document.
 }
 \examples{
 \dontrun{
- # GET request
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   stac_search(
-     collections = "CBERS4-WFI-16D-2",
-     limit = 10,
-     datetime = "2017-08-01/2018-03-01") \%>\%
-   get_request()
+# GET request
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    limit = 10,
+    datetime = "2017-08-01/2018-03-01"
+  ) \%>\%
+  get_request()
 
- # POST request
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   stac_search(
-     collections = "CBERS4-WFI-16D-2",
-     bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
-   post_request()
+# POST request
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)
+  ) \%>\%
+  post_request()
 }
 
 }

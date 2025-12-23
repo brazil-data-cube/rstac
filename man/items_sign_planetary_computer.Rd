@@ -51,38 +51,42 @@ used by \code{items_sign()}. This function sign all the assets' URL.
 }
 \examples{
 \dontrun{
- # doc_items object
- stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") \%>\%
-  stac_search(collections = "sentinel-2-l2a",
-              bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) \%>\%
+# doc_items object
+stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") \%>\%
+  stac_search(
+    collections = "sentinel-2-l2a",
+    bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)
+  ) \%>\%
   get_request()
 
- # the new way to authenticate:
- stac_obj <- stac_obj \%>\%
-   items_sign_planetary_computer()
+# the new way to authenticate:
+stac_obj <- stac_obj \%>\%
+  items_sign_planetary_computer()
 
- # this is the old way of authentication (still works):
- # stac_obj <- stac_obj \%>\%
- #   items_sign(sign_fn = sign_planetary_computer())
+# this is the old way of authentication (still works):
+# stac_obj <- stac_obj \%>\%
+#   items_sign(sign_fn = sign_planetary_computer())
 
- # example of access to collections that require authentication
- stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
-   stac_search(collections = c("sentinel-1-rtc"),
-               bbox = c(-64.8597, -10.4919, -64.79272527, -10.4473),
-               datetime = "2019-01-01/2019-01-28") \%>\%
-   post_request()
+# example of access to collections that require authentication
+stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
+  stac_search(
+    collections = c("sentinel-1-rtc"),
+    bbox = c(-64.8597, -10.4919, -64.79272527, -10.4473),
+    datetime = "2019-01-01/2019-01-28"
+  ) \%>\%
+  post_request()
 
- # the new way to authenticate:
- # stac_obj <- stac_obj \%>\%
- #   items_sign_planetary_computer("<subscription-key>")
+# the new way to authenticate:
+# stac_obj <- stac_obj \%>\%
+#   items_sign_planetary_computer("<subscription-key>")
 
- # this is the old way of authentication (still works):
- # stac_obj <- stac_obj \%>\%
- #   items_sign(
- #     sign_fn = sign_planetary_computer(
- #       headers = c("Ocp-Apim-Subscription-Key" = <your-mpc-token>)
- #     )
- #   )
+# this is the old way of authentication (still works):
+# stac_obj <- stac_obj \%>\%
+#   items_sign(
+#     sign_fn = sign_planetary_computer(
+#       headers = c("Ocp-Apim-Subscription-Key" = <your-mpc-token>)
+#     )
+#   )
 }
 
 }

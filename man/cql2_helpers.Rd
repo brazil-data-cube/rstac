@@ -6,7 +6,7 @@
 \alias{cql2_date}
 \alias{cql2_timestamp}
 \alias{cql2_interval}
-\title{CQL2 helper function}
+\title{\code{CQL2} helper function}
 \usage{
 cql2_bbox_as_geojson(bbox)
 
@@ -17,8 +17,8 @@ cql2_timestamp(x)
 cql2_interval(start = "..", end = "..")
 }
 \arguments{
-\item{bbox}{a \code{numeric} containing a bbox with
-c(xmin, ymin, xmax, ymax).}
+\item{bbox}{a \code{numeric} containing a \code{bbox} with
+\code{c(xmin, ymin, xmax, ymax)}.}
 
 \item{x, start, end}{a \code{character} string containing valid \code{date} or
 \code{timestamp}.}
@@ -32,17 +32,17 @@ internal \code{rstac} expressions representing temporal values.
 }
 }
 \description{
-These are helper functions to easy construction CQL2 expressions.
+These are helper functions to easy construction \code{CQL2} expressions.
 These functions are not meant to be used in expressions and they must
 be escaped using \verb{\{\{} to be evaluated before request.
 }
 \details{
 \itemize{
-\item \code{cql2_bbox_as_geojson()}: used to convert bounding box (bbox) to a
-GeoJSON object to be used as argument of CQL2 spatial operators.
+\item \code{cql2_bbox_as_geojson()}: used to convert bounding box (\code{bbox}) to a
+\code{GeoJSON} object to be used as argument of \code{CQL2} spatial operators.
 
 \item \code{cql2_date()}, \code{cql2_timestamp()}, and \code{cql2_interval()}:
-create temporal literal values to be passed into CQL2 expressions.
+create temporal literal values to be passed into \code{CQL2} expressions.
 }
 }
 \examples{
@@ -50,14 +50,10 @@ create temporal literal values to be passed into CQL2 expressions.
 bbox <- c(-122.2751, 47.5469, -121.9613, 47.7458)
 
 cql2_json(
-    collection == "landsat-c2-l2" &&
-      t_intersects(datetime, {{
-        cql2_interval("2020-12-01", "2020-12-31")
-      }}) &&
-      s_intersects(geometry, {{
-        cql2_bbox_as_geojson(bbox)
-      }})
-  )
+  collection == "landsat-c2-l2" &&
+    t_intersects(datetime, {{ cql2_interval("2020-12-01", "2020-12-31") }}) &&
+    s_intersects(geometry, {{ cql2_bbox_as_geojson(bbox) }})
+)
 }
 
 }

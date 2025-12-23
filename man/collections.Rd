@@ -10,7 +10,7 @@ collections(q, collection_id = NULL, limit = NULL)
 \item{q}{a \code{rstac_query} object expressing a STAC query
 criteria.}
 
-\item{collection_id}{a \code{character} collection id to be retrieved.}
+\item{collection_id}{a \code{character} collection ID to retrieve.}
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed, it defaults to the service implementation.}
@@ -19,10 +19,11 @@ to return. If not informed, it defaults to the service implementation.}
 A \code{rstac_query} object with the subclass \code{collections} for
 \verb{/collections/} endpoint, or a \code{collection_id} subclass for
 \code{/collections/{collection_id}} endpoint, containing all search field
-parameters to be provided to STAC API web service.
+parameters to be provided to a STAC API web service.
 }
 \description{
-The \code{collections} function implements the WFS3 \verb{/collections}
+The \code{collections()} function implements the OGC API - Features (formerly
+\code{WFS3}) \verb{/collections}
 and \code{/collections/\{collectionId\}} endpoints.
 
 Each endpoint retrieves specific STAC objects:
@@ -35,13 +36,13 @@ Collection object
 }
 \examples{
 \dontrun{
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   collections() \%>\%
-   get_request()
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  collections() \%>\%
+  get_request()
 
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   collections("CBERS4-WFI-16D-2") \%>\%
-   get_request()
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  collections("CBERS4-WFI-16D-2") \%>\%
+  get_request()
 }
 
 }

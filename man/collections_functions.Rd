@@ -22,7 +22,7 @@ collections_fetch(collections, ..., progress = TRUE, matched_field = NULL)
 \item{...}{additional arguments. See details.}
 
 \item{matched_field}{a \code{character} vector with the path
-where is the number of collections returned.}
+identifying the field containing the number of matched collections.}
 
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
@@ -32,35 +32,37 @@ shown or not. Defaults to \code{TRUE}.}
 \item \code{collections_length()}: an \code{integer} value.
 
 \item \code{collections_matched()}: returns an \code{integer} value if the STAC web
-server does support this extension. Otherwise returns \code{NULL}.
+server supports this extension. Otherwise, returns \code{NULL}.
 
-\item \code{collections_fetch()}: a \code{doc_items} with all matched items.
+\item \code{collections_fetch()}: a \code{doc_collections} object with all matched
+collections.
 
-\item \code{collections_next()}: fetches a new page from STAC service.
+\item \code{collections_next()}: fetches a new page from the STAC service.
 
 }
 }
 \description{
 These functions provide support to work with
-\code{doc_collections}objects.
+\code{doc_collections} objects.
 
 \itemize{
 \item \code{collections_length()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-shows how many items there are in the \code{doc_items} object.
+shows how many collections there are in a \code{doc_collections} object.
 
 \item \code{collections_matched()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-shows how many items matched the search criteria.
+shows how many collections matched the query criteria (when the service
+provides this information).
 
 \item \code{collections_fetch()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-request all STAC Items through pagination.
+requests all collections through pagination.
 
 \item \code{collections_next()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-fetches a new page from STAC service.
+fetches a new page from the STAC service.
 
 }
 }
 \details{
-Ellipsis argument (\code{...}) appears in different items functions and
+Ellipsis argument (\code{...}) appears in different collection functions and
 has distinct purposes:
 
 \itemize{

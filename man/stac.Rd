@@ -23,13 +23,13 @@ request parameters to be provided to API service.
 The \code{stac} function implements \verb{/stac} API
 endpoint (>=0.8.0), and \code{/} for versions 0.9.0 or higher. It prepares
 search field parameters to be provided to a STAC API web service. This
-endpoint should return a STAC Catalog document containing all published data
-catalogs.
+endpoint should return a STAC Catalog document containing all published
+data catalogs.
 }
 \examples{
 \dontrun{
- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
-   get_request()
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  get_request()
 }
 
 }

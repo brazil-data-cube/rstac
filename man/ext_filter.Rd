@@ -16,9 +16,9 @@ cql2_text(expr)
 \item{q}{a \code{rstac_query} object expressing a STAC query
 criteria.}
 
-\item{expr}{a valid R expression to be translated to CQL2 (see details).}
+\item{expr}{a valid R expression to be translated to \code{CQL2} (see details).}
 
-\item{lang}{a character value indicating which CQL2 representation
+\item{lang}{a character value indicating which \code{CQL2} representation
 to be used. It can be either \code{"cql2-text"} (for plain text) or
 \code{"cql2-json"} (for JSON format). If \code{NULL} (default), \code{"cql2-text"} is
 used for HTTP \code{GET} requests and \code{"cql2-json"} for \code{POST} requests.}
@@ -34,9 +34,9 @@ all request parameters to be passed to \code{get_request()} or
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-\code{ext_filter()} implements Common Query Language (CQL2) filter extension
+\code{ext_filter()} implements Common Query Language (\code{CQL2}) filter extension
 on \code{rstac}. This extension expands the filter capabilities providing a
-query language to construct more complex expressions. CQL2 is an OGC
+query language to construct more complex expressions. \code{CQL2} is an OGC
 standard and defines how filters can be constructed. It supports predicates
 for standard data types like strings, numbers, and boolean as well as
 for spatial geometries (point, lines, polygons) and temporal
@@ -44,18 +44,18 @@ data (instants and intervals).
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 \code{cql2_json()} and \code{cql2_text()} are helper functions that can be used
-to show how expressions are converted into CQL2 standard, either
+to show how expressions are converted into \code{CQL2} standard, either
 JSON or TEXT formats.
 
-\code{rstac} translates R expressions to CQL2, allowing users to express their
+\code{rstac} translates R expressions to \code{CQL2}, allowing users to express their
 filter criteria using R language. For more details on how to create
-CQL2 expressions in \code{rstac}. See the details section.
+\code{CQL2} expressions in \code{rstac}. See the details section.
 }
 \details{
 To allow users to express filter criteria in R language, \code{rstac} takes
-advantage of the abstract syntax tree (AST) to translate R expressions
-to CQL2 expressions. The following topics describe the correspondences
-between \code{rstac} expressions and CQL2 operators.
+advantage of the abstract syntax tree (\code{AST}) to translate R expressions
+to \code{CQL2} expressions. The following topics describe the correspondences
+between \code{rstac} expressions and \code{CQL2} operators.
 \subsection{Non-standard evaluation}{
 \itemize{
 \item \code{ext_filter()} uses non-standard evaluation to evaluate its expressions.
@@ -68,18 +68,18 @@ i.e., \code{{{variable}}}.
 \subsection{Standard comparison operators}{
 \itemize{
 \item \code{==}, \code{>=}, \code{<=}, \code{>}, \code{<}, and \code{!=} operators correspond to
-\code{=}, \code{>=}, \code{<=}, \code{>}, \code{<}, and \verb{<>} in CQL2, respectively.
+\code{=}, \code{>=}, \code{<=}, \code{>}, \code{<}, and \verb{<>} in \code{CQL2}, respectively.
 \item function \code{is_null(a)} and \code{!is_null(a)} corresponds to \verb{a IS NULL} and
-\verb{a IS NOT NULL} CQL2 operators, respectively.
+\verb{a IS NOT NULL} \code{CQL2} operators, respectively.
 }
 }
 
 \subsection{Advanced comparison operators}{
 \itemize{
-\item \code{a \%like\% b} corresponds to CQL2 \verb{a LIKE b}, \code{a} and \code{b} \code{strings} values.
-\item \code{between(a, b, c)} corresponds to CQL2 \verb{a BETWEEN b AND c}, where
+\item \code{a \%like\% b} corresponds to \code{CQL2} \verb{a LIKE b}, \code{a} and \code{b} \code{strings} values.
+\item \code{between(a, b, c)} corresponds to \code{CQL2} \verb{a BETWEEN b AND c}, where
 \code{b} and \code{c} \code{integer} values.
-\item \code{a \%in\% b} corresponds to CQL2 \verb{a IN (b)}, where \code{b} should be
+\item \code{a \%in\% b} corresponds to \code{CQL2} \verb{a IN (b)}, where \code{b} should be
 a list of values of the same type as \code{a}.
 }
 }
@@ -88,16 +88,16 @@ a list of values of the same type as \code{a}.
 \itemize{
 \item functions \code{s_intersects(a, b)}, \code{s_touches(a, b)}, \code{s_within(a, b)},
 \code{s_overlaps(a, b)}, \code{s_crosses(a, b)}, and \code{s_contains(a, b)} corresponds
-to CQL2 \code{S_INTERSECTS(a, b)}, \code{S_TOUCHES(a, b)}, \code{S_WITHIN(a, b)},
+to \code{CQL2} \code{S_INTERSECTS(a, b)}, \code{S_TOUCHES(a, b)}, \code{S_WITHIN(a, b)},
 \code{S_OVERLAPS(a, b)}, \code{S_CROSSES(a, b)}, and \code{S_CONTAINS(a, b)} operators,
 respectively. Here, \code{a} and \code{b} should be \code{geometry} objects. \code{rstac}
-accepts \code{sf}, \code{sfc}, \code{sfg}, \code{list} (representing GeoJSON objects), or
-\code{character} (representing either GeoJSON or WKT).
+accepts \code{sf}, \code{sfc}, \code{sfg}, \code{list} (representing \code{GeoJSON} objects), or
+\code{character} (representing either \code{GeoJSON} or \code{WKT}).
 \item \strong{NOTE}: All of the above spatial object types, except for the
-\code{character}, representing a WKT, may lose precision due to numeric
-truncation when R converts numbers to JSON text. WKT strings are
+\code{character}, representing a \code{WKT}, may lose precision due to numeric
+truncation when R converts numbers to \code{JSON} text. \code{WKT} strings are
 sent "as is" to the service. Therefore, the only way for users to
-retain precision on spatial objects is to represent them as a WKT
+retain precision on spatial objects is to represent them as a \code{WKT}
 string. However, user can control numeric precision using the
 \code{options(stac_digits = ...)}. The default value is 15 digits.
 }
@@ -106,7 +106,7 @@ string. However, user can control numeric precision using the
 \subsection{Temporal operators}{
 \itemize{
 \item functions \code{date(a)}, \code{timestamp(a)}, and \code{interval(a, b)} corresponds to
-CQL2 \code{DATE(a)}, \code{TIMESTAMP(a)}, and \code{INTERVAL(a, b)} operators,
+\code{CQL2} \code{DATE(a)}, \code{TIMESTAMP(a)}, and \code{INTERVAL(a, b)} operators,
 respectively. These functions create literal \code{temporal} values.
 The first two define an \code{instant} type, and the third an \code{interval} type.
 \item functions \code{t_after(a, b)}, \code{t_before(a, b)}, \code{t_contains(a, b)},
@@ -114,7 +114,7 @@ The first two define an \code{instant} type, and the third an \code{interval} ty
 \code{t_finishedby(a, b)}, \code{t_finishes(a, b)}, \code{t_intersects(a, b)},
 \code{t_meets(a, b)}, \code{t_meet(a, b)}, \code{t_metby(a, b)}, \code{t_overlappedby(a, b)},
 \code{t_overlaps(a, b)}, \code{t_startedby(a, b)}, and \code{t_starts(a, b)} corresponds
-to CQL2 \code{T_AFTER(a, b)}, \code{T_BEFORE(a, b)}, \code{T_CONTAINS(a, b)},
+to \code{CQL2} \code{T_AFTER(a, b)}, \code{T_BEFORE(a, b)}, \code{T_CONTAINS(a, b)},
 \code{T_DISJOINT(a, b)}, \code{T_DURING(a, b)}, \code{T_EQUALS(a, b)},
 \code{T_FINISHEDBY(a, b)}, \code{T_FINISHES(a, b)}, \code{T_INTERSECTS(a, b)},
 \code{T_MEETS(a, b)}, \code{T_MEET(a, b)}, \code{T_METBY(a, b)}, \code{T_OVERLAPPEDBY(a, b)},
@@ -128,9 +128,9 @@ respectively. Here, \code{a} and \code{b} are \code{temporal} values (\code{inst
 \itemize{
 \item R unnamed lists (or vectors of size > 1) are translated to arrays by
 \code{rstac}. \code{list()} and \code{c()} functions always create \code{array} values
-in CQL2 context, no matter the number of its arguments.
+in \code{CQL2} context, no matter the number of its arguments.
 \item functions \code{a_equals(a, b)}, \code{a_contains(a, b)}, \code{a_containedby(a, b)},
-and \code{a_overlaps(a, b)} corresponds to CQL2 \code{A_EQUALS(a, b)},
+and \code{a_overlaps(a, b)} corresponds to \code{CQL2} \code{A_EQUALS(a, b)},
 \code{A_CONTAINS(a, b)}, \code{A_CONTAINEDBY(a, b)}, and \code{A_OVERLAPS(a, b)}
 operators, respectively. Here, \code{a} and \code{b} should be \code{arrays}.
 }
