@@ -394,7 +394,7 @@ stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
 stac_item \%>\% items_reap(c("properties", "datetime"))
 
 # Extract all asset URLs from each item
-stac_item \%>\% items_reap(c("assets", "*"), \(x) x$href)
+stac_item \%>\% items_reap(c("assets", "*"), function(x) x$href)
 
 stac_item \%>\% items_as_sf()
 
