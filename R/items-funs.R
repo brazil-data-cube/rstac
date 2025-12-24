@@ -10,12 +10,13 @@
 #'
 #' \item `items_matched()`: shows how many items matched the
 #' search criteria. It supports `search:metadata` (v0.8.0),
-#' `context` (v0.9.0), and `numberMatched` (OGC WFS3 core spec).
+#' `context` (v0.9.0), and `numberMatched` (OGC API - Features core
+#' specification).
 #'
-#' \item `items_fetch()`: request all STAC Items through
+#' \item `items_fetch()`: requests all STAC Items through
 #' pagination.
 #'
-#' \item `items_next()`: fetches a new page from STAC service.
+#' \item `items_next()`: fetches a new page from the STAC service.
 #'
 #' \item `items_datetime()`: retrieves the `datetime`
 #' field in `properties` from `doc_items` and
@@ -24,29 +25,30 @@
 #' \item `items_bbox()`: retrieves the `bbox`
 #' field of a `doc_items` or a `doc_item` object.
 #'
-#' \item `item_assets()`: returns the assets name from
+#' \item `items_assets()`: returns the asset names from
 #' `doc_items` and `doc_item` objects.
 #'
 #' \item `items_filter()`: selects only items that match some criteria
 #'  (see details section).
 #'
-#' \item `items_reap()`: extract key values by traversing all items
-#' in a `doc_items` object.
+#' \item `items_reap()`: traverses all items in a `doc_items` object and
+#' extracts values based on the specified field path. It is useful for
+#' retrieving nested elements from STAC items.
 #'
 #' \item `items_fields()`: lists field names inside an item.
 #'
-#' \item `items_sign()`: allow access assets by preparing its url.
+#' \item `items_sign()`: allows access to assets by preparing their URLs.
 #'
-#' \item `items_as_sf()`: `r lifecycle::badge('experimental')` convert items
-#'   to `sf` object.
+#' \item `items_as_sf()`: `r lifecycle::badge('experimental')` converts items
+#'   to an `sf` object.
 #'
-#' \item `items_as_sfc()`: `r lifecycle::badge('experimental')` convert items
-#'   to `sfc` object.
+#' \item `items_as_sfc()`: `r lifecycle::badge('experimental')` converts items
+#'   to an `sfc` object.
 #'
 #' \item `items_intersects()`: `r lifecycle::badge('experimental')` indicates
-#'   which items intersects a given geometry.
+#'   which items intersect a given geometry.
 #'
-#' \item `items_properties()`: lists properties names inside an item.
+#' \item `items_properties()`: lists property names inside an item.
 #'
 #' }
 #'
@@ -61,8 +63,9 @@
 #' @param progress        a `logical` indicating if a progress bar must be
 #' shown or not. Defaults to `TRUE`.
 #'
-#' @param field           a `character` with the names of the field to
-#' get the subfields values.
+#' @param field           A `character` vector specifying the path to the
+#' field from which to extract sub-field values.
+#' For example, `c("assets", "*")` will traverse all assets from each item.
 #'
 #' @param pick_fn         a `function` used to pick elements from items
 #' addressed by `field` parameter.
@@ -83,7 +86,7 @@
 #' @param ...             additional arguments. See details.
 #'
 #' @details
-#' Ellipsis argument (`...`) appears in different items functions and
+#' Ellipsis argument (`...`) appears in different item functions and
 #' has distinct purposes:
 #' \itemize{
 #' \item `items_matched()` and `items_assets()`: ellipsis is not used.
@@ -93,8 +96,15 @@
 #' methods, such as [add_headers][httr::add_headers] or
 #' [set_cookies][httr::set_cookies].
 #'
-#' \item `items_filter()`: ellipsis is used to pass logical
-#' expressions to be evaluated against a `doc_item` field as filter criteria.
+#' \item `items_filter()`: ellipsis is used to pass logical expressions to
+#' be evaluated against a `doc_item` field as filter criteria. Expressions
+#' must be evaluated as a logical value where `TRUE` selects the item
+#' and `FALSE` discards it. Multiple expressions are combined with `AND`
+#' operator. `items_filter()` uses non-standard evaluation to evaluate
+#' its expressions. That means users must escape any variable or call to
+#' be able to use them in the expressions. The escape is done by using
+#' `double-curly-braces`, i.e., `{{variable}}`.
+
 #'
 #' **WARNING:** the evaluation of filter expressions changed in `rstac` 0.9.2.
 #' Older versions of `rstac` used `properties` field to evaluate filter
@@ -109,7 +119,7 @@
 #' ```
 #'
 #' \item `items_sign()`: in the near future, ellipsis will be used to append
-#' key-value pairs to the url query string of an asset.
+#' key-value pairs to the URL query string of an asset.
 #' }
 #'
 #' `items_sign()` has `sign_fn` parameter that must be a function that
@@ -123,27 +133,27 @@
 #' \item `items_length()`: an `integer` value.
 #'
 #' \item `items_matched()`: returns an `integer` value if the STAC web server
-#' does support this extension. Otherwise returns `NULL`.
+#' supports this extension. Otherwise, returns `NULL`.
 #'
 #' \item `items_fetch()`: a `doc_items` with all matched items.
 #'
-#' \item `items_next()`: fetches a new page from STAC service.
+#' \item `items_next()`: fetches a new page from the STAC service.
 #'
 #' \item `items_datetime()`: a `list` of all items' datetime.
 #'
 #' \item `items_bbox()`: returns a `list` with all items' bounding boxes.
 #'
-#' \item `item_assets()`: returns a `character` value with all assets names
+#' \item `items_assets()`: returns a `character` value with all asset names
 #' of all items.
 #'
 #' \item `items_filter()`: a `doc_items` object.
 #'
-#' \item `items_reap()`: a `vector` if the supplied field is atomic,
-#' otherwise or a `list`.
+#' \item `items_reap()`: a `vector` if the supplied field is atomic;
+#' otherwise, a `list`.
 #'
 #' \item `items_fields()`: a `character` vector.
 #'
-#' \item `items_sign()`: a `doc_items` object with signed assets url.
+#' \item `items_sign()`: a `doc_items` object with signed asset URLs.
 #'
 #' \item `items_as_sf()`: a `sf` object.
 #'
@@ -156,22 +166,22 @@
 #' \item `items_properties()`: returns a `character` value with all properties
 #' of all items.
 #'
-#' \item `items_select()`: select features from an items object.
+#' \item `items_select()`: selects features from a `doc_items` object.
 #'
 #' }
 #'
 #' @examples
 #' \dontrun{
-#'  x <- stac("https://brazildatacube.dpi.inpe.br/stac") %>%
-#'      stac_search(collections = "CB4-16D-2") %>%
-#'      stac_search(datetime = "2020-01-01/2021-01-01", limit = 500) %>%
-#'      get_request()
+#' x <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   stac_search(collections = "CBERS4-WFI-16D-2") %>%
+#'   stac_search(datetime = "2020-01-01/2021-01-01", limit = 500) %>%
+#'   get_request()
 #'
-#'  x %>% items_length()
-#'  x %>% items_matched()
-#'  x %>% items_datetime()
-#'  x %>% items_bbox()
-#'  x %>% items_fetch()
+#' x %>% items_length()
+#' x %>% items_matched()
+#' x %>% items_datetime()
+#' x %>% items_bbox()
+#' x %>% items_fetch()
 #' }
 #'
 #' \dontrun{
@@ -179,49 +189,65 @@
 #' Sys.setenv("BDC_ACCESS_KEY" = "token-123")
 #'
 #' # doc_item object
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'     stac_search(collections = "CB4-16D-2", limit = 100,
-#'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
-#'     get_request() %>% items_sign(sign_fn = sign_bdc())
-#'
+#' stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   stac_search(
+#'     collections = "CB4-16D-2",
+#'     limit = 100,
+#'     datetime = "2017-08-01/2018-03-01",
+#'     bbox = c(-48.206, -14.195, -45.067, -12.272)
+#'   ) %>%
+#'   get_request() %>%
+#'   items_sign(sign_fn = sign_bdc())
 #' }
 #'
 #' \dontrun{
 #' # doc_items object
-#' stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'     stac_search(collections = "CB4-16D-2", limit = 100,
-#'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
-#'     get_request() %>%
-#'     items_filter(properties$`eo:cloud_cover` < 10)
+#' stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   stac_search(
+#'     collections = "CBERS4-WFI-16D-2",
+#'     limit = 100,
+#'     datetime = "2017-08-01/2018-03-01",
+#'     bbox = c(-48.206, -14.195, -45.067, -12.272)
+#'   ) %>%
+#'   get_request() %>%
+#'   items_filter(properties$`eo:cloud_cover` < 10)
 #'
 #' # Example with AWS STAC
 #' stac("https://earth-search.aws.element84.com/v0") %>%
-#'   stac_search(collections = "sentinel-s2-l2a-cogs",
-#'               bbox = c(-48.206, -14.195, -45.067, -12.272),
-#'               datetime = "2018-06-01/2018-06-30",
-#'               limit = 500) %>%
+#'   stac_search(
+#'     collections = "sentinel-s2-l2a-cogs",
+#'     bbox = c(-48.206, -14.195, -45.067, -12.272),
+#'     datetime = "2018-06-01/2018-06-30",
+#'     limit = 500
+#'   ) %>%
 #'   post_request() %>%
-#'   items_filter(filter_fn = function(x) {x$properties$`eo:cloud_cover` < 10})
+#'   items_filter(filter_fn = function(x) {
+#'     x$properties$`eo:cloud_cover` < 10
+#'   })
 #' }
 #'
 #' \dontrun{
 #' # doc_items object
-#' stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'  stac_search(collections = "CB4-16D-2", limit = 100,
-#'         datetime = "2017-08-01/2018-03-01",
-#'         bbox = c(-48.206, -14.195, -45.067, -12.272)) %>%
-#'  get_request() %>% items_fetch(progress = FALSE)
+#' stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   stac_search(
+#'     collections = "CBERS4-WFI-16D-2",
+#'     limit = 100,
+#'     datetime = "2017-08-01/2018-03-01",
+#'     bbox = c(-48.206, -14.195, -45.067, -12.272)
+#'   ) %>%
+#'   get_request() %>%
+#'   items_fetch(progress = FALSE)
 #'
-#' stac_item %>% items_reap(field = c("properties", "datetime"))
+#' stac_item %>% items_reap(c("properties", "datetime"))
+#'
+#' # Extract all asset URLs from each item
+#' stac_item %>% items_reap(c("assets", "*"), function(x) x$href)
 #'
 #' stac_item %>% items_as_sf()
 #'
 #' stac_item %>% items_as_tibble()
 #'
 #' stac_item %>% items_select(c(1, 4, 10, 20))
-#'
 #' }
 #'
 #' @name items_functions
@@ -245,7 +271,7 @@ items_length.doc_items <- function(items) {
 #' @rdname items_functions
 #'
 #' @export
-items_matched  <- function(items, matched_field = NULL) {
+items_matched <- function(items, matched_field = NULL) {
   UseMethod("items_matched", items)
 }
 
@@ -257,15 +283,19 @@ items_matched.doc_items <- function(items, matched_field = NULL) {
   matched <- NULL
   # try by the matched_field provided by user. This allow users specify a
   # non-standard field for matched items.
-  if (is.character(matched_field) && matched_field %in% names(items))
+  if (is.character(matched_field) && matched_field %in% names(items)) {
     matched <- as.numeric(items[[matched_field]])
-  if (is.null(matched) && "search:metadata" %in% names(items))
+  }
+  if (is.null(matched) && "search:metadata" %in% names(items)) {
     matched <- items$`search:metadata`$matched
-  if (is.null(matched) && "context" %in% names(items))
+  }
+  if (is.null(matched) && "context" %in% names(items)) {
     matched <- items$`context`$matched
+  }
   # try the last resort: OGC features core spec
-  if (is.null(matched))
+  if (is.null(matched)) {
     matched <- items$numberMatched
+  }
   matched
 }
 
@@ -304,21 +334,30 @@ items_fetch.doc_items <- function(items, ...,
   next_items <- items
   while (TRUE) {
     # check if features is complete
-    if (!is.null(matched) && (items_length(items) == matched))
+    if (!is.null(matched) && (items_length(items) == matched)) {
       break
+    }
     # protect against infinite loop
-    if (!is.null(matched) && (items_length(items) > matched))
-      .error(paste("Length of returned items (%s) is different",
-                   "from matched items (%s)."), items_length(items), matched)
-    next_items <- tryCatch({
-      items_next(next_items, ...)
-    }, next_error = function(e) NULL)
-    if (is.null(next_items))
+    if (!is.null(matched) && (items_length(items) > matched)) {
+      .error(paste(
+        "Length of returned items (%s) is different",
+        "from matched items (%s)."
+      ), items_length(items), matched)
+    }
+    next_items <- tryCatch(
+      {
+        items_next(next_items, ...)
+      },
+      next_error = function(e) NULL
+    )
+    if (is.null(next_items)) {
       break
+    }
     items$features <- c(items$features, next_items$features)
     # update progress bar
-    if (progress)
+    if (progress) {
       utils::setTxtProgressBar(pb, length(next_items))
+    }
   }
   items
 }
@@ -338,21 +377,24 @@ items_next.doc_items <- function(items, ...) {
   # get url of the next page
   rel <- NULL
   next_link <- links(items, rel == "next")
-  if (length(next_link) == 0)
+  if (length(next_link) == 0) {
     .error("Cannot get next link URL.", class = "next_error")
+  }
   next_link <- next_link[[1]]
   # check for body implementation in next link
   verb <- "GET"
-  if ("method" %in% names(next_link) && next_link$method %in% c("GET", "POST"))
+  if ("method" %in% names(next_link) && next_link$method %in% c("GET", "POST")) {
     verb <- next_link$method
+  }
   q <- NULL
   if (verb == "POST") {
     # POST
     q <- attr(items, "query")
     if (!is.null(q)) {
       # merge content body to next body field
-      if ("merge" %in% names(next_link) && next_link$merge)
+      if ("merge" %in% names(next_link) && next_link$merge) {
         next_link$body <- modify_list(q$params, next_link$body)
+      }
       next_link$body <- parse_params(q, next_link$body)
     }
     res <- make_post_request(
@@ -437,8 +479,9 @@ items_assets <- function(items) {
 #' @export
 items_assets.doc_item <- function(items) {
   check_item(items)
-  if (!"assets" %in% names(items))
+  if (!"assets" %in% names(items)) {
     .error("Item has no assets.")
+  }
   names(items$assets)
 }
 
@@ -454,8 +497,9 @@ items_assets.doc_items <- function(items) {
 #'
 #' @export
 items_assets.default <- function(items) {
-  if (!"assets" %in% names(items))
+  if (!"assets" %in% names(items)) {
     .error("Item has no assets.")
+  }
   names(items$assets)
 }
 
@@ -471,15 +515,14 @@ items_filter <- function(items, ..., filter_fn = NULL) {
 #' @export
 items_filter.doc_items <- function(items, ..., filter_fn = NULL) {
   init_length <- items_length(items)
-  exprs <- unquote(
-    expr = as.list(substitute(list(...), env = environment())[-1]),
-    env =  parent.frame()
-  )
+  exprs <- as.list(substitute(list(...), env = environment()))[-1]
   if (length(exprs) > 0) {
-    if (!is.null(names(exprs)))
+    if (!is.null(names(exprs))) {
       .error("Filter expressions cannot be named.")
-    for (i in seq_along(exprs)) {
-      sel <- map_lgl(items$features, eval_filter_expr, expr = exprs[[i]])
+    }
+    for (expr in exprs) {
+      expr <- unquote(expr = expr, env = parent.frame())
+      sel <- map_lgl(items$features, eval_filter_expr, expr = expr)
       items$features <- items$features[sel]
     }
   }
@@ -487,10 +530,13 @@ items_filter.doc_items <- function(items, ..., filter_fn = NULL) {
     sel <- map_lgl(items$features, eval_filter_fn, filter_fn = filter_fn)
     items$features <- items$features[sel]
   }
-  if (items_length(items) == 0 && init_length > 0)
-    .warning(paste("Filter criteria did not match any item.\n",
-                   "Please, see `?items_filter` for more details on",
-                   "how expressions are evaluated by `items_filter()`."))
+  if (items_length(items) == 0 && init_length > 0) {
+    .warning(paste(
+      "Filter criteria did not match any item.\n",
+      "Please, see `?items_filter` for more details on",
+      "how expressions are evaluated by `items_filter()`."
+    ))
+  }
   items
 }
 
@@ -529,14 +575,19 @@ items_reap.doc_item <- function(items, field, pick_fn = identity) {
 #' @export
 items_reap.doc_items <- function(items, field, pick_fn = identity) {
   check_items(items)
-  if (items_length(items) == 0) return(NULL)
-  values <- lapply(items$features, items_reap.doc_item, field = field,
-                   pick_fn = pick_fn)
+  if (items_length(items) == 0) {
+    return(NULL)
+  }
+  values <- lapply(items$features, items_reap.doc_item,
+    field = field,
+    pick_fn = pick_fn
+  )
   is_atomic <- all(vapply(values, function(x) {
     is.atomic(x) && length(x) == 1
   }, logical(1)))
-  if (is_atomic)
+  if (is_atomic) {
     return(unlist(values))
+  }
   values
 }
 
@@ -563,7 +614,8 @@ items_fields.doc_item <- function(items, field = NULL) {
     fields <- names(items)
   } else {
     fields <- unique(unlist(apply_deeply(
-      items, i = field, fn = names
+      items,
+      i = field, fn = names
     ), use.names = FALSE))
   }
   sort(fields)
@@ -574,8 +626,9 @@ items_fields.doc_item <- function(items, field = NULL) {
 #' @export
 items_fields.doc_items <- function(items, field = NULL) {
   check_items(items)
-  if (items_length(items) == 0)
+  if (items_length(items) == 0) {
     return(NULL)
+  }
   fields <- apply_deeply(items, i = c("features", "*", field), fn = names)
   sort(unique(unlist(unname(fields))))
 }
@@ -639,7 +692,7 @@ items_as_sf.doc_items <- function(items, ..., crs = 4326) {
     items_as_tibble(items),
     geometry = items_as_sfc(items, crs = crs)
   )
-  #class(data) <- c("sf", "tbl_df", "tbl", "data.frame")
+  # class(data) <- c("sf", "tbl_df", "tbl", "data.frame")
   data
 }
 
@@ -780,11 +833,14 @@ items_select.doc_items <- function(items, selection) {
   check_items(items)
   items$features <- items$features[selection]
   # clear numberMatched information
-  if ("search:metadata" %in% names(items))
+  if ("search:metadata" %in% names(items)) {
     items$`search:metadata`$matched <- NULL
-  if ("context" %in% names(items))
+  }
+  if ("context" %in% names(items)) {
     items$`context`$matched <- NULL
-  if ("numberMatched" %in% names(items))
+  }
+  if ("numberMatched" %in% names(items)) {
     items$numberMatched <- NULL
+  }
   items
 }

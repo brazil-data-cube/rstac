@@ -3,7 +3,7 @@
 \name{items_sign_bdc}
 \alias{items_sign_bdc}
 \alias{sign_bdc}
-\title{Signature in hrefs provided by the STAC from the Brazil Data Cube
+\title{Signature in \code{href} provided by the STAC from the Brazil Data Cube
 project.}
 \usage{
 items_sign_bdc(items, access_token = NULL, ...)
@@ -42,25 +42,27 @@ to be able to access the data.
 used by \code{items_sign()}. This function sign all the assets' URL.
 }
 
-To sign the hrefs with your token you need to store it in an
+To sign the \code{href} with your token you need to store it in an
 environment variable in \code{BDC_ACCESS_KEY}or use \code{acess_token} parameter.
 }
 \examples{
 \dontrun{
- # doc_items object
- stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-   stac_search(collections = "CB4-16D-2",
-               datetime = "2019-06-01/2019-08-01") \%>\%
-   stac_search() \%>\%
-   get_request()
+# doc_items object
+stac_obj <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    datetime = "2019-06-01/2019-08-01"
+  ) \%>\%
+  stac_search() \%>\%
+  get_request()
 
- # the new way to authenticate:
- stac_obj <- stac_obj \%>\%
-   items_sign_bdc("<your-access-token>")
+# the new way to authenticate:
+stac_obj <- stac_obj \%>\%
+  items_sign_bdc("<your-access-token>")
 
- # this is the old way of authentication (still works):
- # stac_obj \%>\%
- #   items_sign(sign_fn = sign_bdc(access_token = "<your-access-token>"))
+# this is the old way of authentication (still works):
+# stac_obj \%>\%
+#   items_sign(sign_fn = sign_bdc(access_token = "<your-access-token>"))
 }
 
 }

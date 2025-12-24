@@ -1,17 +1,21 @@
 geom_type <- function(x) {
-  if (!"type" %in% names(x))
+  if (!"type" %in% names(x)) {
     .error("Invalid geometry object")
+  }
   x$type
 }
 
 geom_switch <- function(x, ...) {
-  switch(geom_type(x), ...,
-         .error("Geometry of type '%s' is not supported", geom_type(x)))
+  switch(geom_type(x),
+    ...,
+    .error("Geometry of type '%s' is not supported", geom_type(x))
+  )
 }
 
 get_geom <- function(x) {
-  if ("geometry" %in% names(x))
+  if ("geometry" %in% names(x)) {
     x <- x$geometry
+  }
   geom_switch(
     x,
     Point = point(x),
@@ -40,7 +44,7 @@ linestring <- function(x) {
 }
 
 multi_linestring <- function(x) {
-  data <- lapply(x$coordinates, \(ls) {
+  data <- lapply(x$coordinates, function(ls) {
     data <- matrix(unlist(ls), ncol = 2, byrow = TRUE)
     structure(c(data), dim = dim(data))
   })
@@ -48,7 +52,7 @@ multi_linestring <- function(x) {
 }
 
 polygon <- function(x) {
-  data <- lapply(x$coordinates, \(lr) {
+  data <- lapply(x$coordinates, function(lr) {
     data <- matrix(unlist(lr), ncol = 2, byrow = TRUE)
     structure(c(data), dim = dim(data))
   })
@@ -56,8 +60,8 @@ polygon <- function(x) {
 }
 
 multi_polygon <- function(x) {
-  data <- lapply(x$coordinates, \(pl) {
-    lapply(pl, \(lr) {
+  data <- lapply(x$coordinates, function(pl) {
+    lapply(pl, function(lr) {
       data <- matrix(unlist(lr), ncol = 2, byrow = TRUE)
       structure(c(data), dim = dim(data))
     })

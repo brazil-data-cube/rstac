@@ -21,7 +21,8 @@ This endpoint is accessible from the provider's catalog (\verb{/conformance}).
 \examples{
 \dontrun{
 stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
-  conformance() \%>\% get_request()
+  conformance() \%>\%
+  get_request()
 }
 
 }

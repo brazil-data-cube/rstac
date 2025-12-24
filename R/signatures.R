@@ -1,6 +1,6 @@
 ms_token <- new_env()
 
-#' @title Signature in hrefs provided by the STAC from the Brazil Data Cube
+#' @title Signature in `href` provided by the STAC from the Brazil Data Cube
 #'  project.
 #'
 #' @description
@@ -15,7 +15,7 @@ ms_token <- new_env()
 #'  used by `items_sign()`. This function sign all the assets' URL.
 #' }
 #'
-#' To sign the hrefs with your token you need to store it in an
+#' To sign the `href` with your token you need to store it in an
 #' environment variable in `BDC_ACCESS_KEY`or use `acess_token` parameter.
 #'
 #' @param items       a `doc_item` or `doc_items` object
@@ -38,20 +38,22 @@ ms_token <- new_env()
 #'
 #' @examples
 #' \dontrun{
-#'  # doc_items object
-#'  stac_obj <- stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'    stac_search(collections = "CB4-16D-2",
-#'                datetime = "2019-06-01/2019-08-01") %>%
-#'    stac_search() %>%
-#'    get_request()
+#' # doc_items object
+#' stac_obj <- stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   stac_search(
+#'     collections = "CBERS4-WFI-16D-2",
+#'     datetime = "2019-06-01/2019-08-01"
+#'   ) %>%
+#'   stac_search() %>%
+#'   get_request()
 #'
-#'  # the new way to authenticate:
-#'  stac_obj <- stac_obj %>%
-#'    items_sign_bdc("<your-access-token>")
+#' # the new way to authenticate:
+#' stac_obj <- stac_obj %>%
+#'   items_sign_bdc("<your-access-token>")
 #'
-#'  # this is the old way of authentication (still works):
-#'  # stac_obj %>%
-#'  #   items_sign(sign_fn = sign_bdc(access_token = "<your-access-token>"))
+#' # this is the old way of authentication (still works):
+#' # stac_obj %>%
+#' #   items_sign(sign_fn = sign_bdc(access_token = "<your-access-token>"))
 #' }
 #'
 #' @name items_sign_bdc
@@ -66,13 +68,11 @@ items_sign_bdc <- function(items, access_token = NULL, ...) {
 #'
 #' @export
 sign_bdc <- function(access_token = NULL, ...) {
-
   token <- list()
 
   # parse href to separate each query element, this will be used to dont
   # append the same token for an asset
   parse <- function(obj_req) {
-
     token_str <- paste0("?access_token=", obj_req$token)
     parsed_url <- httr::parse_url(token_str)
     obj_req$token_value <- parsed_url$query
@@ -81,13 +81,12 @@ sign_bdc <- function(access_token = NULL, ...) {
   }
 
   new_token <- function(item) {
-
     token[["default"]] <<- list("token" = access_token)
 
     if (is.null(access_token)) {
-
-      if (!nzchar(Sys.getenv("BDC_ACCESS_KEY")))
+      if (!nzchar(Sys.getenv("BDC_ACCESS_KEY"))) {
         .error("No token informed in 'BDC_ACCESS_KEY' enviroment variable.")
+      }
 
       token[["default"]] <<- list("token" = Sys.getenv("BDC_ACCESS_KEY"))
     }
@@ -112,7 +111,6 @@ sign_bdc <- function(access_token = NULL, ...) {
   }
 
   sign_asset <- function(asset, token) {
-
     asset_url <- httr::parse_url(asset$href)
 
     # if the href is already sign it will not be modified
@@ -123,9 +121,9 @@ sign_bdc <- function(access_token = NULL, ...) {
   }
 
   sign_item <- function(item) {
-
-    if (!exists_token(item) || is_token_expired(item))
+    if (!exists_token(item) || is_token_expired(item)) {
       new_token(item)
+    }
 
     item$assets <- lapply(item$assets, sign_asset, get_token_value(item))
 
@@ -178,48 +176,53 @@ sign_bdc <- function(access_token = NULL, ...) {
 #'
 #' @examples
 #' \dontrun{
-#'  # doc_items object
-#'  stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
-#'   stac_search(collections = "sentinel-2-l2a",
-#'               bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
+#' # doc_items object
+#' stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1/") %>%
+#'   stac_search(
+#'     collections = "sentinel-2-l2a",
+#'     bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)
+#'   ) %>%
 #'   get_request()
 #'
-#'  # the new way to authenticate:
-#'  stac_obj <- stac_obj %>%
-#'    items_sign_planetary_computer()
+#' # the new way to authenticate:
+#' stac_obj <- stac_obj %>%
+#'   items_sign_planetary_computer()
 #'
-#'  # this is the old way of authentication (still works):
-#'  # stac_obj <- stac_obj %>%
-#'  #   items_sign(sign_fn = sign_planetary_computer())
+#' # this is the old way of authentication (still works):
+#' # stac_obj <- stac_obj %>%
+#' #   items_sign(sign_fn = sign_planetary_computer())
 #'
-#'  # example of access to collections that require authentication
-#'  stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
-#'    stac_search(collections = c("sentinel-1-rtc"),
-#'                bbox = c(-64.8597, -10.4919, -64.79272527, -10.4473),
-#'                datetime = "2019-01-01/2019-01-28") %>%
-#'    post_request()
+#' # example of access to collections that require authentication
+#' stac_obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
+#'   stac_search(
+#'     collections = c("sentinel-1-rtc"),
+#'     bbox = c(-64.8597, -10.4919, -64.79272527, -10.4473),
+#'     datetime = "2019-01-01/2019-01-28"
+#'   ) %>%
+#'   post_request()
 #'
-#'  # the new way to authenticate:
-#'  # stac_obj <- stac_obj %>%
-#'  #   items_sign_planetary_computer("<subscription-key>")
+#' # the new way to authenticate:
+#' # stac_obj <- stac_obj %>%
+#' #   items_sign_planetary_computer("<subscription-key>")
 #'
-#'  # this is the old way of authentication (still works):
-#'  # stac_obj <- stac_obj %>%
-#'  #   items_sign(
-#'  #     sign_fn = sign_planetary_computer(
-#'  #       headers = c("Ocp-Apim-Subscription-Key" = <your-mpc-token>)
-#'  #     )
-#'  #   )
+#' # this is the old way of authentication (still works):
+#' # stac_obj <- stac_obj %>%
+#' #   items_sign(
+#' #     sign_fn = sign_planetary_computer(
+#' #       headers = c("Ocp-Apim-Subscription-Key" = <your-mpc-token>)
+#' #     )
+#' #   )
 #' }
 #'
 #' @name items_sign_planetary_computer
 #' @export
 items_sign_planetary_computer <- function(items, subscription_key = NULL, ...) {
   header <- NULL
-  if (!is.null(subscription_key))
+  if (!is.null(subscription_key)) {
     header <- httr::add_headers(
       c("Ocp-Apim-Subscription-Key" = subscription_key)
     )
+  }
   sign_fn <- sign_planetary_computer(header)
   items_sign(items, sign_fn)
 }
@@ -294,7 +297,9 @@ sign_planetary_computer <- function(..., headers = NULL, token_url = NULL) {
   }
 
   new_token <- function(acc, cnt) {
-    if (exists_token(acc, cnt) && !is_token_expired(acc, cnt)) return(NULL)
+    if (exists_token(acc, cnt) && !is_token_expired(acc, cnt)) {
+      return(NULL)
+    }
     res <- make_get_request(
       url = paste(ms_token_endpoint, acc, cnt, sep = "/"),
       httr::add_headers(.headers = headers),

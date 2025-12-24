@@ -10,10 +10,10 @@ preview_plot(url)
 \item{url}{image URL to be plotted.}
 }
 \value{
-A rastergrob grob from package \code{grid}.
+A \code{rastergrob} from package \code{grid}.
 }
 \description{
 This is a helper function to plot preview assets
-(e.g. quicklook, thumbnail, rendered_preview).
-Currently, only png and jpeg formats are supported.
+(e.g. \code{quicklook}, \code{thumbnail}, \code{rendered_preview}).
+Currently, only \code{png} and \code{jpeg} formats are supported.
 }

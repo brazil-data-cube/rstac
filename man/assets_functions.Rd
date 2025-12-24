@@ -33,6 +33,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   download_fn = NULL
 )
 
@@ -42,6 +43,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   create_json = FALSE,
   download_fn = NULL
 )
@@ -52,6 +54,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   download_fn = NULL,
   create_json = TRUE,
   items_max = Inf,
@@ -64,6 +67,7 @@ assets_download(
   output_dir = getwd(),
   overwrite = FALSE,
   ...,
+  use_gdal = FALSE,
   create_json = FALSE,
   download_fn = NULL
 )
@@ -118,14 +122,17 @@ to be selected.}
 \item{output_dir}{a \code{character} directory in which the assets will be
 saved. Default is the working directory (\code{getwd()})}
 
-\item{overwrite}{a \code{logical} if TRUE will replace the existing file,
-if FALSE, a warning message is shown.}
+\item{overwrite}{a \code{logical} value. If \code{TRUE}, replaces the existing file;
+if \code{FALSE}, a warning message is shown.}
 
 \item{...}{additional arguments. See details.}
 
+\item{use_gdal}{a \code{logical} indicating whether the file should be
+downloaded with \code{GDAL} instead of the \code{httr} package.}
+
 \item{download_fn}{a \code{function} to handle download of assets for
 each item to be downloaded. Using this function, you can change the
-hrefs for each asset, as well as the way download is done.}
+\code{href} for each asset, as well as how the download is performed.}
 
 \item{create_json}{a \code{logical} indicating if a JSON file with item
 metadata (\code{doc_item} or \code{doc_items}) must be created in the
@@ -137,11 +144,11 @@ downloaded.}
 \item{progress}{a \code{logical} indicating if a progress bar must be
 shown or not. Defaults to \code{TRUE}.}
 
-\item{append_gdalvsi}{a \code{logical} value. If true, gdal drivers are
-included in the URL of each asset. The following schemes are supported:
-HTTP/HTTPS files, S3 (AWS S3) and GS (Google Cloud Storage).}
+\item{append_gdalvsi}{a \code{logical} value. If \code{TRUE}, \verb{GDAL VSI} prefixes
+are included in the URL of each asset. The following schemes are supported:
+\code{HTTP}/\code{HTTPS} files, S3 (\code{AWS} S3) and \code{GS} (Google Cloud Storage).}
 
-\item{select_fn}{a \code{function} to select assets an item
+\item{select_fn}{a \code{function} to select assets from an item
 (\code{doc_item} or \code{doc_items}). This function receives as parameter
 the asset element and, optionally, the asset name. Asset elements
 contain metadata describing spatial-temporal objects. Users can provide
@@ -159,9 +166,8 @@ return.}
 }
 \value{
 \itemize{
-\item \code{assets_download()}: returns the same input object item
-(\code{doc_item} or \code{doc_items}) where \code{href} properties point to
-the download assets.
+\item \code{assets_download()}: returns the input item object (\code{doc_item} or
+\code{doc_items}), where \code{href} properties point to the downloaded assets.
 
 \item \code{assets_url()}: returns a character vector with all assets \code{href}
 of an item (\code{doc_item} or \code{doc_items}).
@@ -174,16 +180,16 @@ of an item (\code{doc_item} or \code{doc_items}).
 }
 }
 \description{
-These functions provide support to work with \code{doc_items} and
-\code{doc_item} item objects.
+These functions provide support for working with \code{doc_items} and \code{doc_item}
+objects.
 
 \itemize{
-\item \code{assets_download()}: Downloads the assets provided by the STAC API.
+\item \code{assets_download()}: downloads the assets provided by the STAC API.
 
-\item \code{assets_url()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Returns a
-character vector with each asset href. For the URL, you can add the
-GDAL library drivers for the following schemes: HTTP/HTTPS files,
-S3 (AWS S3) and GS (Google Cloud Storage).
+\item \code{assets_url()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} returns a
+\code{character} vector with each asset's \code{href}. You can prepend \verb{GDAL VSI}
+prefixes for the following schemes: \code{HTTP}/\code{HTTPS}, S3 (\code{AWS} S3), and \code{GS}
+(Google Cloud Storage).
 
 \item \code{assets_select()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Selects the
 assets of each item by its name (\code{asset_names} parameter), by expressions
@@ -192,12 +198,12 @@ Note: This function can produce items with empty assets. In this case,
 users can use the \code{items_compact()} function to remove items with no
 assets.
 
-\item \code{assets_rename()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Rename each
+\item \code{assets_rename()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} renames each
 asset using a named list or a function.
 }
 }
 \details{
-Ellipsis argument (\code{...}) appears in different assets functions and
+Ellipsis argument (\code{...}) appears in different asset functions and
 has distinct purposes:
 \itemize{
 \item \code{assets_download()}: ellipsis is used to pass
@@ -208,10 +214,12 @@ methods, such as \link[httr:add_headers]{add_headers} or
 \item \code{assets_select()}: ellipsis is used to pass expressions that will
 be evaluated against each asset metadata. Expressions must be evaluated as
 a logical value where \code{TRUE} selects the asset and \code{FALSE} discards it.
-Multiple expressions are combine with \code{AND} operator. Expressions can
-use \code{asset} helper functions (i.e. \code{asset_key()}, \code{asset_eo_bands()},
-and \code{asset_raster_bands()}). Multiple expressions are combined with
-\code{AND} operator.
+Multiple expressions are combined with the \code{AND} operator. Expressions can
+use \code{asset} helper functions (e.g., \code{asset_key()}, \code{asset_eo_bands()},
+and \code{asset_raster_bands()}). \code{assets_select()} uses non-standard evaluation to evaluate
+its expressions. That means users must escape any variable or call to
+be able to use them in the expressions. The escape is done by using
+\code{double-curly-braces}, i.e., \code{{{variable}}}.
 
 \strong{WARNING:} Errors in the evaluation of expressions are
 considered as \code{FALSE}.
@@ -222,55 +230,71 @@ to be processed in the same way as the named list in \code{mapper} argument.
 }
 \examples{
 \dontrun{
- # assets_download function
- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-   stac_search(collections = "CB4-16D-2",
-               datetime = "2019-06-01/2019-08-01") \%>\%
-   stac_search() \%>\%
-   get_request() \%>\%
-   assets_download(asset_names = "thumbnail", output_dir = tempdir())
+# assets_download function
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    datetime = "2019-06-01/2019-08-01"
+  ) \%>\%
+  stac_search() \%>\%
+  get_request() \%>\%
+  assets_download(asset_names = "thumbnail", output_dir = tempdir())
 }
 
 \dontrun{
- # assets_url function
- stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  stac_search(collections = "CB4-16D-2", limit = 100,
-         datetime = "2017-08-01/2018-03-01",
-         bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
-  get_request() \%>\% items_fetch(progress = FALSE)
+# assets_url function
+stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    limit = 100,
+    datetime = "2017-08-01/2018-03-01",
+    bbox = c(-48.206, -14.195, -45.067, -12.272)
+  ) \%>\%
+  get_request() \%>\%
+  items_fetch(progress = FALSE)
 
- stac_item \%>\% assets_url()
+stac_item \%>\% assets_url()
 }
 
 \dontrun{
- # assets_select function
- stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  stac_search(collections = "CB4-16D-2", limit = 100,
-         datetime = "2017-08-01/2018-03-01",
-         bbox = c(-48.206,-14.195,-45.067,-12.272)) \%>\%
-  get_request() \%>\% items_fetch(progress = FALSE)
+# assets_select function
+stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    limit = 100,
+    datetime = "2017-08-01/2018-03-01",
+    bbox = c(-48.206, -14.195, -45.067, -12.272)
+  ) \%>\%
+  get_request() \%>\%
+  items_fetch(progress = FALSE)
 
- stac_item \%>\% assets_select(asset_names = "NDVI")
+stac_item \%>\% assets_select(asset_names = "NDVI")
 }
 
 \dontrun{
 items <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
-  stac_search(collections = c("landsat-8-c2-l2", "sentinel-2-l2a"),
-              bbox = c(xmin = -64.85976089, ymin = -10.49199395,
-                       xmax = -64.79272527, ymax =-10.44736091),
-              datetime = "2019-01-01/2019-06-28",
-              limit = 50) \%>\%
+  stac_search(
+    collections = c("landsat-8-c2-l2", "sentinel-2-l2a"),
+    bbox = c(
+      xmin = -64.85976089, ymin = -10.49199395,
+      xmax = -64.79272527, ymax = -10.44736091
+    ),
+    datetime = "2019-01-01/2019-06-28",
+    limit = 50
+  ) \%>\%
   post_request()
 
 # Selects assets by name
 items <- assets_select(items,
-                       asset_names = c("B02", "B03", "SR_B1", "SR_B2"))
+  asset_names = c("B02", "B03", "SR_B1", "SR_B2")
+)
 # Renames the landsat assets
 items <- assets_rename(items,
-                       SR_B1 = "blue",
-                       SR_B2 = "green",
-                       B02   = "blue",
-                       B03   = "green")
+  SR_B1 = "blue",
+  SR_B2 = "green",
+  B02   = "blue",
+  B03   = "green"
+)
 # Get the assets url's
 assets_url(items)
 }

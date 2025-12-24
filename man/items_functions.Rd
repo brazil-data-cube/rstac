@@ -171,8 +171,9 @@ shown or not. Defaults to \code{TRUE}.}
 \item{filter_fn}{a \code{function} that receives an item that should
 evaluate a \code{logical} value.}
 
-\item{field}{a \code{character} with the names of the field to
-get the subfields values.}
+\item{field}{A \code{character} vector specifying the path to the
+field from which to extract sub-field values.
+For example, \code{c("assets", "*")} will traverse all assets from each item.}
 
 \item{pick_fn}{a \code{function} used to pick elements from items
 addressed by \code{field} parameter.}
@@ -192,27 +193,27 @@ to select.}
 \item \code{items_length()}: an \code{integer} value.
 
 \item \code{items_matched()}: returns an \code{integer} value if the STAC web server
-does support this extension. Otherwise returns \code{NULL}.
+supports this extension. Otherwise, returns \code{NULL}.
 
 \item \code{items_fetch()}: a \code{doc_items} with all matched items.
 
-\item \code{items_next()}: fetches a new page from STAC service.
+\item \code{items_next()}: fetches a new page from the STAC service.
 
 \item \code{items_datetime()}: a \code{list} of all items' datetime.
 
 \item \code{items_bbox()}: returns a \code{list} with all items' bounding boxes.
 
-\item \code{item_assets()}: returns a \code{character} value with all assets names
+\item \code{items_assets()}: returns a \code{character} value with all asset names
 of all items.
 
 \item \code{items_filter()}: a \code{doc_items} object.
 
-\item \code{items_reap()}: a \code{vector} if the supplied field is atomic,
-otherwise or a \code{list}.
+\item \code{items_reap()}: a \code{vector} if the supplied field is atomic;
+otherwise, a \code{list}.
 
 \item \code{items_fields()}: a \code{character} vector.
 
-\item \code{items_sign()}: a \code{doc_items} object with signed assets url.
+\item \code{items_sign()}: a \code{doc_items} object with signed asset URLs.
 
 \item \code{items_as_sf()}: a \code{sf} object.
 
@@ -225,7 +226,7 @@ otherwise or a \code{list}.
 \item \code{items_properties()}: returns a \code{character} value with all properties
 of all items.
 
-\item \code{items_select()}: select features from an items object.
+\item \code{items_select()}: selects features from a \code{doc_items} object.
 
 }
 }
@@ -239,12 +240,13 @@ the \code{doc_items} object.
 
 \item \code{items_matched()}: shows how many items matched the
 search criteria. It supports \code{search:metadata} (v0.8.0),
-\code{context} (v0.9.0), and \code{numberMatched} (OGC WFS3 core spec).
+\code{context} (v0.9.0), and \code{numberMatched} (OGC API - Features core
+specification).
 
-\item \code{items_fetch()}: request all STAC Items through
+\item \code{items_fetch()}: requests all STAC Items through
 pagination.
 
-\item \code{items_next()}: fetches a new page from STAC service.
+\item \code{items_next()}: fetches a new page from the STAC service.
 
 \item \code{items_datetime()}: retrieves the \code{datetime}
 field in \code{properties} from \code{doc_items} and
@@ -253,34 +255,35 @@ field in \code{properties} from \code{doc_items} and
 \item \code{items_bbox()}: retrieves the \code{bbox}
 field of a \code{doc_items} or a \code{doc_item} object.
 
-\item \code{item_assets()}: returns the assets name from
+\item \code{items_assets()}: returns the asset names from
 \code{doc_items} and \code{doc_item} objects.
 
 \item \code{items_filter()}: selects only items that match some criteria
 (see details section).
 
-\item \code{items_reap()}: extract key values by traversing all items
-in a \code{doc_items} object.
+\item \code{items_reap()}: traverses all items in a \code{doc_items} object and
+extracts values based on the specified field path. It is useful for
+retrieving nested elements from STAC items.
 
 \item \code{items_fields()}: lists field names inside an item.
 
-\item \code{items_sign()}: allow access assets by preparing its url.
+\item \code{items_sign()}: allows access to assets by preparing their URLs.
 
-\item \code{items_as_sf()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} convert items
-to \code{sf} object.
+\item \code{items_as_sf()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} converts items
+to an \code{sf} object.
 
-\item \code{items_as_sfc()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} convert items
-to \code{sfc} object.
+\item \code{items_as_sfc()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} converts items
+to an \code{sfc} object.
 
 \item \code{items_intersects()}: \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} indicates
-which items intersects a given geometry.
+which items intersect a given geometry.
 
-\item \code{items_properties()}: lists properties names inside an item.
+\item \code{items_properties()}: lists property names inside an item.
 
 }
 }
 \details{
-Ellipsis argument (\code{...}) appears in different items functions and
+Ellipsis argument (\code{...}) appears in different item functions and
 has distinct purposes:
 \itemize{
 \item \code{items_matched()} and \code{items_assets()}: ellipsis is not used.
@@ -290,8 +293,14 @@ additional \code{httr} options to \link[httr:GET]{GET} or \link[httr:POST]{POST}
 methods, such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.
 
-\item \code{items_filter()}: ellipsis is used to pass logical
-expressions to be evaluated against a \code{doc_item} field as filter criteria.
+\item \code{items_filter()}: ellipsis is used to pass logical expressions to
+be evaluated against a \code{doc_item} field as filter criteria. Expressions
+must be evaluated as a logical value where \code{TRUE} selects the item
+and \code{FALSE} discards it. Multiple expressions are combined with \code{AND}
+operator. \code{items_filter()} uses non-standard evaluation to evaluate
+its expressions. That means users must escape any variable or call to
+be able to use them in the expressions. The escape is done by using
+\code{double-curly-braces}, i.e., \code{{{variable}}}.
 
 \strong{WARNING:} the evaluation of filter expressions changed in \code{rstac} 0.9.2.
 Older versions of \code{rstac} used \code{properties} field to evaluate filter
@@ -306,7 +315,7 @@ items_filter(stac_obj, properties[["eo:cloud_cover"]] < 10)
 }\if{html}{\out{</div>}}
 
 \item \code{items_sign()}: in the near future, ellipsis will be used to append
-key-value pairs to the url query string of an asset.
+key-value pairs to the URL query string of an asset.
 }
 
 \code{items_sign()} has \code{sign_fn} parameter that must be a function that
@@ -316,16 +325,16 @@ Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 }
 \examples{
 \dontrun{
- x <- stac("https://brazildatacube.dpi.inpe.br/stac") \%>\%
-     stac_search(collections = "CB4-16D-2") \%>\%
-     stac_search(datetime = "2020-01-01/2021-01-01", limit = 500) \%>\%
-     get_request()
+x <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(collections = "CBERS4-WFI-16D-2") \%>\%
+  stac_search(datetime = "2020-01-01/2021-01-01", limit = 500) \%>\%
+  get_request()
 
- x \%>\% items_length()
- x \%>\% items_matched()
- x \%>\% items_datetime()
- x \%>\% items_bbox()
- x \%>\% items_fetch()
+x \%>\% items_length()
+x \%>\% items_matched()
+x \%>\% items_datetime()
+x \%>\% items_bbox()
+x \%>\% items_fetch()
 }
 
 \dontrun{
@@ -333,49 +342,65 @@ Data Cube products and Microsoft Planetary Computer catalogs, respectively.
 Sys.setenv("BDC_ACCESS_KEY" = "token-123")
 
 # doc_item object
-stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-    stac_search(collections = "CB4-16D-2", limit = 100,
-        datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
-    get_request() \%>\% items_sign(sign_fn = sign_bdc())
-
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CB4-16D-2",
+    limit = 100,
+    datetime = "2017-08-01/2018-03-01",
+    bbox = c(-48.206, -14.195, -45.067, -12.272)
+  ) \%>\%
+  get_request() \%>\%
+  items_sign(sign_fn = sign_bdc())
 }
 
 \dontrun{
 # doc_items object
-stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-    stac_search(collections = "CB4-16D-2", limit = 100,
-        datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
-    get_request() \%>\%
-    items_filter(properties$`eo:cloud_cover` < 10)
+stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    limit = 100,
+    datetime = "2017-08-01/2018-03-01",
+    bbox = c(-48.206, -14.195, -45.067, -12.272)
+  ) \%>\%
+  get_request() \%>\%
+  items_filter(properties$`eo:cloud_cover` < 10)
 
 # Example with AWS STAC
 stac("https://earth-search.aws.element84.com/v0") \%>\%
-  stac_search(collections = "sentinel-s2-l2a-cogs",
-              bbox = c(-48.206, -14.195, -45.067, -12.272),
-              datetime = "2018-06-01/2018-06-30",
-              limit = 500) \%>\%
+  stac_search(
+    collections = "sentinel-s2-l2a-cogs",
+    bbox = c(-48.206, -14.195, -45.067, -12.272),
+    datetime = "2018-06-01/2018-06-30",
+    limit = 500
+  ) \%>\%
   post_request() \%>\%
-  items_filter(filter_fn = function(x) {x$properties$`eo:cloud_cover` < 10})
+  items_filter(filter_fn = function(x) {
+    x$properties$`eo:cloud_cover` < 10
+  })
 }
 
 \dontrun{
 # doc_items object
-stac_item <- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
- stac_search(collections = "CB4-16D-2", limit = 100,
-        datetime = "2017-08-01/2018-03-01",
-        bbox = c(-48.206, -14.195, -45.067, -12.272)) \%>\%
- get_request() \%>\% items_fetch(progress = FALSE)
+stac_item <- stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+  stac_search(
+    collections = "CBERS4-WFI-16D-2",
+    limit = 100,
+    datetime = "2017-08-01/2018-03-01",
+    bbox = c(-48.206, -14.195, -45.067, -12.272)
+  ) \%>\%
+  get_request() \%>\%
+  items_fetch(progress = FALSE)
 
-stac_item \%>\% items_reap(field = c("properties", "datetime"))
+stac_item \%>\% items_reap(c("properties", "datetime"))
+
+# Extract all asset URLs from each item
+stac_item \%>\% items_reap(c("assets", "*"), function(x) x$href)
 
 stac_item \%>\% items_as_sf()
 
 stac_item \%>\% items_as_tibble()
 
 stac_item \%>\% items_select(c(1, 4, 10, 20))
-
 }
 
 }

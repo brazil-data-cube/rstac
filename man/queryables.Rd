@@ -14,7 +14,7 @@ A \code{rstac_query} object with the subclass \code{queryables} for \verb{/query
 endpoint.
 }
 \description{
-The queryables endpoint allows the user to discover which
+The \verb{/queryables} endpoint allows the user to discover which
 properties can be used in the filter extension.
 This endpoint can be accessed from the catalog (\verb{/queryables})
 or from a collection (\verb{/collections/\{collection_id\}/queryables}).
@@ -23,7 +23,8 @@ or from a collection (\verb{/collections/\{collection_id\}/queryables}).
 \dontrun{
 # Catalog's queryables
 stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%
-  queryables() \%>\% get_request()
+  queryables() \%>\%
+  get_request()
 
 # Collection's queryables
 stac("https://planetarycomputer.microsoft.com/api/stac/v1") \%>\%

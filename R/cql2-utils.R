@@ -1,20 +1,20 @@
-#' CQL2 helper function
+#' `CQL2` helper function
 #'
-#' These are helper functions to easy construction CQL2 expressions.
+#' These are helper functions to easy construction `CQL2` expressions.
 #' These functions are not meant to be used in expressions and they must
 #' be escaped using `{{` to be evaluated before request.
 #'
 #' \itemize{
-#' \item `cql2_bbox_as_geojson()`: used to convert bounding box (bbox) to a
-#' GeoJSON object to be used as argument of CQL2 spatial operators.
+#' \item `cql2_bbox_as_geojson()`: used to convert bounding box (`bbox`) to a
+#' `GeoJSON` object to be used as argument of `CQL2` spatial operators.
 #'
 #' \item `cql2_date()`, `cql2_timestamp()`, and `cql2_interval()`:
-#' create temporal literal values to be passed into CQL2 expressions.
+#' create temporal literal values to be passed into `CQL2` expressions.
 #' }
 #'
 #'
-#' @param bbox          a `numeric` containing a bbox with
-#' c(xmin, ymin, xmax, ymax).
+#' @param bbox          a `numeric` containing a `bbox` with
+#' `c(xmin, ymin, xmax, ymax)`.
 #'
 #' @param x,start,end   a `character` string containing valid `date` or
 #' `timestamp`.
@@ -32,14 +32,10 @@
 #' bbox <- c(-122.2751, 47.5469, -121.9613, 47.7458)
 #'
 #' cql2_json(
-#'     collection == "landsat-c2-l2" &&
-#'       t_intersects(datetime, {{
-#'         cql2_interval("2020-12-01", "2020-12-31")
-#'       }}) &&
-#'       s_intersects(geometry, {{
-#'         cql2_bbox_as_geojson(bbox)
-#'       }})
-#'   )
+#'   collection == "landsat-c2-l2" &&
+#'     t_intersects(datetime, {{ cql2_interval("2020-12-01", "2020-12-31") }}) &&
+#'     s_intersects(geometry, {{ cql2_bbox_as_geojson(bbox) }})
+#' )
 #' }
 #'
 #' @name cql2_helpers
@@ -69,7 +65,7 @@ cql2_bbox_as_geojson <- function(bbox) {
 #' @export
 cql2_date <- function(x) {
   check_is_date(x)
-  unquote(quote(date({{x}})), environment())
+  unquote(quote(date({{ x }})), environment())
 }
 
 #' @rdname cql2_helpers
@@ -77,16 +73,18 @@ cql2_date <- function(x) {
 #' @export
 cql2_timestamp <- function(x) {
   check_is_time(x)
-  unquote(quote(timestamp({{x}})), environment())
+  unquote(quote(timestamp({{ x }})), environment())
 }
 
 #' @rdname cql2_helpers
 #'
 #' @export
 cql2_interval <- function(start = "..", end = "..") {
-  if (start != "..")
+  if (start != "..") {
     check_is_instant_param(start)
-  if (end != "..")
+  }
+  if (end != "..") {
     check_is_instant_param(end)
-  unquote(quote(interval({{start}}, {{end}})), environment())
+  }
+  unquote(quote(interval({{ start }}, {{ end }})), environment())
 }

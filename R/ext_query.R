@@ -54,8 +54,8 @@
 #'
 #' @examples
 #' \dontrun{
-#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'    stac_search(collections = "CB4-16D-2") %>%
+#'  stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'    stac_search(collections = "CBERS4-WFI-16D-2") %>%
 #'    ext_query("bdc:tile" %in% "007004") %>%
 #'    post_request()
 #' }
@@ -118,8 +118,8 @@ before_request.ext_query <- function(q) {
 }
 
 #' @export
-after_response.ext_query <- function(q, res) {
-  after_response.items(q, res)
+after_response.ext_query <- function(q, res, simplify_vector = TRUE) {
+  after_response.items(q, res, simplify_vector)
 }
 
 #' @export

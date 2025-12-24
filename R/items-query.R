@@ -1,31 +1,31 @@
 #' @title Endpoint functions
 #'
 #' @description
-#' The `items` function implements WFS3
+#' The `items()` function implements the OGC API - Features
 #' \code{/collections/\{collectionId\}/items}, and
-#' \code{/collections/\{collectionId\}/items/\{featureId\}} endpoints.
+#' \code{/collections/\{collectionId\}/items/\{itemId\}} endpoints.
 #'
 #' Each endpoint retrieves specific STAC objects:
 #' \itemize{
-#'   \item \code{/collections/\{collectionId\}/items}: Returns a STAC Items
-#'     collection (GeoJSON)
-#'   \item \code{/collections/\{collectionId\}/items/\{itemId\}}: Returns a
-#'     STAC Item (GeoJSON Feature)
+#'   \item \code{/collections/\{collectionId\}/items}: Returns a STAC Item
+#'     Collection (`GeoJSON`)
+#'   \item \code{/collections/\{collectionId\}/items/\{itemId\}}: Returns a STAC
+#'     Item (`GeoJSON` Feature)
 #' }
 #'
 #' The endpoint \code{/collections/\{collectionId\}/items} accepts the same
-#' filters parameters of [stac_search()] function.
+#' filter parameters as the [stac_search()] function.
 #'
 #' @param q           a `rstac_query` object expressing a STAC query
 #' criteria.
 #'
-#' @param feature_id  a `character` with item id to be fetched.
-#' Only works if the `collection_id` is informed. This is equivalent to
-#' the endpoint \code{/collections/\{collectionId\}/items/\{featureId\}}.
+#' @param feature_id  a `character` item ID to fetch.
+#' Only works when `collection_id` is provided. This is equivalent to the
+#' endpoint \code{/collections/\{collectionId\}/items/\{itemId\}}.
 #'
 #' @param datetime    a `character` with a date-time or an interval.
-#' Date and time strings needs to conform to RFC 3339. Intervals are
-#' expressed by separating two date-time strings by `'/'` character.
+#' Date and time strings need to conform to RFC 3339. Intervals are
+#' expressed by separating two date-time strings using the `'/'` character.
 #' Open intervals are expressed by using `'..'` in place of date-time.
 #'
 #' Examples:
@@ -37,11 +37,12 @@
 #' }
 #'
 #' Only features that have a `datetime` property that intersects
-#' the interval or date-time informed in `datetime` are selected.
+#' the interval or date-time provided in `datetime` are selected.
 #'
-#' @param bbox        a `numeric` vector with only features that have a
-#' geometry that intersects the bounding box are selected. The bounding box is
-#' provided as four or six numbers, depending on whether the coordinate
+#' @param bbox        a `numeric` vector specifying a bounding box. Only
+#' features with geometry that intersects the bounding box are selected. The
+#' bounding box is provided as four or six numbers, depending on whether the
+#' coordinate
 #' reference system includes a vertical axis (elevation or depth):
 #' \itemize{ \item Lower left corner, coordinate axis 1
 #'           \item Lower left corner, coordinate axis 2
@@ -66,24 +67,23 @@
 #'  [collections()]
 #'
 #' @return
-#' A `rstac_query` object with the subclass `items` for
-#'  \code{/collections/{collection_id}/items} endpoint, or a
-#'  `item_id` subclass for
-#'  \code{/collections/{collection_id}/items/{feature_id}} endpoint,
-#'  containing all search field parameters to be provided to STAC API web
-#'  service.
+#' A `rstac_query` object with the subclass `items` for the
+#' \code{/collections/\{collectionId\}/items} endpoint, or an `item_id` subclass
+#' for the \code{/collections/\{collectionId\}/items/\{itemId\}} endpoint,
+#' containing all search field parameters to be provided to a STAC API web
+#' service.
 #'
 #' @examples
 #' \dontrun{
-#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'    collections("CB4-16D-2") %>%
-#'    items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
-#'    get_request()
+#' stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   collections("CBERS4-WFI-16D-2") %>%
+#'   items(bbox = c(-47.02148, -17.35063, -42.53906, -12.98314)) %>%
+#'   get_request()
 #'
-#'  stac("https://brazildatacube.dpi.inpe.br/stac/") %>%
-#'    collections("CB4-16D-2") %>%
-#'    items("CB4-16D_V2_000002_20230509") %>%
-#'    get_request()
+#' stac("https://data.inpe.br/bdc/stac/v1/") %>%
+#'   collections("CBERS4-WFI-16D-2") %>%
+#'   items("CB4-16D_V2_000002_20230509") %>%
+#'   get_request()
 #' }
 #'
 #' @export
@@ -91,12 +91,15 @@ items <- function(q, feature_id = NULL, datetime = NULL, bbox = NULL,
                   limit = NULL) {
   check_query(q, c("collection_id", "items"))
   params <- list()
-  if (!is.null(datetime))
+  if (!is.null(datetime)) {
     params$datetime <- .parse_datetime(datetime)
-  if (!is.null(bbox))
+  }
+  if (!is.null(bbox)) {
     params$bbox <- .parse_bbox(bbox)
-  if (!is.null(limit) && !is.null(limit))
+  }
+  if (!is.null(limit) && !is.null(limit)) {
     params$limit <- .parse_limit(limit)
+  }
   # set subclass
   subclass <- "items"
   if (!is.null(feature_id)) {
@@ -113,37 +116,44 @@ items <- function(q, feature_id = NULL, datetime = NULL, bbox = NULL,
 
 #' @export
 parse_params.items <- function(q, params) {
-  if (!is.null(params$datetime))
+  if (!is.null(params$datetime)) {
     params$datetime <- .parse_datetime(params$datetime)
-  if (!is.null(params$bbox))
+  }
+  if (!is.null(params$bbox)) {
     params$bbox <- .parse_bbox(params$bbox)
-  if (!is.null(params$limit))
+  }
+  if (!is.null(params$limit)) {
     params$limit <- .parse_limit(params$limit)
+  }
   params
 }
 
 #' @export
 before_request.items <- function(q) {
   check_query_verb(q, verbs = c("GET", "POST"))
-  set_query_endpoint(q, endpoint = "./collections/%s/items",
-                     params = "collection_id")
+  set_query_endpoint(q,
+    endpoint = "./collections/%s/items",
+    params = "collection_id"
+  )
 }
 
 #' @export
-after_response.items <- function(q, res) {
-  content <- content_response_json(res)
+after_response.items <- function(q, res, simplify_vector = TRUE) {
+  content <- content_response_json(res, simplify_vector)
   doc_items(content, query = q)
 }
 
 #' @export
 before_request.item_id <- function(q) {
   check_query_verb(q, verbs = c("GET", "POST"))
-  set_query_endpoint(q, endpoint = "./collections/%s/items/%s",
-                      params = c("collection_id", "feature_id"))
+  set_query_endpoint(q,
+    endpoint = "./collections/%s/items/%s",
+    params = c("collection_id", "feature_id")
+  )
 }
 
 #' @export
-after_response.item_id <- function(q, res) {
-  content <- content_response_json(res)
+after_response.item_id <- function(q, res, simplify_vector = TRUE) {
+  content <- content_response_json(res, simplify_vector)
   doc_item(content)
 }

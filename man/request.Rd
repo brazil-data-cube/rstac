@@ -5,15 +5,24 @@
 \alias{post_request}
 \title{STAC API request functions}
 \usage{
-get_request(q, ...)
+get_request(q, simplify_vector = NULL, ...)
 
-post_request(q, ..., encode = c("json", "multipart", "form"))
+post_request(
+  q,
+  simplify_vector = NULL,
+  ...,
+  encode = c("json", "multipart", "form")
+)
 }
 \arguments{
 \item{q}{a \code{rstac_query} object expressing a STAC query
 criteria.}
 
-\item{...}{config parameters to be passed to \link[httr:GET]{GET} or
+\item{simplify_vector}{a \code{logical} describing whether length-one nested
+lists should be simplified into vectors. Defaults to TRUE. Can also be set
+for an entire session via e.g. \code{options(rstac.simplify_vector = FALSE)}.}
+
+\item{...}{configuration parameters to be passed to \link[httr:GET]{GET} or
 \link[httr:POST]{POST} methods, such as \link[httr:add_headers]{add_headers} or
 \link[httr:set_cookies]{set_cookies}.}
 
@@ -30,20 +39,20 @@ object depending on the subclass and search fields parameters of \code{q}
 argument.
 }
 \description{
-The \code{get_request} is function that makes HTTP GET
-requests to STAC web services, retrieves, and parse the data.
+The \code{get_request()} function makes HTTP GET requests to STAC web
+services, retrieves the response, and parses the data.
 
-The \code{post_request} is function that makes HTTP POST
-requests to STAC web services, retrieves, and parse the data.
+The \code{post_request()} function makes HTTP POST requests to STAC web services,
+retrieves the response, and parses the data.
 }
 \examples{
 \dontrun{
- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  get_request()
+ stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+     get_request()
 
- stac("https://brazildatacube.dpi.inpe.br/stac/") \%>\%
-  stac_search(collections = "CB4-16D-2") \%>\%
-  post_request()
+ stac("https://data.inpe.br/bdc/stac/v1/") \%>\%
+     stac_search(collections = "CBERS4-WFI-16D-2") \%>\%
+     post_request()
 }
 }
 \seealso{

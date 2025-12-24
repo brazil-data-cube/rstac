@@ -56,19 +56,36 @@ select_exec <- function(key, asset, select_fn) {
 asset_download <- function(asset,
                            output_dir,
                            overwrite, ...,
+                           use_gdal = FALSE,
                            download_fn = NULL) {
   if (!is.null(download_fn))
     return(download_fn(asset))
   # create a full path name
-  path <- url_get_path(asset$href)
-  out_file <- path_normalize(output_dir, path)
-  dir_create(out_file)
-  make_get_request(
-    url = asset$href,
-    httr::write_disk(path = out_file, overwrite = overwrite),
-    ...,
-    error_msg = "Error while downloading"
-  )
-  asset$href <- path
+  out_file <- path_normalize(output_dir, url_get_path(asset$href))
+  out_dir <- dirname(out_file)
+  if (!dir.exists(out_dir))
+    dir.create(out_dir, recursive = TRUE)
+  stopifnot(dir.exists(out_dir))
+  if (use_gdal) {
+    if (file.exists(out_file) && !overwrite)
+      .error("File already exists. Use `overwrite=TRUE`.")
+    if (file.exists(out_file))
+      unlink(out_file)
+    sf::gdal_utils(
+      util = "translate",
+      source = gdalvsi_append(asset$href),
+      destination = out_file, ...
+    )
+    if (!file.exists(out_file)) {
+      .error("Download failed. File: '%s'.", asset$href)
+    }
+  } else {
+    make_get_request(
+      url = asset$href,
+      httr::write_disk(path = out_file, overwrite = overwrite),
+      error_msg = "Error while downloading", ...
+    )
+  }
+  asset$href <- out_file
   asset
 }

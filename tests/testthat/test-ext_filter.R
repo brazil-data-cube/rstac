@@ -6,11 +6,16 @@ conformance_test <- function(q, expected_number) {
 }
 
 test_that("doc_conformance Test 7", {
-  skip_if({
-    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
-  }, "Test server is offline")
-  q <- stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
-                   force_version = "0.9.0")
+  skip_if(
+    {
+      httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+    },
+    "Test server is offline"
+  )
+  q <- stac(
+    base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
+    force_version = "0.9.0"
+  )
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
@@ -20,25 +25,29 @@ test_that("doc_conformance Test 7", {
   )
 
   req <- stac("https://planetarycomputer.microsoft.com/api/stac/v1") %>%
-      stac_search(limit = 5)
+    stac_search(limit = 5)
 
   polygon <- list(
     type = "Polygon",
     coordinates = list(
-      matrix(c(-62.34499836, -8.57414572,
-               -62.18858174, -8.57414572,
-               -62.18858174, -8.15351185,
-               -62.34499836, -8.15351185,
-               -62.34499836, -8.57414572),
-             ncol = 2, byrow = TRUE)
+      matrix(
+        c(
+          -62.34499836, -8.57414572,
+          -62.18858174, -8.57414572,
+          -62.18858174, -8.15351185,
+          -62.34499836, -8.15351185,
+          -62.34499836, -8.57414572
+        ),
+        ncol = 2, byrow = TRUE
+      )
     )
   )
   # 'S_INTERSECTS' spatial operator with polygon and geometry property
   res <- req %>%
     ext_filter(collection == "sentinel-2-l2a" &&
-                 s_intersects(geometry, {{polygon}}) &&
-                 datetime > "2019-01-01" &&
-                 datetime < "2019-02-02")
+      s_intersects(geometry, {{ polygon }}) &&
+      datetime > "2019-01-01" &&
+      datetime < "2019-02-02")
   res <- post_request(res)
 
   expect_s3_class(res, "doc_items")
@@ -153,7 +162,7 @@ test_that("doc_conformance Test 7", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      name == 'København'
+      name == "København"
     ),
     expected_number = 1
   )
@@ -185,7 +194,7 @@ test_that("doc_conformance Test 7", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      `"date"` == date('2022-04-16')
+      `"date"` == date("2022-04-16")
     ),
     expected_number = 1
   )
@@ -193,7 +202,7 @@ test_that("doc_conformance Test 7", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      `"date"` >= date('2022-04-16')
+      `"date"` >= date("2022-04-16")
     ),
     expected_number = 2
   )
@@ -201,7 +210,7 @@ test_that("doc_conformance Test 7", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      `"date"` > date('2022-04-16')
+      `"date"` > date("2022-04-16")
     ),
     expected_number = 1
   )
@@ -209,7 +218,7 @@ test_that("doc_conformance Test 7", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      `"date"` <= date('2022-04-16')
+      `"date"` <= date("2022-04-16")
     ),
     expected_number = 2
   )
@@ -217,7 +226,7 @@ test_that("doc_conformance Test 7", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      `"date"` < date('2022-04-16')
+      `"date"` < date("2022-04-16")
     ),
     expected_number = 1
   )
@@ -225,7 +234,7 @@ test_that("doc_conformance Test 7", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      `"date"` != date('2022-04-16')
+      `"date"` != date("2022-04-16")
     ),
     expected_number = 2
   )
@@ -233,7 +242,7 @@ test_that("doc_conformance Test 7", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      start == timestamp('2022-04-16T10:13:19Z')
+      start == timestamp("2022-04-16T10:13:19Z")
     ),
     expected_number = 1
   )
@@ -256,11 +265,16 @@ test_that("doc_conformance Test 7", {
 })
 
 test_that("doc_conformance Test 12", {
-  skip_if({
-    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
-  }, "Test server is offline")
-  q <- stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
-                   force_version = "0.9.0")
+  skip_if(
+    {
+      httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+    },
+    "Test server is offline"
+  )
+  q <- stac(
+    base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
+    force_version = "0.9.0"
+  )
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
@@ -296,7 +310,7 @@ test_that("doc_conformance Test 12", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      name %in% c('Kiev','kobenhavn','Berlin','athens','foo')
+      name %in% c("Kiev", "kobenhavn", "Berlin", "athens", "foo")
     ),
     expected_number = 2
   )
@@ -304,7 +318,7 @@ test_that("doc_conformance Test 12", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      !name %in% c('Kiev','kobenhavn','Berlin','athens','foo')
+      !name %in% c("Kiev", "kobenhavn", "Berlin", "athens", "foo")
     ),
     expected_number = 241
   )
@@ -312,7 +326,7 @@ test_that("doc_conformance Test 12", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      pop_other %in% c(1038288,1611692,3013258,3013257,3013259)
+      pop_other %in% c(1038288, 1611692, 3013258, 3013257, 3013259)
     ),
     expected_number = 3
   )
@@ -320,7 +334,7 @@ test_that("doc_conformance Test 12", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      !pop_other %in% c(1038288,1611692,3013258,3013257,3013259)
+      !pop_other %in% c(1038288, 1611692, 3013258, 3013257, 3013259)
     ),
     expected_number = 240
   )
@@ -328,8 +342,10 @@ test_that("doc_conformance Test 12", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      `"date"` %in% c(date('2021-04-16'), date('2022-04-16'),
-                      date('2022-04-18'))
+      `"date"` %in% c(
+        date("2021-04-16"), date("2022-04-16"),
+        date("2022-04-18")
+      )
     ),
     expected_number = 2
   )
@@ -337,8 +353,10 @@ test_that("doc_conformance Test 12", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      !`"date"` %in% c(date('2021-04-16'), date('2022-04-16'),
-                       date('2022-04-18'))
+      !`"date"` %in% c(
+        date("2021-04-16"), date("2022-04-16"),
+        date("2022-04-18")
+      )
     ),
     expected_number = 1
   )
@@ -346,7 +364,7 @@ test_that("doc_conformance Test 12", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      start %in% c(timestamp('2022-04-16T10:13:19Z'))
+      start %in% c(timestamp("2022-04-16T10:13:19Z"))
     ),
     expected_number = 1
   )
@@ -354,7 +372,7 @@ test_that("doc_conformance Test 12", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      !start %in% c(timestamp('2022-04-16T10:13:19Z'))
+      !start %in% c(timestamp("2022-04-16T10:13:19Z"))
     ),
     expected_number = 2
   )
@@ -377,16 +395,21 @@ test_that("doc_conformance Test 12", {
 })
 
 test_that("doc_conformance Test 16", {
-  skip_if({
-    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
-  }, "Test server is offline")
-  q <- stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
-                   force_version = "0.9.0")
+  skip_if(
+    {
+      httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+    },
+    "Test server is offline"
+  )
+  q <- stac(
+    base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
+    force_version = "0.9.0"
+  )
 
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      casei(name) == casei('KIEV')
+      casei(name) == casei("KIEV")
     ),
     expected_number = 1
   )
@@ -394,7 +417,7 @@ test_that("doc_conformance Test 16", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      casei(name) == casei('kiev')
+      casei(name) == casei("kiev")
     ),
     expected_number = 1
   )
@@ -402,7 +425,7 @@ test_that("doc_conformance Test 16", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      casei(name) == casei('Kiev')
+      casei(name) == casei("Kiev")
     ),
     expected_number = 1
   )
@@ -410,7 +433,7 @@ test_that("doc_conformance Test 16", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      casei(name) == casei('København')
+      casei(name) == casei("København")
     ),
     expected_number = 1
   )
@@ -418,7 +441,7 @@ test_that("doc_conformance Test 16", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      casei(name) == casei('københavn')
+      casei(name) == casei("københavn")
     ),
     expected_number = 1
   )
@@ -426,7 +449,7 @@ test_that("doc_conformance Test 16", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      casei(name) == casei('KØBENHAVN')
+      casei(name) == casei("KØBENHAVN")
     ),
     expected_number = 1
   )
@@ -434,7 +457,7 @@ test_that("doc_conformance Test 16", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      casei(name) %like% casei('B_r%')
+      casei(name) %like% casei("B_r%")
     ),
     expected_number = 3
   )
@@ -442,7 +465,7 @@ test_that("doc_conformance Test 16", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      casei(name) %like% casei('b_r%')
+      casei(name) %like% casei("b_r%")
     ),
     expected_number = 3
   )
@@ -450,7 +473,7 @@ test_that("doc_conformance Test 16", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      casei(name) %like% casei('B_R%')
+      casei(name) %like% casei("B_R%")
     ),
     expected_number = 3
   )
@@ -458,20 +481,27 @@ test_that("doc_conformance Test 16", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      casei(name) %in% c(casei('Kiev'), casei('kobenhavn'),
-                         casei('Berlin'),casei('athens'),
-                         casei('foo'))
+      casei(name) %in% c(
+        casei("Kiev"), casei("kobenhavn"),
+        casei("Berlin"), casei("athens"),
+        casei("foo")
+      )
     ),
     expected_number = 3
   )
 })
 
 test_that("doc_conformance Test 25", {
-  skip_if({
-    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
-  }, "Test server is offline")
-  q <- stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
-                   force_version = "0.9.0")
+  skip_if(
+    {
+      httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+    },
+    "Test server is offline"
+  )
+  q <- stac(
+    base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
+    force_version = "0.9.0"
+  )
 
   polygon <- list(
     type = "Polygon",
@@ -488,7 +518,7 @@ test_that("doc_conformance Test 25", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
-      s_intersects(geom, {{polygon}})
+      s_intersects(geom, {{ polygon }})
     ),
     expected_number = 8
   )
@@ -503,7 +533,7 @@ test_that("doc_conformance Test 25", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
-      s_intersects(geom, {{linestring}})
+      s_intersects(geom, {{ linestring }})
     ),
     expected_number = 4
   )
@@ -515,7 +545,7 @@ test_that("doc_conformance Test 25", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
-      s_intersects(geom, {{point}})
+      s_intersects(geom, {{ point }})
     ),
     expected_number = 1
   )
@@ -523,7 +553,7 @@ test_that("doc_conformance Test 25", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      s_intersects(geom, {{polygon}})
+      s_intersects(geom, {{ polygon }})
     ),
     expected_number = 7
   )
@@ -538,18 +568,23 @@ test_that("doc_conformance Test 25", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_rivers_lake_centerlines")),
-      s_intersects(geom, {{linestring}})
+      s_intersects(geom, {{ linestring }})
     ),
     expected_number = 2
   )
 })
 
 test_that("doc_conformance Test 34", {
-  skip_if({
-    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
-  }, "Test server is offline")
-  q <- stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
-                   force_version = "0.9.0")
+  skip_if(
+    {
+      httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+    },
+    "Test server is offline"
+  )
+  q <- stac(
+    base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
+    force_version = "0.9.0"
+  )
   polygon <- list(
     type = "Polygon",
     coordinates = list(
@@ -565,7 +600,7 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
-      s_disjoint(geom, {{polygon}})
+      s_disjoint(geom, {{ polygon }})
     ),
     expected_number = 169
   )
@@ -580,7 +615,7 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
-      s_disjoint(geom, {{linestring}})
+      s_disjoint(geom, {{ linestring }})
     ),
     expected_number = 173
   )
@@ -592,7 +627,7 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
-      s_disjoint(geom, {{point}})
+      s_disjoint(geom, {{ point }})
     ),
     expected_number = 176
   )
@@ -600,7 +635,7 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      s_disjoint(geom, {{polygon}})
+      s_disjoint(geom, {{ polygon }})
     ),
     expected_number = 236
   )
@@ -615,7 +650,7 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_rivers_lake_centerlines")),
-      s_disjoint(geom, {{linestring}})
+      s_disjoint(geom, {{ linestring }})
     ),
     expected_number = 11
   )
@@ -624,7 +659,7 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      s_equals(geom, {{point}})
+      s_equals(geom, {{ point }})
     ),
     expected_number = 1
   )
@@ -633,7 +668,7 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
-      s_touches(geom, {{polygon}})
+      s_touches(geom, {{ polygon }})
     ),
     expected_number = 3
   )
@@ -643,7 +678,7 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
-      s_touches(geom, {{point}})
+      s_touches(geom, {{ point }})
     ),
     expected_number = 2
   )
@@ -652,7 +687,7 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
-      s_touches(geom, {{linestring}})
+      s_touches(geom, {{ linestring }})
     ),
     expected_number = 3
   )
@@ -667,7 +702,7 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_rivers_lake_centerlines")),
-      s_crosses(geom, {{linestring}})
+      s_crosses(geom, {{ linestring }})
     ),
     expected_number = 2
   )
@@ -682,7 +717,7 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
-      s_contains(geom, {{linestring}})
+      s_contains(geom, {{ linestring }})
     ),
     expected_number = 1
   )
@@ -694,23 +729,28 @@ test_that("doc_conformance Test 34", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_admin_0_countries")),
-      s_contains(geom, {{point}})
+      s_contains(geom, {{ point }})
     ),
     expected_number = 1
   )
 })
 
 test_that("doc_conformance Test 38", {
-  skip_if({
-    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
-  }, "Test server is offline")
-  q <- stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
-                   force_version = "0.9.0")
+  skip_if(
+    {
+      httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+    },
+    "Test server is offline"
+  )
+  q <- stac(
+    base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
+    force_version = "0.9.0"
+  )
 
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_after(`"date"`,date('2022-04-16'))
+      t_after(`"date"`, date("2022-04-16"))
     ),
     expected_number = 1
   )
@@ -718,7 +758,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_before(`"date"`,date('2022-04-16'))
+      t_before(`"date"`, date("2022-04-16"))
     ),
     expected_number = 1
   )
@@ -726,7 +766,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_disjoint(`"date"`,date('2022-04-16'))
+      t_disjoint(`"date"`, date("2022-04-16"))
     ),
     expected_number = 2
   )
@@ -734,7 +774,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_equals(`"date"`,date('2022-04-16'))
+      t_equals(`"date"`, date("2022-04-16"))
     ),
     expected_number = 1
   )
@@ -742,7 +782,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_intersects(`"date"`,date('2022-04-16'))
+      t_intersects(`"date"`, date("2022-04-16"))
     ),
     expected_number = 1
   )
@@ -750,7 +790,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_after(`"date"`, interval('2022-01-01','2022-12-31'))
+      t_after(`"date"`, interval("2022-01-01", "2022-12-31"))
     ),
     expected_number = 1
   )
@@ -758,7 +798,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_before(`"date"`, interval('2022-01-01','2022-12-31'))
+      t_before(`"date"`, interval("2022-01-01", "2022-12-31"))
     ),
     expected_number = 1
   )
@@ -766,7 +806,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_disjoint(`"date"`, interval('2022-01-01','2022-12-31'))
+      t_disjoint(`"date"`, interval("2022-01-01", "2022-12-31"))
     ),
     expected_number = 2
   )
@@ -774,7 +814,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_equals(`"date"`, interval('2022-01-01','2022-12-31'))
+      t_equals(`"date"`, interval("2022-01-01", "2022-12-31"))
     ),
     expected_number = 0
   )
@@ -782,7 +822,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_equals(`"date"`, interval('2022-04-16','2022-04-16'))
+      t_equals(`"date"`, interval("2022-04-16", "2022-04-16"))
     ),
     expected_number = 1
   )
@@ -790,7 +830,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_intersects(start,timestamp('2022-04-16T10:13:19Z'))
+      t_intersects(start, timestamp("2022-04-16T10:13:19Z"))
     ),
     expected_number = 1
   )
@@ -798,7 +838,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_before(start,timestamp('2022-04-16T10:13:19Z'))
+      t_before(start, timestamp("2022-04-16T10:13:19Z"))
     ),
     expected_number = 1
   )
@@ -806,7 +846,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_disjoint(start,timestamp('2022-04-16T10:13:19Z'))
+      t_disjoint(start, timestamp("2022-04-16T10:13:19Z"))
     ),
     expected_number = 2
   )
@@ -814,7 +854,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_equals(start,timestamp('2022-04-16T10:13:19Z'))
+      t_equals(start, timestamp("2022-04-16T10:13:19Z"))
     ),
     expected_number = 1
   )
@@ -822,7 +862,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_equals(interval(start,end),interval('2021-04-16T10:15:59Z','2022-04-16T10:16:06Z'))
+      t_equals(interval(start, end), interval("2021-04-16T10:15:59Z", "2022-04-16T10:16:06Z"))
     ),
     expected_number = 1
   )
@@ -830,7 +870,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_intersects(interval(start,end),interval('2022-04-16T10:13:19Z','2022-04-16T10:15:09Z'))
+      t_intersects(interval(start, end), interval("2022-04-16T10:13:19Z", "2022-04-16T10:15:09Z"))
     ),
     expected_number = 2
   )
@@ -838,7 +878,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_contains(interval(start,end),interval('2022-04-16T10:13:19Z','2022-04-16T10:15:09Z'))
+      t_contains(interval(start, end), interval("2022-04-16T10:13:19Z", "2022-04-16T10:15:09Z"))
     ),
     expected_number = 1
   )
@@ -846,7 +886,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_meets(interval(start,end),interval('2022-04-16T10:13:19Z','2022-04-16T10:15:10Z'))
+      t_meets(interval(start, end), interval("2022-04-16T10:13:19Z", "2022-04-16T10:15:10Z"))
     ),
     expected_number = 0
   )
@@ -854,7 +894,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_metby(interval(start,end),interval('2022-04-16T10:13:19Z','2022-04-16T10:15:10Z'))
+      t_metby(interval(start, end), interval("2022-04-16T10:13:19Z", "2022-04-16T10:15:10Z"))
     ),
     expected_number = 1
   )
@@ -862,7 +902,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_overlappedby(interval(start,end),interval('2020-04-16T10:13:19Z','2022-04-16T10:15:10Z'))
+      t_overlappedby(interval(start, end), interval("2020-04-16T10:13:19Z", "2022-04-16T10:15:10Z"))
     ),
     expected_number = 2
   )
@@ -870,7 +910,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_overlaps(interval(start,end),interval('2022-04-16T10:13:19Z','2023-04-16T10:15:10Z'))
+      t_overlaps(interval(start, end), interval("2022-04-16T10:13:19Z", "2023-04-16T10:15:10Z"))
     ),
     expected_number = 1
   )
@@ -878,7 +918,7 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_startedby(interval(start,end),interval('2022-04-16T10:13:19Z','2023-04-16T10:15:10Z'))
+      t_startedby(interval(start, end), interval("2022-04-16T10:13:19Z", "2023-04-16T10:15:10Z"))
     ),
     expected_number = 1
   )
@@ -886,18 +926,23 @@ test_that("doc_conformance Test 38", {
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
-      t_starts(interval(start,end),interval('2022-04-16T10:13:19Z','2023-04-16T10:15:10Z'))
+      t_starts(interval(start, end), interval("2022-04-16T10:13:19Z", "2023-04-16T10:15:10Z"))
     ),
     expected_number = 0
   )
 })
 
 test_that("doc_conformance Test 45", {
-  skip_if({
-    httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
-  }, "Test server is offline")
-  q <- stac(base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
-                   force_version = "0.9.0")
+  skip_if(
+    {
+      httr::http_error(httr::HEAD("https://cql2test.ldproxy.net/ne110m4cql2"))
+    },
+    "Test server is offline"
+  )
+  q <- stac(
+    base_url = "https://cql2test.ldproxy.net/ne110m4cql2",
+    force_version = "0.9.0"
+  )
   conformance_test(
     q = ext_filter(
       items(collections(q, "ne_110m_populated_places_simple")),
@@ -961,24 +1006,24 @@ test_that("scalar data types contructors", {
   expect_output(cql2_json("string"), regexp = '"string"')
 
   # "number": numbers including integers and floating point values
-  expect_output(cql2_json(3.14), regexp = '3.14')
+  expect_output(cql2_json(3.14), regexp = "3.14")
   expect_output(cql2_text(3.14), regexp = "3.14")
 
   # integer
-  expect_output(cql2_json(3L), regexp = '3')
+  expect_output(cql2_json(3L), regexp = "3")
   expect_output(cql2_text(3L), regexp = "3")
 
   # "boolean": booleans
-  expect_output(cql2_json(TRUE), regexp = 'true')
-  expect_output(cql2_text(TRUE), regexp = 'true')
-  expect_output(cql2_json(T), regexp = 'true')
-  expect_output(cql2_text(T), regexp = 'true')
-  expect_output(cql2_json(FALSE), regexp = 'false')
-  expect_output(cql2_text(FALSE), regexp = 'false')
+  expect_output(cql2_json(TRUE), regexp = "true")
+  expect_output(cql2_text(TRUE), regexp = "true")
+  expect_output(cql2_json(T), regexp = "true")
+  expect_output(cql2_text(T), regexp = "true")
+  expect_output(cql2_json(FALSE), regexp = "false")
+  expect_output(cql2_text(FALSE), regexp = "false")
 
   boolean4 <- cql2(F)
-  expect_output(cql2_json(F), regexp = 'false')
-  expect_output(cql2_text(F), regexp = 'false')
+  expect_output(cql2_json(F), regexp = "false")
+  expect_output(cql2_text(F), regexp = "false")
 
   # "timestamp": an instant with a granularity of a second or smaller
   expect_output(
@@ -1020,7 +1065,8 @@ test_that("cql2 contructors", {
   expect_s3_class(not_operator, "cql2_not_op")
   expect_output(print(not_operator), "NOT false")
   expect_output(
-    cat(to_json(not_operator)), '{"op":"not","args":[false]}', fixed = TRUE
+    cat(to_json(not_operator)), '{"op":"not","args":[false]}',
+    fixed = TRUE
   )
 
   # ---- new comp op ----
@@ -1062,7 +1108,7 @@ test_that("cql2 contructors", {
   expect_output(print(minus_operator1), "-1")
   expect_output(
     cat(to_json(minus_operator1)),
-    '-1',
+    "-1",
     fixed = TRUE
   )
 
@@ -1084,7 +1130,8 @@ test_that("cql2 contructors", {
   ts_lit <- timestamp_lit("2019-01-01T01:00:00Z")
   expect_s3_class(ts_lit, "cql2_timestamp")
   expect_output(
-    print(ts_lit), "TIMESTAMP('2019-01-01T01:00:00Z')", fixed = TRUE
+    print(ts_lit), "TIMESTAMP('2019-01-01T01:00:00Z')",
+    fixed = TRUE
   )
 
   # ---- date literal ----
@@ -1097,7 +1144,8 @@ test_that("cql2 contructors", {
   dt_lit <- date_lit("2019-01-01")
   expect_s3_class(dt_lit, "cql2_date")
   expect_output(
-    print(dt_lit), "DATE('2019-01-01')", fixed = TRUE
+    print(dt_lit), "DATE('2019-01-01')",
+    fixed = TRUE
   )
 
   # ---- interval literal ----
@@ -1110,7 +1158,8 @@ test_that("cql2 contructors", {
   int_lit <- interval_lit("2019-01-01")
   expect_s3_class(int_lit, "cql2_interval")
   expect_output(
-    print(int_lit), "INTERVAL('2019-01-01','..')", fixed = TRUE
+    print(int_lit), "INTERVAL('2019-01-01','..')",
+    fixed = TRUE
   )
 
   # ---- func def ----
@@ -1237,7 +1286,8 @@ test_that("cql2 contructors", {
   temp <- temporal_operator("2019-01-01", "2019-02-01T01:01:01Z")
   expect_s3_class(temp, "cql2_temporal_op")
   expect_output(
-    print(temp), "TEST('2019-01-01','2019-02-01T01:01:01Z')", fixed = TRUE
+    print(temp), "TEST('2019-01-01','2019-02-01T01:01:01Z')",
+    fixed = TRUE
   )
 
   # ---- array op ----
@@ -1263,24 +1313,24 @@ test_that("cql2 output functions", {
 
   # ---- numeric ----
   expect_output(cat(to_json(1)), "1")
-  expect_output(cat(to_json(c(1, 2))), '[1,2]', fixed = TRUE)
+  expect_output(cat(to_json(c(1, 2))), "[1,2]", fixed = TRUE)
 
   expect_output(cat(to_text(1)), "1")
-  expect_output(cat(to_text(c(1, 2))), '(1,2)', fixed = TRUE)
+  expect_output(cat(to_text(c(1, 2))), "(1,2)", fixed = TRUE)
 
   # ---- logical ----
   expect_output(cat(to_json(TRUE)), "true")
-  expect_output(cat(to_json(c(TRUE, FALSE))), '[true,false]', fixed = TRUE)
+  expect_output(cat(to_json(c(TRUE, FALSE))), "[true,false]", fixed = TRUE)
 
   expect_output(cat(to_text(TRUE)), "true")
-  expect_output(cat(to_text(c(TRUE, FALSE))), '(true,false)', fixed = TRUE)
+  expect_output(cat(to_text(c(TRUE, FALSE))), "(true,false)", fixed = TRUE)
 
   # ---- logical ----
   expect_output(cat(to_json(TRUE)), "true")
-  expect_output(cat(to_json(c(TRUE, FALSE))), '[true,false]', fixed = TRUE)
+  expect_output(cat(to_json(c(TRUE, FALSE))), "[true,false]", fixed = TRUE)
 
   expect_output(cat(to_text(TRUE)), "true")
-  expect_output(cat(to_text(c(TRUE, FALSE))), '(true,false)', fixed = TRUE)
+  expect_output(cat(to_text(c(TRUE, FALSE))), "(true,false)", fixed = TRUE)
 
   # ---- list ----
   expect_error(cat(to_json(to_json(list(2, a = 2)))))
@@ -1288,23 +1338,31 @@ test_that("cql2 output functions", {
 
   pt <- list(type = "Point", coordinates = c(1, 2))
   expect_output(cat(to_json(list(a = 2))), '{"a":2}', fixed = TRUE)
-  expect_output(cat(to_json(c(TRUE, FALSE))), '[true,false]', fixed = TRUE)
+  expect_output(cat(to_json(c(TRUE, FALSE))), "[true,false]", fixed = TRUE)
   expect_output(cat(to_json(pt)), '{"type":"Point","coordinates":[1,2]}', fixed = TRUE)
 
   expect_output(cat(to_text(TRUE)), "true")
-  expect_output(cat(to_text(c(TRUE, FALSE))), '(true,false)', fixed = TRUE)
-  expect_output(cat(to_text(pt)), 'POINT(1 2)', fixed = TRUE)
+  expect_output(cat(to_text(c(TRUE, FALSE))), "(true,false)", fixed = TRUE)
+  expect_output(cat(to_text(pt)), "POINT(1 2)", fixed = TRUE)
 
   # ---- sfg, sfc sf ----
   options(stac_digits = NULL)
   pt_sfg <- sf::st_point(c(1, 2))
   ls_sfc <- sf::st_sfc(sf::st_linestring(matrix(seq_len(10), 5, 2)), crs = 4326)
-  outer <- matrix(c(100.0, 0.0, 101.0, 0.0,
-                    101.0, 1.0, 100.0, 1.0,100.0, 0.0),
-                  ncol = 2, byrow = TRUE)
-  hole1 <- matrix(c(100.8, 0.8, 100.8, 0.2, 100.2, 0.2,
-                    100.2, 0.8, 100.8, 0.8),
-                  ncol = 2, byrow = TRUE)
+  outer <- matrix(
+    c(
+      100.0, 0.0, 101.0, 0.0,
+      101.0, 1.0, 100.0, 1.0, 100.0, 0.0
+    ),
+    ncol = 2, byrow = TRUE
+  )
+  hole1 <- matrix(
+    c(
+      100.8, 0.8, 100.8, 0.2, 100.2, 0.2,
+      100.2, 0.8, 100.8, 0.8
+    ),
+    ncol = 2, byrow = TRUE
+  )
   poly_sf <- sf::st_sf(
     geom = sf::st_sfc(sf::st_polygon(list(outer, hole1)), crs = 4326)
   )
@@ -1319,9 +1377,10 @@ test_that("cql2 output functions", {
 
   # sfg
   expect_output(
-    cat(to_json(pt_sfg)), '{"type":"Point","coordinates":[1,2]}', fixed = TRUE
+    cat(to_json(pt_sfg)), '{"type":"Point","coordinates":[1,2]}',
+    fixed = TRUE
   )
-  expect_output(cat(to_text(pt_sfg)), 'POINT(1 2)', fixed = TRUE)
+  expect_output(cat(to_text(pt_sfg)), "POINT(1 2)", fixed = TRUE)
 
   # sfc
   expect_output(
@@ -1330,7 +1389,8 @@ test_that("cql2 output functions", {
     fixed = TRUE
   )
   expect_output(
-    cat(to_text(ls_sfc)), 'LINESTRING(1 6,2 7,3 8,4 9,5 10)', fixed = TRUE
+    cat(to_text(ls_sfc)), "LINESTRING(1 6,2 7,3 8,4 9,5 10)",
+    fixed = TRUE
   )
 
   # sf
@@ -1341,7 +1401,7 @@ test_that("cql2 output functions", {
   )
   expect_output(
     cat(to_text(poly_sf)),
-    'POLYGON((100 0,101 0,101 1,100 1,100 0),(100.8 0.8,100.8 0.2,100.2 0.2,100.2 0.8,100.8 0.8))',
+    "POLYGON((100 0,101 0,101 1,100 1,100 0),(100.8 0.8,100.8 0.2,100.2 0.2,100.2 0.8,100.8 0.8))",
     fixed = TRUE
   )
 
@@ -1353,7 +1413,7 @@ test_that("cql2 output functions", {
   )
   expect_output(
     cat(to_text(geom_col)),
-    'GEOMETRYCOLLECTION(POINT(1 2),LINESTRING(1 4,2 5,3 6))',
+    "GEOMETRYCOLLECTION(POINT(1 2),LINESTRING(1 4,2 5,3 6))",
     fixed = TRUE
   )
 
@@ -1372,9 +1432,8 @@ test_that("cql2 output functions", {
   )
   expect_output(
     cat(to_text(linestring)),
-    'LINESTRING(-62.5573 -8.4332,-62.2179 -8.3681)',
+    "LINESTRING(-62.5573 -8.4332,-62.2179 -8.3681)",
     fixed = TRUE,
-
   )
   expect_error(to_text(list(a = 1, NULL)))
   b <- structure(list(a = 1), class = "my-class")
@@ -1411,11 +1470,13 @@ test_that("cql2 helper functions", {
   expect_error(cql2_date("2020-01-55"))
   expect_error(cql2_timestamp("2020-01-01"))
   expect_output(
-    object = {cql2_json(
-      collection == "landsat-c2-l2" &&
-        t_intersects(datetime, !!time_range) &&
-        s_intersects(geometry, !!area_of_interest)
-    )},
+    object = {
+      cql2_json(
+        collection == "landsat-c2-l2" &&
+          t_intersects(datetime, !!time_range) &&
+          s_intersects(geometry, !!area_of_interest)
+      )
+    },
     regexp = "-121.9613"
   )
 })
