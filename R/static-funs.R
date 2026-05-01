@@ -96,6 +96,13 @@ NULL
 #' @export
 read_stac <- function(url, ...) {
   check_character(url, "STAC URL must be a character value.")
+  
+  # Normalize local file paths to file:// URLs with absolute path
+  if (!grepl("^[a-zA-Z]+://", url)) {
+    url <- normalizePath(path.expand(url), mustWork = FALSE)
+    url <- paste0("file://", url)
+  }
+  
   content <- jsonlite::read_json(url, ...)
   # create an rstac doc from content and return
   as_rstac_doc(content, base_url = url)
