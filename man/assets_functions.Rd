@@ -132,7 +132,10 @@ downloaded with \code{GDAL} instead of the \code{httr} package.}
 
 \item{download_fn}{a \code{function} to handle download of assets for
 each item to be downloaded. Using this function, you can change the
-\code{href} for each asset, as well as how the download is performed.}
+\code{href} for each asset, as well as how the download is performed. The
+function must have one parameter that get an asset entry to be downloaded.
+The function should return an asset entry to represent the downloaded
+asset.}
 
 \item{create_json}{a \code{logical} indicating if a JSON file with item
 metadata (\code{doc_item} or \code{doc_items}) must be created in the

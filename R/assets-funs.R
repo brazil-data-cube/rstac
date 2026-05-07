@@ -48,7 +48,10 @@
 #'
 #' @param download_fn a `function` to handle download of assets for
 #' each item to be downloaded. Using this function, you can change the
-#' `href` for each asset, as well as how the download is performed.
+#' `href` for each asset, as well as how the download is performed. The
+#' function must have one parameter that get an asset entry to be downloaded.
+#' The function should return an asset entry to represent the downloaded
+#' asset.
 #'
 #' @param append_gdalvsi a `logical` value. If `TRUE`, `GDAL VSI` prefixes
 #' are included in the URL of each asset. The following schemes are supported:
